@@ -10,3 +10,6 @@ class Config:
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'jwt-dev-secret')
     JWT_ACCESS_TOKEN_EXPIRES = 3600          # 1 godzina
     JWT_REFRESH_TOKEN_EXPIRES = 2592000      # 30 dni
+
+    PUSH_ENABLED = os.getenv("PUSH_ENABLED", "true").lower() == "true"
+    VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@example.com")

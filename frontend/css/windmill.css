@@ -412,14 +412,14 @@
     .windmill-app .zen-client-card .detail-empty { min-height:210px; }
 }
 /* Floating account controls replace the top application bar. */
-.windmill-app .zen-sync-widget { position:fixed;right:94px;bottom:calc(33px + env(safe-area-inset-bottom,0px));z-index:40; }
-.windmill-app .zen-profile-widget { position:fixed;right:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:40; }
+.windmill-app .zen-profile-widget { position:fixed;right:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:50; }
 .windmill-app .zen-profile-trigger { width:58px;height:58px;justify-content:center;padding:5px;background:var(--wm-surface);border:1px solid #b8dbe6;box-shadow:0 5px 22px #16384b26; }
 .windmill-app .zen-profile-trigger>svg { display:none; }
 .windmill-app .zen-profile-trigger :is(img,.avatar-gradient) { width:46px;height:46px; }
 .windmill-app .zen-profile-trigger:hover { background:var(--wm-subtle);border-color:#009fb9; }
 .windmill-app .zen-profile-menu { bottom:calc(100% + 12px);max-width:calc(100vw - 32px);max-height:calc(100dvh - 120px);overflow-y:auto; }
 .windmill-app .zen-mobile-nav { position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;padding:14px;border-radius:50%;background:#203749;color:#fff;box-shadow:0 5px 22px #16384b26; }
+.windmill-app .zen-sync-widget { position:fixed;right:94px;bottom:calc(33px + env(safe-area-inset-bottom,0px));z-index:50; }
 .windmill-app main { padding-bottom:104px!important; }
 .windmill-app .ux-notice { bottom:100px; }
 @media(max-width:640px) {

@@ -9,7 +9,7 @@
         <div class="px-3 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center">
             <a href="#dashboard" @click.prevent="selectView('dashboard')" :aria-label="window.ZenI18n.t('Przejdź do dashboardu')" class="inline-flex items-center justify-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-500">
             <img id="zen-sidebar-logo"
-                 :src="(darkMode && settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
+                 :src="(darkMode &amp;&amp; settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
                  @error="$el.src = '/logo.png'"
                  :alt="settingsForm?.brand_name || window.ZenI18n.t(&quot;ZenCRM&quot;)"
                  class="h-20 w-auto max-w-full object-contain">
@@ -41,7 +41,7 @@
                             <button type="button"
                                     @click="toggleMenuGroup(item.id)"
                                     class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition cursor-pointer select-none"
-                                    :class="item.children.some(c => c.id === currentView || (c.id === &#x27;ticketSettings&#x27; &amp;&amp; currentView === &#x27;settings&#x27; &amp;&amp; settingsTab === &#x27;helpdesk&#x27;))
+                                    :class="item.children.some(c =&gt; c.id === currentView || (c.id === &#x27;ticketSettings&#x27; &amp;&amp; currentView === &#x27;settings&#x27; &amp;&amp; settingsTab === &#x27;helpdesk&#x27;))
                                         ? &#x27;text-brand-700 dark:text-brand-300 font-semibold bg-brand-50/70 dark:bg-gray-700/60&#x27;
                                         : &#x27;text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700&#x27;">
                                 <div class="flex items-center gap-3 truncate">
@@ -92,6 +92,7 @@
     <div class="flex flex-col flex-1 min-w-0">
 
 <button @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen" :aria-label="window.ZenI18n.t(&quot;Otwórz menu nawigacji&quot;)" class="zen-mobile-nav lg:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+                <% include "views/reminders.html" %>
                 <div class="zen-notifications" @click.outside="notificationsOpen=false" @keydown.escape.stop="notificationsOpen=false; $refs.notificationTrigger.focus()">
                     <button x-ref="notificationTrigger" class="zen-bell" @click="toggleNotifications()" :aria-expanded="notificationsOpen" aria-controls="notification-panel" :aria-label="window.ZenI18n.t(&#x27;Powiadomienia&#x27;) + &#x27; (&#x27; + unreadNotifications + &#x27;)&#x27;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -103,11 +104,12 @@
                         <p class="zen-inbox-state" x-show="notificationsLoading &amp;&amp; !notifications.length" x-text="window.ZenI18n.t(&#x27;Wczytywanie…&#x27;)" role="status"></p>
                         <div class="zen-inbox-state" x-show="notificationsError" role="alert"><p x-text="notificationsError"></p><button @click="loadNotifications()" x-text="window.ZenI18n.t(&#x27;Spróbuj ponownie&#x27;)"></button></div>
                         <p class="zen-inbox-state" x-show="!notificationsLoading &amp;&amp; !notificationsError &amp;&amp; !notifications.length" x-text="window.ZenI18n.t(&#x27;Nie masz jeszcze powiadomień&#x27;)"></p>
-                        <div class="zen-inbox-list"><template x-for="item in notifications" :key="item.id"><button class="zen-inbox-item" :class="{&#x27;is-unread&#x27;:!notificationRead.includes(item.id)}" @click="openNotification(item)"><span class="zen-inbox-dot"></span><span><small x-text="notificationAction(item.action)"></small><strong x-text="item.title"></strong><small x-show="item.actor" x-text="item.actor ? fullName(item.actor) : ''"></small><small x-text="window.ZenI18n.t(({client:window.ZenI18n.t(&#x27;Klient&#x27;),lead:window.ZenI18n.t(&#x27;Lead&#x27;),task:window.ZenI18n.t(&#x27;Zadanie&#x27;),service:window.ZenI18n.t(&#x27;Usługa&#x27;),meeting:window.ZenI18n.t(&#x27;Spotkanie&#x27;)})[item.entity_type]) + &#x27; · &#x27; + new Date(item.created_at + (/[Z+]/.test(item.created_at) ? '' : 'Z')).toLocaleString(locale,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})"></small></span><span aria-hidden="true">↗</span></button></template></div>
+                        <div class="zen-inbox-list"><template x-for="item in notifications" :key="item.id"><button class="zen-inbox-item" :class="{'is-unread':!notificationRead.includes(item.id)}" @click="openNotification(item)"><span class="zen-inbox-dot"></span><span><small x-text="notificationAction(item.action)"></small><strong x-text="item.title"></strong><small x-show="item.actor" x-text="item.actor ? fullName(item.actor) : ''"></small><small x-text="window.ZenI18n.t(({client:window.ZenI18n.t('Klient'),lead:window.ZenI18n.t('Lead'),task:window.ZenI18n.t('Zadanie'),service:window.ZenI18n.t('Usługa'),meeting:window.ZenI18n.t('Spotkanie')})[item.entity_type]) + ' · ' + new Date(item.created_at + (/[Z+]/.test(item.created_at) ? '' : 'Z')).toLocaleString(locale,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})"></small></span><span aria-hidden="true">↗</span></button></template></div>
+                        <footer class="p-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/80 text-center"><a href="#notifications" @click.prevent="notificationsOpen=false; selectView('notifications')" class="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 inline-flex items-center gap-1.5"><span x-text="window.ZenI18n.t('Zobacz wszystkie i archiwalne')">Zobacz wszystkie i archiwalne</span> <span>→</span></a></footer>
                     </section>
                 </div>
                 <!-- Przycisk Synchronizuj (mała ikona z telefonem) -->
-                <div class="zen-sync-widget" x-show="smsDevices && smsDevices.length > 0" x-cloak>
+                <div class="zen-sync-widget" x-show="smsDevices &amp;&amp; smsDevices.length &gt; 0" x-cloak>
                     <button @click="syncTelephony()" :disabled="syncingTelephony"
                             :title="window.ZenI18n.t('Synchronizuj połączenia i SMS z telefonem')"
                             :aria-label="window.ZenI18n.t('Synchronizuj połączenia i SMS z telefonem')"
@@ -135,7 +137,7 @@
                         </template>
                         <template x-if="!user?.avatar_url">
                             <div class="w-9 h-9 rounded-full avatar-gradient text-white flex items-center justify-center text-sm font-bold ring-2 ring-white dark:ring-gray-800">
-                                <span x-text="(user?.first_name?.[0] || &#x27;?&#x27;) + (user?.last_name?.[0] || &#x27;&#x27;)"></span>
+                                <span x-text="(user?.first_name?.[0] || '?') + (user?.last_name?.[0] || '')"></span>
                             </div>
                         </template>
                         <svg class="hidden sm:block w-4 h-4 text-gray-500 transition-transform"

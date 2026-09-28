@@ -4,6 +4,7 @@
 
                     <!-- NAWIGACJA -->
                     <nav class="settings-nav">
+                        <button class="settings-nav-item" :class="settingsTab === 'recordViews' ? 'active' : ''" @click="settingsTab = 'recordViews'">Domyślne widoki</button>
                         <button class="settings-nav-item" :class="settingsTab === 'customFields' ? 'active' : ''" @click="settingsTab = 'customFields'">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
                             <span x-text="window.ZenI18n.t('Pola własne')">Pola własne</span>
@@ -58,6 +59,15 @@
 
                     <!-- PANEL -->
                     <div class="settings-panel">
+                        <div x-show="settingsTab === 'recordViews'" x-cloak>
+                            <h2 class="settings-section-title">Domyślny widok rekordu</h2>
+                            <p class="settings-section-desc">Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.</p>
+                            <div class="space-y-4 mt-6">
+                                <template x-for="item in [{key:'client',label:'Klienci'},{key:'lead',label:'Leady'},{key:'task',label:'Zadania'},{key:'service',label:'Usługi'}]" :key="item.key">
+                                    <label class="flex items-center justify-between gap-4"><span x-text="item.label"></span><select class="ux-input" x-model="settingsForm['ui_detail_' + item.key]"><option value="compact">Skrócony — panel boczny</option><option value="full">Pełny — karta rekordu</option></select></label>
+                                </template>
+                            </div>
+                        </div>
 
                         <div x-show="settingsTab === 'permissions'" x-cloak class="space-y-5">
                             <div>

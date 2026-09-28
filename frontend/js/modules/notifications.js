@@ -2,6 +2,7 @@ window.ZenModules = window.ZenModules || {};
 window.ZenModules.notifications = () => ({
     notifications: [], notificationRead: [], notificationsOpen: false,
     notificationsLoading: false, notificationsError: '', notificationTimer: null,
+    notificationFilter: 'all', notificationSearch: '',
     get unreadNotifications() { return this.notifications.filter(n => !this.notificationRead.includes(n.id)).length; },
     startNotifications() {
         this.stopNotifications();
@@ -23,6 +24,17 @@ window.ZenModules.notifications = () => ({
         this.notificationRead=[...new Set([...this.notificationRead,...ids])].slice(-5000);
         localStorage.setItem('zen-notifications:'+this.user.id,JSON.stringify(this.notificationRead));
     },
+    markNotificationUnread(id) {
+        this.notificationRead = this.notificationRead.filter(item => item !== id);
+        localStorage.setItem('zen-notifications:'+this.user.id, JSON.stringify(this.notificationRead));
+    },
+    toggleNotificationRead(item) {
+        if (this.notificationRead.includes(item.id)) {
+            this.markNotificationUnread(item.id);
+        } else {
+            this.markNotificationsRead([item.id]);
+        }
+    },
     async openNotification(item) {
         this.markNotificationsRead([item.id]); this.notificationsOpen=false;
         if(item.entity_type==='meeting') {
@@ -32,5 +44,17 @@ window.ZenModules.notifications = () => ({
     notificationAction(action) {
         const labels={assigned:'Przypisano do Ciebie',created:'Utworzono',updated:'Zaktualizowano',comment:'Nowy komentarz',commented:'Nowy komentarz',status:'Zmieniono status',status_changed:'Zmieniono status',team:'Zmieniono zespół',call:'Zapisano rozmowę',email:'Zapisano e-mail',converted:'Przekonwertowano na klienta'};
         return this.t(labels[action] || 'Nowa aktywność');
+    },
+    entityLabel(entityType) {
+        const labels = {
+            client: 'Klient',
+            lead: 'Lead',
+            task: 'Zadanie',
+            service: 'Usługa',
+            meeting: 'Spotkanie',
+            project: 'Projekt',
+            reminder: 'Przypomnienie'
+        };
+        return this.t(labels[entityType] || entityType || 'Element');
     },
 });

@@ -336,6 +336,16 @@ window.ZenModules.records = function () { return {
             const wasQuickAdd = !!this.modal.view;
             this.savingRecord = true;
             try {
+                if (targetView === 'tasks' && payload.reminder_offset != null && payload.reminder_offset !== '') {
+                    if (payload.reminder_offset === 'off') payload.reminder_at = null;
+                    else {
+                        const at = new Date(payload.due_date).getTime() - Number(payload.reminder_offset)*60000;
+                        if (!Number.isFinite(at) || at <= Date.now()) throw new Error('Ustaw termin zadania tak, aby przypomnienie wypadało w przyszłości.');
+                        payload.reminder_at = new Date(at).toISOString();
+                        this.enableReminderSound();
+                    }
+                }
+                delete payload.reminder_offset;
                 const apiTarget = this.apiPath(targetView);
                 let saved;
                 if (this.modal.editingId) {
@@ -371,6 +381,7 @@ window.ZenModules.records = function () { return {
                         } catch (_) {}
                     }
                     if (tid) await this.saveTaskAssignees(tid);
+                    await this.loadReminders();
                 }
                 this.modal.open = false;
                 this.notify(window.ZenI18n.t('Zapisano zmiany'));

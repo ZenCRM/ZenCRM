@@ -9,7 +9,10 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('phone_calls', sa.Column('note', sa.Text(), nullable=True))
+    inspector = sa.inspect(op.get_bind())
+    cols = {c['name'] for c in inspector.get_columns('phone_calls')}
+    if 'note' not in cols:
+        op.add_column('phone_calls', sa.Column('note', sa.Text(), nullable=True))
 
 
 def downgrade():

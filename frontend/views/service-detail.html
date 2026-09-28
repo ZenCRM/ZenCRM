@@ -1,7 +1,7 @@
 <!-- ═══ DETAIL VIEW – USŁUGA ═══ -->
             <div x-show="detailView.open &amp;&amp; detailView.type === &#x27;service&#x27;" x-cloak :class="{ &#x27;ux-detail-panel&#x27;: detailPanel }" :role="detailPanel ? &#x27;dialog&#x27; : null" :aria-modal="detailPanel ? &#x27;true&#x27; : null" :aria-label="window.ZenI18n.t(&quot;Szczegóły rekordu&quot;)" @keydown="panelKeydown($event)">
                 <div class="detail-shell zen-client-card zen-service-card">
-<div class="ux-panel-controls"><button class="ux-panel-close ux-text-button" @click="closeDetail()"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;left&#x27;)" aria-hidden="true"></span> <span x-text="window.ZenI18n.t(&quot;Wróć&quot;)">Wróć</span></button><button x-show="detailPanel" class="ux-text-button" @click="detailPanel = false"><span x-text="window.ZenI18n.t(&quot;Pełna karta&quot;)">Pełna karta</span> <span class="zen-icon-wrap" x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button></div>
+<div class="ux-panel-controls"><button class="ux-panel-close ux-text-button" @click="closeDetail()"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;left&#x27;)" aria-hidden="true"></span> <span x-text="window.ZenI18n.t(&quot;Wróć&quot;)">Wróć</span></button><button class="ux-text-button" @click="detailPanel = !detailPanel"><span x-text="detailPanel ? window.ZenI18n.t('Pełna karta') : 'Skrócony widok'">Pełna karta</span> <span class="zen-icon-wrap" x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button></div>
 <div class="ux-error" x-show="detailError" role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>
 
                     <!-- HERO -->

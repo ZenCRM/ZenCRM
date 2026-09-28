@@ -2,7 +2,7 @@
     position:fixed;
     right:30px;
     bottom:calc(85px + env(safe-area-inset-bottom,0px));
-    z-index:45
+    z-index:50
 }
 .zen-bell {
     position:relative;
@@ -145,4 +145,3 @@
 }
 
 }
-

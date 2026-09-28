@@ -41,6 +41,10 @@ def update_settings():
 
     data = request.get_json(silent=True) or {}
     try:
+        for kind in ('client', 'lead', 'task', 'service'):
+            key = 'ui_detail_' + kind
+            if key in data and data[key] not in ('full', 'compact'):
+                raise ValueError('Wybierz pełny lub skrócony widok rekordu.')
         if 'lead_stages' in data:
             import json
             from ..utils.lead_stages import validate_stages

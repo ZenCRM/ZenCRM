@@ -1,0 +1,309 @@
+<!-- ═══════════════ WIDOK WSZYSTKICH POWIADOMIEŃ I PRZYPOMNIEŃ ═══════════════ -->
+<div :inert="detailView.open && detailPanel" x-show="(!detailView.open || detailPanel) && currentView === 'notifications'" x-cloak class="space-y-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+
+        <!-- HEADER BANNER -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200/80 dark:border-gray-700 shadow-xs">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950/60 border border-brand-100 dark:border-brand-800 flex items-center justify-center text-brand-600 dark:text-brand-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="window.ZenI18n.t('Wszystkie powiadomienia')">Wszystkie powiadomienia</h1>
+                        <span x-show="unreadNotifications > 0" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-400" x-text="unreadNotifications + ' ' + window.ZenI18n.t('nowe')"></span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5" x-text="window.ZenI18n.t('Historia aktywności w rekordach, przypisania oraz zaplanowane i archiwalne przypomnienia')"></p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                <button type="button" @click="loadNotifications(); loadAllReminders(); loadReminders();"
+                        class="px-3.5 py-2 text-xs font-medium rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-1.5 shadow-2xs">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span x-text="window.ZenI18n.t('Odśwież')">Odśwież</span>
+                </button>
+                <button type="button" @click="markNotificationsRead()" :disabled="!unreadNotifications"
+                        class="px-3.5 py-2 text-xs font-medium rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition flex items-center gap-1.5 shadow-2xs">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span x-text="window.ZenI18n.t('Oznacz jako przeczytane')">Oznacz jako przeczytane</span>
+                </button>
+                <button type="button" @click="addReminder()"
+                        class="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-700 text-white transition flex items-center gap-1.5 shadow-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <span x-text="window.ZenI18n.t('Nowe przypomnienie')">Nowe przypomnienie</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS / KPI -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 shadow-2xs">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block" x-text="window.ZenI18n.t('Nieprzeczytane')">Nieprzeczytane</span>
+                <span class="text-2xl font-bold text-red-600 dark:text-red-400 mt-1 block" x-text="unreadNotifications">0</span>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 shadow-2xs">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block" x-text="window.ZenI18n.t('Aktywne przypomnienia')">Aktywne przypomnienia</span>
+                <span class="text-2xl font-bold text-brand-600 dark:text-brand-400 mt-1 block" x-text="reminders.length">0</span>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 shadow-2xs">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block" x-text="window.ZenI18n.t('Archiwalne / Wykonane')">Archiwalne / Wykonane</span>
+                <span class="text-2xl font-bold text-gray-600 dark:text-gray-300 mt-1 block" x-text="(allReminders.filter(r => r.dismissed).length) + notificationRead.length">0</span>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 shadow-2xs">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block" x-text="window.ZenI18n.t('Wszystkich wpisów')">Wszystkich wpisów</span>
+                <span class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1 block" x-text="notifications.length + allReminders.length">0</span>
+            </div>
+        </div>
+
+        <!-- FILTRY I WYSZUKIWARKA -->
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <!-- Tabs -->
+            <div class="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                <button type="button" @click="notificationFilter = 'all'"
+                        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer"
+                        :class="notificationFilter === 'all'
+                            ? 'bg-brand-600 text-white shadow-xs'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'">
+                    <span x-text="window.ZenI18n.t('Wszystkie')">Wszystkie</span>
+                </button>
+                <button type="button" @click="notificationFilter = 'unread'"
+                        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer"
+                        :class="notificationFilter === 'unread'
+                            ? 'bg-brand-600 text-white shadow-xs'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'">
+                    <span x-text="window.ZenI18n.t('Aktywne i nieprzeczytane')">Aktywne i nieprzeczytane</span>
+                </button>
+                <button type="button" @click="notificationFilter = 'archived'"
+                        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer"
+                        :class="notificationFilter === 'archived'
+                            ? 'bg-brand-600 text-white shadow-xs'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'">
+                    <span x-text="window.ZenI18n.t('Archiwalne i przeczytane')">Archiwalne i przeczytane</span>
+                </button>
+                <button type="button" @click="notificationFilter = 'reminders'"
+                        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer"
+                        :class="notificationFilter === 'reminders'
+                            ? 'bg-brand-600 text-white shadow-xs'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'">
+                    <span x-text="window.ZenI18n.t('Tylko przypomnienia')">Tylko przypomnienia</span>
+                </button>
+                <button type="button" @click="notificationFilter = 'activities'"
+                        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer"
+                        :class="notificationFilter === 'activities'
+                            ? 'bg-brand-600 text-white shadow-xs'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'">
+                    <span x-text="window.ZenI18n.t('Aktywności CRM')">Aktywności CRM</span>
+                </button>
+            </div>
+
+            <!-- Search box -->
+            <div class="relative min-w-[240px]">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+                <input type="search" x-model="notificationSearch"
+                       :placeholder="window.ZenI18n.t('Szukaj powiadomienia lub linku…')"
+                       class="w-full pl-9 pr-8 py-1.5 text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-brand-500">
+                <button type="button" x-show="notificationSearch" @click="notificationSearch = ''" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-600">×</button>
+            </div>
+        </div>
+
+        <!-- LISTA POWIADOMIEŃ I PRZYPOMNIEŃ -->
+        <div class="space-y-3">
+
+            <!-- SEKCJA: PRZYPOMNIENIA (gdy filtr pozwala) -->
+            <template x-if="['all', 'unread', 'archived', 'reminders'].includes(notificationFilter)">
+                <div class="space-y-2.5">
+                    <template x-for="r in allReminders.filter(rem => {
+                        const q = notificationSearch.toLowerCase().trim();
+                        if (q && !(rem.title.toLowerCase().includes(q) || (rem.link && rem.link.toLowerCase().includes(q)))) return false;
+                        if (notificationFilter === 'unread') return !rem.dismissed;
+                        if (notificationFilter === 'archived') return rem.dismissed;
+                        return true;
+                    })" :key="'all-rem-' + r.id">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition shadow-2xs"
+                             :class="r.dismissed
+                                ? 'bg-gray-50/70 dark:bg-gray-800/40 border-gray-200 dark:border-gray-700/60 opacity-80'
+                                : 'bg-white dark:bg-gray-800 border-amber-200 dark:border-amber-900/40 hover:border-amber-300 dark:hover:border-amber-700'">
+
+                            <!-- Lewa strona: Ikona i informacje -->
+                            <div class="flex items-start gap-3.5 min-w-0">
+                                <div class="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-800/50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 8v5l3 2M3 4l3-2m12 0 3 2M6 20l-2 2m14-2 2 2"/></svg>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                                              :class="r.dismissed
+                                                ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                                : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'"
+                                              x-text="r.dismissed ? window.ZenI18n.t('Archiwalne') : window.ZenI18n.t('Aktywne przypomnienie')"></span>
+                                        <span x-show="r.task_id" class="text-[11px] font-medium text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 rounded-full border border-brand-200 dark:border-brand-800">
+                                            <span x-text="window.ZenI18n.t('Powiązane z zadaniem')"></span>
+                                        </span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500">
+                                            Termin: <strong class="text-gray-700 dark:text-gray-300" x-text="new Date(r.remind_at).toLocaleString(locale)"></strong>
+                                        </span>
+                                    </div>
+
+                                    <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100 mt-1 break-words"
+                                        :class="r.dismissed ? 'line-through text-gray-500 dark:text-gray-400' : ''"
+                                        x-text="r.title"></h4>
+
+                                    <!-- LINK DODANY DO PRZYPOMNIENIA -->
+                                    <div x-show="r.link" class="mt-2 flex items-center gap-2 flex-wrap">
+                                        <a :href="r.link" @click.stop="openLink(r.link)" target="_blank" rel="noopener noreferrer"
+                                           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 dark:hover:bg-brand-900 border border-brand-200 dark:border-brand-800 transition">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                            <span x-text="window.ZenI18n.t('Otwórz powiązany link')">Otwórz powiązany link</span>
+                                            <span class="text-gray-400 dark:text-gray-500 text-[10px] font-normal truncate max-w-[200px]" x-text="'(' + r.link + ')'"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Prawa strona: Akcje dla przypomnienia -->
+                            <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+                                <template x-if="!r.dismissed">
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" @click="resolveReminder(r, 'snooze')"
+                                                class="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">
+                                            <span x-text="window.ZenI18n.t('+10 min')">+10 min</span>
+                                        </button>
+                                        <button type="button" @click="resolveReminder(r, 'dismiss')"
+                                                class="px-3 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            <span x-text="window.ZenI18n.t('Wykonane')">Wykonane</span>
+                                        </button>
+                                    </div>
+                                </template>
+                                <template x-if="r.dismissed">
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" @click="restoreReminder(r)"
+                                                class="px-2.5 py-1 text-xs font-medium rounded-lg border border-brand-200 dark:border-brand-800 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/40 transition flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                            <span x-text="window.ZenI18n.t('Przywróć')">Przywróć</span>
+                                        </button>
+                                        <button type="button" @click="deleteReminder(r)"
+                                                class="px-2 py-1 text-xs font-medium rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+                                                :title="window.ZenI18n.t('Usuń')">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- SEKCJA: POWIADOMIENIA / AKTYWNOŚCI Z BAZY -->
+            <template x-if="['all', 'unread', 'archived', 'activities'].includes(notificationFilter)">
+                <div class="space-y-2.5">
+                    <template x-for="item in notifications.filter(n => {
+                        const isRead = notificationRead.includes(n.id);
+                        if (notificationFilter === 'unread' && isRead) return false;
+                        if (notificationFilter === 'archived' && !isRead) return false;
+                        const q = notificationSearch.toLowerCase().trim();
+                        if (!q) return true;
+                        return (n.title && n.title.toLowerCase().includes(q))
+                            || (n.action && notificationAction(n.action).toLowerCase().includes(q))
+                            || (n.actor && (fullName(n.actor).toLowerCase().includes(q)))
+                            || (entityLabel(n.entity_type).toLowerCase().includes(q));
+                    })" :key="item.id">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition shadow-2xs cursor-pointer"
+                             @click="openNotification(item)"
+                             :class="notificationRead.includes(item.id)
+                                ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/70 hover:bg-gray-50/80 dark:hover:bg-gray-750'
+                                : 'bg-brand-50/40 dark:bg-brand-950/20 border-brand-200 dark:border-brand-800/80 hover:bg-brand-50/80'">
+
+                            <!-- Lewa strona: Dot, ikona, treść -->
+                            <div class="flex items-start gap-3.5 min-w-0">
+                                <div class="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center"
+                                     :class="{
+                                        'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300': item.entity_type === 'task',
+                                        'bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300': item.entity_type === 'client',
+                                        'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300': item.entity_type === 'lead',
+                                        'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300': item.entity_type === 'service',
+                                        'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300': item.entity_type === 'meeting'
+                                     }">
+                                    <template x-if="item.entity_type === 'task'">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                    </template>
+                                    <template x-if="item.entity_type === 'client'">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                    </template>
+                                    <template x-if="item.entity_type === 'lead'">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                    </template>
+                                    <template x-if="item.entity_type === 'service'">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    </template>
+                                    <template x-if="item.entity_type === 'meeting'">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </template>
+                                </div>
+
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <!-- Nieprzeczytana kropka -->
+                                        <span x-show="!notificationRead.includes(item.id)" class="w-2 h-2 rounded-full bg-brand-600 inline-block animate-pulse"></span>
+                                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                              x-text="entityLabel(item.entity_type)"></span>
+                                        <span class="text-xs font-medium text-brand-600 dark:text-brand-400"
+                                              x-text="notificationAction(item.action)"></span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500"
+                                              x-text="'· ' + new Date(item.created_at + (/[Z+]/.test(item.created_at) ? '' : 'Z')).toLocaleString(locale)"></span>
+                                    </div>
+
+                                    <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100 mt-1 break-words" x-text="item.title"></h4>
+
+                                    <div class="mt-1 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                                        <span x-show="item.actor" class="flex items-center gap-1.5">
+                                            <template x-if="item.actor?.avatar_url">
+                                                <img :src="item.actor.avatar_url" class="w-4 h-4 rounded-full object-cover">
+                                            </template>
+                                            <span x-text="'Autor: ' + fullName(item.actor)"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Prawa strona: Akcje -->
+                            <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center" @click.stop>
+                                <button type="button" @click="toggleNotificationRead(item)"
+                                        class="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">
+                                    <span x-text="notificationRead.includes(item.id) ? window.ZenI18n.t('Oznacz jako nieprzeczytane') : window.ZenI18n.t('Przeczytane')"></span>
+                                </button>
+                                <button type="button" @click="openNotification(item)"
+                                        class="px-3 py-1 text-xs font-semibold rounded-lg bg-brand-600 hover:bg-brand-700 text-white transition flex items-center gap-1">
+                                    <span x-text="window.ZenI18n.t('Otwórz')">Otwórz</span>
+                                    <span aria-hidden="true">↗</span>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- EMPTY STATE -->
+            <div x-show="notifications.length === 0 && allReminders.length === 0" class="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700 p-8">
+                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto text-gray-400 mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                </div>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100" x-text="window.ZenI18n.t('Brak powiadomień')">Brak powiadomień</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm mx-auto" x-text="window.ZenI18n.t('Nie masz jeszcze żadnych powiadomień ani zaplanowanych przypomnień.')"></p>
+                <div class="mt-4">
+                    <button type="button" @click="addReminder()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-700 text-white transition">
+                        <span x-text="window.ZenI18n.t('Zaplanuj pierwsze przypomnienie')">Zaplanuj pierwsze przypomnienie</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

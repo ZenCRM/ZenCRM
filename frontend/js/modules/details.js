@@ -4,7 +4,7 @@ window.ZenModules.details = function () { return {
             if (Date.now() - this.lastDragEnd < 300) return;
             if (this.detailView.newComment?.trim() && !confirm(window.ZenI18n.t('Odrzucić niezapisany komentarz?'))) return;
             if (!this.detailView.open) { this.returnScroll = document.querySelector('main')?.scrollTop || 0; this.returnFocus = document.activeElement; }
-            this.detailPanel = !skipHash;
+            this.detailPanel = this.settingsForm?.['ui_detail_' + type] !== 'full';
             this.detailError = '';
             this.detailView = {
                 open: true,

@@ -42,6 +42,12 @@ def create_app(config_class=Config):
                          template, offer, document, contact, comment, activity,
                          service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission)
 
+    from .api.push import push_bp
+    app.register_blueprint(push_bp, url_prefix="/api/push")
+
+    from .api.reminders import reminders_bp
+    app.register_blueprint(reminders_bp, url_prefix='/api/reminders')
+
     from .api.notifications import notifications_bp
     app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
 
@@ -254,5 +260,8 @@ def create_app(config_class=Config):
             email_template.EmailTemplate.seed_defaults()
         except Exception:
             pass
+
+    from .services.push_service import start_push_worker
+    start_push_worker(app)
 
     return app

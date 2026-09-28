@@ -1,3 +1,4 @@
+from .reminders import save_task_reminder
 from ..utils.activity import log_activity
 import json
 from flask import Blueprint, request, jsonify
@@ -60,6 +61,7 @@ def create_item():
             raise ValueError('Wybierz dostępny status zadania.')
         db.session.add(item)
         db.session.flush()
+        save_task_reminder(item, data)
         log_activity('task', item.id, 'created', 'Utworzono')
         db.session.commit()
         return jsonify(item.to_dict()), 201
@@ -81,6 +83,7 @@ def update_item(item_id):
         apply_payload(item, data)
         if item.project_id is None and item.status not in {stage['id'] for stage in get_task_stages()}:
             raise ValueError('Wybierz dostępny status zadania.')
+        save_task_reminder(item, data)
         log_activity('task', item.id, 'updated', 'Zaktualizowano')
         db.session.commit()
         return jsonify(item.to_dict()), 200

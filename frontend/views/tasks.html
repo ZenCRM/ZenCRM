@@ -127,9 +127,10 @@
                                         <td @click.stop x-show="isColumnVisible('tasks', 'due_date')"><input type="date" class="ux-input ux-date" :value="t.due_date?.slice(0,10) || ''" :disabled="!!savingTask" :aria-label="window.ZenI18n.t('Termin zadania')" @change="await patchTask(t, { due_date: $event.target.value ? $event.target.value + 'T' + (t.due_date?.slice(11,19) || '17:00:00') : null }); $event.target.value = t.due_date?.slice(0,10) || ''"><span class="ux-overdue-label" x-show="isOverdue(t)"><span x-text="window.ZenI18n.t('Po terminie')">Po terminie</span></span></td>
                                         <td class="text-xs" x-show="isColumnVisible('tasks', 'context')">
                                             <button x-show="t.client_id" @click.stop="openDetail('client', t.client_id)" class="ux-text-button" x-text="clientName(t.client_id)"></button>
-                                            <button x-show="t.service_id" @click.stop="openDetail('service', t.service_id)" class="ux-text-button" x-text="services.find(s =&gt; s.id === t.service_id)?.name || ('Usługa #' + t.service_id)"></button>
-                                            <button x-show="t.lead_id" @click.stop="openDetail('lead', t.lead_id)" class="ux-text-button" x-text="leads.find(l =&gt; l.id === t.lead_id)?.title || ('Lead #' + t.lead_id)"></button>
-                                            <span x-show="!t.client_id &amp;&amp; !t.service_id &amp;&amp; !t.lead_id" class="text-gray-400">—</span>
+                                            <button x-show="t.project_id" @click.stop="openDetail('project', t.project_id)" class="ux-text-button" x-text="projectName(t.project_id) || ('Projekt #' + t.project_id)"></button>
+                                            <button x-show="t.service_id" @click.stop="openDetail('service', t.service_id)" class="ux-text-button" x-text="services.find(s => s.id === t.service_id)?.name || ('Usługa #' + t.service_id)"></button>
+                                            <button x-show="t.lead_id" @click.stop="openDetail('lead', t.lead_id)" class="ux-text-button" x-text="leads.find(l => l.id === t.lead_id)?.title || ('Lead #' + t.lead_id)"></button>
+                                            <span x-show="!t.client_id && !t.service_id && !t.lead_id && !t.project_id" class="text-gray-400">—</span>
                                         </td>
                                         <td x-show="isColumnVisible('tasks', 'assignees')">
                                             <div class="flex -space-x-1">
@@ -220,9 +221,9 @@
                                                 <!-- Kontekst klienta / projektu / leada / usługi -->
                                                 <div class="mt-2 text-xs text-brand-600 dark:text-brand-400 font-medium truncate" x-show="task.client_id || task.lead_id || task.service_id || task.project_id">
                                                     <span x-show="task.client_id" x-text="clientName(task.client_id)"></span>
+                                                    <span x-show="task.project_id" class="text-gray-500 dark:text-gray-400 font-normal" x-text="(task.client_id ? ' · ' : '') + (projectName(task.project_id) || 'Projekt')"></span>
                                                     <span x-show="!task.client_id && task.lead_id" x-text="leads.find(l => l.id === task.lead_id)?.title || ('Lead #' + task.lead_id)"></span>
                                                     <span x-show="!task.client_id && !task.lead_id && task.service_id" x-text="services.find(s => s.id === task.service_id)?.name || ('Usługa #' + task.service_id)"></span>
-                                                    <span x-show="!task.client_id && !task.lead_id && !task.service_id && task.project_id" x-text="'Projekt #' + task.project_id"></span>
                                                 </div>
 
                                                 <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 dark:border-gray-700/60">

@@ -287,8 +287,10 @@ function crmApp() {
             }
         },
 
-        logout() {
+        async logout() {
+            await this.disablePush();
             this.stopNotifications();
+            this.stopReminders();
             this.endLeadDrag();
             this.detailView.open = false;
             this.detailPanel = false;
@@ -383,6 +385,15 @@ function crmApp() {
             }
             if (this.currentView === 'archive') {
                 await this.loadArchive();
+                return;
+            }
+            if (this.currentView === 'notifications') {
+                await Promise.all([
+                    this.loadNotifications(),
+                    this.loadAllReminders(),
+                    this.loadReminders(),
+                    (async () => { if (!this.projects?.length) { try { this.projects = await this.api('/projects'); } catch(_) {} } })()
+                ]);
                 return;
             }
             try {
@@ -495,6 +506,11 @@ function crmApp() {
             if (!id) return '';
             const c = this.clients.find(x => x.id === id);
             return c ? c.name : `#${id}`;
+        },
+        projectName(id) {
+            if (!id) return '';
+            const p = (this.projects || []).find(x => x.id === id);
+            return p ? p.name : '';
         },
 
         formatNumber(v)     { return window.ZenHelpers.formatNumber(v); },
@@ -913,6 +929,8 @@ function crmApp() {
         // ═══════════════════════════════════════════════════════════
         async init() {
             this.startNotifications();
+            this.startReminders();
+            this.initPush();
             this.$watch('user', (v) => {
                 this.isAdmin = (v?.role === 'admin');
             }, { deep: true });
