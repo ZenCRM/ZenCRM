@@ -2,7 +2,7 @@
 
 <img src="https://zencrm.pl/logow.png" alt="ZenCRM" width="240">
 
-# ZenCRM
+
 
 ### Mniej chaosu. Więcej relacji. Wszystko w jednym CRM.
 
