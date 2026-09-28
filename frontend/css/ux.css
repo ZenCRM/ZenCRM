@@ -1,0 +1,47 @@
+/* Wspólne elementy interakcji i czytelniejsze karty. */
+.ux-toolbar,.ux-board-nav,.ux-next-step,.ux-detail-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ux-toolbar{margin-bottom:12px}.kanban-toolbar{flex-wrap:wrap;gap:12px}
+.ux-input{border:1px solid #d1d5db;border-radius:10px;padding:9px 12px;background:#fff;color:#1f2937;font:inherit;font-size:13px;max-width:100%;min-width:0}
+.ux-input:focus-visible,button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #6fc5d7;outline-offset:3px}
+.ux-board-nav{gap:8px;flex-wrap:nowrap;font-size:12px;color:#6b7280}
+.ux-board-nav button{width:40px;height:40px;border:1px solid #cce7ed;background:white;color:#086e91;border-radius:12px;box-shadow:0 2px 5px #1f293710;font-size:22px;transition:background .15s}
+.ux-board-nav button:hover:not(:disabled){background:#e8f7fa}.ux-board-nav button:disabled{opacity:.3;cursor:default}
+.kanban-cols{position:relative}.kanban-cols.ux-dragging{scroll-snap-type:none;scroll-behavior:auto}
+.kanban-col-body{min-height:120px}.kanban-card-new{position:relative}.ux-card-dragged{opacity:.4}
+.ux-card-open{float:right;border:0;background:transparent;font-size:11px;color:#007fce;padding:2px 0 4px 8px;cursor:pointer}
+.ux-stage-select{width:100%;margin:8px 0;font-size:12px;padding:5px 8px}
+.kanban-viewport::before,.kanban-viewport::after{content:'';position:absolute;top:0;bottom:12px;width:22px;z-index:2;pointer-events:none;opacity:0}
+.kanban-viewport::before{left:0;background:linear-gradient(90deg,#d8d5e4aa,transparent)}
+.kanban-viewport::after{right:0;background:linear-gradient(270deg,#d8d5e4aa,transparent)}
+.kanban-viewport.ux-more-left::before,.kanban-viewport.ux-more-right::after{opacity:1}
+.ux-muted{font-size:12px;color:#6b7280}.ux-button{padding:10px 16px;background:#007fce;color:#fff;border-radius:10px;font-size:13px;font-weight:600;white-space:nowrap}
+.ux-lead-next{font-size:12px;color:#6b7280;margin:6px 0;line-height:1.4}
+.ux-panel-backdrop{position:fixed;inset:0;background:#11182766;z-index:39}
+.ux-detail-panel{position:fixed;top:0;right:0;bottom:0;width:min(100%,960px);overflow-y:auto;overscroll-behavior:contain;background:#f9fafb;z-index:40;padding:16px;box-shadow:-12px 0 45px #11182726}
+.zen-list-pagination{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:14px;padding:12px 16px;color:#52616d;font-size:13px}
+.zen-list-pagination button:disabled{opacity:.4;cursor:default}
+.detail-tabs-wrap{display:flex;position:relative;min-width:0}
+.detail-tabs-wrap .detail-tabs-v2{flex:1;min-width:0}
+.detail-more{position:relative;flex:none;background:var(--wm-surface,#fff);border-bottom:1px solid var(--wm-border,#eef0f5)}
+.detail-more-trigger{height:100%;min-width:52px;padding:0 14px;font-size:22px;color:var(--wm-text,#374151)}
+.detail-more-menu{position:absolute;right:4px;top:100%;z-index:30;min-width:220px;max-height:60vh;overflow-y:auto;padding:6px;background:var(--wm-surface,#fff);border:1px solid var(--wm-border,#e5e7eb);border-radius:10px;box-shadow:0 12px 28px #0002}
+.detail-more-menu button{display:block;width:100%;padding:9px 12px;text-align:left;border-radius:7px;color:var(--wm-text,#374151);font-size:13px}
+.detail-more-menu button:hover{background:var(--wm-tint,#eff8fb)}
+.ux-detail-panel .detail-tabs-v2>button:nth-child(n+5),.detail-more-menu .detail-more-mobile{display:none}
+@media(max-width:640px){.ux-detail-panel .detail-tabs-v2>button:nth-child(n+3),.ux-detail-panel .detail-more-menu .detail-more-mobile{display:block}}
+@media(min-width:1000px){.ux-detail-panel .detail-tabs-v2>button:nth-child(5),.ux-detail-panel .detail-tabs-v2>button:nth-child(6){display:inline-flex}.ux-detail-panel .detail-more-wide-hidden{display:none}}
+@media(min-width:1000px){.ux-detail-panel .service-tabs-wrap .detail-more{display:none}}
+.ux-panel-controls{display:flex;justify-content:space-between;gap:12px;padding:8px 16px;background:white;border-bottom:1px solid #e5e7eb}
+.ux-detail-panel .ux-panel-controls{position:sticky;top:-16px;z-index:5}.dark .ux-detail-panel,.dark .ux-panel-controls{background:#111827;border-color:#374151}
+@media(max-width:640px){.ux-detail-panel{padding:0}.ux-detail-panel .ux-panel-controls{top:0}}
+.ux-text-button{color:#007fce;font-size:13px;padding:5px 8px;cursor:pointer}.ux-text-button:hover{text-decoration:underline}
+.ux-next-step{margin:20px 24px 12px;padding:18px;background:#eff8fb;border:1px solid #cce7ed;border-radius:14px}
+.ux-next-step>div{display:flex;flex-direction:column;gap:4px;flex:1;min-width:180px}
+.ux-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#086e91;font-weight:700}
+.ux-detail-actions{padding:0 24px 12px}.detail-hero{padding:20px 24px!important}.detail-tabs-v2{overflow-x:auto;flex-wrap:nowrap}.detail-tab-v2{white-space:nowrap}
+.ux-overdue-label{display:block;font-size:11px;color:#b91c1c;font-weight:600}.ux-overdue{box-shadow:inset 3px 0 #ef4444}.ux-date{max-width:155px;padding:6px}
+.ux-notice{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;align-items:center;gap:16px;max-width:min(560px,calc(100vw - 32px));padding:16px 20px;background:#1f2937;color:white;border-radius:14px;box-shadow:0 8px 30px #0003;font-size:14px}
+.ux-notice button{color:#cce7ed;font-weight:700;white-space:nowrap}.ux-error{padding:14px 18px;border:1px solid #fecaca;background:#fef2f2;color:#991b1b;border-radius:12px;margin:12px 0;display:flex;gap:16px;justify-content:space-between}.ux-error button{text-decoration:underline}
+.dark .ux-input,.dark .ux-board-nav button{background:#1f2937;color:#e5e7eb;border-color:#4b5563}.dark .ux-muted{color:#9ca3af}.dark .ux-next-step{background:#1b3644;border-color:#315360}.dark .ux-eyebrow,.dark .ux-text-button,.dark .ux-card-open{color:#8cdae8}.dark .ux-overdue-label{color:#fca5a5}
+@media(max-width:640px){.ux-next-step{margin:12px;padding:14px}.ux-detail-actions{padding:0 12px 12px}.ux-board-nav{margin-left:auto}.kanban-toolbar>.ux-input{flex:1 1 140px}.detail-hero{padding:16px!important}.ux-notice{bottom:16px;right:16px}.ux-next-step>.ux-button{width:100%}}
+@media(prefers-reduced-motion:reduce){.kanban-cols{scroll-behavior:auto}.kanban-card-new,.ux-board-nav button{transition:none}}

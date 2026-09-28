@@ -1,0 +1,69 @@
+<!-- MODAL SZABLONU (edytor z podglądem) -->
+<div x-show="templateModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2"
+     @keydown.escape.window="templateModal.open = false">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] flex flex-col">
+        <div class="px-6 py-4 border-b flex justify-between items-center flex-shrink-0">
+            <h3 class="text-lg font-semibold"
+                x-text="(templateModal.editingId ? window.ZenI18n.t(&#x27;Edytuj&#x27;) : window.ZenI18n.t(&#x27;Nowy&#x27;)) + window.ZenI18n.t(&#x27; szablon&#x27;)"></h3>
+            <button @click="templateModal.open = false" class="text-2xl leading-none hover:text-red-500">&times;</button>
+        </div>
+
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+            <!-- Lewa: formularz -->
+            <div class="p-6 overflow-y-auto space-y-4 border-r border-gray-200 dark:border-gray-700">
+                <div>
+                    <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Nazwa&quot;)">Nazwa</span></label>
+                    <input type="text" x-model="templateModal.form.name" required
+                           class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Typ&quot;)">Typ</span></label>
+                    <select x-model="templateModal.form.type"
+                            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                        <option value="offer" x-text="window.ZenI18n.t(&quot;Oferta&quot;)">Oferta</option>
+                        <option value="document" x-text="window.ZenI18n.t(&quot;Dokument&quot;)">Dokument</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Treść HTML (Jinja2)&quot;)">Treść HTML (Jinja2)</span></label>
+                    <textarea x-model="templateModal.form.content" rows="20"
+                              class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none font-mono text-xs"></textarea>
+                </div>
+                <div class="text-xs text-gray-500 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                    <strong><span x-text="window.ZenI18n.t(&quot;Dostępne zmienne:&quot;)">Dostępne zmienne:</span></strong><br>
+                    <code class="text-[10px]">{{ number }}</code>, <code class="text-[10px]">{{ title }}</code>,
+                    <code class="text-[10px]">{{ date }}</code>, <code class="text-[10px]">{{ valid_until }}</code>,
+                    <code class="text-[10px]">{{ total_amount }}</code>, <code class="text-[10px]">{{ description }}</code>,
+                    <code class="text-[10px]">{{ client.name }}</code>, <code class="text-[10px]">{{ client.email }}</code>,
+                    <code class="text-[10px]">{{ client.company }}</code>, <code class="text-[10px]">{{ client.address }}</code>,
+                    <code class="text-[10px]">{{ company.name }}</code>, <code class="text-[10px]">{{ company.nip }}</code><br>
+                    <strong><span x-text="window.ZenI18n.t(&quot;Pętla:&quot;)">Pętla:</span></strong> <code class="text-[10px]">{% for item in items %}{{ item.name }} – {{ item.total }} zł{% endfor %}</code>
+                </div>
+                <p x-show="templateModal.error" x-text="templateModal.error" class="text-red-500 text-sm"></p>
+            </div>
+
+            <!-- Prawa: podgląd -->
+            <div class="flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden">
+                <div class="px-4 py-2 bg-white dark:bg-gray-800 border-b flex justify-between items-center flex-shrink-0">
+                    <span class="text-sm font-medium"><span x-text="window.ZenI18n.t(&quot;Podgląd (dane przykładowe)&quot;)">Podgląd (dane przykładowe)</span></span>
+                    <button @click="refreshTemplatePreview()"
+                            class="text-xs px-3 py-1 rounded bg-brand-600 text-white hover:bg-brand-700">
+                         <span x-text="window.ZenI18n.t(&quot;Odśwież&quot;)">Odśwież</span>
+                    </button>
+                </div>
+                <iframe x-ref="templatePreviewFrame"
+                        class="flex-1 w-full bg-white"
+                        sandbox="allow-same-origin"></iframe>
+            </div>
+        </div>
+
+        <div class="px-6 py-4 border-t flex justify-end gap-2 flex-shrink-0">
+            <button type="button" @click="templateModal.open = false"
+                    class="px-4 py-2 rounded-lg border dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"><span x-text="window.ZenI18n.t(&quot;Anuluj&quot;)">Anuluj</span></button>
+            <button type="button" @click="saveTemplate()"
+                    class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-medium"><span x-text="window.ZenI18n.t(&quot;Zapisz&quot;)">Zapisz</span></button>
+        </div>
+    </div>
+</div>
+
+

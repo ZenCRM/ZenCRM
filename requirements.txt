@@ -1,0 +1,13 @@
+Flask>=3.1
+Flask-SQLAlchemy>=3.1
+Flask-Migrate>=4.0
+Flask-JWT-Extended>=4.7
+Flask-CORS>=5.0
+Flask-Marshmallow>=1.2
+marshmallow-sqlalchemy>=1.1
+python-dotenv>=1.0
+gunicorn>=23.0
+weasyprint>=62.0
+Jinja2>=3.1
+
+xhtml2pdf>=0.2.16

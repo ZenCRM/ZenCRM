@@ -1,0 +1,56 @@
+<!-- ═══ PICKER: Przypisz osobę odpowiedzialną ═══ -->
+<div x-show="assignPicker.open" x-cloak @click.outside="assignPicker.open = false"
+     class="fixed z-50 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 py-2 max-h-80 overflow-y-auto"
+     :style="`left: ${Math.min(assignPicker.x, window.innerWidth - 280)}px; top: ${assignPicker.y}px;`">
+    <div class="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
+        <p class="text-xs font-semibold uppercase text-gray-500"><span x-text="window.ZenI18n.t(&quot;Przypisz do leada&quot;)">Przypisz do leada</span></p>
+    </div>
+    <template x-for="u in users" :key="u.id">
+        <button @click="setAssignee(u.id)"
+                class="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-left transition">
+            <template x-if="u.avatar_url">
+                <img :src="u.avatar_url" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+            </template>
+            <template x-if="!u.avatar_url">
+                <div class="w-8 h-8 rounded-full avatar-gradient text-white flex items-center justify-center text-xs font-bold flex-shrink-0"
+                     x-text="initialsFrom(u)"></div>
+            </template>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate" x-text="fullName(u)"></p>
+                <p class="text-xs text-gray-500 truncate" x-text="u.role"></p>
+            </div>
+            <template x-if="assignPicker.lead?.assignee_id === u.id">
+                <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+            </template>
+        </button>
+    </template>
+    <div class="border-t border-gray-100 dark:border-gray-700 pt-1 mt-1">
+        <button @click="setAssignee(null)"
+                class="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+            <span x-text="window.ZenI18n.t(&quot;Usuń przypisanie&quot;)">Usuń przypisanie</span>
+        </button>
+    </div>
+</div>
+
+<div class="ux-panel-backdrop" x-show="detailView.open &amp;&amp; detailPanel" x-cloak @click="closeDetail()" aria-hidden="true"></div>
+<div class="ux-notice" x-show="notice" x-cloak role="status" aria-live="polite"><span x-text="notice?.message"></span><button x-show="notice?.canUndo" @click="undoNotice()"><span x-text="window.ZenI18n.t(&quot;Cofnij&quot;)">Cofnij</span></button><button @click="dismissNotice()" :aria-label="window.ZenI18n.t(&quot;Zamknij komunikat&quot;)">×</button></div>
+
+<div class="journal-overlay" x-show="journal.open" x-cloak @keydown.escape.stop="closeJournal()" @click.self="closeJournal()">
+ <section class="journal-dialog" role="dialog" aria-modal="true" aria-labelledby="journal-title" @keydown.tab="trapJournal($event)">
+ <header><div><small><span x-text="window.ZenI18n.t(&quot;HISTORIA KONTAKTU&quot;)">HISTORIA KONTAKTU</span></small><h2 id="journal-title"><span x-text="window.ZenI18n.t(&quot;Dodaj wpis&quot;)">Dodaj wpis</span></h2></div><button @click="closeJournal()" :disabled="journal.saving" :aria-label="window.ZenI18n.t(&quot;Zamknij wpis&quot;)">×</button></header>
+ <form @submit.prevent="saveJournal()">
+ <fieldset :disabled="journal.saving">
+ <div class="journal-kinds"><template x-for="kind in [&#x27;call&#x27;,&#x27;note&#x27;,&#x27;email&#x27;]"><button type="button" :class="{&#x27;active&#x27;:journal.kind===kind}" @click="setJournalKind(kind)" x-text="{call:window.ZenI18n.t(&#x27;Telefon&#x27;),note:window.ZenI18n.t(&#x27;Notatka&#x27;),email:window.ZenI18n.t(&#x27;E-mail&#x27;)}[kind]"></button></template></div>
+ <div x-show="journal.selected" class="journal-selected"><span><small x-text="recordType(journal.selected?._type)"></small><strong x-text="journal.selected ? recordLabel(journal.selected) : &#x27;&#x27;"></strong></span><button type="button" @click="journal.selected=null; journal.history=[]; journal.revision++; journal.loading=false"><span x-text="window.ZenI18n.t(&quot;Zmień&quot;)">Zmień</span></button></div>
+ <div x-show="!journal.selected"><label for="journal-search"><span x-text="window.ZenI18n.t(&quot;Klient, lead lub kontakt&quot;)">Klient, lead lub kontakt</span></label><input id="journal-search" x-model="journal.search" :placeholder="window.ZenI18n.t(&quot;Wyszukaj po nazwie, telefonie lub e-mailu&quot;)"><p x-show="directoryLoading"><span x-text="window.ZenI18n.t(&quot;Wczytywanie…&quot;)">Wczytywanie…</span></p><p x-show="directoryError" x-text="directoryError" role="alert"></p><div class="journal-picker"><template x-for="r in searchDirectory(journal.search,true)" :key="r._type+r.id"><button type="button" @click="selectJournalRecord(r)"><strong x-text="recordLabel(r)"></strong><small x-text="recordType(r._type)"></small></button></template><p x-show="!directoryLoading &amp;&amp; !searchDirectory(journal.search,true).length"><span x-text="window.ZenI18n.t(&quot;Brak wyników&quot;)">Brak wyników</span></p></div></div>
+ <div x-show="journal.kind!==&#x27;note&#x27;" class="journal-fields"><label><span x-text="window.ZenI18n.t(&quot;Status&quot;)">Status</span><select x-model="journal.status"><template x-for="option in (journal.kind===&#x27;call&#x27; ? [{id:&#x27;answered&#x27;,label:window.ZenI18n.t(&#x27;Odebrane&#x27;)},{id:&#x27;missed&#x27;,label:window.ZenI18n.t(&#x27;Nieodebrane&#x27;)}] : journal.kind===&#x27;email&#x27; ? [{id:&#x27;outgoing&#x27;,label:window.ZenI18n.t(&#x27;Wychodzący&#x27;)},{id:&#x27;incoming&#x27;,label:window.ZenI18n.t(&#x27;Przychodzący&#x27;)}] : [])" :key="option.id"><option :value="option.id" x-text="option.label"></option></template></select></label><label><span x-text="journal.kind===&#x27;call&#x27;?window.ZenI18n.t(&#x27;Numer telefonu (opcjonalnie)&#x27;):window.ZenI18n.t(&#x27;Adres e-mail (opcjonalnie)&#x27;)"></span><input x-model="journal.address" :type="journal.kind===&#x27;email&#x27;?&#x27;email&#x27;:&#x27;tel&#x27;" maxlength="254"></label></div>
+ <label for="journal-content"><span x-text="window.ZenI18n.t(&quot;Treść notatki&quot;)">Treść notatki</span></label><textarea id="journal-content" x-model="journal.content" rows="4" required :placeholder="window.ZenI18n.t(&quot;Zapisz przebieg rozmowy, treść e-maila lub ustalenia…&quot;)"></textarea>
+ <p class="journal-error" role="alert" x-show="journal.error" x-text="journal.error"></p><button class="journal-save" type="submit" :disabled="!journal.selected || journal.saving || journal.loading" x-text="journal.saving?window.ZenI18n.t(&#x27;Zapisywanie…&#x27;):(journal.editingId?window.ZenI18n.t('Zapisz zmiany'):window.ZenI18n.t(&#x27;Zapisz wpis&#x27;))"></button>
+ </fieldset></form>
+ <section class="journal-history" x-show="journal.selected"><h3><span x-text="window.ZenI18n.t(&quot;Dotychczasowe wpisy&quot;)">Dotychczasowe wpisy</span></h3><p x-show="journal.loading"><span x-text="window.ZenI18n.t(&quot;Wczytywanie historii…&quot;)">Wczytywanie historii…</span></p><p x-show="!journal.loading &amp;&amp; !journal.history.length"><span x-text="window.ZenI18n.t(&quot;Brak wpisów. Dodaj pierwszy powyżej.&quot;)">Brak wpisów. Dodaj pierwszy powyżej.</span></p><template x-for="c in journal.history" :key="c.id"><article @click="if (c.kind === 'call') editJournalCall(c)" @keydown.enter="if (c.kind === 'call') editJournalCall(c)" @keydown.space.prevent="if (c.kind === 'call') editJournalCall(c)" :tabindex="c.kind === 'call' ? 0 : null" :role="c.kind === 'call' ? 'button' : null" :class="c.kind === 'call' ? 'cursor-pointer' : ''"><span class="journal-badge" :class="c.kind" x-text="noteLabel(c)"></span><small x-text="fullName(c.user || {})+&#x27; · &#x27;+relativeTime(c.created_at)"></small><small class="journal-address" x-show="c.address" x-text="c.address"></small><p x-text="c.content"></p></article></template></section>
+ </section>
+</div>
+</body>
+</html>

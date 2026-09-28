@@ -1,0 +1,119 @@
+<!-- ═══ DASHBOARD ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;dashboard&#x27;" x-cloak class="zen-dashboard space-y-6">
+<div class="journal-toolbar">
+ <div class="journal-search" @click.outside="dashboardSearch=&#x27;&#x27;">
+ <input :aria-label="window.ZenI18n.t(&quot;Szukaj w CRM&quot;)" :placeholder="window.ZenI18n.t(&quot;Szukaj klienta, leada, kontaktu lub zadania…&quot;)" x-model.debounce.200ms="dashboardSearch" @focus="loadDirectory()" @keydown.escape="dashboardSearch=&#x27;&#x27;">
+ <div class="journal-results" x-show="dashboardSearch.trim()" x-cloak><p x-show="directoryLoading"><span x-text="window.ZenI18n.t(&quot;Wyszukiwanie…&quot;)">Wyszukiwanie…</span></p><p x-show="directoryError" x-text="directoryError" role="alert"></p><template x-for="r in searchDirectory(dashboardSearch)" :key="r._type+r.id"><button @click="openSearchRecord(r)"><strong x-text="recordLabel(r)"></strong><small x-text="recordType(r._type) + (r.email ? &#x27; · &#x27;+r.email : &#x27;&#x27;)"></small></button></template><p x-show="!directoryLoading &amp;&amp; !directoryError &amp;&amp; !searchDirectory(dashboardSearch).length"><span x-text="window.ZenI18n.t(&quot;Brak wyników&quot;)">Brak wyników</span></p></div>
+ </div>
+ <button @click="openJournal(&#x27;call&#x27;)"><span x-html="zenIcon(&#x27;phone&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Telefon&quot;)">Telefon</span></button><button @click="openJournal(&#x27;note&#x27;)"><span x-html="zenIcon(&#x27;comment&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Notatka&quot;)">Notatka</span></button><button @click="openJournal(&#x27;email&#x27;)"><span x-html="zenIcon(&#x27;mail&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;E-mail&quot;)">E-mail</span></button><button @click="openModal(null,null,false,&#x27;tasks&#x27;)"><span x-html="zenIcon(&#x27;plus&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Zadanie&quot;)">Zadanie</span></button>
+</div>
+
+                <div class="relative overflow-hidden rounded-2xl brand-gradient text-white p-6 sm:p-8">
+                    <div class="relative z-10 flex items-center justify-between flex-wrap gap-4">
+                        <div>
+                            <p class="text-sm opacity-80 zen-greeting"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;sun&#x27;)" aria-hidden="true"></span><span x-text="greeting"></span></p>
+                            <h1 class="text-2xl sm:text-3xl font-bold mt-1"><span x-text="window.ZenI18n.t(&quot;Witaj,&quot;)">Witaj,</span> <span x-text="user?.first_name || window.ZenI18n.t(&#x27;Użytkowniku&#x27;)"></span>!</h1>
+                            <p class="text-sm opacity-90 mt-2" x-text="todayLabel"></p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button @click="kanbanMode = 'kanban'; selectView('leads')" class="px-3.5 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-sm font-medium backdrop-blur flex items-center gap-1.5"><svg class="w-4 h-4 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span x-text="window.ZenI18n.t(&quot;Tablica leadów&quot;)">Tablica leadów</span></button>
+                            <button @click="taskViewMode = 'kanban'; localStorage.setItem('taskViewMode', 'kanban'); selectView('tasks')" class="px-3.5 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-sm font-medium backdrop-blur flex items-center gap-1.5"><svg class="w-4 h-4 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span x-text="window.ZenI18n.t(&quot;Tablica zadań&quot;)">Tablica zadań</span></button>
+                            <button @click="openModal(null, null, false, 'leads')" class="px-3.5 py-2 rounded-lg bg-white text-brand-700 text-sm font-semibold hover:bg-gray-100 shadow-sm"><span aria-hidden="true">+ </span><span x-text="window.ZenI18n.t('Nowy lead')">Nowy lead</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="zen-dashboard-kpis grid gap-3 grid-cols-2 sm:grid-cols-3 xl:grid-cols-7">
+                    <div @click="selectView('clients')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Klienci&quot;)">Klienci</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.clients || 0"></p>
+                    </div>
+                    <div @click="kanbanMode = 'kanban'; selectView('leads')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Leady&quot;)">Leady</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.leads || 0"></p>
+                    </div>
+                    <div @click="selectView('projects')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Projekty&quot;)">Projekty</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.projects || 0"></p>
+                    </div>
+                    <div @click="selectView('tasks')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.tasks || 0"></p>
+                    </div>
+                    <div @click="selectView('tickets')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Tickety&quot;)">Tickety</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.tickets || 0"></p>
+                    </div>
+                    <div @click="selectView('services')" class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 p-3 sm:p-3.5 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Usługi&quot;)">Usługi</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="stats.cards?.services || 0"></p>
+                    </div>
+                    <div @click="selectView('offers')" class="brand-gradient rounded-xl shadow-sm p-3 sm:p-3.5 text-white col-span-2 sm:col-span-3 xl:col-span-1 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] uppercase tracking-wider opacity-85 font-semibold truncate"><span x-text="window.ZenI18n.t(&quot;Wygrane&quot;)">Wygrane</span></span>
+                            <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-xl sm:text-2xl font-bold truncate" x-text="formatNumber(stats.cards?.won_value || 0) + window.ZenI18n.t(&#x27; zł&#x27;)"></p>
+                    </div>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                        <div class="zen-chart-heading"><div><h3><span x-text="window.ZenI18n.t(&quot;Lejek sprzedaży&quot;)">Lejek sprzedaży</span></h3><p><span x-text="window.ZenI18n.t(&quot;Udział leadów w poszczególnych etapach&quot;)">Udział leadów w poszczególnych etapach</span></p></div><span class="zen-chart-badge"><span x-text="window.ZenI18n.t(&quot;Liczba leadów&quot;)">Liczba leadów</span></span></div>
+<div class="ux-error" x-show="chartError" x-text="chartError" role="status"></div>
+<div class="zen-donut-layout"><div class="zen-donut-wrap"><canvas id="funnelChart" role="img" :aria-label="window.ZenI18n.t(&quot;Rozkład leadów według etapu. Liczby znajdują się w legendzie obok.&quot;)"></canvas><div class="zen-donut-center"><strong x-text="funnelTotal"></strong><span><span x-text="window.ZenI18n.t(&quot;leadów łącznie&quot;)">leadów łącznie</span></span></div></div><ul class="zen-chart-legend"><template x-for="stage in leadStages" :key="stage.id"><li><span class="zen-legend-dot" :style="{ background: stage.accent }"></span><span x-text="stage.label"></span><strong x-text="stats.funnel?.[stage.id] || 0"></strong><small x-text="funnelTotal ? Math.round((stats.funnel?.[stage.id] || 0) / funnelTotal * 100) + &#x27;%&#x27; : &#x27;0%&#x27;"></small></li></template></ul></div><p class="ux-muted" x-show="!funnelTotal"><span x-text="window.ZenI18n.t(&quot;Brak leadów — dodaj pierwszy w widoku Kanban.&quot;)">Brak leadów — dodaj pierwszy w widoku Kanban.</span></p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                        <div class="zen-chart-heading"><div><h3><span x-text="window.ZenI18n.t(&quot;Wartość leadów&quot;)">Wartość leadów</span></h3><p><span x-text="window.ZenI18n.t(&quot;Suma wartości na każdym etapie, w PLN&quot;)">Suma wartości na każdym etapie, w PLN</span></p></div></div><div class="zen-value-chart"><canvas id="leadValueChart" role="img" :aria-label="window.ZenI18n.t(&quot;Wartość leadów według etapu. Dane dostępne w tabeli poniżej.&quot;)"></canvas></div><details class="zen-chart-data"><summary><span x-text="window.ZenI18n.t(&quot;Pokaż wartości&quot;)">Pokaż wartości</span></summary><table><caption class="sr-only"><span x-text="window.ZenI18n.t(&quot;Wartość leadów w PLN&quot;)">Wartość leadów w PLN</span></caption><thead><tr><th><span x-text="window.ZenI18n.t(&quot;Etap&quot;)">Etap</span></th><th><span x-text="window.ZenI18n.t(&quot;Wartość&quot;)">Wartość</span></th></tr></thead><tbody><template x-for="stage in leadStages" :key="stage.id"><tr><td x-text="stage.label"></td><td x-text="formatNumber(stats.lead_values?.[stage.id] || 0) + window.ZenI18n.t(&#x27; zł&#x27;)"></td></tr></template></tbody></table></details></div>
+                    <div class="zen-dashboard-panel zen-task-chart-panel">
+                        <div class="zen-chart-heading"><div><h3 x-text="window.ZenI18n.t('Postęp zadań')">Postęp zadań</h3><p x-text="window.ZenI18n.t('Zadania według aktualnego statusu')">Zadania według aktualnego statusu</p></div><span class="zen-chart-badge" x-text="Object.values(stats.task_status || {}).reduce((sum, count) => sum + Number(count || 0), 0) + ' ' + window.ZenI18n.t('łącznie')"></span></div>
+                        <div class="zen-task-chart"><canvas id="taskStatusChart" role="img" :aria-label="window.ZenI18n.t('Zadania według statusu. Liczby znajdują się poniżej wykresu.')"></canvas></div>
+                        <div class="zen-task-chart-legend"><template x-for="item in dashboardTaskStages" :key="item.id"><div><span class="zen-legend-dot" :style="{background:item.accent}"></span><span x-text="item.label"></span><strong x-text="stats.task_status?.[item.id] || 0"></strong></div></template></div>
+                    </div>
+<div class="zen-dashboard-panel zen-upcoming-panel"><h3 class="font-semibold text-lg mb-4"><span x-text="window.ZenI18n.t(&quot;Nadchodzące zadania&quot;)">Nadchodzące zadania</span></h3>
+                        <div class="space-y-3">
+                            <template x-for="t in stats.upcoming_tasks || []" :key="t.id">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-2 h-2 rounded-full" :class="{&#x27;bg-red-500&#x27;: t.priority === &#x27;high&#x27;, &#x27;bg-yellow-500&#x27;: t.priority === &#x27;medium&#x27;, &#x27;bg-green-500&#x27;: t.priority === &#x27;low&#x27;}"></span>
+                                    <span class="flex-1 text-sm truncate" x-text="t.title"></span>
+                                    <span class="text-xs text-gray-500" x-text="t.due_date ? new Date(t.due_date).toLocaleDateString(locale) : &#x27;—&#x27;"></span>
+                                </div>
+                            </template>
+                            <p x-show="!stats.upcoming_tasks?.length" class="text-sm text-gray-500 text-center py-4"><span x-text="window.ZenI18n.t(&quot;Brak zadań&quot;)">Brak zadań</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="ux-error" x-show="!detailView.open &amp;&amp; listError" x-cloak role="alert"><span x-text="listError"></span><button @click="reload()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div><div class="ux-error" x-show="detailView.open &amp;&amp; detailError" x-cloak role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>
+            

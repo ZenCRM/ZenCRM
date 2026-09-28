@@ -1,0 +1,22 @@
+<!-- ═══ DOKUMENTY ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;documents&#x27;" x-cloak>
+                <div class="flex justify-end mb-4"><button type="button" x-show="canRecordAction('documents', 'create')" @click="openModal(null, null, false, 'documents')" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj dokument')">+ Dodaj dokument</button></div>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <template x-for="d in pagedItems('documents', documents)" :key="d.id">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4">
+                            <p class="font-medium truncate" x-text="d.title"></p>
+                            <p class="text-xs text-gray-500" x-text="docTypeLabel(d.type)"></p>
+                            <p class="text-xs text-gray-500 mt-1" x-text="clientName(d.client_id)"></p>
+                            <div class="flex gap-2 mt-3">
+                                <button @click="generateDoc(d)" class="zen-list-action zen-action-document" :aria-label="window.ZenI18n.t(&quot;Generuj&quot;)" :title="window.ZenI18n.t(&quot;Generuj&quot;)"><span x-html="zenIcon(&#x27;document&#x27;)" aria-hidden="true"></span></button>
+                                <button @click="downloadPdf(&#x27;documents&#x27;, d)" class="zen-list-action zen-action-download" :aria-label="window.ZenI18n.t(&quot;PDF&quot;)" :title="window.ZenI18n.t(&quot;PDF&quot;)"><span x-html="zenIcon(&#x27;download&#x27;)" aria-hidden="true"></span></button>
+                                <button @click="openModal(d, null, false, &#x27;documents&#x27;)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
+                                <button @click="remove(d.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-data="{ pagerView: 'documents', get pagerItems() { return this.documents } }"><% include "views/pagination.html" %></div>
+            </div>
+
+            

@@ -1,0 +1,215 @@
+<!-- ═══════════════ APLIKACJA ═══════════════ -->
+<div x-show="token" x-cloak class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto bg-white dark:bg-gray-800
+                  border-r border-gray-200 dark:border-gray-700 transition-transform duration-200
+                  lg:static lg:translate-x-0 lg:flex-shrink-0"
+           :class="sidebarOpen ? &#x27;translate-x-0&#x27; : &#x27;-translate-x-full&#x27;">
+        <div class="px-3 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center">
+            <a href="#dashboard" @click.prevent="selectView('dashboard')" :aria-label="window.ZenI18n.t('Przejdź do dashboardu')" class="inline-flex items-center justify-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-500">
+            <img id="zen-sidebar-logo"
+                 :src="(darkMode && settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
+                 @error="$el.src = '/logo.png'"
+                 :alt="settingsForm?.brand_name || window.ZenI18n.t(&quot;ZenCRM&quot;)"
+                 class="h-20 w-auto max-w-full object-contain">
+            </a>
+        </div>
+        <nav class="space-y-1 px-3 py-4">
+            <template x-for="item in menu.filter(m =&gt; (!m.adminOnly &amp;&amp; m.id !== &#x27;settings&#x27;) || user?.role === &#x27;admin&#x27; || isAdmin)" :key="item.id">
+                <div>
+                    <!-- Pojedyncza pozycja bez podmenu -->
+                    <template x-if="!item.children">
+                        <a href="#" :aria-current="currentView === item.id ? &#x27;page&#x27; : null" @click.prevent="selectView(item.id)"
+                           class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition"
+                           :class="currentView === item.id
+                                ? &#x27;bg-brand-100 dark:bg-gray-700 text-brand-700 dark:text-brand-300&#x27;
+                                : &#x27;text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700&#x27;">
+                            <div class="flex items-center gap-3 truncate">
+                                <span x-html="item.icon" class="w-5 h-5 flex-shrink-0"></span>
+                                <span x-text="item.label"></span>
+                            </div>
+                            <span x-show="item.id === &#x27;tickets&#x27; &amp;&amp; activeTicketsCount &gt; 0"
+                                  class="ml-auto px-2 py-0.5 text-xs font-bold rounded-full bg-red-600 text-white shadow-xs"
+                                  x-text="activeTicketsCount"></span>
+                        </a>
+                    </template>
+
+                    <!-- Grupa rozwijana (dropdown / accordion) -->
+                    <template x-if="item.children">
+                        <div class="space-y-1" @click.outside="openMenuGroups[item.id] = false">
+                            <button type="button"
+                                    @click="toggleMenuGroup(item.id)"
+                                    class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition cursor-pointer select-none"
+                                    :class="item.children.some(c => c.id === currentView || (c.id === &#x27;ticketSettings&#x27; &amp;&amp; currentView === &#x27;settings&#x27; &amp;&amp; settingsTab === &#x27;helpdesk&#x27;))
+                                        ? &#x27;text-brand-700 dark:text-brand-300 font-semibold bg-brand-50/70 dark:bg-gray-700/60&#x27;
+                                        : &#x27;text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700&#x27;">
+                                <div class="flex items-center gap-3 truncate">
+                                    <span x-html="item.icon" class="w-5 h-5 flex-shrink-0"></span>
+                                    <span x-text="item.label"></span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span x-show="item.id === &#x27;tickets_group&#x27; &amp;&amp; activeTicketsCount &gt; 0"
+                                          class="px-2 py-0.5 text-xs font-bold rounded-full bg-red-600 text-white shadow-xs"
+                                          x-text="activeTicketsCount"></span>
+                                    <svg class="w-4 h-4 text-gray-400 transition-transform duration-200"
+                                         :class="openMenuGroups[item.id] ? &#x27;rotate-180 text-brand-600 dark:text-brand-400&#x27; : &#x27;&#x27;"
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </button>
+                            <!-- Podmenu -->
+                            <div x-show="openMenuGroups[item.id]" x-cloak class="pl-7 space-y-1 pt-0.5">
+                                <template x-for="child in item.children" :key="child.id">
+                                    <a href="#" :aria-current="(currentView === child.id || (child.id === &#x27;ticketSettings&#x27; &amp;&amp; currentView === &#x27;settings&#x27; &amp;&amp; settingsTab === &#x27;helpdesk&#x27;)) ? &#x27;page&#x27; : null" @click.prevent="selectView(child.id)"
+                                       class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition"
+                                       :class="(currentView === child.id || (child.id === &#x27;ticketSettings&#x27; &amp;&amp; currentView === &#x27;settings&#x27; &amp;&amp; settingsTab === &#x27;helpdesk&#x27;))
+                                            ? &#x27;bg-brand-100 dark:bg-gray-700 text-brand-700 dark:text-brand-300 font-semibold&#x27;
+                                            : &#x27;text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200&#x27;">
+                                        <div class="flex items-center gap-2.5 truncate">
+                                            <span x-html="child.icon" class="w-4 h-4 flex-shrink-0 opacity-75"></span>
+                                            <span x-text="child.label"></span>
+                                        </div>
+                                        <span x-show="child.id === &#x27;tickets&#x27; &amp;&amp; activeTicketsCount &gt; 0"
+                                              class="ml-auto px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-red-600 text-white shadow-xs"
+                                              x-text="activeTicketsCount"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </nav>
+    </aside>
+
+    <!-- Overlay mobile -->
+    <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+         class="fixed inset-0 z-20 bg-black/40 lg:hidden"></div>
+
+    <!-- MAIN -->
+    <div class="flex flex-col flex-1 min-w-0">
+
+<button @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen" :aria-label="window.ZenI18n.t(&quot;Otwórz menu nawigacji&quot;)" class="zen-mobile-nav lg:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+                <div class="zen-notifications" @click.outside="notificationsOpen=false" @keydown.escape.stop="notificationsOpen=false; $refs.notificationTrigger.focus()">
+                    <button x-ref="notificationTrigger" class="zen-bell" @click="toggleNotifications()" :aria-expanded="notificationsOpen" aria-controls="notification-panel" :aria-label="window.ZenI18n.t(&#x27;Powiadomienia&#x27;) + &#x27; (&#x27; + unreadNotifications + &#x27;)&#x27;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span x-show="unreadNotifications" class="zen-bell-count" x-text="unreadNotifications &gt; 99 ? &#x27;99+&#x27; : unreadNotifications"></span>
+                    </button>
+                    <section id="notification-panel" class="zen-inbox" x-show="notificationsOpen" x-cloak x-transition.opacity role="region" :aria-label="window.ZenI18n.t(&#x27;Powiadomienia&#x27;)">
+                        <header><div><h2 x-text="window.ZenI18n.t(&#x27;Powiadomienia&#x27;)"></h2><p x-text="window.ZenI18n.t(&#x27;Aktywność w przypisanych rekordach&#x27;)"></p></div><button class="zen-list-action" @click="notificationsOpen=false; $refs.notificationTrigger.focus()" :aria-label="window.ZenI18n.t(&#x27;Zamknij&#x27;)">×</button></header>
+                        <div class="zen-inbox-tools"><span x-text="unreadNotifications + &#x27; &#x27; + window.ZenI18n.t(&#x27;nieprzeczytanych&#x27;)"></span><button @click="markNotificationsRead()" :disabled="!unreadNotifications" x-text="window.ZenI18n.t(&#x27;Oznacz wszystkie jako przeczytane&#x27;)"></button></div>
+                        <p class="zen-inbox-state" x-show="notificationsLoading &amp;&amp; !notifications.length" x-text="window.ZenI18n.t(&#x27;Wczytywanie…&#x27;)" role="status"></p>
+                        <div class="zen-inbox-state" x-show="notificationsError" role="alert"><p x-text="notificationsError"></p><button @click="loadNotifications()" x-text="window.ZenI18n.t(&#x27;Spróbuj ponownie&#x27;)"></button></div>
+                        <p class="zen-inbox-state" x-show="!notificationsLoading &amp;&amp; !notificationsError &amp;&amp; !notifications.length" x-text="window.ZenI18n.t(&#x27;Nie masz jeszcze powiadomień&#x27;)"></p>
+                        <div class="zen-inbox-list"><template x-for="item in notifications" :key="item.id"><button class="zen-inbox-item" :class="{&#x27;is-unread&#x27;:!notificationRead.includes(item.id)}" @click="openNotification(item)"><span class="zen-inbox-dot"></span><span><small x-text="notificationAction(item.action)"></small><strong x-text="item.title"></strong><small x-show="item.actor" x-text="item.actor ? fullName(item.actor) : ''"></small><small x-text="window.ZenI18n.t(({client:window.ZenI18n.t(&#x27;Klient&#x27;),lead:window.ZenI18n.t(&#x27;Lead&#x27;),task:window.ZenI18n.t(&#x27;Zadanie&#x27;),service:window.ZenI18n.t(&#x27;Usługa&#x27;),meeting:window.ZenI18n.t(&#x27;Spotkanie&#x27;)})[item.entity_type]) + &#x27; · &#x27; + new Date(item.created_at + (/[Z+]/.test(item.created_at) ? '' : 'Z')).toLocaleString(locale,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})"></small></span><span aria-hidden="true">↗</span></button></template></div>
+                    </section>
+                </div>
+                <!-- Przycisk Synchronizuj (mała ikona z telefonem) -->
+                <div class="zen-sync-widget" x-show="smsDevices && smsDevices.length > 0" x-cloak>
+                    <button @click="syncTelephony()" :disabled="syncingTelephony"
+                            :title="window.ZenI18n.t('Synchronizuj połączenia i SMS z telefonem')"
+                            :aria-label="window.ZenI18n.t('Synchronizuj połączenia i SMS z telefonem')"
+                            class="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-md hover:shadow-lg flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 disabled:opacity-60 cursor-pointer relative">
+                        <template x-if="!syncingTelephony">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </template>
+                        <template x-if="syncingTelephony">
+                            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </template>
+                        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 border-2 border-white dark:border-gray-900 rounded-full"
+                              :class="{'animate-ping': syncingTelephony}"></span>
+                    </button>
+                </div>
+                <div class="zen-profile-widget" x-data="{ open: false }" @click.outside="open = false" @keydown.escape.stop="open = false; $refs.profileTrigger.focus()">
+                    <button x-ref="profileTrigger" :aria-label="window.ZenI18n.t(&quot;Menu profilu&quot;)" :aria-expanded="open" aria-controls="zen-profile-menu" @click="open = !open"
+                            class="zen-profile-trigger flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <template x-if="user?.avatar_url">
+                            <img :src="user.avatar_url" :alt="window.ZenI18n.t(&quot;avatar&quot;)"
+                                 class="w-9 h-9 rounded-full object-cover ring-2 ring-white dark:ring-gray-800">
+                        </template>
+                        <template x-if="!user?.avatar_url">
+                            <div class="w-9 h-9 rounded-full avatar-gradient text-white flex items-center justify-center text-sm font-bold ring-2 ring-white dark:ring-gray-800">
+                                <span x-text="(user?.first_name?.[0] || &#x27;?&#x27;) + (user?.last_name?.[0] || &#x27;&#x27;)"></span>
+                            </div>
+                        </template>
+                        <svg class="hidden sm:block w-4 h-4 text-gray-500 transition-transform"
+                             :class="open ? &#x27;rotate-180&#x27; : &#x27;&#x27;"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div x-show="open" x-cloak x-transition.opacity.duration.150ms
+                         id="zen-profile-menu" class="zen-profile-menu absolute right-0 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+
+                        <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                            <p class="font-semibold text-sm truncate"
+                               x-text="user?.first_name + &#x27; &#x27; + user?.last_name"></p>
+                            <p class="text-xs text-gray-500 truncate" x-text="user?.email"></p>
+                            <span class="inline-block mt-2 px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full"
+                                  :class="{
+                                    &#x27;bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-200&#x27;: user?.role === &#x27;admin&#x27;,
+                                    &#x27;bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200&#x27;: user?.role === &#x27;manager&#x27;,
+                                    &#x27;bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300&#x27;: user?.role === &#x27;employee&#x27;
+                                  }"
+                                  x-text="roleLabel(user?.role)"></span>
+                        </div>
+
+                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t(&#x27;Język&#x27;)"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t(&#x27;Język&#x27;)"><option value="pl" x-text="window.ZenI18n.t(&quot;Polski&quot;)">Polski</option><option value="en" x-text="window.ZenI18n.t(&quot;English&quot;)">English</option></select></label></div><div class="py-1"><button x-show="![&#x27;dashboard&#x27;,&#x27;meetings&#x27;,&#x27;portalSettings&#x27;,&#x27;portalUsers&#x27;,&#x27;portalTickets&#x27;,&#x27;portalSpaces&#x27;].includes(currentView)" @click="open = false; openModal()" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;plus&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Dodaj nowy rekord&quot;)">Dodaj nowy rekord</span></button>
+                            <button @click="open = false; openProfile()"
+                                    class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <span x-text="window.ZenI18n.t(&quot;Mój profil&quot;)">Mój profil</span>
+                            </button>
+                            <button @click="open = false; openPassword()"
+                                    class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                </svg>
+                                <span x-text="window.ZenI18n.t(&quot;Zmień hasło&quot;)">Zmień hasło</span>
+                            </button>
+                            <button @click="open = false; darkMode = !darkMode"
+                                    class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <span class="flex items-center gap-3">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                    </svg>
+                                    <span x-text="window.ZenI18n.t(&quot;Tryb ciemny&quot;)">Tryb ciemny</span>
+                                </span>
+                                <span class="w-9 h-5 rounded-full transition relative"
+                                      :class="darkMode ? &#x27;bg-brand-600&#x27; : &#x27;bg-gray-300 dark:bg-gray-600&#x27;">
+                                    <span class="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform"
+                                          :class="darkMode ? &#x27;translate-x-4&#x27; : &#x27;translate-x-0.5&#x27;"></span>
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="border-t border-gray-100 dark:border-gray-700 pt-1">
+                            <button @click="open = false; logout()"
+                                    class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                <span x-text="window.ZenI18n.t(&quot;Wyloguj się&quot;)">Wyloguj się</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+<!-- ─── MAIN CONTENT ─── -->
+        <main class="flex-1 overflow-y-auto p-2 sm:p-3 w-full">
+
+            

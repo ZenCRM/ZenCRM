@@ -1,0 +1,202 @@
+<!-- ═══ KLIENCI ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'clients'" x-init="$watch('clients', list => { loadAllCustomFields(); loadCustomValuesForTable('clients', (list||[]).map(c => c.id)); }); loadAllCustomFields(); if (clients.length) loadCustomValuesForTable('clients', clients.map(c => c.id));" x-cloak>
+                <div class="zen-task-summary zen-list-summary">
+                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Wszyscy klienci')">Wszyscy klienci</span></span><strong x-text="clients.length"></strong></div>
+                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('check')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Aktywni')">Aktywni</span></span><strong x-text="clients.filter(c => c.status === 'active').length"></strong></div>
+                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Potencjalni')">Potencjalni</span></span><strong x-text="clients.filter(c => c.status === 'prospect').length"></strong></div>
+                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Z opiekunem')">Z opiekunem</span></span><strong x-text="clients.filter(c => c.assignee).length"></strong></div>
+                </div>
+
+                <div class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <input type="text" x-model="search" :placeholder="window.ZenI18n.t('Szukaj klienta...')"
+                               class="w-full sm:w-64 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none text-sm">
+                        <button type="button" @click="openModal(null, null, false, 'clients')"
+                                class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 whitespace-nowrap">
+                            <span x-html="zenIcon('user')"></span>
+                            <span x-text="window.ZenI18n.t('+ Dodaj klienta')">+ Dodaj klienta</span>
+                        </button>
+                    </div>
+
+                    <!-- Column picker for clients -->
+                    <div class="relative inline-block text-left" @click.outside="if (columnPickerOpen === 'clients') columnPickerOpen = null">
+                        <button type="button" @click="columnPickerOpen = (columnPickerOpen === 'clients' ? null : 'clients')"
+                                class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-1.5 shadow-xs">
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                            <span x-text="window.ZenI18n.t('Dostosuj kolumny')">Dostosuj kolumny</span>
+                        </button>
+                        <div x-show="columnPickerOpen === 'clients'" x-cloak class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 text-xs">
+                            <div class="px-3 py-1.5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                                <span class="font-bold text-gray-700 dark:text-gray-300" x-text="window.ZenI18n.t('Widoczne kolumny')">Widoczne kolumny</span>
+                                <button type="button" @click="resetColumns('clients')" class="text-brand-600 dark:text-brand-400 hover:underline text-[11px]" x-text="window.ZenI18n.t('Resetuj')">Resetuj</button>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto px-3 py-2 space-y-1.5">
+                                <template x-for="col in availableColumns('clients')" :key="'col-clients-' + col.key">
+                                    <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
+                                        <input type="checkbox" :checked="isColumnVisible('clients', col.key)" @change="toggleColumn('clients', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
+                                        <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
+                                        <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-left text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'name')"><span x-text="window.ZenI18n.t('Nazwa')">Nazwa</span></th>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'email')"><span x-text="window.ZenI18n.t('Email')">Email</span></th>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'phone')"><span x-text="window.ZenI18n.t('Telefon')">Telefon</span></th>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'company')"><span x-text="window.ZenI18n.t('Firma')">Firma</span></th>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'assignee')"><span x-text="window.ZenI18n.t('Opiekun')">Opiekun</span></th>
+                                    <th class="px-4 py-3" x-show="isColumnVisible('clients', 'status')"><span x-text="window.ZenI18n.t('Status')">Status</span></th>
+                                    <template x-for="col in (availableColumns('clients').filter(c => c.isCustom))" :key="'th-cf-clients-' + col.key">
+                                        <th class="px-4 py-3" x-show="isColumnVisible('clients', col.key)" x-text="col.label"></th>
+                                    </template>
+                                    <th class="px-4 py-3 text-right" x-show="isColumnVisible('clients', 'actions')"><span x-text="window.ZenI18n.t('Akcje')">Akcje</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <template x-for="c in pagedItems('clients', filteredClients)" :key="c.id">
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                        <td class="px-4 py-3 font-medium" x-show="isColumnVisible('clients', 'name')">
+                                            <button @click="openDetail('client', c.id)" class="text-brand-600 hover:underline" x-text="c.name"></button>
+                                        </td>
+                                        <td class="px-4 py-3" x-show="isColumnVisible('clients', 'email')" x-text="c.email || '—'"></td>
+                                        <td class="px-4 py-3 whitespace-nowrap" x-show="isColumnVisible('clients', 'phone')" x-text="c.phone || '—'"></td>
+                                        <td class="px-4 py-3" x-show="isColumnVisible('clients', 'company')" x-text="c.company || '—'"></td>
+                                        <td class="px-4 py-3" x-show="isColumnVisible('clients', 'assignee')">
+                                            <template x-if="c.assignee">
+                                                <div class="flex items-center gap-2">
+                                                    <template x-if="c.assignee.avatar_url">
+                                                        <img :src="c.assignee.avatar_url" class="w-6 h-6 rounded-full object-cover">
+                                                    </template>
+                                                    <template x-if="!c.assignee.avatar_url">
+                                                        <div class="w-6 h-6 rounded-full avatar-gradient text-white flex items-center justify-center text-[9px] font-bold" x-text="initialsFrom(c.assignee)"></div>
+                                                    </template>
+                                                    <span class="text-xs" x-text="fullName(c.assignee)"></span>
+                                                </div>
+                                            </template>
+                                            <span x-show="!c.assignee" class="text-xs text-gray-400">—</span>
+                                        </td>
+                                        <td class="px-4 py-3" x-show="isColumnVisible('clients', 'status')">
+                                            <span class="px-2 py-0.5 text-xs font-medium rounded-full"
+                                                  :class="{'bg-green-100 text-green-700': c.status === 'active', 'bg-gray-100 text-gray-700': c.status === 'inactive', 'bg-yellow-100 text-yellow-700': c.status === 'prospect'}"
+                                                  x-text="statusLabel(c.status)"></span>
+                                        </td>
+                                        <template x-for="col in (availableColumns('clients').filter(c => c.isCustom))" :key="'td-cf-clients-' + col.key">
+                                            <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-300" x-show="isColumnVisible('clients', col.key)" x-text="getCustomFieldValue('clients', c.id, col.field.id)"></td>
+                                        </template>
+                                        <td class="px-4 py-3 text-right whitespace-nowrap" x-show="isColumnVisible('clients', 'actions')">
+                                            <button @click="openEntityTelephonyModal('client', c)" class="zen-list-action !text-emerald-600 hover:!text-emerald-700 dark:!text-emerald-400" :aria-label="window.ZenI18n.t('Połączenia i SMS')" :title="window.ZenI18n.t('Połączenia i SMS')"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
+                                            <button @click="openModal(c, null, false, 'clients')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span></button>
+                                            <button @click="remove(c.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t('Usuń')" :title="window.ZenI18n.t('Usuń')"><span x-html="zenIcon('trash')" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr x-show="filteredClients.length === 0 &amp;&amp; !listError">
+                                    <td :colspan="availableColumns('clients').filter(col => isColumnVisible('clients', col.key)).length || 7" class="px-4 py-8 text-center text-gray-500"><span x-text="window.ZenI18n.t('Brak klientów')">Brak klientów</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div x-data="{ pagerView: 'clients', get pagerItems() { return this.filteredClients } }"><% include "views/pagination.html" %></div>
+                </div>
+            </div>
+
+<div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'contacts'" x-init="$watch('contacts', list => { loadAllCustomFields(); loadCustomValuesForTable('contacts', (list||[]).map(c => c.id)); }); loadAllCustomFields(); if (contacts.length) loadCustomValuesForTable('contacts', contacts.map(c => c.id));" x-cloak>
+    <div class="zen-task-summary zen-list-summary">
+        <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Wszystkie kontakty')">Wszystkie kontakty</span></span><strong x-text="contacts.length"></strong></div>
+        <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('check')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Z klientem')">Z klientem</span></span><strong x-text="contacts.filter(c => c.client_id).length"></strong></div>
+        <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('mail')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Z adresem e-mail')">Z adresem e-mail</span></span><strong x-text="contacts.filter(c => c.email).length"></strong></div>
+        <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('phone')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Z telefonem')">Z telefonem</span></span><strong x-text="contacts.filter(c => c.phone).length"></strong></div>
+    </div>
+    <div class="ux-toolbar flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2 flex-1">
+            <input type="search" class="ux-input" x-model="contactSearch" :placeholder="window.ZenI18n.t('Szukaj kontaktu…')" :aria-label="window.ZenI18n.t('Szukaj kontaktu')">
+            <button class="ux-button" @click="openModal(null, null, false, 'contacts')"><span x-text="window.ZenI18n.t('+ Dodaj kontakt')">+ Dodaj kontakt</span></button>
+        </div>
+        <div class="relative inline-block text-left" @click.outside="if (columnPickerOpen === 'contacts') columnPickerOpen = null">
+            <button type="button" @click="columnPickerOpen = (columnPickerOpen === 'contacts' ? null : 'contacts')"
+                    class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-1.5 shadow-xs">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                <span x-text="window.ZenI18n.t('Dostosuj kolumny')">Dostosuj kolumny</span>
+            </button>
+            <div x-show="columnPickerOpen === 'contacts'" x-cloak class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 text-xs">
+                <div class="px-3 py-1.5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <span class="font-bold text-gray-700 dark:text-gray-300" x-text="window.ZenI18n.t('Widoczne kolumny')">Widoczne kolumny</span>
+                    <button type="button" @click="resetColumns('contacts')" class="text-brand-600 dark:text-brand-400 hover:underline text-[11px]" x-text="window.ZenI18n.t('Resetuj')">Resetuj</button>
+                </div>
+                <div class="max-h-60 overflow-y-auto px-3 py-2 space-y-1.5">
+                    <template x-for="col in availableColumns('contacts')" :key="'col-contacts-' + col.key">
+                        <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
+                            <input type="checkbox" :checked="isColumnVisible('contacts', col.key)" @change="toggleColumn('contacts', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
+                            <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
+                            <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="detail-section overflow-x-auto">
+        <table class="svc-table">
+            <thead>
+                <tr>
+                    <th x-show="isColumnVisible('contacts', 'name')"><span x-text="window.ZenI18n.t('Osoba')">Osoba</span></th>
+                    <th x-show="isColumnVisible('contacts', 'client')"><span x-text="window.ZenI18n.t('Klient')">Klient</span></th>
+                    <th x-show="isColumnVisible('contacts', 'position')"><span x-text="window.ZenI18n.t('Stanowisko')">Stanowisko</span></th>
+                    <th x-show="isColumnVisible('contacts', 'email')"><span x-text="window.ZenI18n.t('E-mail')">E-mail</span></th>
+                    <th x-show="isColumnVisible('contacts', 'phone')"><span x-text="window.ZenI18n.t('Telefon')">Telefon</span></th>
+                    <template x-for="col in (availableColumns('contacts').filter(c => c.isCustom))" :key="'th-cf-contacts-' + col.key">
+                        <th x-show="isColumnVisible('contacts', col.key)" x-text="col.label"></th>
+                    </template>
+                    <th x-show="isColumnVisible('contacts', 'actions')"><span x-text="window.ZenI18n.t('Akcje')">Akcje</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="c in pagedItems('contacts', filteredContacts)" :key="c.id">
+                    <tr>
+                        <td x-show="isColumnVisible('contacts', 'name')">
+                            <button type="button" @click="openEntityTelephonyModal('contact', c)" class="font-semibold text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 hover:underline text-left inline-flex items-center gap-1.5" :title="window.ZenI18n.t('Połączenia i SMS')">
+                                <span x-text="[c.first_name,c.last_name].filter(Boolean).join(' ')"></span>
+                                <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 inline opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            </button>
+                            <span x-show="c.is_primary" class="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+                                <svg class="w-2.5 h-2.5 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <span x-text="window.ZenI18n.t('Główny')">Główny</span>
+                            </span>
+                        </td>
+                        <td x-show="isColumnVisible('contacts', 'client')" x-text="clientName(c.client_id) || '—'"></td>
+                        <td x-show="isColumnVisible('contacts', 'position')" x-text="c.position || '—'"></td>
+                        <td x-show="isColumnVisible('contacts', 'email')" x-text="c.email || '—'"></td>
+                        <td x-show="isColumnVisible('contacts', 'phone')">
+                            <div class="flex items-center gap-2">
+                                <span x-text="c.phone || '—'"></span>
+                                <button x-show="c.phone" @click.stop="openSmsModal({phone: c.phone, clientId: c.client_id})" class="px-1.5 py-0.5 rounded bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/30 dark:hover:bg-brand-900/50 text-brand-700 dark:text-brand-300 text-[10px] font-bold uppercase transition" :title="window.ZenI18n.t('Wyślij SMS')">SMS</button>
+                            </div>
+                        </td>
+                        <template x-for="col in (availableColumns('contacts').filter(c => c.isCustom))" :key="'td-cf-contacts-' + col.key">
+                            <td class="text-xs text-gray-600 dark:text-gray-300" x-show="isColumnVisible('contacts', col.key)" x-text="getCustomFieldValue('contacts', c.id, col.field.id)"></td>
+                        </template>
+                        <td class="whitespace-nowrap" x-show="isColumnVisible('contacts', 'actions')">
+                            <button @click="openEntityTelephonyModal('contact',c)" class="zen-list-action !text-emerald-600 hover:!text-emerald-700 dark:!text-emerald-400" :aria-label="window.ZenI18n.t('Połączenia i SMS')" :title="window.ZenI18n.t('Połączenia i SMS')"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
+                            <button @click="openJournal('call','contact',c)" class="zen-list-action" :aria-label="window.ZenI18n.t('Dodaj telefon')" :title="window.ZenI18n.t('Dodaj telefon')"><span x-html="zenIcon('phone')"></span></button>
+                            <button @click="openJournal('email','contact',c)" class="zen-list-action" :aria-label="window.ZenI18n.t('Dodaj e-mail')" :title="window.ZenI18n.t('Dodaj e-mail')"><span x-html="zenIcon('mail')"></span></button>
+                            <button @click="openJournal('note','contact',c)" class="zen-list-action" :aria-label="window.ZenI18n.t('Notatki i historia kontaktu')" :title="window.ZenI18n.t('Notatki i historia kontaktu')"><span x-html="zenIcon('comment')"></span></button>
+                            <button @click="openModal(c, null, false, 'contacts')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span></button>
+                            <button @click="remove(c.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t('Usuń')" :title="window.ZenI18n.t('Usuń')"><span x-html="zenIcon('trash')" aria-hidden="true"></span></button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <p class="detail-empty" x-show="!filteredContacts.length"><span x-text="window.ZenI18n.t('Brak kontaktów spełniających kryteria.')">Brak kontaktów spełniających kryteria.</span></p>
+        <div x-data="{ pagerView: 'contacts', get pagerItems() { return this.filteredContacts } }"><% include "views/pagination.html" %></div>
+    </div>
+</div>
+<div x-show="stageEditorOpen" x-cloak class="zen-stage-overlay" @keydown.escape.window="stageEditorOpen = false"><section class="zen-stage-editor" role="dialog" aria-modal="true" aria-labelledby="stage-editor-title"><div class="flex justify-between items-center"><h2 id="stage-editor-title"><span x-text="window.ZenI18n.t(&quot;Statusy leadów&quot;)">Statusy leadów</span></h2><button class="zen-list-action" @click="stageEditorOpen = false" :aria-label="window.ZenI18n.t(&quot;Zamknij&quot;)">×</button></div><p class="ux-muted"><span x-text="window.ZenI18n.t(&quot;Ustaw nazwy, kolory i kolejność kolumn. Statusy początkowy, wygrany i przegrany pozostają dostępne.&quot;)">Ustaw nazwy, kolory i kolejność kolumn. Statusy początkowy, wygrany i przegrany pozostają dostępne.</span></p><div class="zen-stage-rows"><template x-for="(stage,index) in stageDraft" :key="stage.id"><div class="zen-stage-row"><input type="color" x-model="stage.accent" :aria-label="window.ZenI18n.t(&#x27;Kolor: &#x27;) + stage.label"><input class="ux-input" x-model="stage.label" maxlength="60" :aria-label="window.ZenI18n.t(&quot;Nazwa statusu&quot;)"><button class="zen-list-action" @click="moveStage(index,-1)" :disabled="index === 0" :aria-label="window.ZenI18n.t(&quot;Przesuń wcześniej&quot;)">↑</button><button class="zen-list-action" @click="moveStage(index,1)" :disabled="index === stageDraft.length-1" :aria-label="window.ZenI18n.t(&quot;Przesuń później&quot;)">↓</button><button class="zen-list-action zen-action-trash" :disabled="[&#x27;new&#x27;,&#x27;won&#x27;,&#x27;lost&#x27;].includes(stage.id)" @click="stageDraft = stageDraft.filter(s =&gt; s.id !== stage.id)" :aria-label="window.ZenI18n.t(&quot;Usuń status&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)"></span></button></div></template></div><p x-show="stageError" x-text="stageError" role="alert" class="text-red-600"></p><div class="flex justify-between gap-3"><button class="ux-text-button" @click="addStage()" :disabled="stageDraft.length &gt;= 20"><span x-text="window.ZenI18n.t('+ Dodaj status')"></span></button><button class="ux-button" @click="saveStages()" :disabled="stageSaving" x-text="stageSaving ? window.ZenI18n.t(&#x27;Zapisywanie…&#x27;) : window.ZenI18n.t(&#x27;Zapisz statusy&#x27;)"></button></div></section></div>            

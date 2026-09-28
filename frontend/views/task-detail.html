@@ -1,0 +1,233 @@
+<!-- ═══ DETAIL VIEW – ZADANIE ═══ -->
+            <div x-show="detailView.open &amp;&amp; detailView.type === &#x27;task&#x27;" x-cloak :class="{ &#x27;ux-detail-panel&#x27;: detailPanel }" :role="detailPanel ? &#x27;dialog&#x27; : null" :aria-modal="detailPanel ? &#x27;true&#x27; : null" :aria-label="window.ZenI18n.t(&quot;Szczegóły rekordu&quot;)" @keydown="panelKeydown($event)">
+                <div class="detail-shell zen-task-card">
+<div class="ux-panel-controls"><button class="ux-panel-close ux-text-button" @click="closeDetail()"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;left&#x27;)" aria-hidden="true"></span> <span x-text="window.ZenI18n.t(&quot;Wróć&quot;)">Wróć</span></button><button x-show="detailPanel" class="ux-text-button" @click="detailPanel = false"><span x-text="window.ZenI18n.t(&quot;Pełna karta&quot;)">Pełna karta</span> <span class="zen-icon-wrap" x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button></div>
+<div class="ux-error" x-show="detailError" role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>
+                    <div class="detail-hero">
+                        <div class="flex items-start gap-4 flex-wrap">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                    <span class="detail-type-badge">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                        <span x-text="window.ZenI18n.t(&quot;Zadanie&quot;)">Zadanie</span>
+                                    </span>
+                                    <span class="detail-type-badge" :style="{borderColor: taskStageColor(detailView.data?.status)}" x-text="taskStageLabel(detailView.data?.status)"></span>
+                                    <span class="detail-type-badge" x-text="priorityLabel(detailView.data?.priority)"></span>
+                                </div>
+                                <h1 class="text-2xl sm:text-3xl font-bold" x-text="detailView.data?.title || &#x27;—&#x27;"></h1>
+                                <p class="text-sm opacity-90 mt-2 whitespace-pre-wrap" x-show="detailView.data?.description" x-text="detailView.data?.description"></p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="detail-quick-actions">
+                                    <button @click="openModal(detailView.data, null, true, &#x27;tasks&#x27;)" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" data-tooltip="Edytuj" class="quick-icon-btn quick-icon-edit">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="svc-info-grid">
+                            <div class="svc-info-tile">
+                                <div class="label"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;calendar&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Termin&quot;)">Termin</span></div>
+                                <div class="value" x-text="detailView.data?.due_date ? new Date(detailView.data.due_date).toLocaleDateString(locale) : window.ZenI18n.t('Bezterminowo')"></div>
+                            </div>
+                            <div class="svc-info-tile">
+                                <div class="label"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;user&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Klient&quot;)">Klient</span></div>
+                                <div class="value" x-text="detailView.data?.client_id ? clientName(detailView.data.client_id) : window.ZenI18n.t('Nie dotyczy')"></div>
+                            </div>
+                            <div class="svc-info-tile">
+                                <div class="label"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;flag&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Priorytet&quot;)">Priorytet</span></div>
+                                <div class="value" x-text="priorityLabel(detailView.data?.priority) || &#x27;—&#x27;"></div>
+                            </div>
+                            <div class="svc-info-tile">
+                                <div class="label"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;check&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Postęp zespołu&quot;)">Postęp zespołu</span></div>
+                                <div class="value" x-text="(detailView.data?.stats?.done || 0) + &#x27;/&#x27; + (detailView.data?.stats?.total || 0) + &#x27; · &#x27; + (detailView.data?.stats?.progress || 0) + &#x27;%&#x27;"></div>
+                            </div>
+                        </div>
+                        <div class="zen-task-hero-progress" x-show="(detailView.data?.stats?.total || 0) &gt; 0">
+                            <div class="zen-task-progress-caption"><span x-text="window.ZenI18n.t('Realizacja zadania')"></span><strong x-text="(detailView.data?.stats?.progress || 0) + '%' "></strong></div>
+                            <div class="wm-progress zen-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="detailView.data?.stats?.progress || 0">
+                                <div class="wm-progress-fill"
+                                     :style="&#x27;width:&#x27; + (detailView.data?.stats?.progress || 0) + &#x27;%&#x27;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-body">
+                        <div x-show="detailView.loading" class="text-center py-12 text-gray-500">
+                            <div class="inline-block w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                            <!-- LEWA KOLUMNA: Komentarze + Aktywność -->
+                            <div class="lg:col-span-2 space-y-5">
+
+                                <!-- Opis / info -->
+                                <div class="detail-section">
+                                    <div class="detail-section-title"><span x-text="window.ZenI18n.t(&quot;Informacje&quot;)">Informacje</span></div>
+                                    <div class="grid sm:grid-cols-2 gap-x-6">
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Status&quot;)">Status</span></span>
+                                            <span class="detail-field-value"
+                                                  x-text="taskStageLabel(detailView.data?.status)"></span>
+                                        </div>
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Termin&quot;)">Termin</span></span>
+                                            <span class="detail-field-value"
+                                                  x-text="detailView.data?.due_date ? new Date(detailView.data.due_date).toLocaleString(locale) : &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field sm:col-span-2" x-show="detailView.data?.description">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Opis&quot;)">Opis</span></span>
+                                            <span class="detail-field-value whitespace-pre-wrap" x-text="detailView.data?.description"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- KOMENTARZE (po lewej) -->
+                                <div class="detail-section">
+                                    <div class="detail-section-title">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                                        <span x-text="window.ZenI18n.t(&quot;Komentarze&quot;)">Komentarze</span> <span class="text-xs text-gray-500 ml-1" x-text="&#x27;(&#x27; + (detailView.comments || []).length + &#x27;)&#x27;"></span>
+                                    </div>
+                                    <div class="space-y-3 mb-4">
+                                        <template x-for="c in (detailView.comments || [])" :key="c.id">
+                                            <div class="comment-item flex gap-3">
+                                                <template x-if="c.user?.avatar_url">
+                                                    <img :src="c.user.avatar_url" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+                                                </template>
+                                                <template x-if="!c.user?.avatar_url">
+                                                    <div class="w-10 h-10 rounded-full avatar-gradient text-white flex items-center justify-center text-sm font-bold flex-shrink-0"
+                                                         x-text="initialsFrom(c.user)"></div>
+                                                </template>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center gap-2 flex-wrap">
+                                                        <span class="font-semibold text-sm" x-text="fullName(c.user)"></span>
+                                                        <span class="text-xs text-gray-500" x-text="relativeTime(c.created_at)"></span>
+                                                    </div>
+                                                    <span class="journal-badge" :class="c.kind" x-text="noteLabel(c)"></span><small class="journal-address" x-show="c.address" x-text="c.address"></small><p class="text-sm mt-1 whitespace-pre-wrap" x-text="c.content"></p>
+                                                </div>
+                                                <button @click="removeComment(c.id)" class="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                                            </div>
+                                        </template>
+                                        <p x-show="(detailView.comments || []).length === 0" class="text-center text-gray-400 text-sm py-4"><span x-text="window.ZenI18n.t(&quot;Brak komentarzy&quot;)">Brak komentarzy</span></p>
+                                    </div>
+                                    <textarea x-model="detailView.newComment" rows="3" :placeholder="window.ZenI18n.t(&quot;Napisz komentarz…&quot;)"
+                                              class="w-full px-4 py-3 border rounded-xl dark:bg-gray-800 dark:border-gray-600 outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                                    <div class="flex justify-end mt-3">
+                                        <button @click="addTaskComment()" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;Wyślij komentarz&quot;)">Wyślij komentarz</span></button>
+                                    </div>
+                                </div>
+
+                                <!-- Aktywność -->
+                                <div class="detail-section">
+                                    <div class="detail-section-title">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <span x-text="window.ZenI18n.t(&quot;Aktywność&quot;)">Aktywność</span>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <template x-for="a in (detailView.activities || [])" :key="a.id">
+                                            <div class="activity-item">
+                                                <template x-if="a.user?.avatar_url">
+                                                    <img :src="a.user.avatar_url" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+                                                </template>
+                                                <template x-if="!a.user?.avatar_url">
+                                                    <span :class="activityIcon(a.action).cls" class="activity-icon text-xs flex-shrink-0" x-html="activityIcon(a.action).icon"></span>
+                                                </template>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-xs">
+                                                        <span class="font-semibold" x-text="fullName(a.user)"></span>
+                                                        <span class="text-gray-500" x-text="&#x27; · &#x27; + relativeTime(a.created_at)"></span>
+                                                    </p>
+                                                    <p class="text-xs text-gray-500" x-text="a.description || a.action"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <p x-show="(detailView.activities || []).length === 0" class="text-center text-gray-400 text-sm py-3"><span x-text="window.ZenI18n.t(&quot;Brak aktywności&quot;)">Brak aktywności</span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PRAWA KOLUMNA: Osoby i ich statusy -->
+                            <div class="space-y-5">
+                                <div class="detail-section">
+                                    <div class="detail-section-title">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        <span x-text="window.ZenI18n.t(&quot;Zespół&quot;)">Zespół</span> <span class="text-xs text-gray-500 ml-1" x-text="&#x27;(&#x27; + (detailView.team || []).length + &#x27;)&#x27;"></span>
+                                    </div>
+
+                                    <div class="user-select-wrap zen-person-picker" x-data="{ open: false, search: &#x27;&#x27; }" @click.outside="open = false" @keydown.escape.stop="open = false">
+<button type="button" class="user-select-btn" @click="open = !open" :aria-expanded="open"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;user&#x27;)" aria-hidden="true"></span> <span x-text="window.ZenI18n.t(&quot;Dodaj osobę&quot;)">Dodaj osobę</span></button>
+<div x-show="open" x-cloak class="user-select-dropdown"><div class="user-select-search"><input type="search" x-model="search" :placeholder="window.ZenI18n.t(&quot;Szukaj osoby…&quot;)" :aria-label="window.ZenI18n.t(&quot;Szukaj osoby&quot;)"></div>
+<template x-for="u in ((users || []).filter(u =&gt; !(detailView.team || []).some(a =&gt; a.user_id === u.id))).filter(u =&gt; fullName(u).toLocaleLowerCase(locale).includes(search.toLocaleLowerCase(locale)))" :key="u.id"><button type="button" class="user-select-option" @click="addTeamMemberToTask(u.id); open = false; search = &#x27;&#x27;"><span class="user-select-avatar"><template x-if="u.avatar_url"><img :src="u.avatar_url" alt=""></template><template x-if="!u.avatar_url"><span x-text="initialsFrom(u)"></span></template></span><span x-text="fullName(u)"></span></button></template>
+</div></div>
+
+                                    <div class="space-y-3">
+                                        <template x-for="ta in (detailView.team || [])" :key="ta.id">
+                                            <div class="task-person-card" :data-status="ta.status">
+                                                <div class="flex items-center gap-3 mb-2">
+                                                    <template x-if="ta.user?.avatar_url">
+                                                        <img :src="ta.user.avatar_url" class="w-9 h-9 rounded-full object-cover">
+                                                    </template>
+                                                    <template x-if="!ta.user?.avatar_url">
+                                                        <div class="w-9 h-9 rounded-full avatar-gradient text-white flex items-center justify-center text-xs font-bold"
+                                                             x-text="initialsFrom(ta.user)"></div>
+                                                    </template>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p class="text-sm font-semibold truncate" x-text="fullName(ta.user)"></p>
+                                                        <p class="text-[10px] text-gray-500" x-text="roleLabel(ta.user?.role)"></p>
+                                                    </div>
+                                                    <button x-show="canChangeTaskPerson(ta)" @click="removeTeamMemberFromTask(ta.id)"
+                                                            class="w-6 h-6 rounded-full bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center text-xs"
+                                                            :title="window.ZenI18n.t(&quot;Usuń&quot;)">×</button>
+                                                </div>
+                                                <select :disabled="!canChangeTaskPerson(ta)" :value="ta.status"
+                                                        @change="updateTaskAssigneeStatus(ta.id, $event.target.value)"
+                                                        class="w-full mb-2 text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 outline-none">
+                                                    <option value="pending" x-text="window.ZenI18n.t(&quot;Oczekuje&quot;)">Oczekuje</option>
+                                                    <option value="in_progress" x-text="window.ZenI18n.t(&quot;W toku&quot;)">W toku</option>
+                                                    <option value="done" x-text="window.ZenI18n.t(&quot;Zrobione&quot;)">Zrobione</option>
+                                                </select>
+                                                <input type="text" :value="ta.comment"
+                                                       :disabled="!canChangeTaskPerson(ta)" @change="updateTaskAssigneeComment(ta.id, $event.target.value)"
+                                                       :placeholder="window.ZenI18n.t(&quot;Komentarz…&quot;)"
+                                                       class="w-full text-xs px-2 py-1.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg outline-none focus:ring-1 focus:ring-brand-500">
+                                            </div>
+                                        </template>
+                                        <p x-show="(detailView.team || []).length === 0" class="text-center text-gray-400 text-xs py-4"><span x-text="window.ZenI18n.t(&quot;Brak osób&quot;)">Brak osób</span></p>
+                                    </div>
+                                </div>
+
+                                <!-- Postęp -->
+                                <div class="detail-section">
+                                    <div class="detail-section-title"><span x-text="window.ZenI18n.t(&quot;Postęp&quot;)">Postęp</span></div>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-gray-500"><span x-text="window.ZenI18n.t(&quot;Zrobione&quot;)">Zrobione</span></span>
+                                            <span class="font-semibold text-green-600" x-text="detailView.data?.stats?.done || 0"></span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-gray-500"><span x-text="window.ZenI18n.t(&quot;W toku&quot;)">W toku</span></span>
+                                            <span class="font-semibold text-yellow-600" x-text="detailView.data?.stats?.in_progress || 0"></span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-gray-500"><span x-text="window.ZenI18n.t(&quot;Oczekuje&quot;)">Oczekuje</span></span>
+                                            <span class="font-semibold text-gray-500" x-text="detailView.data?.stats?.pending || 0"></span>
+                                        </div>
+                                        <div class="pt-3 border-t border-gray-100 dark:border-gray-700">
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span class="text-gray-500"><span x-text="window.ZenI18n.t(&quot;Postęp&quot;)">Postęp</span></span>
+                                                <span class="font-bold text-brand-600" x-text="(detailView.data?.stats?.progress || 0) + &#x27;%&#x27;"></span>
+                                            </div>
+                                            <div class="wm-progress zen-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="detailView.data?.stats?.progress || 0">
+                                                <div class="wm-progress-fill" :style="&#x27;width:&#x27; + (detailView.data?.stats?.progress || 0) + &#x27;%&#x27;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            

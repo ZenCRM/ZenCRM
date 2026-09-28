@@ -1,0 +1,741 @@
+<!-- ═══ DETAIL VIEW – Klient / Lead (v2) ═══ -->
+            <div x-show="detailView.open &amp;&amp; (detailView.type === &#x27;client&#x27; || detailView.type === &#x27;lead&#x27;)" x-cloak :class="{ &#x27;ux-detail-panel&#x27;: detailPanel }" :role="detailPanel ? &#x27;dialog&#x27; : null" :aria-modal="detailPanel ? &#x27;true&#x27; : null" :aria-label="window.ZenI18n.t(&quot;Szczegóły rekordu&quot;)" @keydown="panelKeydown($event)">
+                <div class="detail-shell zen-client-card">
+<div class="ux-panel-controls"><button class="ux-panel-close ux-text-button" @click="closeDetail()"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;left&#x27;)" aria-hidden="true"></span> <span x-text="window.ZenI18n.t(&quot;Wróć&quot;)">Wróć</span></button><button x-show="detailPanel" class="ux-text-button" @click="detailPanel = false"><span x-text="window.ZenI18n.t(&quot;Pełna karta&quot;)">Pełna karta</span> <span class="zen-icon-wrap" x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button></div>
+<div class="ux-error" x-show="detailError" role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>
+
+                    <!-- HERO -->
+                    <div class="detail-hero" :class="detailView.type === &#x27;lead&#x27; ? &#x27;hero-lead&#x27; : &#x27;hero-client&#x27;">
+                        <div class="flex items-start gap-4 flex-wrap">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                    <template x-if="detailView.type === &#x27;client&#x27;">
+                                        <span class="detail-type-badge">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                            <span x-text="window.ZenI18n.t(&quot;Klient&quot;)">Klient</span>
+                                        </span>
+                                    </template>
+                                    <template x-if="detailView.type === &#x27;lead&#x27;">
+                                        <span class="detail-type-badge">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                            <span x-text="window.ZenI18n.t(&quot;Lead&quot;)">Lead</span>
+                                        </span>
+                                    </template>
+                                    <span x-show="detailView.data?.status &amp;&amp; detailView.type === &#x27;client&#x27;"
+                                          class="detail-type-badge"
+                                          x-text="statusLabel(detailView.data?.status)"></span>
+                                </div>
+                                <h1 class="zen-client-title text-2xl sm:text-3xl font-bold truncate"
+                                    x-text="detailView.data?.name || detailView.data?.title || &#x27;—&#x27;"></h1>
+                                <div class="flex items-center gap-4 mt-2 text-sm opacity-90 flex-wrap">
+                                    <span x-show="detailView.data?.email" class="inline-flex items-center gap-1.5">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                        <span x-text="detailView.data?.email"></span>
+                                    </span>
+                                    <template x-if="detailView.type === 'client'">
+                                        <div class="inline-flex items-center gap-2 flex-wrap">
+                                            <template x-for="c in (detailView.contacts || []).filter(c => c.phone)" :key="c.id">
+                                                <span class="inline-flex items-center gap-1.5 bg-white/10 px-2 py-0.5 rounded-full text-xs">
+                                                    <svg class="w-3.5 h-3.5 opacity-80 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                                    <span class="font-medium" x-text="([c.first_name, c.last_name].filter(Boolean).join(' ') || c.name || '') + ':'"></span>
+                                                    <span class="font-mono cursor-pointer hover:underline"
+                                                          @click.stop="callContact(c.phone, c.name)"
+                                                          :title="user?.default_call_method === 'android' ? window.ZenI18n.t('Kliknij, aby zlecić połączenie telefonowi Android') : window.ZenI18n.t('Kliknij, aby zadzwonić (tel:)')"
+                                                          x-text="c.phone"></span>
+                                                </span>
+                                            </template>
+                                            <span x-show="!(detailView.contacts || []).some(c => c.phone)" class="inline-flex items-center gap-1 text-xs opacity-70 italic">
+                                                <span x-text="window.ZenI18n.t('Brak numeru w kontaktach')"></span>
+                                            </span>
+                                        </div>
+                                    </template>
+                                    <template x-if="detailView.type !== 'client'">
+                                        <span x-show="detailView.data?.phone" class="inline-flex items-center gap-1.5">
+                                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                            <span class="cursor-pointer hover:underline"
+                                                  @click.stop="callContact(detailView.data?.phone, detailView.data?.name)"
+                                                  :title="user?.default_call_method === 'android' ? window.ZenI18n.t('Kliknij, aby zlecić połączenie telefonowi Android') : window.ZenI18n.t('Kliknij, aby zadzwonić (tel:)')"
+                                                  x-text="detailView.data?.phone"></span>
+                                            
+                                            <button @click.stop="sendSmsFromDetail(detailView.data?.phone, detailView.data?.name)"
+                                                    class="ml-1 px-1.5 py-0.5 rounded bg-white/20 hover:bg-white/30 text-[11px] font-semibold transition"
+                                                    title="Wyślij SMS">SMS</button>
+                                        </span>
+                                    </template>
+                                    <span x-show="detailView.data?.company" class="inline-flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                        <span x-text="detailView.data?.company"></span>
+                                    </span>
+                                    <span x-show="detailView.type === 'lead' && detailView.data?.value" class="inline-flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <span x-text="formatNumber(detailView.data?.value) + window.ZenI18n.t(' zł')"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <template x-if="detailView.type === 'lead' && !detailView.data?.converted_to_client_id && !detailView.data?.client_id">
+                                    <button @click="convertLead()"
+                                            class="zen-convert-button">
+                                        <span x-text="window.ZenI18n.t(&quot;Konwertuj na klienta&quot;)">Konwertuj na klienta</span>
+                                    </button>
+                                </template>
+                                <template x-if="detailView.data?.converted_to_client_id">
+                                    <span class="px-4 py-2 rounded-lg bg-white/20 text-sm font-medium">
+                                        <span x-text="window.ZenI18n.t(&quot;Klient #&quot;)">Klient #</span><span x-text="detailView.data.converted_to_client_id"></span>
+                                    </span>
+                                </template>
+                                <div class="detail-quick-actions">
+                                    <button x-show="detailView.type === 'client'" @click="quickAdd('lead')" :aria-label="window.ZenI18n.t(&quot;Dodaj lead&quot;)" data-tooltip="Dodaj lead" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                                    </button>
+                                    <button @click="quickAdd('contact')" :aria-label="window.ZenI18n.t(&quot;Dodaj kontakt&quot;)" data-tooltip="Dodaj kontakt" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                                    </button>
+                                    <button @click="openJournal('call',detailView.type,detailView.data)" :aria-label="window.ZenI18n.t(&quot;Dodaj telefon&quot;)" data-tooltip="Dodaj telefon" class="quick-icon-btn"><span x-html="zenIcon('phone')"></span></button><button @click="openJournal('email',detailView.type,detailView.data)" :aria-label="window.ZenI18n.t(&quot;Dodaj e-mail&quot;)" data-tooltip="Dodaj e-mail" class="quick-icon-btn"><span x-html="zenIcon('mail')"></span></button><button @click="openJournal('note',detailView.type,detailView.data)" :aria-label="window.ZenI18n.t(&quot;Dodaj notatkę&quot;)" data-tooltip="Dodaj notatkę" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                                    </button>
+                                    <button @click="quickAdd('task')" :aria-label="window.ZenI18n.t(&quot;Dodaj zadanie&quot;)" data-tooltip="Dodaj zadanie" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                    </button>
+                                    <button @click="quickAdd('meeting')" :aria-label="window.ZenI18n.t(&quot;Dodaj spotkanie&quot;)" data-tooltip="Dodaj spotkanie" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </button>
+                                    <button x-show="detailView.type === 'client'" @click="quickAdd('service')" :aria-label="window.ZenI18n.t(&quot;Dodaj usługę&quot;)" data-tooltip="Dodaj usługę" class="quick-icon-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    </button>
+                                    <div class="w-px h-6 bg-white/25 mx-1"></div>
+                                    <button @click="openModal(detailView.data, null, true)" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" data-tooltip="Edytuj" class="quick-icon-btn quick-icon-edit">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+<div class="zen-task-summary zen-detail-summary" x-show="detailView.type === 'lead' && !detailView.loading"><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')"></span><span><span x-text="window.ZenI18n.t(&quot;Etap&quot;)">Etap</span></span><strong x-text="leadStages.find(s => s.id === detailView.data?.stage)?.label || detailView.data?.stage"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('activity')"></span><span><span x-text="window.ZenI18n.t(&quot;Wartość&quot;)">Wartość</span></span><strong x-text="formatNumber(detailView.data?.value || 0) + window.ZenI18n.t(' zł')"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('check')"></span><span><span x-text="window.ZenI18n.t(&quot;Otwarte zadania&quot;)">Otwarte zadania</span></span><strong x-text="(detailView.tasks || []).filter(t => t.status !== 'done').length"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')"></span><span><span x-text="window.ZenI18n.t(&quot;Opiekun&quot;)">Opiekun</span></span><strong x-text="detailView.data?.assignee ? fullName(detailView.data.assignee) : window.ZenI18n.t('Nie przypisano')"></strong></div></div><div class="zen-client-summary" x-show="detailView.type === 'client' && !detailView.loading && !detailError"><button class="zen-client-metric zen-contacts" @click="detailView.tab = 'contacts'"><span class="zen-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M17 4a4 4 0 0 1 0 7 M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span><span><span class="zen-metric-label"><span x-text="window.ZenI18n.t(&quot;Osoby kontaktowe&quot;)">Osoby kontaktowe</span></span><strong x-text="(detailView.contacts || []).length"></strong></span><span class="zen-metric-arrow" aria-hidden="true" x-html="zenIcon('arrow')"></span></button><button class="zen-client-metric zen-tasks" @click="detailView.tab = 'tasks'"><span class="zen-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H5v16h14V5h-4 M9 3h6v4H9z M8 14l3 3 5-6"/></svg></span><span><span class="zen-metric-label"><span x-text="window.ZenI18n.t(&quot;Otwarte zadania&quot;)">Otwarte zadania</span></span><strong x-text="(detailView.tasks || []).filter(t => t.status !== 'done').length"></strong></span><span class="zen-metric-arrow" aria-hidden="true" x-html="zenIcon('arrow')"></span></button><button class="zen-client-metric zen-services" @click="detailView.tab = 'services'"><span class="zen-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18v14H3z M8 7V3h8v4 M3 12h18 M10 12v3h4v-3"/></svg></span><span><span class="zen-metric-label"><span x-text="window.ZenI18n.t(&quot;Usługi&quot;)">Usługi</span></span><strong x-text="(detailView.clientServices || []).length"></strong></span><span class="zen-metric-arrow" aria-hidden="true" x-html="zenIcon('arrow')"></span></button><button class="zen-client-metric zen-tickets" @click="detailView.tab = 'tickets'"><span class="zen-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg></span><span><span class="zen-metric-label"><span x-text="window.ZenI18n.t(&quot;Tickety&quot;)">Tickety</span></span><strong x-text="(detailView.clientTickets || []).length"></strong></span><span class="zen-metric-arrow" aria-hidden="true" x-html="zenIcon('arrow')"></span></button><div class="zen-client-metric zen-owner"><span class="zen-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a7 7 0 0 0-14 0v2 M13 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8"/></svg></span><span><span class="zen-metric-label"><span x-text="window.ZenI18n.t(&quot;Opiekun klienta&quot;)">Opiekun klienta</span></span><strong class="zen-owner-name" x-text="detailView.data?.assignee ? fullName(detailView.data.assignee) : window.ZenI18n.t('Nie przypisano')"></strong></span></div></div>
+<div class="ux-next-step" x-show="!detailView.loading && !detailError"><div><span class="ux-eyebrow"><span class="zen-next-pulse zen-icon-wrap" x-html="zenIcon('arrow')" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Następny krok&quot;)">Następny krok</span></span><strong x-text="nextDetailTask?.title || window.ZenI18n.t('Zaplanuj pierwsze działanie')"></strong><span class="ux-muted" x-text="nextDetailTask?.due_date ? new Date(nextDetailTask.due_date).toLocaleString(locale) : window.ZenI18n.t('Brak ustalonego terminu')"></span><span class="ux-overdue-label" x-show="nextDetailTask && isOverdue(nextDetailTask)"><span x-text="window.ZenI18n.t(&quot;Zadanie po terminie&quot;)">Zadanie po terminie</span></span></div><button class="ux-button" @click="quickAdd('task')"><span x-text="window.ZenI18n.t(&quot;+ Zaplanuj zadanie&quot;)">+ Zaplanuj zadanie</span></button><button class="ux-text-button" x-show="nextDetailTask" @click="if (nextDetailTask) openDetail('task', nextDetailTask.id)"><span x-text="window.ZenI18n.t(&quot;Otwórz zadanie&quot;)">Otwórz zadanie</span> <span class="zen-icon-wrap" x-html="zenIcon('arrow')" aria-hidden="true"></span></button></div>
+<div class="ux-toolbar ux-detail-actions" x-show="!detailView.loading && detailView.data"><select x-show="detailView.type === 'lead'" class="ux-input" :value="detailView.data?.stage" :disabled="!!savingLead" @change="await changeLeadStage(detailView.data, $event.target.value); $event.target.value = detailView.data.stage" :aria-label="window.ZenI18n.t('Etap leada')"><template x-for="stage in leadStages" :key="stage.id"><option :value="stage.id" :selected="stage.id === detailView.data?.stage" x-text="stage.label"></option></template></select><button x-show="detailView.data?.phone || (detailView.contacts || []).some(c => c.phone)" @click="callContact()" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon('phone')"></span><span x-text="user?.default_call_method === 'android' ? 'Połącz' : 'Zadzwoń'"></span></button><a x-show="detailView.data?.email" :href="'mailto:' + (detailView.data?.email || '')" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon('mail')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Napisz e-mail')">Napisz e-mail</span></span></a><button @click="sendSmsFromDetail()" class="ux-text-button !bg-emerald-600 hover:!bg-emerald-700 !text-white !border-emerald-600 shadow-sm font-medium"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><span><span x-text="window.ZenI18n.t('Wyślij SMS')">Wyślij SMS</span></span></button></div>
+                    <!-- TABS -->
+                    
+
+                        <div class="detail-tabs-wrap" x-data="{ moreOpen: false }" @click.outside="moreOpen = false" @keydown.escape="moreOpen = false">
+                        <div class="detail-tabs-v2">
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;overview&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;overview&#x27;"><span x-text="window.ZenI18n.t(&quot;Przegląd&quot;)">Przegląd</span></button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;contacts&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;contacts&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Kontakty&quot;)">Kontakty</span> <span class="detail-tab-count" x-text="(detailView.contacts || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2 !text-emerald-700 dark:!text-emerald-400 font-medium"
+                                :class="detailView.tab === &#x27;telephony&#x27; ? &#x27;active !text-emerald-800 dark:!text-emerald-200 !border-emerald-600&#x27; : &#x27;&#x27;"
+                                @click="detailView.tab = &#x27;telephony&#x27;; loadEntityTelephony(detailView.type, detailView.data.id, detailView.data.phone)">
+                            <span class="inline-flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                <span x-text="window.ZenI18n.t(&quot;Połączenia i SMS&quot;)">Połączenia i SMS</span>
+                            </span>
+                            <span class="detail-tab-count !bg-emerald-100 dark:!bg-emerald-950 !text-emerald-700 dark:!text-emerald-300"
+                                  x-text="(entityTelephony?.calls?.length || 0) + (entityTelephony?.messages?.length || 0)"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;services&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;services&#x27;" x-show="detailView.type === &#x27;client&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Usługi&quot;)">Usługi</span> <span class="detail-tab-count" x-text="(detailView.clientServices || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;tickets&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;tickets&#x27;" x-show="detailView.type === &#x27;client&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Tickety&quot;)">Tickety</span> <span class="detail-tab-count" x-text="(detailView.clientTickets || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;leads&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;leads&#x27;" x-show="detailView.type === &#x27;client&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Leady&quot;)">Leady</span> <span class="detail-tab-count" x-text="(detailView.clientLeads || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;tasks&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;tasks&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span> <span class="detail-tab-count" x-text="(detailView.tasks || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;comments&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;comments&#x27;">
+                            <span x-text="window.ZenI18n.t(&quot;Notatki i kontakt&quot;)">Notatki i kontakt</span> <span class="detail-tab-count" x-text="(detailView.comments || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === &#x27;activity&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;activity&#x27;"><span x-text="window.ZenI18n.t(&quot;Aktywność&quot;)">Aktywność</span></button>
+                        </div>
+                        <div class="detail-more" x-show="detailPanel">
+                            <button type="button" class="detail-more-trigger" @click="moreOpen = !moreOpen" :aria-expanded="moreOpen" :aria-label="window.ZenI18n.t('Więcej zakładek')">☰</button>
+                            <div class="detail-more-menu" x-show="moreOpen" x-cloak>
+                                <button class="detail-more-mobile" @click="detailView.tab = 'telephony'; loadEntityTelephony(detailView.type, detailView.data.id, detailView.data.phone); moreOpen = false" x-text="window.ZenI18n.t('Połączenia i SMS')"></button>
+                                <button class="detail-more-mobile" x-show="detailView.type === 'client'" @click="detailView.tab = 'services'; moreOpen = false" x-text="window.ZenI18n.t('Usługi')"></button>
+                                <button class="detail-more-wide-hidden" x-show="detailView.type === 'client'" @click="detailView.tab = 'tickets'; moreOpen = false" x-text="window.ZenI18n.t('Tickety')"></button>
+                                <button class="detail-more-wide-hidden" x-show="detailView.type === 'client'" @click="detailView.tab = 'leads'; moreOpen = false" x-text="window.ZenI18n.t('Leady')"></button>
+                                <button @click="detailView.tab = 'tasks'; moreOpen = false" x-text="window.ZenI18n.t('Zadania')"></button>
+                                <button @click="detailView.tab = 'documents'; moreOpen = false" x-text="window.ZenI18n.t('Dokumenty')"></button>
+                                <button @click="detailView.tab = 'comments'; moreOpen = false" x-text="window.ZenI18n.t('Notatki i kontakt')"></button>
+                                <button @click="detailView.tab = 'activity'; moreOpen = false" x-text="window.ZenI18n.t('Aktywność')"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="detail-body">
+
+                        <div x-show="detailView.loading" class="text-center py-12 text-gray-500">
+                            <div class="inline-block w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                            <p class="mt-2 text-sm"><span x-text="window.ZenI18n.t(&quot;Ładowanie…&quot;)">Ładowanie…</span></p>
+                        </div>
+
+                        
+                        <!-- LEADY KLIENTA -->
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;leads&#x27; &amp;&amp; detailView.type === &#x27;client&#x27;" x-cloak class="space-y-5">
+                            <div class="flex items-center justify-between flex-wrap gap-4 mb-2">
+                                <div>
+                                    <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Leady klienta&quot;)">Leady klienta</span></h3>
+                                    <p class="text-xs text-gray-500 mt-0.5"><span x-text="window.ZenI18n.t(&quot;Wszystkie leady powiązane z tym klientem.&quot;)">Wszystkie leady powiązane z tym klientem.</span></p>
+                                </div>
+                                <button @click="quickAdd(&#x27;lead&#x27;)"
+                                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    <span x-text="window.ZenI18n.t(&quot;Dodaj lead&quot;)">Dodaj lead</span>
+                                </button>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                                <div class="overflow-x-auto">
+                                    <table class="svc-table">
+                                        <thead>
+                                            <tr>
+                                                <th><span x-text="window.ZenI18n.t(&quot;Tytuł&quot;)">Tytuł</span></th>
+                                                <th><span x-text="window.ZenI18n.t(&quot;Etap&quot;)">Etap</span></th>
+                                                <th><span x-text="window.ZenI18n.t(&quot;Wartość&quot;)">Wartość</span></th>
+                                                <th><span x-text="window.ZenI18n.t(&quot;Prawd.&quot;)">Prawd.</span></th>
+                                                <th><span x-text="window.ZenI18n.t(&quot;Opiekun&quot;)">Opiekun</span></th>
+                                                <th class="text-right"><span x-text="window.ZenI18n.t(&quot;Akcje&quot;)">Akcje</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template x-for="l in (detailView.clientLeads || [])" :key="l.id">
+                                                <tr class="task-row" @click="openDetail(&#x27;lead&#x27;, l.id)">
+                                                    <td>
+                                                        <div class="font-semibold text-gray-900 dark:text-gray-100" x-text="l.title"></div>
+                                                        <div class="text-xs text-gray-500 mt-0.5" x-show="l.source" x-text="window.ZenI18n.t(&#x27;Źródło: &#x27;) + l.source"></div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                                              x-text="(leadStages.find(s =&gt; s.id === l.stage) || {}).label || l.stage"></span>
+                                                    </td>
+                                                    <td class="font-semibold" x-text="formatNumber(l.value) + window.ZenI18n.t(&#x27; zł&#x27;)"></td>
+                                                    <td>
+                                                        <div class="prob-wrap">
+                                                            <div class="prob-bar">
+                                                                <div class="prob-bar-fill"
+                                                                     :class="{
+                                                                        &#x27;prob-high&#x27;: (l.probability || 0) &gt;= 70,
+                                                                        &#x27;prob-mid&#x27;:  (l.probability || 0) &gt;= 40 &amp;&amp; (l.probability || 0) &lt; 70,
+                                                                        &#x27;prob-low&#x27;:  (l.probability || 0) &lt; 40
+                                                                     }"
+                                                                     :style="&#x27;width:&#x27; + (l.probability || 0) + &#x27;%&#x27;"></div>
+                                                            </div>
+                                                            <span class="prob-value" x-text="(l.probability || 0) + &#x27;%&#x27;"></span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <template x-if="l.assignee">
+                                                            <div class="flex items-center gap-2">
+                                                                <template x-if="l.assignee.avatar_url">
+                                                                    <img :src="l.assignee.avatar_url" class="w-7 h-7 rounded-full object-cover">
+                                                                </template>
+                                                                <template x-if="!l.assignee.avatar_url">
+                                                                    <div class="w-7 h-7 rounded-full avatar-gradient text-white flex items-center justify-center text-[10px] font-bold"
+                                                                         x-text="initialsFrom(l.assignee)"></div>
+                                                                </template>
+                                                                <span class="text-xs font-medium" x-text="fullName(l.assignee)"></span>
+                                                            </div>
+                                                        </template>
+                                                        <span x-show="!l.assignee" class="text-xs text-gray-400 italic"><span x-text="window.ZenI18n.t(&quot;Brak opiekuna&quot;)">Brak opiekuna</span></span>
+                                                    </td>
+                                                    <td class="text-right whitespace-nowrap" @click.stop>
+                                                        <button @click="openDetail(&#x27;lead&#x27;, l.id)" class="zen-list-action zen-action-arrow" :aria-label="window.ZenI18n.t(&quot;Otwórz&quot;)" :title="window.ZenI18n.t(&quot;Otwórz&quot;)"><span x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button>
+                                                        <button @click="openModal(l, null, false, &#x27;leads&#x27;)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
+                                                        <button @click="remove(l.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div x-show="(detailView.clientLeads || []).length === 0" class="detail-empty">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak leadów dla tego klienta&quot;)">Brak leadów dla tego klienta</span></p>
+                                    <p class="text-sm mt-1"><span x-text="window.ZenI18n.t(&quot;Kliknij „Dodaj lead\&quot;, aby utworzyć pierwszy.&quot;)">Kliknij „Dodaj lead&quot;, aby utworzyć pierwszy.</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;overview&#x27;" x-cloak class="grid gap-6 lg:grid-cols-3">
+                            <div class="lg:col-span-2 space-y-5">
+                                <div class="detail-section">
+                                    <div class="detail-section-title"><span class="zen-section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18 M5 21V3h14v18 M9 7h1 M14 7h1 M9 11h1 M14 11h1 M10 21v-5h4v5"/></svg></span><span x-text="window.ZenI18n.t(&quot;Informacje podstawowe&quot;)">Informacje podstawowe</span></div>
+                                    <div class="grid sm:grid-cols-2 gap-x-6">
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Nazwa&quot;)">Nazwa</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.name || detailView.data?.title || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Email&quot;)">Email</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.email || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Telefon&quot;)">Telefon</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.phone || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Firma&quot;)">Firma</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.company || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field sm:col-span-2">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Adres&quot;)">Adres</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.address || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field" x-show="detailView.type === &#x27;client&#x27;">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Status&quot;)">Status</span></span>
+                                            <span class="detail-field-value">
+                                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700"
+                                                      x-text="statusLabel(detailView.data?.status)"></span>
+                                            </span>
+                                        </div>
+                                        <div class="detail-field" x-show="detailView.type === &#x27;lead&#x27;">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Wartość&quot;)">Wartość</span></span>
+                                            <span class="detail-field-value text-brand-600 font-bold" x-text="formatNumber(detailView.data?.value) + window.ZenI18n.t(&#x27; zł&#x27;)"></span>
+                                        </div>
+                                        <div class="detail-field" x-show="detailView.type === &#x27;lead&#x27;">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Etap&quot;)">Etap</span></span>
+                                            <span class="detail-field-value" x-text="leadStages.find(s =&gt; s.id === detailView.data?.stage)?.label || detailView.data?.stage || &#x27;—&#x27;"></span>
+                                        </div>
+                                        <div class="detail-field" x-show="detailView.type === 'lead'">
+                                            <span class="detail-field-label"><span x-text="window.ZenI18n.t(&quot;Źródło&quot;)">Źródło</span></span>
+                                            <span class="detail-field-value" x-text="detailView.data?.source || '—'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detail-section" x-show="detailView.customFields && detailView.customFields.length > 0">
+                                    <div class="detail-section-title">
+                                        <span class="zen-section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
+                                        <span x-text="window.ZenI18n.t(&quot;Pola własne&quot;)">Pola własne</span>
+                                    </div>
+                                    <div class="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+                                        <template x-for="cf in detailView.customFields" :key="'det-cf-' + cf.id">
+                                            <div class="detail-field" :class="cf.kind === 'textarea' ? 'sm:col-span-2' : ''">
+                                                <span class="detail-field-label" x-text="cf.label"></span>
+                                                <span class="detail-field-value">
+                                                    <template x-if="cf.kind === 'boolean'">
+                                                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold"
+                                                              :class="cf.value === 'true' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : (cf.value === 'false' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : 'text-gray-400')"
+                                                              x-text="cf.value === 'true' ? window.ZenI18n.t('Tak') : (cf.value === 'false' ? window.ZenI18n.t('Nie') : '—')">
+                                                        </span>
+                                                    </template>
+                                                    <template x-if="cf.kind !== 'boolean'">
+                                                        <span class="whitespace-pre-wrap" x-text="cf.value || '—'"></span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="detail-section">
+                                    <div class="detail-section-title"><span class="zen-section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h16v18H4z M8 8h8 M8 12h8 M8 16h4"/></svg></span><span x-text="detailView.type === &#x27;client&#x27; ? window.ZenI18n.t(&quot;Dodatkowe informacje&quot;) : window.ZenI18n.t(&quot;Notatki&quot;)">Notatki</span></div>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap" x-text="detailView.data?.notes || (detailView.type === &#x27;client&#x27; ? window.ZenI18n.t(&#x27;Brak dodatkowych informacji&#x27;) : window.ZenI18n.t(&#x27;Brak notatek&#x27;))"></p>
+                                </div>
+                            </div>
+                            <div class="space-y-5">
+                                <div class="detail-section">
+                                    <div class="detail-section-title"><span class="zen-section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span x-text="window.ZenI18n.t(&quot;Ostatnia aktywność&quot;)">Ostatnia aktywność</span></div>
+                                    <div class="space-y-3">
+                                        <template x-for="a in (detailView.activities || []).slice(0,6)" :key="a.id">
+                                            <div class="flex gap-3 text-sm">
+                                                <span :class="activityIcon(a.action).cls" class="w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0" x-html="activityIcon(a.action).icon"></span>
+                                                <div class="min-w-0 flex-1">
+                                                    <p class="truncate" x-text="a.description || a.action"></p>
+                                                    <p class="text-xs text-gray-500 mt-0.5">
+                                                        <span x-text="fullName(a.user)"></span>
+                                                        <span> · </span>
+                                                        <span x-text="relativeTime(a.created_at)"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <p x-show="(detailView.activities || []).length === 0" class="text-sm text-gray-500 text-center py-4"><span x-text="window.ZenI18n.t(&quot;Brak aktywności&quot;)">Brak aktywności</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;contacts&#x27;" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Osoby kontaktowe&quot;)">Osoby kontaktowe</span></h3>
+                                <button @click="quickAdd(&#x27;contact&#x27;)" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;+ Dodaj kontakt&quot;)">+ Dodaj kontakt</span></button>
+                            </div>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <template x-for="c in (detailView.contacts || [])" :key="c.id">
+                                    <div class="detail-section flex items-start gap-3 relative transition hover:border-brand-300 dark:hover:border-brand-700" :class="c.is_primary ? 'ring-2 ring-brand-500/40 bg-brand-50/20 dark:bg-brand-900/10' : ''">
+                                        <button @click="openModal(c, null, true, 'contacts')" class="absolute top-2.5 right-2.5 p-1 rounded-md text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition" :aria-label="window.ZenI18n.t('Edytuj kontakt')" :title="window.ZenI18n.t('Edytuj kontakt')">
+                                            <span class="w-3.5 h-3.5 block [&_svg]:w-3.5 [&_svg]:h-3.5" x-html="zenIcon('edit')"></span>
+                                        </button>
+                                        <div class="w-10 h-10 rounded-full avatar-gradient text-white flex items-center justify-center text-sm font-bold flex-shrink-0" x-text="initialsFrom(c)"></div>
+                                        <div class="flex-1 min-w-0 pr-6">
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <p class="font-semibold truncate text-sm" x-text="c.full_name || (c.first_name + ' ' + c.last_name)"></p>
+                                                <span x-show="c.is_primary" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-semibold bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+                                                    <svg class="w-3 h-3 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                                    <span x-text="window.ZenI18n.t('Główny kontakt')">Główny kontakt</span>
+                                                </span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 truncate" x-text="c.position || '—'"></p>
+                                            <p class="text-xs text-gray-500 mt-1 truncate" x-show="c.email" x-text="c.email"></p>
+                                            <p class="text-xs text-gray-500 truncate" x-show="c.phone" x-text="c.phone"></p>
+                                            <div class="mt-2 flex items-center gap-1.5 flex-wrap">
+                                                <button @click="openEntityTelephonyModal('contact', c)" class="w-6 h-6 flex items-center justify-center rounded border border-emerald-200 dark:border-emerald-800 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition" :aria-label="window.ZenI18n.t('Połączenia i SMS')" :title="window.ZenI18n.t('Połączenia i SMS')"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
+                                                <button @click="openJournal('call','contact',c)" class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition [&_svg]:w-3 [&_svg]:h-3" :aria-label="window.ZenI18n.t('Dodaj telefon')" :title="window.ZenI18n.t('Dodaj telefon')"><span x-html="zenIcon('phone')"></span></button>
+                                                <button @click="openJournal('email','contact',c)" class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition [&_svg]:w-3 [&_svg]:h-3" :aria-label="window.ZenI18n.t('Dodaj e-mail')" :title="window.ZenI18n.t('Dodaj e-mail')"><span x-html="zenIcon('mail')"></span></button>
+                                                <button @click="openJournal('note','contact',c)" class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition [&_svg]:w-3 [&_svg]:h-3" :aria-label="window.ZenI18n.t('Notatki i historia kontaktu')" :title="window.ZenI18n.t('Notatki i historia kontaktu')"><span x-html="zenIcon('comment')"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="(detailView.contacts || []).length === 0" class="detail-empty">
+                                <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak kontaktów&quot;)">Brak kontaktów</span></p>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;services&#x27; &amp;&amp; detailView.type === &#x27;client&#x27;" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Usługi klienta&quot;)">Usługi klienta</span></h3>
+                                <button @click="quickAdd(&#x27;service&#x27;)" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;+ Dodaj usługę&quot;)">+ Dodaj usługę</span></button>
+                            </div>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <template x-for="s in (detailView.clientServices || [])" :key="s.id">
+                                    <div class="detail-section cursor-pointer hover:shadow-md transition" @click="openDetail(&#x27;service&#x27;, s.id)">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <h4 class="font-semibold truncate" x-text="s.name"></h4>
+                                            <span class="px-2 py-0.5 text-xs rounded-full font-semibold flex-shrink-0" :class="serviceStatusClass(s.status)" x-text="serviceStatusLabel(s.status)"></span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 line-clamp-2 mb-2" x-text="s.description || &#x27;—&#x27;"></p>
+                                        <div class="flex items-baseline justify-between text-xs">
+                                            <span class="font-bold" x-text="formatNumber(s.price) + window.ZenI18n.t(&#x27; zł&#x27;)"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="(detailView.clientServices || []).length === 0" class="detail-empty">
+                                <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak usług&quot;)">Brak usług</span></p>
+                            </div>
+                        </div>
+
+                        <!-- TAB TICKETY KLIENTA -->
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === &#x27;tickets&#x27; && detailView.type === &#x27;client&#x27;" x-cloak class="space-y-4">
+                            <div class="flex items-center justify-between flex-wrap gap-3 mb-2">
+                                <h3 class="font-semibold text-lg flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                                    <span x-text="window.ZenI18n.t(&quot;Tickety klienta&quot;)">Tickety klienta</span>
+                                </h3>
+                                <button type="button" @click="openNewTicketModal({ client_id: detailView.id, contact_name: detailView.data?.name, contact_email: detailView.data?.email, contact_phone: detailView.data?.phone })" class="detail-add-btn">
+                                    <span x-text="window.ZenI18n.t(&quot;+ Nowy ticket&quot;)">+ Nowy ticket</span>
+                                </button>
+                            </div>
+
+                            <div class="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xs"
+                                 x-show="(detailView.clientTickets || []).length > 0">
+                                <template x-for="tck in (detailView.clientTickets || [])" :key="tck.id">
+                                    <div class="p-4 hover:bg-gray-50/70 dark:hover:bg-gray-700/40 transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                                         @click="openTicketDetails(tck)">
+                                        <div class="space-y-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-mono text-xs font-bold text-brand-600 dark:text-brand-400" x-text="tck.ticket_number"></span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold"
+                                                      :class="ticketStatusClass(tck.status)"
+                                                      x-text="ticketStatusLabel(tck.status)"></span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold"
+                                                      :class="ticketPriorityClass(tck.priority)"
+                                                      x-text="ticketPriorityLabel(tck.priority)"></span>
+                                            </div>
+                                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm" x-text="tck.title"></div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1" x-text="tck.description"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-400 text-right whitespace-nowrap flex sm:flex-col items-center sm:items-end justify-between gap-1">
+                                            <span x-text="new Date(tck.created_at).toLocaleDateString(locale, { day: &#x27;2-digit&#x27;, month: &#x27;2-digit&#x27;, year: &#x27;numeric&#x27; })"></span>
+                                            <span class="text-brand-600 dark:text-brand-400 font-semibold" x-text="window.ZenI18n.t(&quot;Otwórz szczegóły →&quot;)">Otwórz szczegóły →</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div x-show="(detailView.clientTickets || []).length === 0" class="detail-empty">
+                                <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak ticketów dla tego klienta&quot;)">Brak ticketów dla tego klienta</span></p>
+                                <button type="button" @click="openNewTicketModal({ client_id: detailView.id, contact_name: detailView.data?.name, contact_email: detailView.data?.email, contact_phone: detailView.data?.phone })" class="mt-2 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                                    <span x-text="window.ZenI18n.t(&quot;+ Dodaj pierwszy ticket&quot;)">+ Dodaj pierwszy ticket</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;tasks&#x27;" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span></h3>
+                                <button @click="quickAdd(&#x27;task&#x27;)" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;+ Dodaj zadanie&quot;)">+ Dodaj zadanie</span></button>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="t in (detailView.tasks || [])" :key="t.id">
+                                    <div class="detail-section task-card cursor-pointer hover:shadow-md transition"
+                                         :class="{
+                                            &#x27;task-done&#x27;: t.status === &#x27;done&#x27;,
+                                            &#x27;task-high&#x27;: t.status !== &#x27;done&#x27; &amp;&amp; t.priority === &#x27;high&#x27;,
+                                            &#x27;task-medium&#x27;: t.status !== &#x27;done&#x27; &amp;&amp; t.priority === &#x27;medium&#x27;,
+                                            &#x27;task-low&#x27;: t.status !== &#x27;done&#x27; &amp;&amp; t.priority === &#x27;low&#x27;
+                                         }"
+                                         @click="openDetail(&#x27;task&#x27;, t.id)">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="font-semibold" :class="t.status === &#x27;done&#x27; ? &#x27;line-through text-gray-400&#x27; : &#x27;&#x27;" x-text="t.title"></p>
+                                                <p class="text-xs text-gray-500 mt-0.5"
+                                                   ><span class="zen-icon-wrap" x-show="t.due_date" x-html="zenIcon(&#x27;calendar&#x27;)" aria-hidden="true"></span> <span x-text="[
+                                                      t.due_date ? new Date(t.due_date).toLocaleDateString(locale) : &#x27;&#x27;,
+                                                      taskStageLabel(t.status)
+                                                   ].filter(Boolean).join(&#x27; · &#x27;)"></span></p>
+                                            </div>
+                                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full"
+                                                  :class="{&#x27;bg-red-100 text-red-700&#x27;: t.priority === &#x27;high&#x27;, &#x27;bg-yellow-100 text-yellow-700&#x27;: t.priority === &#x27;medium&#x27;, &#x27;bg-green-100 text-green-700&#x27;: t.priority === &#x27;low&#x27;}"
+                                                  x-text="priorityLabel(t.priority)"></span>
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="(detailView.tasks || []).length === 0" class="detail-empty">
+                                <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak zadań&quot;)">Brak zadań</span></p>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;documents&#x27;" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span></h3>
+                                <button @click="quickAdd(&#x27;document&#x27;)" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;+ Dodaj dokument&quot;)">+ Dodaj dokument</span></button>
+                            </div>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <template x-for="d in (detailView.documents || [])" :key="d.id">
+                                    <div class="detail-section">
+                                        <p class="font-semibold truncate" x-text="d.title"></p>
+                                        <p class="text-xs text-gray-500" x-text="docTypeLabel(d.type)"></p>
+                                        <div class="flex gap-2 mt-2">
+                                            <button @click="generateDoc(d)" class="zen-list-action zen-action-document" :aria-label="window.ZenI18n.t(&quot;Generuj&quot;)" :title="window.ZenI18n.t(&quot;Generuj&quot;)"><span x-html="zenIcon(&#x27;document&#x27;)" aria-hidden="true"></span></button>
+                                            <button @click="downloadPdf(&#x27;documents&#x27;, d)" class="zen-list-action zen-action-download" :aria-label="window.ZenI18n.t(&quot;PDF&quot;)" :title="window.ZenI18n.t(&quot;PDF&quot;)"><span x-html="zenIcon(&#x27;download&#x27;)" aria-hidden="true"></span></button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="(detailView.documents || []).length === 0" class="detail-empty">
+                                <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak dokumentów&quot;)">Brak dokumentów</span></p>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;comments&#x27;" x-cloak>
+                            <h3 class="font-semibold text-lg mb-5"><span x-text="window.ZenI18n.t(&quot;Notatki i kontakt&quot;)">Notatki i kontakt</span></h3>
+                            <div class="journal-inline-actions"><button @click="openJournal(&#x27;call&#x27;,detailView.type,detailView.data)"><span x-html="zenIcon(&#x27;phone&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Dodaj telefon&quot;)">Dodaj telefon</span></button><button @click="openJournal(&#x27;email&#x27;,detailView.type,detailView.data)"><span x-html="zenIcon(&#x27;mail&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Dodaj e-mail&quot;)">Dodaj e-mail</span></button></div><div class="space-y-3 mb-6">
+                                <template x-for="c in (detailView.comments || [])" :key="c.id">
+                                    <div class="comment-item flex gap-3">
+                                        <template x-if="c.user?.avatar_url">
+                                            <img :src="c.user.avatar_url" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+                                        </template>
+                                        <template x-if="!c.user?.avatar_url">
+                                            <div class="w-10 h-10 rounded-full avatar-gradient text-white flex items-center justify-center text-sm font-bold flex-shrink-0" x-text="initialsFrom(c.user)"></div>
+                                        </template>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <span class="font-semibold text-sm" x-text="fullName(c.user)"></span>
+                                                <span class="text-xs text-gray-500" x-text="relativeTime(c.created_at)"></span>
+                                            </div>
+                                            <span class="journal-badge" :class="c.kind" x-text="noteLabel(c)"></span><small class="journal-address" x-show="c.address" x-text="c.address"></small><p class="text-sm mt-1 whitespace-pre-wrap" x-text="c.content"></p>
+                                        </div>
+                                        <button @click="removeComment(c.id)" class="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                                    </div>
+                                </template>
+                                <p x-show="(detailView.comments || []).length === 0" class="text-center text-gray-500 py-8"><span x-text="window.ZenI18n.t(&quot;Brak wpisów&quot;)">Brak wpisów</span></p>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-section-title"><span x-text="window.ZenI18n.t(&quot;Dodaj notatkę&quot;)">Dodaj notatkę</span></div>
+                                <textarea x-model="detailView.newComment" rows="3" :placeholder="window.ZenI18n.t(&quot;Napisz notatkę…&quot;)" class="w-full px-4 py-3 border rounded-xl dark:bg-gray-800 dark:border-gray-600 outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                                <div class="flex justify-end mt-3">
+                                    <button @click="addComment()" class="detail-add-btn"><span x-text="window.ZenI18n.t(&quot;Zapisz notatkę&quot;)">Zapisz notatkę</span></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;activity&#x27;" x-cloak>
+                            <h3 class="font-semibold text-lg mb-5"><span x-text="window.ZenI18n.t(&quot;Dziennik aktywności&quot;)">Dziennik aktywności</span></h3>
+                            <div class="space-y-1">
+                                <template x-for="a in (detailView.activities || [])" :key="a.id">
+                                    <div class="activity-item">
+                                        <template x-if="a.user?.avatar_url">
+                                            <img :src="a.user.avatar_url" class="w-9 h-9 rounded-full object-cover flex-shrink-0">
+                                        </template>
+                                        <template x-if="!a.user?.avatar_url">
+                                            <span :class="activityIcon(a.action).cls" class="activity-icon text-sm flex-shrink-0" x-html="activityIcon(a.action).icon"></span>
+                                        </template>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm">
+                                                <span class="font-semibold" x-text="fullName(a.user)"></span>
+                                                <span class="text-gray-500" x-text="&#x27; · &#x27; + relativeTime(a.created_at)"></span>
+                                            </p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5" x-text="a.description || a.action"></p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <p x-show="(detailView.activities || []).length === 0" class="text-center text-gray-500 py-8"><span x-text="window.ZenI18n.t(&quot;Brak aktywności&quot;)">Brak aktywności</span></p>
+                            </div>
+                        </div>
+
+                        <!-- ═══ ZAKŁADKA: POŁĄCZENIA I SMS ═══ -->
+                        <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;telephony&#x27;" x-cloak class="space-y-6">
+                            <div class="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <h3 class="font-semibold text-lg flex items-center gap-2 text-gray-900 dark:text-white">
+                                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                        <span x-text="window.ZenI18n.t(&quot;Połączenia i SMS&quot;)">Połączenia i SMS</span>
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">
+                                        <span x-text="window.ZenI18n.t(&quot;Wszystkie połączenia i SMS powiązane z numerami tego rekordu&quot;)">Wszystkie połączenia i SMS powiązane z numerami tego rekordu</span>
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button @click="syncTelephony()" :disabled="syncingTelephony"
+                                            class="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-semibold text-gray-700 dark:text-gray-200 inline-flex items-center gap-1.5 transition">
+                                        <svg :class="{'animate-spin': syncingTelephony}" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                        <span x-text="syncingTelephony ? window.ZenI18n.t(&quot;Synchronizuję...&quot;) : window.ZenI18n.t(&quot;Synchronizuj&quot;)">Synchronizuj</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Numery telefonów przypisane do rekordu -->
+                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 flex items-center justify-between gap-3 flex-wrap">
+                                <div class="flex items-center gap-2 flex-wrap text-xs">
+                                    <span class="font-semibold text-gray-600 dark:text-gray-400">Powiązane numery:</span>
+                                    <template x-for="p in (entityTelephony.phones || [])" :key="p">
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-mono text-[11px] font-medium">
+                                            <span x-text="formatPhoneLabel(p)"></span>
+                                            
+                                        </span>
+                                    </template>
+                                    <span x-show="!entityTelephony.phones?.length" class="text-gray-400 italic">Brak zdefiniowanego numeru telefonu</span>
+                                </div>
+                            </div>
+
+                            <!-- Szybkie wysyłanie SMS -->
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-xs text-emerald-800 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                        <span>Wyślij szybki SMS</span>
+                                    </h4>
+                                    <div class="flex items-center gap-2">
+                                        <template x-if="entityTelephony.phones?.length">
+                                            <button @click="callContact(entityTelephony.selectedPhone || entityTelephony.phones[0])"
+                                                    class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold shadow-xs flex items-center gap-1 transition"
+                                                    title="Wybierz numer na telefonie">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                                <span>Połącz</span>
+                                            </button>
+                                        </template>
+                                        <template x-if="entityTelephony.phones && entityTelephony.phones.length > 1">
+                                            <select x-model="entityTelephony.selectedPhone" class="px-2 py-1 text-xs rounded border border-emerald-300 dark:border-emerald-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+                                                <template x-for="p in entityTelephony.phones" :key="p">
+                                                    <option :value="p" x-text="formatPhoneLabel(p)"></option>
+                                                </template>
+                                            </select>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <textarea x-model="entityTelephony.replyText"
+                                              rows="2"
+                                              placeholder="Wpisz treść wiadomości SMS do wysłania z podłączonego telefonu..."
+                                              class="flex-1 px-3 py-2 text-xs rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                                    <button @click="sendInlineEntityTelephonySms()"
+                                            :disabled="entityTelephony.sending || !entityTelephony.replyText?.trim()"
+                                            class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg text-xs font-semibold shadow-sm transition disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap self-end">
+                                        <svg x-show="!entityTelephony.sending" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                        <span x-text="entityTelephony.sending ? 'Wysyłam…' : 'Wyślij SMS'">Wyślij SMS</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Podział na Połączenia i SMS -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <!-- Kolumna 1: Połączenia -->
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between pb-1 border-b border-gray-100 dark:border-gray-700">
+                                        <h4 class="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-1.5">
+                                            <span>Rejestr połączeń</span>
+                                            <span class="text-xs text-gray-400 font-normal" x-text="'(' + (entityTelephony.calls?.length || 0) + ')'"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+                                        <template x-for="call in (entityTelephony.calls || [])" :key="'det-c-' + call.id">
+                                            <button type="button" @click="openCallNote(call)" class="w-full p-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-left flex items-center justify-between hover:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                                <div class="flex items-center gap-2.5">
+                                                    <span class="px-2 py-0.5 rounded font-semibold text-[10px]"
+                                                          :class="callTypeClass(call.type)"
+                                                          x-text="callTypeLabel(call.type)"></span>
+                                                    <div>
+                                                        <div class="font-bold text-gray-900 dark:text-white" x-text="(call.contact || getContactByPhone(call.number))?.name || call.number"></div>
+                                                        <div class="text-[11px] text-gray-500 font-mono" x-show="call.contact || getContactByPhone(call.number)" x-text="call.number"></div>
+                                                        <div class="text-[11px] text-gray-400" x-text="call.date_formatted"></div>
+                                                        <p class="text-[11px] text-gray-600 dark:text-gray-300 whitespace-pre-wrap" x-show="call.note" x-text="call.note"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="font-semibold text-gray-700 dark:text-gray-300" x-text="call.duration_formatted || (call.duration_sec + 's')"></div>
+                                                    <div class="text-[10px] text-gray-400" x-text="call.device_name || ''"></div>
+                                                </div>
+                                            </button>
+                                        </template>
+                                        <template x-if="!entityTelephony.calls || !entityTelephony.calls.length">
+                                            <div class="text-center py-10 text-gray-400 text-xs bg-gray-50 dark:bg-gray-800/40 rounded-xl">
+                                                Brak historii połączeń dla powiązanych numerów
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Kolumna 2: Wiadomości SMS -->
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between pb-1 border-b border-gray-100 dark:border-gray-700">
+                                        <h4 class="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-1.5">
+                                            <span>Historia SMS</span>
+                                            <span class="text-xs text-gray-400 font-normal" x-text="'(' + (entityTelephony.messages?.length || 0) + ')'"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+                                        <template x-for="msg in (entityTelephony.messages || [])" :key="'det-m-' + msg.id">
+                                            <div class="p-3 rounded-xl border text-xs space-y-1.5"
+                                                 :class="msg.type === 'received' ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/40' : 'bg-blue-50/50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/40'">
+                                                <div class="flex items-center justify-between gap-2">
+                                                    <span class="font-bold text-[10px] uppercase tracking-wider"
+                                                          :class="msg.type === 'received' ? 'text-emerald-700 dark:text-emerald-300' : 'text-blue-700 dark:text-blue-300'"
+                                                          x-text="msg.type === 'received' ? 'Odebrany SMS' : 'Wysłany SMS'"></span>
+                                                    <span class="text-[10px] text-gray-400" x-text="msg.date_formatted"></span>
+                                                </div>
+                                                <div class="text-gray-800 dark:text-gray-200 select-text whitespace-pre-wrap leading-relaxed" x-text="msg.body"></div>
+                                                <div class="text-[10px] text-gray-500 font-mono text-right flex items-center justify-end gap-1.5 flex-wrap">
+                                                    <span class="font-sans font-semibold text-gray-700 dark:text-gray-300" x-show="(msg.contact || getContactByPhone(msg.address))?.name" x-text="(msg.contact || getContactByPhone(msg.address))?.name"></span>
+                                                    <span x-text="'(' + msg.address + ')'"></span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="!entityTelephony.messages || !entityTelephony.messages.length">
+                                            <div class="text-center py-10 text-gray-400 text-xs bg-gray-50 dark:bg-gray-800/40 rounded-xl">
+                                                Brak wiadomości SMS dla powiązanych numerów
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            

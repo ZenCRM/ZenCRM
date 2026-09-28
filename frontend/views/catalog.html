@@ -1,0 +1,48 @@
+<!-- ═══ KATALOG USŁUG ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;serviceCatalog&#x27;" x-cloak>
+                <div class="flex justify-end mb-4"><button type="button" x-show="canRecordAction('serviceCatalog', 'create')" @click="openModal(null, null, false, 'serviceCatalog')" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj usługę do katalogu')">+ Dodaj usługę do katalogu</button></div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="overflow-x-auto">
+                        <table class="svc-table">
+                            <thead>
+                                <tr>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Nazwa&quot;)">Nazwa</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Typ&quot;)">Typ</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Okres&quot;)">Okres</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Cykl&quot;)">Cykl</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Cena domyślna&quot;)">Cena domyślna</span></th>
+                                    <th class="text-right"><span x-text="window.ZenI18n.t(&quot;Akcje&quot;)">Akcje</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="c in pagedItems('serviceCatalog', serviceCatalog)" :key="c.id">
+                                    <tr>
+                                        <td>
+                                            <div class="font-medium" x-text="c.name"></div>
+                                            <div class="text-xs text-gray-500 truncate" style="max-width:280px;" x-text="c.description || &#x27;&#x27;"></div>
+                                        </td>
+                                        <td>
+                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium"
+                                                  :class="c.billing_type === &#x27;subscription&#x27; ? &#x27;bg-brand-100 text-brand-700&#x27; : &#x27;bg-blue-100 text-blue-700&#x27;"
+                                                  x-text="c.billing_type === &#x27;subscription&#x27; ? window.ZenI18n.t(&#x27;Abonament&#x27;) : window.ZenI18n.t(&#x27;Jednorazowa&#x27;)"></span>
+                                        </td>
+                                        <td class="text-xs text-gray-500" x-text="c.term_type === &#x27;fixed&#x27; ? window.ZenI18n.t(&#x27;Określony&#x27;) : window.ZenI18n.t(&#x27;Nieokreślony&#x27;)"></td>
+                                        <td class="text-xs text-gray-500" x-text="billingLabel(c.default_billing_cycle)"></td>
+                                        <td class="font-semibold" x-text="formatNumber(c.default_price) + window.ZenI18n.t(&#x27; zł&#x27;)"></td>
+                                        <td class="text-right whitespace-nowrap">
+                                            <button @click="openModal(c, null, false, &#x27;serviceCatalog&#x27;)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
+                                            <button @click="remove(c.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div x-show="serviceCatalog.length === 0" class="detail-empty">
+                        <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Katalog jest pusty&quot;)">Katalog jest pusty</span></p>
+                    </div>
+                    <div x-data="{ pagerView: 'serviceCatalog', get pagerItems() { return this.serviceCatalog } }"><% include "views/pagination.html" %></div>
+                </div>
+            </div>
+
+            

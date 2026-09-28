@@ -1,0 +1,42 @@
+<!-- ═══ OFERTY ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;offers&#x27;" x-cloak>
+                <div class="flex justify-end mb-4"><button type="button" x-show="canRecordAction('offers', 'create')" @click="openModal(null, null, false, 'offers')" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj ofertę')">+ Dodaj ofertę</button></div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700 text-left text-xs uppercase text-gray-500">
+                            <tr>
+                                <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;Numer&quot;)">Numer</span></th>
+                                <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;Tytuł&quot;)">Tytuł</span></th>
+                                <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;Klient&quot;)">Klient</span></th>
+                                <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;Kwota&quot;)">Kwota</span></th>
+                                <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;Status&quot;)">Status</span></th>
+                                <th class="px-4 py-3 text-right"><span x-text="window.ZenI18n.t(&quot;Akcje&quot;)">Akcje</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <template x-for="o in pagedItems('offers', offers)" :key="o.id">
+                                <tr>
+                                    <td class="px-4 py-3 font-mono text-xs" x-text="o.number"></td>
+                                    <td class="px-4 py-3 font-medium" x-text="o.title"></td>
+                                    <td class="px-4 py-3" x-text="clientName(o.client_id)"></td>
+                                    <td class="px-4 py-3 font-semibold" x-text="formatNumber(o.total_amount) + window.ZenI18n.t(&#x27; zł&#x27;)"></td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-0.5 text-xs rounded-full"
+                                              :class="{&#x27;bg-gray-100 text-gray-700&#x27;: o.status === &#x27;draft&#x27;, &#x27;bg-blue-100 text-blue-700&#x27;: o.status === &#x27;sent&#x27;, &#x27;bg-green-100 text-green-700&#x27;: o.status === &#x27;accepted&#x27;, &#x27;bg-red-100 text-red-700&#x27;: o.status === &#x27;rejected&#x27;}"
+                                              x-text="offerStatusLabel(o.status)"></span>
+                                    </td>
+                                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                                        <button @click="generateOffer(o)" class="zen-list-action zen-action-document" :aria-label="window.ZenI18n.t(&quot;Generuj&quot;)" :title="window.ZenI18n.t(&quot;Generuj&quot;)"><span x-html="zenIcon(&#x27;document&#x27;)" aria-hidden="true"></span></button>
+                                        <button @click="downloadPdf(&#x27;offers&#x27;, o)" class="zen-list-action zen-action-download" :aria-label="window.ZenI18n.t(&quot;PDF&quot;)" :title="window.ZenI18n.t(&quot;PDF&quot;)"><span x-html="zenIcon(&#x27;download&#x27;)" aria-hidden="true"></span></button>
+                                        <button @click="openModal(o, null, false, &#x27;offers&#x27;)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
+                                        <button @click="remove(o.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div x-data="{ pagerView: 'offers', get pagerItems() { return this.offers } }"><% include "views/pagination.html" %></div>
+                </div>
+            </div>
+
+            

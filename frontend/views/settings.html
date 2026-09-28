@@ -1,0 +1,1125 @@
+<!-- ═══ USTAWIENIA ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;settings&#x27;" x-cloak>
+                <div class="settings-shell">
+
+                    <!-- NAWIGACJA -->
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item" :class="settingsTab === 'customFields' ? 'active' : ''" @click="settingsTab = 'customFields'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
+                            <span x-text="window.ZenI18n.t('Pola własne')">Pola własne</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'standardFields' ? 'active' : ''" @click="settingsTab = 'standardFields'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                            <span x-text="window.ZenI18n.t('Pola standardowe')">Pola standardowe</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'permissions' ? 'active' : ''" @click="settingsTab = 'permissions'; loadPermissions()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V7l8-4zM9 12l2 2 4-4"/></svg>
+                            <span>Role i uprawnienia</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'customValues' ? 'active' : ''" @click="settingsTab = 'customValues'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M5 4h14v16H5z"/></svg>
+                            <span x-text="window.ZenI18n.t('Wartości pól')">Wartości pól</span>
+                        </button>
+
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;branding&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;branding&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Branding&quot;)">Branding</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;colors&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;colors&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Kolory&quot;)">Kolory</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;login&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;login&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Ekran logowania&quot;)">Ekran logowania</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;company&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;company&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Dane firmy&quot;)">Dane firmy</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;ui&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;ui&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Interfejs&quot;)">Interfejs</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;helpdesk&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;helpdesk&#x27;; loadHelpdeskSettings()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Helpdesk &amp; Tickety&quot;)">Helpdesk &amp; Tickety</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === &#x27;emails&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;emails&#x27;; loadEmailTemplates(); loadSmtpSettings()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Szablony e-mail &amp; SMTP&quot;)">Szablony e-mail &amp; SMTP</span>
+                        </button>
+                        <hr class="my-2 border-gray-100 dark:border-gray-700">
+                        <button class="settings-nav-item" @click="resetSettings()" style="color: #ef4444;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Przywróć domyślne&quot;)">Przywróć domyślne</span>
+                        </button>
+                    </nav>
+
+                    <!-- PANEL -->
+                    <div class="settings-panel">
+
+                        <div x-show="settingsTab === 'permissions'" x-cloak class="space-y-5">
+                            <div>
+                                <h2 class="settings-section-title">Role i uprawnienia</h2>
+                                <p class="settings-section-desc">Ustaw działania dostępne dla roli lub zespołu. Odmowa w dowolnym zespole ma pierwszeństwo. Administrator zawsze ma pełny dostęp i tylko on może usuwać trwale.</p>
+                            </div>
+                            <form @submit.prevent="createManagedRole()" class="flex gap-2 flex-wrap">
+                                <input x-model="newRoleName" required maxlength="100" placeholder="Nazwa nowej roli" class="ux-input flex-1 min-w-40" aria-label="Nazwa nowej roli">
+                                <button type="submit" class="ux-button">Dodaj rolę</button>
+                            </form>
+                            <div class="flex gap-2 items-end flex-wrap">
+                                <label class="flex-1 min-w-48 text-sm">Konfiguracja dla
+                                    <select x-model="permissionSubject" @change="roleNameDraft = managedRoles.find(r => 'role:' + r.key === permissionSubject)?.name || ''" class="ux-input block w-full mt-1">
+                                        <optgroup label="Role">
+                                            <template x-for="role in managedRoles" :key="role.key"><option :value="'role:' + role.key" x-text="role.name"></option></template>
+                                        </optgroup>
+                                        <optgroup label="Zespoły">
+                                            <template x-for="team in teams" :key="team.id"><option :value="'team:' + team.id" x-text="team.name"></option></template>
+                                        </optgroup>
+                                    </select>
+                                </label>
+                                <button type="button" x-show="permissionSubject.startsWith('role:') && !['role:admin','role:manager','role:employee'].includes(permissionSubject)" @click="deleteManagedRole()" class="ux-text-button text-red-600">Usuń rolę</button>
+                            </div>
+                            <form x-show="permissionSubject.startsWith('role:') && !['role:admin','role:manager','role:employee'].includes(permissionSubject)" @submit.prevent="renameManagedRole()" class="flex gap-2 flex-wrap">
+                                <input x-model="roleNameDraft" required maxlength="100" class="ux-input flex-1 min-w-40" aria-label="Nowa nazwa roli">
+                                <button type="submit" class="ux-text-button">Zmień nazwę</button>
+                            </form>
+                            <p x-show="permissionSubject === 'role:admin'" class="ux-muted">Uprawnienia administratora są stałe.</p>
+                            <p x-show="permissionSubject.startsWith('role:') && permissionSubject !== 'role:admin'" class="ux-muted">Dla roli „Dziedzicz” zachowuje dotychczasowy dostęp ról systemowych. Nowa rola domyślnie nie ma uprawnień.</p>
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                                <template x-for="permission in permissionCatalog" :key="permission.key">
+                                    <div class="flex items-center justify-between gap-3 px-4 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                                        <span class="text-sm" x-text="permission.label"></span>
+                                        <select :value="permissionRule(permission.key)" @change="setPermissionRule(permission.key, $event.target.value)" :disabled="permissionSubject === 'role:admin'" class="ux-input w-36 text-sm" :aria-label="permission.label">
+                                            <option value="inherit">Dziedzicz</option><option value="allow">Zezwól</option><option value="deny">Odmów</option>
+                                        </select>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="flex justify-end"><button type="button" @click="savePermissions()" :disabled="permissionSubject === 'role:admin'" class="ux-button">Zapisz uprawnienia</button></div>
+                            <p x-show="permissionError" x-text="permissionError" role="alert" class="text-red-600 text-sm"></p>
+                            <p x-show="permissionSaved" x-text="permissionSaved" role="status" class="text-green-600 text-sm"></p>
+                        </div>
+
+                        <div x-show="settingsTab === 'customFields'" x-cloak>
+                            <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+                                <div>
+                                    <h2 class="settings-section-title" x-text="window.ZenI18n.t('Pola własne')">Pola własne</h2>
+                                    <p class="settings-section-desc" x-text="window.ZenI18n.t('Definiuj dodatkowe pola dostępne w rekordach CRM.')">Definiuj dodatkowe pola dostępne w rekordach CRM.</p>
+                                </div>
+                            </div>
+
+                            <!-- Dodaj nowe pole -->
+                            <div class="p-5 mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/50">
+                                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    <span x-text="window.ZenI18n.t('Dodaj nowe pole własne')">Dodaj nowe pole własne</span>
+                                </h3>
+                                <form @submit.prevent="createCustomField()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Element')">Element</label>
+                                        <select x-model="newCustomField.entity" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                            <template x-for="(label, key) in customEntityLabels" :key="'add-' + key">
+                                                <option :value="key" x-text="label"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Nazwa pola')">Nazwa pola</label>
+                                        <input type="text" x-model="newCustomField.label" :placeholder="window.ZenI18n.t('np. NIP, Źródło leadu')" required
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Typ')">Typ</label>
+                                        <select x-model="newCustomField.kind" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                            <template x-for="(label, key) in customKindLabels" :key="'kind-' + key">
+                                                <option :value="key" x-text="label"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center h-full pt-4">
+                                        <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                            <input type="checkbox" x-model="newCustomField.required" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                            <span x-text="window.ZenI18n.t('Wymagane')">Wymagane</span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="w-full px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                            <span x-text="window.ZenI18n.t('Dodaj pole')">Dodaj pole</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Panel edycji pola własnego -->
+                            <div x-show="editingCustomField" class="mb-6 p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20" x-cloak>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+                                    <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
+                                    <span x-text="window.ZenI18n.t('Edytuj pole') + ': ' + (editingCustomField?.label || '')"></span>
+                                </h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Nazwa pola')">Nazwa pola</label>
+                                        <input type="text" x-model="editingCustomField.label" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Typ')">Typ</label>
+                                        <select x-model="editingCustomField.kind" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                            <template x-for="(label, key) in customKindLabels" :key="'edit-kind-' + key">
+                                                <option :value="key" x-text="label"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center h-full pt-4">
+                                        <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                            <input type="checkbox" x-model="editingCustomField.required" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                            <span x-text="window.ZenI18n.t('Wymagane')">Wymagane</span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" @click="saveEditCustomField()" class="flex-1 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm">
+                                            <span x-text="window.ZenI18n.t('Zapisz')">Zapisz</span>
+                                        </button>
+                                        <button type="button" @click="cancelEditCustomField()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg">
+                                            <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lista zdefiniowanych pól -->
+                            <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider" x-text="window.ZenI18n.t('Filtruj:')">Filtruj:</span>
+                                    <select x-model="customFieldsFilter" class="px-3 py-1.5 text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                        <option value="" x-text="window.ZenI18n.t('Wszystkie elementy')">Wszystkie elementy</option>
+                                        <template x-for="(label, key) in customEntityLabels" :key="'f-' + key">
+                                            <option :value="key" x-text="label"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <span class="text-xs text-gray-500" x-text="'Łącznie pól: ' + (customFieldDefs || []).length"></span>
+                            </div>
+
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-xs">
+                                <table class="svc-table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th x-text="window.ZenI18n.t('Nazwa pola')">Nazwa pola</th>
+                                            <th x-text="window.ZenI18n.t('Element')">Element</th>
+                                            <th x-text="window.ZenI18n.t('Typ')">Typ</th>
+                                            <th x-text="window.ZenI18n.t('Wymagane')">Wymagane</th>
+                                            <th class="text-right" x-text="window.ZenI18n.t('Akcje')">Akcje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="f in (customFieldDefs || []).filter(item => !customFieldsFilter || item.entity === customFieldsFilter)" :key="'cf-row-' + f.id">
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
+                                                <td class="font-semibold text-gray-900 dark:text-gray-100" x-text="f.label"></td>
+                                                <td>
+                                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800"
+                                                          x-text="customEntityLabels[f.entity] || f.entity"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                                          x-text="customKindLabels[f.kind] || f.kind"></span>
+                                                </td>
+                                                <td>
+                                                    <span x-show="f.required" class="px-2 py-0.5 rounded text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800" x-text="window.ZenI18n.t('Tak')">Tak</span>
+                                                    <span x-show="!f.required" class="text-xs text-gray-400" x-text="window.ZenI18n.t('Nie')">Nie</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="inline-flex items-center gap-1 justify-end">
+                                                        <button type="button" @click="openEditCustomField(f)"
+                                                                class="zen-list-action text-blue-500 hover:text-blue-700"
+                                                                :title="window.ZenI18n.t('Edytuj pole')">
+                                                            <span x-html="zenIcon('pencil')" aria-hidden="true"></span>
+                                                        </button>
+                                                        <button type="button" @click="deleteCustomField(f.id)"
+                                                                class="zen-list-action zen-action-trash text-red-500 hover:text-red-700"
+                                                                :title="window.ZenI18n.t('Usuń pole')"
+                                                                :aria-label="window.ZenI18n.t('Usuń pole')">
+                                                            <span x-html="zenIcon('trash')" aria-hidden="true"></span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <tr x-show="!(customFieldDefs || []).filter(item => !customFieldsFilter || item.entity === customFieldsFilter).length">
+                                            <td colspan="5" class="text-center py-8 text-gray-400 text-xs italic">
+                                                <span x-text="window.ZenI18n.t('Brak zdefiniowanych pól własnych.')">Brak zdefiniowanych pól własnych.</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <!-- ═══ POLA STANDARDOWE ═══ -->
+                        <div x-show="settingsTab === 'standardFields'" x-cloak class="space-y-6">
+                            <div class="flex items-center justify-between flex-wrap gap-4">
+                                <div>
+                                    <h2 class="settings-section-title" x-text="window.ZenI18n.t('Pola standardowe')">Pola standardowe</h2>
+                                    <p class="settings-section-desc" x-text="window.ZenI18n.t('Wszystkie wbudowane pola systemowe CRM. Możesz dostosować ich etykiety oraz określić, które pola są wymagane podczas dodawania i edycji rekordów.')">Wszystkie wbudowane pola systemowe CRM. Możesz dostosować ich etykiety oraz określić, które pola są wymagane podczas dodawania i edycji rekordów.</p>
+                                </div>
+                            </div>
+
+                            <!-- Panel edycji pola standardowego -->
+                            <div x-show="editingStandardField" class="p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20" x-cloak>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
+                                        <span x-text="window.ZenI18n.t('Edytuj pole standardowe') + ': ' + (editingStandardField?.label || '')"></span>
+                                    </h4>
+                                    <span class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200"
+                                          x-text="editingStandardField?.entityLabel"></span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
+                                    <div class="sm:col-span-5">
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Wyświetlana etykieta w formularzu')">Wyświetlana etykieta w formularzu</label>
+                                        <input type="text" x-model="editingStandardField.label"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                        <p class="text-[11px] text-gray-400 mt-1" x-text="window.ZenI18n.t('Oryginalna nazwa systemowa: ') + (editingStandardField?.defaultLabel || '')"></p>
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Klucz systemowy')">Klucz systemowy</label>
+                                        <input type="text" readonly :value="editingStandardField?.key"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg bg-gray-100 dark:bg-gray-800 dark:border-gray-600 text-gray-500 font-mono">
+                                    </div>
+                                    <div class="sm:col-span-4 flex items-center h-full pt-4">
+                                        <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                            <input type="checkbox" x-model="editingStandardField.required" :disabled="editingStandardField.systemRequired"
+                                                   class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4 disabled:opacity-50">
+                                            <span x-text="window.ZenI18n.t('Pole wymagane')">Pole wymagane</span>
+                                            <span x-show="editingStandardField.systemRequired" class="text-[10px] text-amber-600 dark:text-amber-400 font-normal italic" x-text="window.ZenI18n.t('(wymóg systemowy)')">(wymóg systemowy)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between flex-wrap gap-2 pt-4 mt-3 border-t border-blue-100 dark:border-blue-800/60">
+                                    <button type="button" @click="resetStandardFieldLabel()" x-show="editingStandardField?.customLabel"
+                                            class="px-3 py-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                                        <span x-text="window.ZenI18n.t('Przywróć domyślną etykietę')">Przywróć domyślną etykietę</span>
+                                    </button>
+                                    <div class="flex items-center gap-2 ml-auto">
+                                        <button type="button" @click="cancelEditStandardField()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-medium rounded-lg">
+                                            <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                                        </button>
+                                        <button type="button" @click="saveEditStandardField()" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow-sm">
+                                            <span x-text="window.ZenI18n.t('Zapisz zmiany')">Zapisz zmiany</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Filtry listy pól standardowych -->
+                            <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                                <div class="flex items-center gap-3 flex-wrap">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider" x-text="window.ZenI18n.t('Moduł:')">Moduł:</span>
+                                        <select x-model="standardFieldsFilter" class="px-3 py-1.5 text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                            <option value="" x-text="window.ZenI18n.t('Wszystkie moduły')">Wszystkie moduły</option>
+                                            <template x-for="ent in standardRequiredEntities" :key="'sff-' + ent.key">
+                                                <option :value="ent.key" x-text="ent.label"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="relative">
+                                        <input type="search" x-model="standardFieldsSearch" :placeholder="window.ZenI18n.t('Szukaj pola...')"
+                                               class="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 outline-none focus:ring-2 focus:ring-brand-500">
+                                        <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500" x-text="'Łącznie pól standardowych: ' + getAllStandardFields().length"></span>
+                            </div>
+
+                            <!-- Tabela pól standardowych -->
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-xs">
+                                <table class="svc-table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th x-text="window.ZenI18n.t('Etykieta w CRM')">Etykieta w CRM</th>
+                                            <th x-text="window.ZenI18n.t('Moduł')">Moduł</th>
+                                            <th x-text="window.ZenI18n.t('Klucz / Typ')">Klucz / Typ</th>
+                                            <th x-text="window.ZenI18n.t('Wymagane')">Wymagane</th>
+                                            <th class="text-right" x-text="window.ZenI18n.t('Akcje')">Akcje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="f in getAllStandardFields()" :key="'std-row-' + f.entity + '-' + f.key">
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
+                                                <td>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="font-semibold text-gray-900 dark:text-gray-100" x-text="f.label"></span>
+                                                        <span x-show="f.customLabel" class="px-1.5 py-0.5 rounded text-[10px] bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium" x-text="window.ZenI18n.t('Dostosowana')">Dostosowana</span>
+                                                    </div>
+                                                    <div class="text-[11px] text-gray-400" x-show="f.customLabel" x-text="window.ZenI18n.t('Domyślnie: ') + f.defaultLabel"></div>
+                                                </td>
+                                                <td>
+                                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800"
+                                                          x-text="f.entityLabel"></span>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center gap-1.5">
+                                                        <code class="px-1.5 py-0.5 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-mono" x-text="f.key"></code>
+                                                        <span class="text-[11px] text-gray-400" x-text="'(' + f.type + ')'"></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center gap-2">
+                                                        <template x-if="f.systemRequired">
+                                                            <span class="px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
+                                                                  x-text="window.ZenI18n.t('Wymóg systemowy')">Wymóg systemowy</span>
+                                                        </template>
+                                                        <template x-if="!f.systemRequired">
+                                                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                                                <input type="checkbox" :checked="f.required" @change="toggleStandardFieldRequired(f.entity, f.key)"
+                                                                       class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                                                <span class="text-xs" :class="f.required ? 'font-medium text-brand-600 dark:text-brand-400' : 'text-gray-400'"
+                                                                      x-text="f.required ? window.ZenI18n.t('Wymagane') : window.ZenI18n.t('Opcjonalne')"></span>
+                                                            </label>
+                                                        </template>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right">
+                                                    <button type="button" @click="openEditStandardField(f)"
+                                                            class="zen-list-action text-blue-500 hover:text-blue-700"
+                                                            :title="window.ZenI18n.t('Edytuj pole')">
+                                                        <span x-html="zenIcon('pencil')" aria-hidden="true"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <tr x-show="!getAllStandardFields().length">
+                                            <td colspan="5" class="text-center py-8 text-gray-400 text-xs italic">
+                                                <span x-text="window.ZenI18n.t('Brak pól pasujących do filtrów.')">Brak pól pasujących do filtrów.</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div x-show="settingsTab === 'customValues'" x-cloak>
+                            <h2 class="settings-section-title" x-text="window.ZenI18n.t('Wartości pól własnych')">Wartości pól własnych</h2>
+                            <p class="settings-section-desc" x-text="window.ZenI18n.t('Przeglądaj i edytuj wartości dodatkowych pól dla wybranego rekordu.')">Przeglądaj i edytuj wartości dodatkowych pól dla wybranego rekordu.</p>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Krok 1: Wybierz element')">Krok 1: Wybierz element</label>
+                                    <select x-model="customValuesEntity" @change="onCustomValuesEntityChange()"
+                                            class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                        <template x-for="(label, key) in customEntityLabels" :key="'ve-' + key">
+                                            <option :value="key" x-text="label"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Krok 2: Wybierz rekord')">Krok 2: Wybierz rekord</label>
+                                    <select x-model="customValuesSelectedRecord" @change="onCustomValuesRecordChange()" :disabled="!customValuesRecords.length"
+                                            class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none disabled:opacity-50">
+                                        <option value="" x-text="window.ZenI18n.t('— Wybierz rekord —')">— Wybierz rekord —</option>
+                                        <template x-for="rec in customValuesRecords" :key="'rec-' + rec.id">
+                                            <option :value="rec.id" x-text="(rec.name || rec.title || rec.email || rec.first_name || 'Rekord #' + rec.id) + ' (#' + rec.id + ')'"></option>
+                                        </template>
+                                    </select>
+                                    <p x-show="!customValuesRecords.length" class="text-xs text-gray-400 mt-1 italic" x-text="window.ZenI18n.t('Brak dostępnych rekordów dla tego elementu.')"></p>
+                                </div>
+                            </div>
+
+                            <!-- Pola dla wybranego rekordu -->
+                            <div x-show="customValuesSelectedRecord" class="p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/40">
+                                <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        <span>Wartości pól dla wybranego rekordu</span>
+                                    </h3>
+                                    <span class="text-xs text-gray-400" x-text="'Liczba pól: ' + (customValuesFields || []).length"></span>
+                                </div>
+
+                                <form @submit.prevent="saveCustomValues()" class="space-y-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <template x-for="cf in (customValuesFields || [])" :key="'vf-' + cf.id">
+                                            <div :class="cf.kind === 'textarea' ? 'sm:col-span-2' : ''">
+                                                <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" x-text="cf.label"></label>
+                                                <template x-if="cf.kind === 'text'">
+                                                    <input type="text" x-model="customValuesRecordData[cf.id]"
+                                                           class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                </template>
+                                                <template x-if="cf.kind === 'number'">
+                                                    <input type="number" step="any" x-model="customValuesRecordData[cf.id]"
+                                                           class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                </template>
+                                                <template x-if="cf.kind === 'date'">
+                                                    <input type="date" x-model="customValuesRecordData[cf.id]"
+                                                           class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                </template>
+                                                <template x-if="cf.kind === 'textarea'">
+                                                    <textarea x-model="customValuesRecordData[cf.id]" rows="3"
+                                                              class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+                                                </template>
+                                                <template x-if="cf.kind === 'boolean'">
+                                                    <select x-model="customValuesRecordData[cf.id]"
+                                                            class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                        <option value="" x-text="window.ZenI18n.t('— wybierz —')">— wybierz —</option>
+                                                        <option value="true" x-text="window.ZenI18n.t('Tak')">Tak</option>
+                                                        <option value="false" x-text="window.ZenI18n.t('Nie')">Nie</option>
+                                                    </select>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <p x-show="!customValuesFields.length" class="text-sm text-gray-500 dark:text-gray-400 italic py-4 text-center">
+                                        Brak zdefiniowanych pól własnych dla tego elementu. Dodaj je w zakładce „Pola własne”.
+                                    </p>
+
+                                    <div x-show="customValuesSuccess" class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
+                                        <span x-text="customValuesSuccess"></span>
+                                    </div>
+                                    <div x-show="customValuesError" class="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 text-xs font-medium">
+                                        <span x-text="customValuesError"></span>
+                                    </div>
+
+                                    <div x-show="customValuesFields.length > 0" class="pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                                        <button type="submit" :disabled="customValuesSaving"
+                                                class="px-5 py-2 bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-semibold text-sm rounded-lg shadow-sm transition inline-flex items-center gap-2">
+                                            <svg x-show="customValuesSaving" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                            <span x-text="customValuesSaving ? window.ZenI18n.t('Zapisywanie...') : window.ZenI18n.t('Zapisz wartości pól')">Zapisz wartości pól</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- ═══ BRANDING ═══ -->
+                        <div x-show="settingsTab === &#x27;branding&#x27;" x-cloak>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Branding&quot;)">Branding</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Logo, favicon i nazwa aplikacji.&quot;)">Logo, favicon i nazwa aplikacji.</span></p>
+
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Nazwa aplikacji&quot;)">Nazwa aplikacji</span></label>
+                                <input type="text" x-model="settingsForm.brand_name" @input="previewBranding()">
+                            </div>
+
+                            <div class="settings-row">
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Logo – tryb jasny&quot;)">Logo – tryb jasny</span></label>
+                                    <div class="logo-preview-box">
+                                        <img :src="settingsForm.brand_logo_light || &#x27;/logo.png&#x27;" alt="Light logo">
+                                    </div>
+                                    <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;light&#x27;)"
+                                           class="text-xs w-full">
+                                </div>
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Logo – tryb ciemny&quot;)">Logo – tryb ciemny</span></label>
+                                    <div class="logo-preview-box dark-bg">
+                                        <img :src="settingsForm.brand_logo_dark || &#x27;/logo.png&#x27;" alt="Dark logo">
+                                    </div>
+                                    <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;dark&#x27;)"
+                                           class="text-xs w-full">
+                                </div>
+                            </div>
+
+                            <div class="settings-row">
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Rozmiar logo (px) w sidebar&quot;)">Rozmiar logo (px) w sidebar</span></label>
+                                    <input type="number" min="20" max="120" x-model="settingsForm.brand_logo_size"
+                                           @input="applyTheme()">
+                                </div>
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Favicon&quot;)">Favicon</span></label>
+                                    <div class="logo-preview-box" style="min-height: 60px;">
+                                        <img :src="settingsForm.brand_favicon || &#x27;/icon.png&#x27;" style="max-height: 40px;">
+                                    </div>
+                                    <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;favicon&#x27;)"
+                                           class="text-xs w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══ KOLORY ═══ -->
+                        <div x-show="settingsTab === &#x27;colors&#x27;" x-cloak>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Kolory motywu&quot;)">Kolory motywu</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Główny kolor aplikacji i akcenty.&quot;)">Główny kolor aplikacji i akcenty.</span></p>
+
+                            <div class="settings-row">
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Kolor główny (primary)&quot;)">Kolor główny (primary)</span></label>
+                                    <div class="flex items-center gap-3">
+                                        <input type="color" x-model="settingsForm.brand_color_primary" @input="applyTheme()">
+                                        <input type="text" x-model="settingsForm.brand_color_primary" @input="applyTheme()">
+                                    </div>
+                                </div>
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Kolor akcentu (secondary)&quot;)">Kolor akcentu (secondary)</span></label>
+                                    <div class="flex items-center gap-3">
+                                        <input type="color" x-model="settingsForm.brand_color_secondary" @input="applyTheme()">
+                                        <input type="text" x-model="settingsForm.brand_color_secondary" @input="applyTheme()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Podgląd&quot;)">Podgląd</span></label>
+                                <div class="flex gap-3 flex-wrap">
+                                    <div class="px-4 py-2 rounded-lg text-white font-medium text-sm" :style="&#x27;background:&#x27; + (settingsForm.brand_color_primary || &#x27;#7e3af2&#x27;)"><span x-text="window.ZenI18n.t(&quot;Przycisk główny&quot;)">Przycisk główny</span></div>
+                                    <div class="px-4 py-2 rounded-lg text-white font-medium text-sm" :style="&#x27;background:&#x27; + (settingsForm.brand_color_secondary || &#x27;#6366f1&#x27;)"><span x-text="window.ZenI18n.t(&quot;Przycisk poboczny&quot;)">Przycisk poboczny</span></div>
+                                    <div class="px-4 py-2 rounded-lg border font-medium text-sm" :style="&#x27;color:&#x27; + (settingsForm.brand_color_primary || &#x27;#7e3af2&#x27;) + &#x27;; border-color:&#x27; + (settingsForm.brand_color_primary || &#x27;#7e3af2&#x27;)"><span x-text="window.ZenI18n.t(&quot;Outline&quot;)">Outline</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══ EKRAN LOGOWANIA ═══ -->
+                        <div x-show="settingsTab === &#x27;login&#x27;" x-cloak>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Ekran logowania&quot;)">Ekran logowania</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Wygląd strony logowania.&quot;)">Wygląd strony logowania.</span></p>
+
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Tekst powitalny&quot;)">Tekst powitalny</span></label>
+                                <input type="text" x-model="settingsForm.login_welcome_text" :placeholder="window.ZenI18n.t(&quot;Zaloguj się do systemu&quot;)">
+                            </div>
+                        </div>
+
+                        <!-- ═══ DANE FIRMY ═══ -->
+                        <div x-show="settingsTab === &#x27;company&#x27;" x-cloak>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Dane firmy&quot;)">Dane firmy</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Używane w generowanych dokumentach, ofertach i PDF.&quot;)">Używane w generowanych dokumentach, ofertach i PDF.</span></p>
+
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Nazwa firmy&quot;)">Nazwa firmy</span></label>
+                                <input type="text" x-model="settingsForm.company_name">
+                            </div>
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Adres&quot;)">Adres</span></label>
+                                <input type="text" x-model="settingsForm.company_address">
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;NIP&quot;)">NIP</span></label>
+                                    <input type="text" x-model="settingsForm.company_nip">
+                                </div>
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Email&quot;)">Email</span></label>
+                                    <input type="email" x-model="settingsForm.company_email">
+                                </div>
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Telefon&quot;)">Telefon</span></label>
+                                    <input type="text" x-model="settingsForm.company_phone">
+                                </div>
+                                <div class="settings-field">
+                                    <label><span x-text="window.ZenI18n.t(&quot;Strona WWW&quot;)">Strona WWW</span></label>
+                                    <input type="text" x-model="settingsForm.company_www">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══ INTERFEJS ═══ -->
+                        <div x-show="settingsTab === &#x27;ui&#x27;" x-cloak>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Interfejs&quot;)">Interfejs</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Dodatkowe opcje widoku.&quot;)">Dodatkowe opcje widoku.</span></p>
+
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Pokaż stopkę w aplikacji&quot;)">Pokaż stopkę w aplikacji</span></label>
+                                <select x-model="settingsForm.ui_show_footer">
+                                    <option value="false" x-text="window.ZenI18n.t(&quot;Nie&quot;)">Nie</option>
+                                    <option value="true" x-text="window.ZenI18n.t(&quot;Tak&quot;)">Tak</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Treść stopki&quot;)">Treść stopki</span></label>
+                                <input type="text" x-model="settingsForm.ui_footer_text">
+                            </div>
+                        </div>
+
+                        <!-- ═══ HELPDESK & TICKETY ═══ -->
+                        <div x-show="settingsTab === &#x27;helpdesk&#x27;" x-cloak class="space-y-6">
+                            <div>
+                                <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Helpdesk &amp; Tickety&quot;)">Helpdesk &amp; Tickety</span></h2>
+                                <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Konfiguracja portalu pomocy dla klientów, automatycznego przydzielania i webhooków.&quot;)">Konfiguracja portalu pomocy dla klientów, automatycznego przydzielania i webhooków.</span></p>
+                            </div>
+
+                            <!-- PORTAL POMOCY (STANDALONE) -->
+                            <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm" x-text="window.ZenI18n.t(&#x27;Dedykowany portal pomocy (Helpdesk)&#x27;)"></h3>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t(&#x27;Samodzielny portal, gdzie każdy klient może zgłosić problem i śledzić ticket przez unikalny link.&#x27;)"></p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <a :href="helpdeskForm.helpdesk_path || &#x27;/pomoc&#x27;" target="_blank"
+                                           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <svg class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                            <span x-text="window.ZenI18n.t(&#x27;Otwórz portal&#x27;)"></span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="settings-field">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Status portalu pomocy&#x27;)">Status portalu pomocy</span></label>
+                                        <select x-model="helpdeskForm.helpdesk_enabled">
+                                            <option :value="true" x-text="window.ZenI18n.t(&#x27;Włączony&#x27;)">Włączony</option>
+                                            <option :value="false" x-text="window.ZenI18n.t(&#x27;Wyłączony&#x27;)">Wyłączony</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-field">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Adres URL portalu (ścieżka)&#x27;)">Adres URL portalu (ścieżka)</span></label>
+                                        <input type="text" x-model="helpdeskForm.helpdesk_path" placeholder="/pomoc">
+                                    </div>
+                                </div>
+
+                                <!-- LOGO I WYGLĄD -->
+                                <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-4">
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-xs uppercase tracking-wider" x-text="window.ZenI18n.t(&#x27;Logo i wygląd portalu&#x27;)">Logo i wygląd portalu</h4>
+                                    
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2" x-text="window.ZenI18n.t(&#x27;Logo portalu&#x27;)">Logo portalu</label>
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-36 h-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center justify-center p-2 overflow-hidden shadow-xs">
+                                                    <img :src="helpdeskForm.helpdesk_logo || settingsForm?.brand_logo_light || &#x27;/logo.png&#x27;"
+                                                         @error="$el.src = &#x27;/logo.png&#x27;"
+                                                         alt="Logo portalu" class="max-h-full max-w-full object-contain">
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition">
+                                                        <svg class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                                        <span x-text="window.ZenI18n.t(&#x27;Wgraj logo&#x27;)">Wgraj logo</span>
+                                                        <input type="file" accept="image/*" class="hidden" @change="uploadHelpdeskLogo($event)">
+                                                    </label>
+                                                    <div x-show="helpdeskForm.helpdesk_logo">
+                                                        <button type="button" @click="removeHelpdeskLogo()" class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 cursor-pointer block" x-text="window.ZenI18n.t(&#x27;Przywróć domyślne logo&#x27;)">Przywróć domyślne logo</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-2" x-text="window.ZenI18n.t(&#x27;Jeśli nie wgrasz osobnego logo, użyte zostanie logo firmy z ustawień CRM.&#x27;)"></p>
+                                        </div>
+
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Kolor akcentu portalu&#x27;)">Kolor akcentu portalu</span></label>
+                                            <div class="flex items-center gap-2">
+                                                <input type="color" x-model="helpdeskForm.helpdesk_accent_color" class="h-9 w-12 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                                                <input type="text" x-model="helpdeskForm.helpdesk_accent_color" class="flex-1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TREŚCI I TEKSTY PORTALU -->
+                                <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-4">
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-xs uppercase tracking-wider" x-text="window.ZenI18n.t(&#x27;Treści i teksty na stronie portalu&#x27;)">Treści i teksty na stronie portalu</h4>
+                                    
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Tytuł portalu (nagłówek w menu)&#x27;)">Tytuł portalu (nagłówek w menu)</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_title" placeholder="Centrum Pomocy">
+                                        </div>
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Podtytuł w nagłówku&#x27;)">Podtytuł w nagłówku</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_header_subtitle" placeholder="Wsparcie i obsługa zgłoszeń">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Etykieta formularza (badge)&#x27;)">Etykieta formularza (badge)</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_badge" placeholder="Zgłoszenie serwisowe">
+                                        </div>
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Główny nagłówek formularza&#x27;)">Główny nagłówek formularza</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_heading" placeholder="W czym możemy Ci pomóc?">
+                                        </div>
+                                    </div>
+
+                                    <div class="settings-field">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Opis / Podtytuł na stronie pomocy&#x27;)">Opis / Podtytuł na stronie pomocy</span></label>
+                                        <textarea x-model="helpdeskForm.helpdesk_description" rows="2" placeholder="Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail."></textarea>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Tytuł po wysłaniu zgłoszenia&#x27;)">Tytuł po wysłaniu zgłoszenia</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_success_heading" placeholder="Zgłoszenie zostało wysłane!">
+                                        </div>
+                                        <div class="settings-field">
+                                            <label><span x-text="window.ZenI18n.t(&#x27;Tekst stopki portalu&#x27;)">Tekst stopki portalu</span></label>
+                                            <input type="text" x-model="helpdeskForm.helpdesk_footer_text" placeholder="Obsługa klienta · Bezpieczny portal pomocy">
+                                        </div>
+                                    </div>
+
+                                    <div class="settings-field">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Komunikat po wysłaniu zgłoszenia&#x27;)">Komunikat po wysłaniu zgłoszenia</span></label>
+                                        <textarea x-model="helpdeskForm.helpdesk_success_description" rows="2" placeholder="Wysłaliśmy potwierdzenie na Twój adres e-mail wraz z bezpośrednim linkiem do śledzenia statusu zgłoszenia."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AUTOMATYCZNE PRZYDZIELANIE -->
+                            <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm" x-text="window.ZenI18n.t(&#x27;Automatyczne przydzielanie zgłoszeń&#x27;)"></h3>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" x-text="window.ZenI18n.t(&#x27;Jeśli zgłaszający jest powiązany z klientem posiadającym opiekuna w CRM, ticket zostanie automatycznie przypisany do tego opiekuna. W przeciwnym razie zadziała poniższa reguła:&#x27;)"></p>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="settings-field">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Czy przydzielać automatycznie?&#x27;)">Czy przydzielać automatycznie?</span></label>
+                                        <select x-model="helpdeskForm.helpdesk_auto_assign">
+                                            <option :value="true" x-text="window.ZenI18n.t(&#x27;Tak, przydzielaj automatycznie&#x27;)">Tak</option>
+                                            <option :value="false" x-text="window.ZenI18n.t(&#x27;Nie, pozostaw bez przypisania&#x27;)">Nie</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-field" x-show="helpdeskForm.helpdesk_auto_assign">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Przydzielaj do:&#x27;)">Przydzielaj do:</span></label>
+                                        <select x-model="helpdeskForm.helpdesk_auto_assign_target">
+                                            <option value="team" x-text="window.ZenI18n.t(&#x27;Zespołu&#x27;)">Zespołu</option>
+                                            <option value="user" x-text="window.ZenI18n.t(&#x27;Pracownika&#x27;)">Pracownika</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-field" x-show="helpdeskForm.helpdesk_auto_assign && helpdeskForm.helpdesk_auto_assign_target === &#x27;team&#x27;">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Domyślny zespół&#x27;)">Domyślny zespół</span></label>
+                                        <select x-model="helpdeskForm.helpdesk_default_team_id">
+                                            <option value="" x-text="window.ZenI18n.t(&#x27;— Wybierz zespół —&#x27;)"></option>
+                                            <template x-for="tm in teams" :key="tm.id">
+                                                <option :value="tm.id" x-text="tm.name"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="settings-field" x-show="helpdeskForm.helpdesk_auto_assign && helpdeskForm.helpdesk_auto_assign_target === &#x27;user&#x27;">
+                                        <label><span x-text="window.ZenI18n.t(&#x27;Domyślny pracownik&#x27;)">Domyślny pracownik</span></label>
+                                        <select x-model="helpdeskForm.helpdesk_default_user_id">
+                                            <option value="" x-text="window.ZenI18n.t(&#x27;— Wybierz pracownika —&#x27;)"></option>
+                                            <template x-for="u in users" :key="u.id">
+                                                <option :value="u.id" x-text="fullName(u)"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- KATEGORIE TICKETÓW -->
+                            <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm" x-text="window.ZenI18n.t(&#x27;Kategorie ticketów&#x27;)"></h3>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" x-text="window.ZenI18n.t(&#x27;Kategorie wyświetlane w formularzu portalu pomocy i przy tworzeniu ticketów.&#x27;)"></p>
+                                </div>
+
+                                <div class="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+                                    <template x-for="(cat, idx) in (helpdeskForm.helpdesk_categories || [])" :key="cat.id || idx">
+                                        <div class="p-3 flex items-center justify-between text-sm">
+                                            <div class="flex items-center gap-3">
+                                                <span class="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300" x-text="cat.id"></span>
+                                                <span class="font-medium text-gray-900 dark:text-gray-100" x-text="cat.name"></span>
+                                            </div>
+                                            <button type="button" @click="removeHelpdeskCategory(idx)"
+                                                    class="p-1 text-gray-400 hover:text-red-600 rounded">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Dodawanie nowej kategorii -->
+                                <div class="flex items-end gap-3 flex-wrap pt-2">
+                                    <div class="flex-1 min-w-[140px]">
+                                        <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Identyfikator (np. sales)&#x27;)"></label>
+                                        <input type="text" x-model="newHelpdeskCategory.id" placeholder="np. sales" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
+                                    </div>
+                                    <div class="flex-2 min-w-[200px]">
+                                        <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Nazwa kategorii (np. Zapytania handlowe)&#x27;)"></label>
+                                        <input type="text" x-model="newHelpdeskCategory.name" placeholder="np. Zapytania handlowe" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
+                                    </div>
+                                    <button type="button" @click="addHelpdeskCategory()"
+                                            class="px-3 py-1.5 text-xs font-semibold rounded bg-brand-600 hover:bg-brand-700 text-white shadow-2xs">
+                                        <span x-text="window.ZenI18n.t(&#x27;+ Dodaj kategorię&#x27;)"></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- WEBHOOK DO ZBIERANIA TICKETÓW -->
+                            <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm" x-text="window.ZenI18n.t(&#x27;Webhook zewnętrzny do zbierania ticketów&#x27;)"></h3>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" x-text="window.ZenI18n.t(&#x27;Pozwala przesyłać tickety bezpośrednio z Twoich stron www, formularzy kontaktowych lub botów.&#x27;)"></p>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Adres Webhooka (POST)&#x27;)"></label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="text" readonly :value="window.location.origin + &#x27;/api/tickets/webhook&#x27;"
+                                                   class="w-full font-mono text-xs py-2 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+                                            <button type="button" @click="copyWebhookUrl()"
+                                                    class="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 whitespace-nowrap">
+                                                <span x-text="window.ZenI18n.t(&#x27;Kopiuj URL&#x27;)"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Token autoryzacyjny (nagłówek X-Webhook-Token)&#x27;)"></label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="text" readonly :value="helpdeskForm.helpdesk_webhook_token"
+                                                   class="w-full font-mono text-xs py-2 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+                                            <button type="button" @click="copyWebhookToken()"
+                                                    class="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 whitespace-nowrap">
+                                                <span x-text="window.ZenI18n.t(&#x27;Kopiuj token&#x27;)"></span>
+                                            </button>
+                                            <button type="button" @click="regenerateWebhookToken()"
+                                                    class="px-3 py-2 text-xs font-semibold rounded-lg border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 whitespace-nowrap">
+                                                <span x-text="window.ZenI18n.t(&#x27;Nowy token&#x27;)"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══ SZABLONY E-MAIL & SMTP ═══ -->
+                        <div x-show="settingsTab === &#x27;emails&#x27;" x-cloak class="space-y-8">
+                            <div>
+                                <h2 class="settings-section-title" x-text="window.ZenI18n.t(&#x27;Szablony e-mail &amp; SMTP&#x27;)">Szablony e-mail &amp; SMTP</h2>
+                                <p class="settings-section-desc" x-text="window.ZenI18n.t(&#x27;Zarządzaj serwerem poczty wychodzącej oraz edytuj szablony wiadomości wysyłanych do klientów i pracowników.&#x27;)">Zarządzaj serwerem poczty wychodzącej oraz edytuj szablony wiadomości wysyłanych do klientów i pracowników.</p>
+                            </div>
+
+                            <!-- KARTA 1: KONFIGURACJA SMTP -->
+                            <div class="p-6 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm space-y-6">
+                                <div class="flex items-center justify-between flex-wrap gap-4 border-b border-gray-100 dark:border-gray-700 pb-4">
+                                    <div>
+                                        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                            <span x-text="window.ZenI18n.t(&#x27;Konfiguracja serwera pocztowego (SMTP)&#x27;)">Konfiguracja serwera pocztowego (SMTP)</span>
+                                        </h3>
+                                        <p class="text-xs text-gray-500 mt-1" x-text="window.ZenI18n.t(&#x27;Podaj parametry serwera SMTP Twojej domeny (np. OVH, Google Workspace, cyber_Folks itp.).&#x27;)"></p>
+                                    </div>
+                                    <label class="flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" x-model="smtpForm.smtp_enabled" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                        <span class="text-sm font-medium text-gray-800 dark:text-gray-200" x-text="window.ZenI18n.t(&#x27;Włącz wysyłkę e-mail (SMTP)&#x27;)">Włącz wysyłkę e-mail (SMTP)</span>
+                                    </label>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Host / Serwer SMTP&#x27;)">Host / Serwer SMTP</label>
+                                        <input type="text" x-model="smtpForm.smtp_host" placeholder="np. smtp.twojadomena.pl"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Port SMTP&#x27;)">Port SMTP</label>
+                                        <input type="number" x-model.number="smtpForm.smtp_port" placeholder="587"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Szyfrowanie połączenia&#x27;)">Szyfrowanie połączenia</label>
+                                        <select x-model="smtpForm.smtp_encryption"
+                                                class="w-full px-3 py-2 text-sm border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                            <option value="tls" x-text="window.ZenI18n.t(&#x27;STARTTLS (domyślne dla portu 587)&#x27;)">STARTTLS (domyślne dla portu 587)</option>
+                                            <option value="ssl" x-text="window.ZenI18n.t(&#x27;SSL / TLS (dla portu 465)&#x27;)">SSL / TLS (dla portu 465)</option>
+                                            <option value="none" x-text="window.ZenI18n.t(&#x27;Brak szyfrowania (port 25)&#x27;)">Brak szyfrowania (port 25)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Użytkownik / Login SMTP&#x27;)">Użytkownik / Login SMTP</label>
+                                        <input type="text" x-model="smtpForm.smtp_user" placeholder="np. kontakt@twojadomena.pl"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1">
+                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t(&#x27;Hasło SMTP&#x27;)">Hasło SMTP</label>
+                                            <span x-show="smtpForm.smtp_password_set" class="text-[10px] text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/40 px-1.5 py-0.5 rounded" x-text="window.ZenI18n.t(&#x27;Hasło zapisane&#x27;)"></span>
+                                        </div>
+                                        <input type="password" x-model="smtpForm.smtp_password" :placeholder="smtpForm.smtp_password_set ? window.ZenI18n.t(&#x27;Wpisz, aby zmienić hasło...&#x27;) : window.ZenI18n.t(&#x27;Wpisz hasło konta pocztowego&#x27;)"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Adres e-mail nadawcy (From)&#x27;)">Adres e-mail nadawcy (From)</label>
+                                        <input type="email" x-model="smtpForm.smtp_from_email" placeholder="np. powiadomienia@twojadomena.pl"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                    <div class="md:col-span-2 lg:col-span-3">
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Nazwa nadawcy wyświetlana odbiorcy&#x27;)">Nazwa nadawcy wyświetlana odbiorcy</label>
+                                        <input type="text" x-model="smtpForm.smtp_from_name" placeholder="np. ZenCRM - Twoja Firma"
+                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between flex-wrap gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" @click="saveSmtpSettings()"
+                                                class="px-5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors">
+                                            <span x-text="window.ZenI18n.t(&#x27;Zapisz konfigurację SMTP&#x27;)">Zapisz konfigurację SMTP</span>
+                                        </button>
+                                        <span x-show="smtpSaved" x-text="smtpSaved" class="text-xs text-green-600 dark:text-green-400 font-medium"></span>
+                                        <span x-show="smtpError" x-text="smtpError" class="text-xs text-red-500 font-medium"></span>
+                                    </div>
+                                </div>
+
+                                <!-- TEST POŁĄCZENIA SMTP -->
+                                <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-3">
+                                    <h4 class="text-xs font-semibold text-gray-900 dark:text-gray-100" x-text="window.ZenI18n.t(&#x27;Test wysyłki e-mail&#x27;)">Test wysyłki e-mail</h4>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <input type="email" x-model="smtpTestEmail" placeholder="Podaj e-mail docelowy do testu"
+                                               class="flex-1 min-w-[240px] px-3 py-2 text-xs border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                        <button type="button" @click="testSmtpSettings()" :disabled="smtpTestLoading"
+                                                class="px-4 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 inline-flex items-center gap-2">
+                                            <svg x-show="smtpTestLoading" class="animate-spin -ml-1 mr-1 h-3.5 w-3.5 text-brand-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            <span x-text="smtpTestLoading ? window.ZenI18n.t(&#x27;Wysyłanie...&#x27;) : window.ZenI18n.t(&#x27;Wyślij testowy e-mail&#x27;)">Wyślij testowy e-mail</span>
+                                        </button>
+                                    </div>
+                                    <template x-if="smtpTestResult">
+                                        <div :class="smtpTestResult.ok ? &#x27;text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-800&#x27; : &#x27;text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800&#x27;"
+                                             class="p-3 text-xs rounded-lg border">
+                                            <span x-text="smtpTestResult.message"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- KARTA 2: SZABLONY WIADOMOŚCI -->
+                            <div class="p-6 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm space-y-6">
+                                <div>
+                                    <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        <span x-text="window.ZenI18n.t(&#x27;Edytor szablonów wiadomości e-mail&#x27;)">Edytor szablonów wiadomości e-mail</span>
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-1" x-text="window.ZenI18n.t(&#x27;Wybierz szablon z listy po lewej, aby zmienić temat wiadomości oraz treść HTML.&#x27;)"></p>
+                                </div>
+
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <!-- LISTA SZABLONÓW -->
+                                    <div class="lg:col-span-4 space-y-2">
+                                        <template x-for="tpl in emailTemplates" :key="tpl.key">
+                                            <button type="button" @click="selectEmailTemplate(tpl)"
+                                                    :class="selectedEmailTemplate?.key === tpl.key ? &#x27;border-brand-500 bg-brand-50/60 dark:bg-brand-950/30 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500&#x27; : &#x27;border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300&#x27;"
+                                                    class="w-full text-left p-3 rounded-xl border text-xs transition-all">
+                                                <div class="flex items-center justify-between gap-1 mb-1">
+                                                    <span class="font-semibold text-sm" x-text="tpl.name"></span>
+                                                    <span :class="tpl.category === &#x27;client&#x27; ? &#x27;bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300&#x27; : (tpl.category === &#x27;employee&#x27; ? &#x27;bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300&#x27; : &#x27;bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300&#x27;)"
+                                                          class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded"
+                                                          x-text="tpl.category === &#x27;client&#x27; ? window.ZenI18n.t(&#x27;Klient&#x27;) : (tpl.category === &#x27;employee&#x27; ? window.ZenI18n.t(&#x27;Pracownik&#x27;) : window.ZenI18n.t(&#x27;Konto&#x27;))"></span>
+                                                </div>
+                                                <div class="text-[11px] text-gray-500 dark:text-gray-400 font-mono truncate" x-text="tpl.subject"></div>
+                                            </button>
+                                        </template>
+                                    </div>
+
+                                    <!-- EDYTOR SZABLONU -->
+                                    <div class="lg:col-span-8 space-y-4">
+                                        <template x-if="selectedEmailTemplate">
+                                            <div class="space-y-4">
+                                                <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2">
+                                                    <div class="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700/60 p-1 rounded-lg">
+                                                        <button type="button" @click="emailEditorTab = &#x27;edit&#x27;"
+                                                                :class="emailEditorTab === &#x27;edit&#x27; ? &#x27;bg-white dark:bg-gray-800 text-brand-600 dark:text-brand-400 font-semibold shadow-xs&#x27; : &#x27;text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white&#x27;"
+                                                                class="px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5 transition">
+                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                            <span x-text="window.ZenI18n.t(&#x27;Edytor treści&#x27;)">Edytor treści</span>
+                                                        </button>
+                                                        <button type="button" @click="emailEditorTab = &#x27;preview&#x27;"
+                                                                :class="emailEditorTab === &#x27;preview&#x27; ? &#x27;bg-white dark:bg-gray-800 text-brand-600 dark:text-brand-400 font-semibold shadow-xs&#x27; : &#x27;text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white&#x27;"
+                                                                class="px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5 transition">
+                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                            <span x-text="window.ZenI18n.t(&#x27;Podgląd na żywo&#x27;)">Podgląd na żywo</span>
+                                                        </button>
+                                                    </div>
+                                                    <span class="text-xs text-gray-400 font-mono" x-text="&#x27;[&#x27; + selectedEmailTemplate.key + &#x27;]&#x27;"></span>
+                                                </div>
+
+                                                <!-- TRYB EDYCJI -->
+                                                <div x-show="emailEditorTab === &#x27;edit&#x27;" class="space-y-4">
+                                                    <div>
+                                                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1" x-text="window.ZenI18n.t(&#x27;Temat wiadomości e-mail&#x27;)">Temat wiadomości e-mail</label>
+                                                        <input type="text" x-model="emailTemplateForm.subject"
+                                                               class="w-full px-3.5 py-2.5 text-sm border rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1" x-text="window.ZenI18n.t(&#x27;Treść HTML wiadomości&#x27;)">Treść HTML wiadomości</label>
+                                                        <textarea x-model="emailTemplateForm.body_html" rows="12"
+                                                                  class="w-full px-3.5 py-2.5 font-mono text-xs border rounded-xl dark:bg-gray-900 dark:border-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-brand-500 outline-none resize-y"></textarea>
+                                                    </div>
+
+                                                    <!-- DOSTĘPNE ZMIENNE -->
+                                                    <div class="p-3.5 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40">
+                                                        <div class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2" x-text="window.ZenI18n.t(&#x27;Dostępne zmienne (kliknij, aby wstawić do treści)&#x27;)">Dostępne zmienne</div>
+                                                        <div class="flex flex-wrap gap-1.5">
+                                                            <template x-for="varName in (selectedEmailTemplate.variables || &#x27;&#x27;).split(&#x27;, &#x27;)" :key="varName">
+                                                                <button type="button" @click="emailTemplateForm.body_html += &#x27; &#x27; + varName"
+                                                                        class="px-2 py-1 text-xs font-mono bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 rounded-md transition-colors"
+                                                                        x-text="varName"></button>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- TRYB PODGLĄDU NA ŻYWO -->
+                                                <div x-show="emailEditorTab === &#x27;preview&#x27;" class="space-y-4" x-cloak>
+                                                    <div class="p-3.5 bg-gray-50 dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 text-xs space-y-1.5 font-mono">
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Nadawca:&#x27;)">Nadawca:</span>
+                                                            <span class="text-gray-800 dark:text-gray-200" x-text="(smtpForm.smtp_from_name || &#x27;ZenCRM&#x27;) + &#x27; &lt;&#x27; + (smtpForm.smtp_from_email || &#x27;powiadomienia@twojadomena.pl&#x27;) + &#x27;&gt;&#x27;"></span>
+                                                        </div>
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Odbiorca:&#x27;)">Odbiorca:</span>
+                                                            <span class="text-gray-800 dark:text-gray-200">Jan Kowalski &lt;jan.kowalski@example.com&gt;</span>
+                                                        </div>
+                                                        <div class="flex items-center gap-2 pt-1 border-t border-gray-200 dark:border-gray-700/60">
+                                                            <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Temat:&#x27;)">Temat:</span>
+                                                            <span class="font-bold text-gray-900 dark:text-white font-sans text-sm" x-text="getRenderedEmailPreview().subject"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white shadow-sm">
+                                                        <iframe :srcdoc="getRenderedEmailPreview().html" class="w-full min-h-[460px] border-0" sandbox="allow-same-origin"></iframe>
+                                                    </div>
+                                                    <p class="text-[11px] text-gray-400 italic text-right" x-text="window.ZenI18n.t(&#x27;Podgląd z przykładowymi danymi testowymi.&#x27;)">Podgląd z przykładowymi danymi testowymi.</p>
+                                                </div>
+
+                                                <div class="flex items-center justify-between flex-wrap gap-3 pt-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <button type="button" @click="saveEmailTemplate()"
+                                                                class="px-5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors">
+                                                            <span x-text="window.ZenI18n.t(&#x27;Zapisz szablon&#x27;)">Zapisz szablon</span>
+                                                        </button>
+                                                        <button type="button" @click="resetEmailTemplate(selectedEmailTemplate.key)"
+                                                                class="px-4 py-2 rounded-lg border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 text-sm font-medium transition-colors">
+                                                            <span x-text="window.ZenI18n.t(&#x27;Przywróć domyślny&#x27;)">Przywróć domyślny</span>
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <span x-show="emailTemplateSaved" x-text="emailTemplateSaved" class="text-xs text-green-600 dark:text-green-400 font-medium"></span>
+                                                        <span x-show="emailTemplateError" x-text="emailTemplateError" class="text-xs text-red-500 font-medium"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ZAPISZ -->
+                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
+                            <button @click="loadSettings()" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium">
+                                <span x-text="window.ZenI18n.t(&quot;Cofnij zmiany&quot;)">Cofnij zmiany</span>
+                            </button>
+                            <button @click="saveSettings()" class="px-6 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold">
+                                <span x-text="window.ZenI18n.t(&quot;Zapisz ustawienia&quot;)">Zapisz ustawienia</span>
+                            </button>
+                        </div>
+
+                        <p x-show="settingsSaved" x-text="settingsSaved" class="text-green-600 text-sm mt-3 text-right"></p>
+                        <p x-show="settingsError" x-text="settingsError" class="text-red-500 text-sm mt-3 text-right"></p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+

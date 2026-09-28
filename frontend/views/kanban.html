@@ -1,0 +1,175 @@
+<!-- ═══ LEADY ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'leads'" x-init="$watch('leads', list => { loadAllCustomFields(); loadCustomValuesForTable('leads', (list||[]).map(l => l.id)); }); loadAllCustomFields(); if (leads.length) loadCustomValuesForTable('leads', leads.map(l => l.id));" x-cloak>
+                <div class="zen-pipeline-summary"><div><span class="zen-eyebrow" x-text="window.ZenI18n.t('SPRZEDAŻ')"></span><h2 x-text="window.ZenI18n.t('Lejek sprzedaży')"></h2></div><div class="zen-pipeline-metrics"><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Leady')">Leady</span><strong x-text="boardLeads.length"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('activity')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Wartość lejka')">Wartość lejka</span><strong x-text="formatNumber(boardLeads.reduce((sum,l)=>sum+Number(l.value || 0),0)) + ' PLN'"></strong></div></div></div>
+                <div class="kanban-toolbar">
+                    <div class="kanban-tabs">
+                        <button type="button" @click="kanbanMode = 'kanban'" class="kanban-tab" :class="{ 'active': kanbanMode === 'kanban' }">
+                            <span x-text="window.ZenI18n.t('Kanban')">Kanban</span>
+                        </button>
+                        <button type="button" @click="kanbanMode = 'list'" class="kanban-tab" :class="{ 'active': kanbanMode === 'list' }">
+                            <span x-text="window.ZenI18n.t('Lista')">Lista</span>
+                        </button>
+                    </div>
+                    <label class="zen-column-count" x-show="kanbanMode === 'kanban'">
+                        <span x-text="window.ZenI18n.t('Kolumny na ekranie')">Kolumny na ekranie</span>
+                        <select class="ux-input" x-model.number="boardColumns" @change="setBoardColumns()">
+                            <template x-for="n in [2,3,4,5,6]" :key="n"><option :value="n" x-text="n"></option></template>
+                        </select>
+                    </label>
+                    <button x-show="user?.role === 'admin' &amp;&amp; kanbanMode === 'kanban'" @click="editStages()" class="ux-text-button"><span x-text="window.ZenI18n.t('Ustaw statusy')">Ustaw statusy</span></button>
+                    <input class="ux-input" type="search" x-model.debounce.150ms="leadSearch" :placeholder="window.ZenI18n.t('Szukaj leada lub klienta')" :aria-label="window.ZenI18n.t('Szukaj leada')">
+                    <select class="ux-input" x-model="leadFilter" :aria-label="window.ZenI18n.t('Filtr leadów')">
+                        <option value="" x-text="window.ZenI18n.t('Wszystkie leady')">Wszystkie leady</option>
+                        <option value="mine" x-text="window.ZenI18n.t('Moje leady')">Moje leady</option>
+                        <option value="unassigned" x-text="window.ZenI18n.t('Bez opiekuna')">Bez opiekuna</option>
+                    </select>
+                    <div class="ux-board-nav" x-show="kanbanMode === 'kanban' &amp;&amp; (canScrollLeft || canScrollRight)" x-cloak>
+                        <button @click="scrollKanban(-1)" :disabled="!canScrollLeft" :aria-label="window.ZenI18n.t('Poprzednia kolumna')"><span class="zen-icon-wrap" x-html="zenIcon('left')" aria-hidden="true"></span></button>
+                        <span x-text="(kanbanScrollIndex + 1) + '–' + Math.min(leadStages.length, kanbanScrollIndex + visibleKanbanCols) + ' / ' + leadStages.length"></span>
+                        <button @click="scrollKanban(1)" :disabled="!canScrollRight" :aria-label="window.ZenI18n.t('Następna kolumna')"><span class="zen-icon-wrap" x-html="zenIcon('right')" aria-hidden="true"></span></button>
+                    </div>
+
+                    <!-- Column picker for leads -->
+                    <div class="relative inline-block text-left" @click.outside="if (columnPickerOpen === 'leads') columnPickerOpen = null">
+                        <button type="button" @click="columnPickerOpen = (columnPickerOpen === 'leads' ? null : 'leads')"
+                                class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-1.5 shadow-xs">
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                            <span x-text="window.ZenI18n.t('Dostosuj kolumny')">Dostosuj kolumny</span>
+                        </button>
+                        <div x-show="columnPickerOpen === 'leads'" x-cloak class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 text-xs">
+                            <div class="px-3 py-1.5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                                <span class="font-bold text-gray-700 dark:text-gray-300" x-text="window.ZenI18n.t('Widoczne kolumny')">Widoczne kolumny</span>
+                                <button type="button" @click="resetColumns('leads')" class="text-brand-600 dark:text-brand-400 hover:underline text-[11px]" x-text="window.ZenI18n.t('Resetuj')">Resetuj</button>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto px-3 py-2 space-y-1.5">
+                                <template x-for="col in availableColumns('leads')" :key="'col-leads-' + col.key">
+                                    <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
+                                        <input type="checkbox" :checked="isColumnVisible('leads', col.key)" @change="toggleColumn('leads', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
+                                        <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
+                                        <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button @click="openModal(null, null, false, 'leads')" class="kanban-new-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span x-text="window.ZenI18n.t('Nowy Lead')">Nowy Lead</span>
+                    </button>
+                </div>
+
+                <!-- Kanban View -->
+                <div class="kanban-board" x-show="kanbanMode === 'kanban'">
+                    <div class="kanban-viewport" :class="{ 'ux-more-left': canScrollLeft, 'ux-more-right': canScrollRight }">
+                        <div class="kanban-cols" :style="{ '--board-columns': boardColumns }" x-ref="kanbanCols" x-init="$nextTick(() => recomputeVisibleCols())" @scroll.passive="updateKanbanScroll()" @dragover.prevent="boardDrag($event)" @dragleave="if (!$el.contains($event.relatedTarget)) { stopBoardDrag(); dragOverStage = null; }" :class="{ 'ux-dragging': draggedLead }" tabindex="0" :aria-label="window.ZenI18n.t('Etapy leadów')" @keydown.left.self.prevent="scrollKanban(-1)" @keydown.right.self.prevent="scrollKanban(1)">
+                            <template x-for="stage in leadStages" :key="stage.id">
+                                <div class="kanban-col-new" :data-stage="stage.id" :style="{ '--stage-accent': stage.accent, '--stage-tint': stage.accent + '12' }" :class="{ dragover: dragOverStage === stage.id }" @dragenter.prevent="if (draggedLead) dragOverStage = stage.id" @dragover.prevent="if (draggedLead) dragOverStage = stage.id" @drop.prevent.stop="moveLead($event, stage.id)">
+                                    <div class="kanban-col-header" >
+                                        <div>
+                                            <div class="title">
+                                                <span class="zen-stage-dot" aria-hidden="true"></span><span x-text="stage.label"></span>
+                                                <span class="count" x-text="boardLeads.filter(l => l.stage === stage.id).length"></span>
+                                            </div>
+                                            <div class="total" x-text="formatNumber(boardLeads.filter(l => l.stage === stage.id).reduce((s, l) => s + (Number(l.value) || 0), 0)) + window.ZenI18n.t(' zł')"></div>
+                                        </div>
+                                        <button :aria-label="window.ZenI18n.t('Dodaj lead') + ': ' + stage.label" class="kanban-col-add" @click="openModal(null, stage.id, false, 'leads')">+</button>
+                                    </div>
+                                    <div class="kanban-col-body">
+                                        <template x-for="lead in boardLeads.filter(l => l.stage === stage.id)" :key="lead.id">
+                                            <div class="kanban-card-new" @dragstart.capture="if ($event.target.tagName === 'IMG') $event.preventDefault()" :draggable="!savingLead" :aria-busy="savingLead === lead.id" @dragstart.stop="startLeadDrag($event, lead)" @dragend="endLeadDrag()" :class="{ 'ux-card-dragged': draggedLead?.id === lead.id }" @click="openDetail('lead', lead.id)"><button class="ux-card-open zen-card-open-icon" @click.stop="openDetail('lead', lead.id)" :aria-label="window.ZenI18n.t('Otwórz lead: ') + lead.title"><span class="zen-icon-wrap" x-html="zenIcon('arrow')" aria-hidden="true"></span></button><button class="ux-card-open zen-card-phone-btn !text-emerald-600 hover:!text-emerald-700 dark:!text-emerald-400" @click.stop="openEntityTelephonyModal('lead', lead)" :aria-label="window.ZenI18n.t('Połączenia i SMS')" :title="window.ZenI18n.t('Połączenia i SMS')"><svg class="w-3.5 h-3.5 inline text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
+                                                <div class="company">
+                                                    <span class="dot"></span>
+                                                    <span x-text="lead.source || clientName(lead.client_id) || window.ZenI18n.t('Bez źródła')"></span>
+                                                </div>
+                                                <div class="title" x-text="lead.title"></div><div class="zen-probability" :aria-label="window.ZenI18n.t('Prawdopodobieństwo') + ': ' + (lead.probability || 0) + '%'"><span><i :style="{width: Math.max(0,Math.min(100,Number(lead.probability)||0))+'%'}"></i></span><small x-text="(lead.probability || 0)+'%'"></small></div><p class="ux-muted" x-text="lead.assignee ? fullName(lead.assignee) : window.ZenI18n.t('Bez opiekuna')"></p><p class="ux-lead-next" :class="{ 'ux-overdue-label': leadNextTask(lead) &amp;&amp; isOverdue(leadNextTask(lead)) }" x-text="leadNextLabel(lead)"></p><select class="ux-input ux-stage-select" :value="lead.stage" :disabled="!!savingLead" @click.stop @mousedown.stop @dragstart.prevent.stop @change="await changeLeadStage(lead, $event.target.value); $event.target.value = lead.stage" :aria-label="window.ZenI18n.t('Etap leada: ') + lead.title"><template x-for="option in leadStages" :key="option.id"><option :value="option.id" :selected="option.id === lead.stage" x-text="option.label"></option></template></select>
+                                                <div class="row">
+                                                    <span class="value" :class="lead.stage === 'won' ? 'won' : (lead.stage === 'lost' ? 'lost' : '')"
+                                                          x-text="(Number(lead.value) || 0).toLocaleString(locale) + window.ZenI18n.t(' zł')"></span>
+                                                    <template x-if="lead.assignee?.avatar_url">
+                                                        <img :src="lead.assignee.avatar_url" :title="fullName(lead.assignee)" class="w-6 h-6 rounded-full object-cover border-2 border-white dark:border-gray-800">
+                                                    </template>
+                                                    <template x-if="!lead.assignee?.avatar_url">
+                                                        <span class="avatar" x-text="lead.assignee ? initialsFrom(lead.assignee) : avatarInitials(lead.title)"></span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <p x-show="boardLeads.filter(l => l.stage === stage.id).length === 0" class="kanban-empty"><span x-text="window.ZenI18n.t('Upuść lead tutaj lub dodaj nowy przyciskiem +')">Upuść lead tutaj lub dodaj nowy przyciskiem +</span></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela Leady (List View) -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 mt-4" x-show="kanbanMode === 'list'">
+                    <div class="overflow-x-auto">
+                        <table class="svc-table w-full">
+                            <thead>
+                                <tr>
+                                    <th x-show="isColumnVisible('leads', 'title')"><span x-text="window.ZenI18n.t('Tytuł')">Tytuł</span></th>
+                                    <th x-show="isColumnVisible('leads', 'client')"><span x-text="window.ZenI18n.t('Klient')">Klient</span></th>
+                                    <th x-show="isColumnVisible('leads', 'stage')"><span x-text="window.ZenI18n.t('Etap')">Etap</span></th>
+                                    <th x-show="isColumnVisible('leads', 'value')"><span x-text="window.ZenI18n.t('Wartość')">Wartość</span></th>
+                                    <th x-show="isColumnVisible('leads', 'assignee')"><span x-text="window.ZenI18n.t('Opiekun')">Opiekun</span></th>
+                                    <th x-show="isColumnVisible('leads', 'expected_close_date')"><span x-text="window.ZenI18n.t('Data zamknięcia')">Data zamknięcia</span></th>
+                                    <th x-show="isColumnVisible('leads', 'source')"><span x-text="window.ZenI18n.t('Źródło')">Źródło</span></th>
+                                    <th x-show="isColumnVisible('leads', 'probability')"><span x-text="window.ZenI18n.t('Prawdopodobieństwo')">Prawdopodobieństwo</span></th>
+                                    <template x-for="col in (availableColumns('leads').filter(c => c.isCustom))" :key="'th-cf-leads-' + col.key">
+                                        <th x-show="isColumnVisible('leads', col.key)" x-text="col.label"></th>
+                                    </template>
+                                    <th class="text-right" x-show="isColumnVisible('leads', 'actions')"><span x-text="window.ZenI18n.t('Akcje')">Akcje</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="l in boardLeads" :key="l.id">
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                                        <td class="font-medium" x-show="isColumnVisible('leads', 'title')">
+                                            <button @click="openDetail('lead', l.id)" class="text-brand-600 hover:underline" x-text="l.title"></button>
+                                        </td>
+                                        <td x-show="isColumnVisible('leads', 'client')" x-text="clientName(l.client_id) || '—'"></td>
+                                        <td x-show="isColumnVisible('leads', 'stage')">
+                                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                                  :style="{ backgroundColor: (leadStages.find(s => s.id === l.stage)?.accent || '#94a3b8') + '22', color: leadStages.find(s => s.id === l.stage)?.accent || '#64748b' }"
+                                                  x-text="leadStages.find(s => s.id === l.stage)?.label || l.stage"></span>
+                                        </td>
+                                        <td class="font-semibold text-gray-900 dark:text-gray-100" x-show="isColumnVisible('leads', 'value')" x-text="formatNumber(l.value) + ' PLN'"></td>
+                                        <td x-show="isColumnVisible('leads', 'assignee')">
+                                            <template x-if="l.assignee">
+                                                <div class="flex items-center gap-1.5">
+                                                    <template x-if="l.assignee.avatar_url">
+                                                        <img :src="l.assignee.avatar_url" class="w-5 h-5 rounded-full object-cover">
+                                                    </template>
+                                                    <template x-if="!l.assignee.avatar_url">
+                                                        <div class="w-5 h-5 rounded-full avatar-gradient text-white flex items-center justify-center text-[8px] font-bold" x-text="initialsFrom(l.assignee)"></div>
+                                                    </template>
+                                                    <span class="text-xs" x-text="fullName(l.assignee)"></span>
+                                                </div>
+                                            </template>
+                                            <span x-show="!l.assignee" class="text-xs text-gray-400">—</span>
+                                        </td>
+                                        <td x-show="isColumnVisible('leads', 'expected_close_date')" x-text="formatDate(l.expected_close_date)"></td>
+                                        <td x-show="isColumnVisible('leads', 'source')" x-text="l.source || '—'"></td>
+                                        <td x-show="isColumnVisible('leads', 'probability')" x-text="(l.probability || 0) + '%'"></td>
+                                        <template x-for="col in (availableColumns('leads').filter(c => c.isCustom))" :key="'td-cf-leads-' + col.key">
+                                            <td class="text-xs text-gray-600 dark:text-gray-300" x-show="isColumnVisible('leads', col.key)" x-text="getCustomFieldValue('leads', l.id, col.field.id)"></td>
+                                        </template>
+                                        <td class="text-right whitespace-nowrap" x-show="isColumnVisible('leads', 'actions')">
+                                            <button @click="openEntityTelephonyModal('lead', l)" class="zen-list-action !text-emerald-600 hover:!text-emerald-700 dark:!text-emerald-400" :aria-label="window.ZenI18n.t('Połączenia i SMS')" :title="window.ZenI18n.t('Połączenia i SMS')"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
+                                            <button @click="openModal(l, null, false, 'leads')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span></button>
+                                            <button @click="remove(l.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t('Usuń')" :title="window.ZenI18n.t('Usuń')"><span x-html="zenIcon('trash')" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr x-show="boardLeads.length === 0">
+                                    <td :colspan="availableColumns('leads').filter(col => isColumnVisible('leads', col.key)).length || 8" class="text-center py-8 text-gray-400 text-sm" x-text="window.ZenI18n.t('Brak leadów')">Brak leadów</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            

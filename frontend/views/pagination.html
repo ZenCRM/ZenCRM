@@ -1,0 +1,14 @@
+<nav class="zen-list-pagination" x-show="pagerItems.length" :aria-label="window.ZenI18n.t('Paginacja')">
+    <label class="flex items-center gap-2">
+        <span x-text="window.ZenI18n.t('Na stronie')">Na stronie</span>
+        <select :value="listPageSizes[pagerView]" @change="setListPageSize(pagerView, $event.target.value)" class="ux-input text-sm" :aria-label="window.ZenI18n.t('Liczba rekordów na stronie')">
+            <option value="10">10</option><option value="20">20</option><option value="50">50</option>
+        </select>
+    </label>
+    <span x-text="((listPage(pagerView, pagerItems.length) - 1) * listPageSizes[pagerView] + 1) + '–' + Math.min(listPage(pagerView, pagerItems.length) * listPageSizes[pagerView], pagerItems.length) + ' / ' + pagerItems.length"></span>
+    <div class="flex items-center gap-2">
+        <button type="button" class="ux-text-button" :disabled="listPage(pagerView, pagerItems.length) === 1" @click="setListPage(pagerView, listPage(pagerView, pagerItems.length) - 1, pagerItems.length)" :aria-label="window.ZenI18n.t('Poprzednia strona')">‹</button>
+        <span x-text="listPage(pagerView, pagerItems.length) + ' / ' + listPageCount(pagerView, pagerItems.length)"></span>
+        <button type="button" class="ux-text-button" :disabled="listPage(pagerView, pagerItems.length) === listPageCount(pagerView, pagerItems.length)" @click="setListPage(pagerView, listPage(pagerView, pagerItems.length) + 1, pagerItems.length)" :aria-label="window.ZenI18n.t('Następna strona')">›</button>
+    </div>
+</nav>

@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Centrum Pomocy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    <!-- Nagłówek -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3.5 cursor-pointer" onclick="location.href = location.pathname">
+                <img id="hd-logo" src="/logo.png" alt="Logo" class="h-9 w-auto max-w-[180px] object-contain">
+                <div>
+                    <h1 id="hd-header-title" class="font-bold text-lg text-gray-900 leading-tight">Centrum Pomocy</h1>
+                    <span id="hd-header-sub" class="text-xs text-gray-500 block">Wsparcie i obsługa zgłoszeń</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="hd-header-badge">Strefa klienta</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Główna zawartość -->
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8">
+        <!-- Komunikat wyłączonego portalu -->
+        <div id="hd-disabled" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center my-12">
+            <svg class="w-12 h-12 text-amber-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <h2 class="text-xl font-bold text-amber-900 mb-2">Portal pomocy jest obecnie niedostępny</h2>
+            <p class="text-sm text-amber-700">Skontaktuj się z administratorem lub spróbuj ponownie później.</p>
+        </div>
+
+        <!-- 1. WIDOK ZGŁASZANIA TICKETU -->
+        <div id="hd-submit-view" class="space-y-6">
+            <div class="text-center max-w-xl mx-auto mb-8">
+                <span id="hd-badge" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 mb-3">Zgłoszenie serwisowe</span>
+                <h2 id="hd-title" class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">W czym możemy Ci pomóc?</h2>
+                <p id="hd-desc" class="text-sm text-gray-600 mt-2">Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail.</p>
+            </div>
+
+            <!-- Formularz zgłoszenia -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl mx-auto">
+                <form id="ticket-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                                Twój adres e-mail <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="f-email" required placeholder="twoj@email.pl"
+                                   class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                                Imię i nazwisko / Firma
+                            </label>
+                            <input type="text" id="f-name" placeholder="Jan Kowalski"
+                                   class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                                Kategoria zgłoszenia <span class="text-red-500">*</span>
+                            </label>
+                            <select id="f-category" required
+                                    class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                                Numer telefonu (opcjonalnie)
+                            </label>
+                            <input type="tel" id="f-phone" placeholder="+48 123 456 789"
+                                   class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            Temat zgłoszenia <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="f-title" required placeholder="Krótki opis problemu lub pytania"
+                               class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            Szczegółowy opis <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="f-description" required rows="5" placeholder="Podaj jak najwięcej szczegółów..."
+                                  class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"></textarea>
+                    </div>
+
+                    <div id="form-error" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium"></div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="btn-submit"
+                                class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-sm transition flex items-center justify-center gap-2 cursor-pointer text-sm">
+                            <span>Wyślij zgłoszenie</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. EKRAN SUKCESU -->
+        <div id="hd-success-view" class="hidden max-w-lg mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center space-y-5 my-8">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+                <h3 id="hd-succ-title" class="text-xl font-bold text-gray-900">Zgłoszenie zostało wysłane!</h3>
+                <p class="text-xs text-gray-500 mt-1">Numer zgłoszenia: <span id="succ-number" class="font-bold text-gray-900"></span></p>
+            </div>
+            <p id="hd-succ-desc" class="text-sm text-gray-600">
+                Wysłaliśmy potwierdzenie na Twój adres e-mail wraz z bezpośrednim linkiem do śledzenia statusu zgłoszenia.
+            </p>
+            <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-left">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Twój unikalny link do ticketu</label>
+                <input type="text" id="succ-link" readonly class="w-full bg-transparent text-xs text-blue-600 font-mono select-all outline-none">
+            </div>
+            <div class="flex gap-2 justify-center pt-2">
+                <a id="succ-btn-track" href="#" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition">
+                    Przejdź do zgłoszenia
+                </a>
+                <button type="button" onclick="location.href = location.pathname" class="px-4 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-xl transition">
+                    Nowe zgłoszenie
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. WIDOK ŚLEDZENIA TICKETU (PO UNIKALNYM LINKU) -->
+        <div id="hd-track-view" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
+                <!-- Nagłówek ticketu -->
+                <div class="flex items-start justify-between gap-4 flex-wrap pb-6 border-b border-gray-200">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2 flex-wrap">
+                            <span id="tr-number" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-gray-100 text-gray-800"></span>
+                            <span id="tr-category" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700"></span>
+                            <span id="tr-status" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+                        </div>
+                        <h2 id="tr-title" class="text-xl sm:text-2xl font-bold text-gray-900"></h2>
+                        <p class="text-xs text-gray-500 mt-1">
+                            Zgłoszono: <span id="tr-date" class="font-medium text-gray-700"></span>
+                            · Zgłaszający: <span id="tr-author" class="font-medium text-gray-700"></span>
+                        </p>
+                    </div>
+                    <button type="button" onclick="location.href = location.pathname" class="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1 cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span>Nowe zgłoszenie</span>
+                    </button>
+                </div>
+
+                <!-- Wątek konwersacji -->
+                <div class="py-6 space-y-4">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Historia zgłoszenia</h3>
+                    <div id="tr-messages" class="space-y-4">
+                        <!-- Wiadomości renderowane dynamicznie -->
+                    </div>
+                </div>
+
+                <!-- Formularz odpowiedzi klienta -->
+                <div id="tr-reply-box" class="pt-6 border-t border-gray-200">
+                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Dodaj odpowiedź</h4>
+                    <form id="track-reply-form" class="space-y-3">
+                        <textarea id="tr-reply-content" required rows="3" placeholder="Wpisz treść swojej odpowiedzi..."
+                                  class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"></textarea>
+                        <div class="flex justify-end">
+                            <button type="submit" id="btn-reply-submit"
+                                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition cursor-pointer">
+                                Wyślij odpowiedź
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div id="tr-closed-notice" class="hidden pt-6 border-t border-gray-200 text-center text-xs text-gray-500 italic">
+                    To zgłoszenie zostało zamknięte. Jeśli potrzebujesz dalszej pomocy, utwórz nowe zgłoszenie.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Stopka (portal klienta - bez linków do CRM) -->
+    <footer class="border-t border-gray-200 bg-white py-6 text-center text-xs text-gray-500">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p id="hd-footer-text">Obsługa klienta · Bezpieczny portal pomocy</p>
+            <span class="text-[11px] text-gray-400">Centrum zgłoszeń online</span>
+        </div>
+    </footer>
+
+    <!-- Skrypt obsługi portalu pomocy -->
+    <script>
+        (async () => {
+            const params = new URLSearchParams(location.search);
+            const token = params.get('ticket') || params.get('token');
+
+            // Pobierz konfigurację portalu
+            let config = {};
+            try {
+                const res = await fetch('/api/tickets/public/config');
+                config = await res.json();
+            } catch (e) {
+                console.error('Błąd pobierania konfiguracji helpdesku:', e);
+            }
+
+            if (config.title) {
+                document.title = config.title;
+                const elHdrTitle = document.getElementById('hd-header-title');
+                if (elHdrTitle) elHdrTitle.textContent = config.title;
+            }
+            if (config.header_subtitle) {
+                const elHdrSub = document.getElementById('hd-header-sub');
+                if (elHdrSub) elHdrSub.textContent = config.header_subtitle;
+            }
+            if (config.badge) {
+                const elBadge = document.getElementById('hd-badge');
+                if (elBadge) elBadge.textContent = config.badge;
+                const elHdrBadge = document.getElementById('hd-header-badge');
+                if (elHdrBadge) elHdrBadge.textContent = config.badge;
+            }
+            if (config.heading) {
+                const elTitle = document.getElementById('hd-title');
+                if (elTitle) elTitle.textContent = config.heading;
+            }
+            if (config.description) {
+                const elDesc = document.getElementById('hd-desc');
+                if (elDesc) elDesc.textContent = config.description;
+            }
+            if (config.success_heading) {
+                const elSuccTitle = document.getElementById('hd-succ-title');
+                if (elSuccTitle) elSuccTitle.textContent = config.success_heading;
+            }
+            if (config.success_description) {
+                const elSuccDesc = document.getElementById('hd-succ-desc');
+                if (elSuccDesc) elSuccDesc.textContent = config.success_description;
+            }
+            if (config.footer_text) {
+                const elFooter = document.getElementById('hd-footer-text');
+                if (elFooter) elFooter.textContent = config.footer_text;
+            }
+            if (config.logo) {
+                const logo = document.getElementById('hd-logo');
+                if (logo) {
+                    logo.src = config.logo;
+                    logo.onerror = () => { logo.src = '/logo.png'; };
+                }
+            }
+            if (config.enabled === false) {
+                document.getElementById('hd-submit-view').classList.add('hidden');
+                document.getElementById('hd-disabled').classList.remove('hidden');
+                return;
+            }
+
+            // Wypełnij kategorie
+            const catSelect = document.getElementById('f-category');
+            catSelect.innerHTML = '';
+            (config.categories || []).forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.name;
+                catSelect.appendChild(opt);
+            });
+
+            // Ładowanie i śledzenie ticketu
+            async function loadTrackTicket(tok) {
+                try {
+                    const res = await fetch('/api/tickets/public/track/' + encodeURIComponent(tok));
+                    if (!res.ok) throw new Error('Nie znaleziono takiego zgłoszenia.');
+                    const ticket = await res.json();
+
+                    document.getElementById('tr-number').textContent = ticket.ticket_number;
+                    document.getElementById('tr-category').textContent = (config.categories || []).find(c => c.id === ticket.category)?.name || ticket.category;
+                    document.getElementById('tr-title').textContent = ticket.title;
+                    document.getElementById('tr-author').textContent = ticket.contact_name ? `${ticket.contact_name} (${ticket.contact_email})` : ticket.contact_email;
+                    document.getElementById('tr-date').textContent = new Date(ticket.created_at).toLocaleString('pl-PL');
+
+                    // Status badge
+                    const statusBadge = document.getElementById('tr-status');
+                    const statuses = {
+                        new: { label: 'Nowe', cls: 'bg-blue-100 text-blue-800' },
+                        open: { label: 'W toku', cls: 'bg-amber-100 text-amber-800' },
+                        pending_client: { label: 'Oczekuje na Twoją odpowiedź', cls: 'bg-purple-100 text-purple-800' },
+                        resolved: { label: 'Rozwiązane', cls: 'bg-emerald-100 text-emerald-800' },
+                        closed: { label: 'Zamknięte', cls: 'bg-gray-100 text-gray-700' }
+                    };
+                    const st = statuses[ticket.status] || { label: ticket.status, cls: 'bg-gray-100 text-gray-800' };
+                    statusBadge.textContent = st.label;
+                    statusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold ' + st.cls;
+
+                    if (ticket.status === 'closed') {
+                        document.getElementById('tr-reply-box').classList.add('hidden');
+                        document.getElementById('tr-closed-notice').classList.remove('hidden');
+                    } else {
+                        document.getElementById('tr-reply-box').classList.remove('hidden');
+                        document.getElementById('tr-closed-notice').classList.add('hidden');
+                    }
+
+                    // Renderuj wiadomości
+                    const msgBox = document.getElementById('tr-messages');
+                    msgBox.innerHTML = '';
+                    (ticket.messages || []).forEach(m => {
+                        const isAgent = (m.sender_type === 'agent');
+                        const card = document.createElement('div');
+                        card.className = `p-4 rounded-xl border ${isAgent ? 'bg-blue-50/60 border-blue-200' : 'bg-gray-50 border-gray-200'}`;
+                        card.innerHTML = `
+                            <div class="flex items-center justify-between gap-2 mb-2 text-xs">
+                                <span class="font-bold ${isAgent ? 'text-blue-900' : 'text-gray-900'}">
+                                    ${isAgent ? '💬 Zespół Wsparcia' : '👤 ' + (m.sender_name || 'Klient')}
+                                </span>
+                                <span class="text-gray-400">${new Date(m.created_at).toLocaleString('pl-PL')}</span>
+                            </div>
+                            <div class="text-sm text-gray-800 whitespace-pre-wrap">${m.content}</div>
+                        `;
+                        msgBox.appendChild(card);
+                    });
+                } catch (e) {
+                    const msgBox = document.getElementById('tr-messages');
+                    if (msgBox) {
+                        msgBox.innerHTML = `<div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">${e.message}</div>`;
+                    }
+                }
+            }
+
+            // Obsługa odpowiedzi w wątku klienta
+            const replyForm = document.getElementById('track-reply-form');
+            if (replyForm) {
+                replyForm.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const contentInput = document.getElementById('tr-reply-content');
+                    const content = contentInput.value.trim();
+                    if (!content) return;
+
+                    const curToken = token || (new URLSearchParams(location.search)).get('ticket') || (new URLSearchParams(location.search)).get('token');
+                    if (!curToken) return;
+
+                    const btn = document.getElementById('btn-reply-submit');
+                    btn.disabled = true;
+                    try {
+                        const res = await fetch('/api/tickets/public/track/' + encodeURIComponent(curToken) + '/reply', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ content })
+                        });
+                        const data = await res.json().catch(() => ({}));
+                        if (!res.ok) throw new Error(data.error || 'Błąd wysyłania odpowiedzi');
+                        contentInput.value = '';
+                        await loadTrackTicket(curToken);
+                    } catch (err) {
+                        alert(err.message);
+                    } finally {
+                        btn.disabled = false;
+                    }
+                };
+            }
+
+            // Jeśli jest podany token w URL -> wyświetl widok śledzenia ticketu
+            if (token) {
+                document.getElementById('hd-submit-view').classList.add('hidden');
+                document.getElementById('hd-track-view').classList.remove('hidden');
+                await loadTrackTicket(token);
+                return;
+            }
+
+            // Obsługa wysyłania formularza
+            const form = document.getElementById('ticket-form');
+            const btnSubmit = document.getElementById('btn-submit');
+            const errBox = document.getElementById('form-error');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                errBox.classList.add('hidden');
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('opacity-75');
+
+                const payload = {
+                    email: document.getElementById('f-email').value.trim(),
+                    name: document.getElementById('f-name').value.trim(),
+                    category: document.getElementById('f-category').value,
+                    phone: document.getElementById('f-phone').value.trim(),
+                    title: document.getElementById('f-title').value.trim(),
+                    description: document.getElementById('f-description').value.trim(),
+                };
+
+                try {
+                    const res = await fetch('/api/tickets/public/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Wystąpił błąd podczas wysyłania zgłoszenia.');
+
+                    // Wyświetl ekran sukcesu
+                    document.getElementById('hd-submit-view').classList.add('hidden');
+                    document.getElementById('hd-success-view').classList.remove('hidden');
+                    document.getElementById('succ-number').textContent = data.ticket_number;
+                    const fullLink = location.origin + location.pathname + '?ticket=' + data.token;
+                    document.getElementById('succ-link').value = fullLink;
+                    document.getElementById('succ-btn-track').href = fullLink;
+                } catch (err) {
+                    errBox.textContent = err.message;
+                    errBox.classList.remove('hidden');
+                } finally {
+                    btnSubmit.disabled = false;
+                    btnSubmit.classList.remove('opacity-75');
+                }
+            };
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+/* Compact pipeline with subtle stage-colored column backgrounds. */
+.zen-pipeline-summary {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin:0 0 12px
+}
+.zen-eyebrow {
+    font-size:10px;
+    letter-spacing:.16em;
+    font-weight:750;
+    color:var(--wm-muted,#64748b)
+}
+.zen-pipeline-summary h2 {
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:-.035em;
+    margin-top:4px
+}
+.zen-pipeline-metrics {
+    display:flex;
+    gap:22px
+}
+.zen-pipeline-metrics>span {
+    display:flex;
+    flex-direction:column;
+    gap:3px
+}
+.zen-pipeline-metrics strong {
+    font-size:18px;
+    letter-spacing:-.03em
+}
+.zen-pipeline-metrics small {
+    font-size:11px;
+    color:var(--wm-muted,#64748b)
+}
+
+.windmill-app .kanban-toolbar {
+    flex-wrap:wrap;
+    gap:8px;
+    padding:10px 12px;
+    margin-bottom:12px
+}
+.windmill-app .kanban-col-new {
+    background:color-mix(in srgb,var(--stage-accent) 7%,var(--wm-surface,#fff));
+    border:1px solid var(--wm-border,#e2e8f0);
+    border-radius:12px;
+    max-height:calc(100dvh - 220px);
+    min-height:280px
+}
+.windmill-app .kanban-col-header {
+    background:transparent;
+    border-top:3px solid var(--stage-accent);
+    border-radius:11px 11px 0 0;
+    padding:10px;
+    border-bottom:1px solid var(--wm-border,#e2e8f0)
+}
+.windmill-app .kanban-col-header .title {
+    font-size:13px;
+    gap:8px
+}
+.windmill-app .kanban-col-header .count {
+    background:var(--stage-tint);
+    color:var(--stage-accent);
+    font-size:11px;
+    padding:2px 7px;
+    border-radius:6px
+}
+.windmill-app .kanban-col-header .total {
+    margin-top:4px;
+    font-variant-numeric:tabular-nums;
+    font-size:12px
+}
+.windmill-app .kanban-col-add {
+    background:var(--wm-surface,#fff);
+    border:1px solid var(--wm-border,#e2e8f0);
+    border-radius:8px;
+    width:27px;
+    height:27px
+}
+.windmill-app .kanban-col-body {
+    padding:7px;
+    gap:7px;
+    background:transparent
+}
+.windmill-app .kanban-card-new {
+    background:var(--wm-surface,#fff);
+    padding:10px;
+    border:1px solid var(--wm-border,#e2e8f0);
+    border-radius:9px;
+    box-shadow:0 2px 3px #0f172a04;
+    transition:box-shadow .15s,border-color .15s,transform .15s
+}
+.windmill-app .kanban-card-new:hover {
+    box-shadow:0 5px 15px #0f172a0c;
+    transform:translateY(-1px)
+}
+.windmill-app .kanban-card-new .title {
+    font-size:13px;
+    line-height:1.35;
+    margin:6px 18px 7px 0
+}
+.windmill-app .kanban-card-new .company {
+    font-size:10px;
+    letter-spacing:.02em
+}
+.windmill-app .kanban-card-new .row {
+    padding-top:7px;
+    border-top:1px solid var(--wm-border,#e2e8f0);
+    margin-top:7px
+}
+.windmill-app .kanban-card-new .value {
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:-.02em
+}
+.windmill-app .kanban-card-new .ux-stage-select {
+    background:transparent;
+    border:1px solid var(--wm-border,#e2e8f0);
+    margin:6px 0;
+    padding:4px 6px;
+    font-size:11px;
+    color:var(--wm-muted,#64748b)
+}
+.windmill-app .kanban-empty {
+    margin:7px 0;
+    padding:18px 10px;
+    border:1px dashed var(--wm-border,#cbd5e1);
+    border-radius:10px;
+    line-height:1.5;
+    font-size:11px;
+    text-align:center;
+    color:var(--wm-muted,#64748b)
+}
+.zen-probability {
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:6px
+}
+.zen-probability>span {
+    height:4px;
+    flex:1;
+    background:var(--wm-border,#e2e8f0);
+    border-radius:9px;
+    overflow:hidden
+}
+.zen-probability i {
+    height:100%;
+    display:block;
+    background:var(--stage-accent);
+    border-radius:9px;
+    opacity:.75
+}
+.zen-probability small {
+    font-size:10px;
+    color:var(--wm-muted,#64748b)
+}
+.windmill-app .kanban-col-new.dragover {
+    outline:2px dashed var(--stage-accent);
+    outline-offset:-3px
+}
+.windmill-app .kanban-card-new:focus-within {
+    outline:2px solid var(--stage-accent);
+    outline-offset:2px
+}
+
+@media(max-width:640px) {
+    .zen-pipeline-summary {
+    align-items:flex-start;
+    gap:12px
+}
+.zen-pipeline-summary h2 {
+    font-size:20px
+}
+.zen-pipeline-metrics {
+    gap:16px
+}
+.zen-pipeline-metrics strong {
+    font-size:15px
+}
+.windmill-app .kanban-col-new {
+    max-height:calc(100dvh - 240px)
+}
+
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .windmill-app .kanban-card-new {
+    transition:none
+}
+.windmill-app .kanban-card-new:hover {
+    transform:none
+}
+
+}
+
+
+.dark .windmill-app .kanban-col-header .count {
+    color:color-mix(in srgb,var(--stage-accent) 45%,white)
+}
+
+
+.windmill-app .kanban-toolbar .ux-input {
+    min-height:32px;
+    padding:5px 8px;
+    font-size:12px;
+}
+.windmill-app .kanban-toolbar .kanban-new-btn {
+    min-height:32px;
+    padding:6px 10px;
+    font-size:12px;
+}
+.windmill-app .kanban-card-new .ux-lead-next {
+    padding-top:5px;
+    margin-top:5px;
+    font-size:10px;
+    line-height:1.4;
+}
+.dark .windmill-app .kanban-col-new {
+    background:color-mix(in srgb,var(--stage-accent) 10%,var(--wm-surface,#1a1c23));
+}
+.dark .windmill-app .kanban-col-header {
+    background:transparent;
+}
+.windmill-app .kanban-col-new.dragover {
+    background:color-mix(in srgb,var(--stage-accent) 16%,var(--wm-surface,#fff));
+}

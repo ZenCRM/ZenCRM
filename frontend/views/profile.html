@@ -1,0 +1,117 @@
+<!-- ═══════════════ MODAL PROFILU ═══════════════ -->
+<div x-show="profile.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+     @keydown.escape.window="profile.open = false">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold"><span x-text="window.ZenI18n.t(&quot;Mój profil&quot;)">Mój profil</span></h3>
+            <button @click="profile.open = false" class="text-2xl leading-none hover:text-red-500">&times;</button>
+        </div>
+        <form @submit.prevent="saveProfile()" class="p-6 space-y-4">
+            <div class="flex items-center gap-4 pb-4 border-b border-gray-100 dark:border-gray-700">
+                <template x-if="profile.form.avatar_url">
+                    <img :src="profile.form.avatar_url + (profile.form.avatar_url.includes(&#x27;?&#x27;) ? &#x27;&amp;&#x27; : &#x27;?&#x27;) + &#x27;t=&#x27; + avatarTs"
+                         class="w-20 h-20 rounded-full object-cover ring-2 ring-brand-500">
+                </template>
+                <template x-if="!profile.form.avatar_url">
+                    <div class="w-20 h-20 rounded-full avatar-gradient text-white flex items-center justify-center text-2xl font-bold"
+                         x-text="(profile.form.first_name?.[0] || &#x27;?&#x27;) + (profile.form.last_name?.[0] || &#x27;&#x27;)"></div>
+                </template>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium mb-2"><span x-text="window.ZenI18n.t(&quot;Zdjęcie profilowe&quot;)">Zdjęcie profilowe</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <label class="cursor-pointer px-3 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium inline-flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Wgraj zdjęcie&quot;)">Wgraj zdjęcie</span>
+                            <input type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                                   @change="uploadAvatar($event)" class="hidden">
+                        </label>
+                        <button type="button" x-show="profile.form.avatar_url"
+                                @click="removeAvatar()"
+                                class="px-3 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-sm">
+                            <span x-text="window.ZenI18n.t(&quot;Usuń zdjęcie&quot;)">Usuń zdjęcie</span>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2"><span x-text="window.ZenI18n.t(&quot;JPG, PNG, GIF, WEBP · max 2 MB&quot;)">JPG, PNG, GIF, WEBP · max 2 MB</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Imię&quot;)">Imię</span></label>
+                    <input type="text" x-model="profile.form.first_name" required
+                           class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Nazwisko&quot;)">Nazwisko</span></label>
+                    <input type="text" x-model="profile.form.last_name" required
+                           class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Email&quot;)">Email</span></label>
+                <input type="email" x-model="profile.form.email" required
+                       class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Rola&quot;)">Rola</span></label>
+                <input type="text" :value="roleLabel(user?.role)" disabled
+                       class="w-full px-3 py-2 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:border-gray-600 text-gray-500">
+                <p class="text-xs text-gray-500 mt-1"><span x-text="window.ZenI18n.t(&quot;Rolę może zmienić tylko administrator.&quot;)">Rolę może zmienić tylko administrator.</span></p>
+            </div>
+
+            <div class="pt-2 border-t border-gray-100 dark:border-gray-700">
+                <label class="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">
+                    <span x-text="window.ZenI18n.t('Domyślna metoda połączeń')">Domyślna metoda połączeń</span>
+                </label>
+                <select x-model="profile.form.default_call_method"
+                        class="w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                    <option value="link" x-text="window.ZenI18n.t('Zwykły link tel: (np. aplikacja w komputerze / telefonie)')">Zwykły link tel: (np. aplikacja w komputerze / telefonie)</option>
+                    <option value="android" x-text="window.ZenI18n.t('Telefon Android (zlecenie połączenia z CRM)')">Telefon Android (zlecenie połączenia z CRM)</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1" x-text="window.ZenI18n.t('Określa, czy główny przycisk telefonu natychmiast zleca połączenie z podłączonego telefonu Android, czy uruchamia link tel:.')"></p>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 dark:border-gray-700">
+                <label class="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">
+                    <span x-text="window.ZenI18n.t('Powiadomienia e-mail')">Powiadomienia e-mail</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-3" x-text="window.ZenI18n.t('Wybierz powiadomienia, które chcesz otrzymywać na swój adres e-mail:')"></p>
+                <div class="space-y-2.5">
+                    <label class="flex items-center gap-2.5 text-sm cursor-pointer hover:text-brand-600 dark:hover:text-brand-400">
+                        <input type="checkbox" x-model="profile.form.email_notifications.ticket_assigned"
+                               class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                        <span x-text="window.ZenI18n.t('Nowy przypisany ticket')">Nowy przypisany ticket</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 text-sm cursor-pointer hover:text-brand-600 dark:hover:text-brand-400">
+                        <input type="checkbox" x-model="profile.form.email_notifications.ticket_reply"
+                               class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                        <span x-text="window.ZenI18n.t('Nowa odpowiedź klienta w tickecie')">Nowa odpowiedź klienta w tickecie</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 text-sm cursor-pointer hover:text-brand-600 dark:hover:text-brand-400">
+                        <input type="checkbox" x-model="profile.form.email_notifications.task_assigned"
+                               class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                        <span x-text="window.ZenI18n.t('Nowe przypisane zadanie')">Nowe przypisane zadanie</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 text-sm cursor-pointer hover:text-brand-600 dark:hover:text-brand-400">
+                        <input type="checkbox" x-model="profile.form.email_notifications.client_assigned"
+                               class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                        <span x-text="window.ZenI18n.t('Przypisany nowy klient')">Przypisany nowy klient</span>
+                    </label>
+                </div>
+            </div>
+
+            <p x-show="profile.error" x-text="profile.error" class="text-red-500 text-sm"></p>
+            <p x-show="profile.success" class="text-green-600 text-sm"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;check&#x27;)" aria-hidden="true"></span> <span x-text="profile.success"></span></p>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" @click="profile.open = false"
+                        class="px-4 py-2 rounded-lg border dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"><span x-text="window.ZenI18n.t(&quot;Anuluj&quot;)">Anuluj</span></button>
+                <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-medium"><span x-text="window.ZenI18n.t(&quot;Zapisz zmiany&quot;)">Zapisz zmiany</span></button>
+            </div>
+        </form>
+    </div>
+</div>
+

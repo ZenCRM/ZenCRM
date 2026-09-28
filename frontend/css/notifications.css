@@ -1,0 +1,148 @@
+.zen-notifications {
+    position:fixed;
+    right:30px;
+    bottom:calc(85px + env(safe-area-inset-bottom,0px));
+    z-index:45
+}
+.zen-bell {
+    position:relative;
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--wm-border,#e2e8f0);
+    background:var(--wm-surface,#fff);
+    border-radius:50%;
+    box-shadow:0 3px 12px #0f172a0d
+}
+.zen-bell svg {
+    width:21px;
+    height:21px
+}
+.zen-bell-count {
+    position:absolute;
+    top:-4px;
+    right:-5px;
+    min-width:18px;
+    height:18px;
+    padding:0 4px;
+    border-radius:20px;
+    background:#007fce;
+    color:white;
+    font-size:10px;
+    display:grid;
+    place-items:center;
+    font-weight:700
+}
+.zen-inbox {
+    position:absolute;
+    right:0;
+    bottom:54px;
+    width:min(390px,calc(100vw - 32px));
+    max-height:calc(100dvh - 170px);
+    display:flex;
+    flex-direction:column;
+    background:var(--wm-surface,#fff);
+    color:var(--wm-text,#172b4d);
+    border:1px solid var(--wm-border,#e2e8f0);
+    border-radius:16px;
+    box-shadow:0 15px 55px #0f172a24;
+    overflow:hidden
+}
+.zen-inbox header {
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center
+}
+.zen-inbox h2 {
+    font-size:16px;
+    font-weight:700
+}
+.zen-inbox header p,.zen-inbox-tools {
+    font-size:11px;
+    color:var(--wm-muted,#64748b)
+}
+.zen-inbox-tools {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 18px;
+    border-block:1px solid var(--wm-border,#e2e8f0)
+}
+.zen-inbox-tools button {
+    color:#007fce
+}
+.zen-inbox-tools button:disabled {
+    opacity:.45
+}
+.zen-inbox-list {
+    overflow:auto;
+    overscroll-behavior:contain
+}
+.zen-inbox-item {
+    display:flex;
+    width:100%;
+    gap:12px;
+    align-items:center;
+    text-align:left;
+    padding:14px 18px;
+    border-bottom:1px solid var(--wm-border,#e2e8f0)
+}
+.zen-inbox-item>span:nth-child(2) {
+    min-width:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:4px
+}
+.zen-inbox-item small {
+    font-size:11px;
+    color:var(--wm-muted,#64748b)
+}
+.zen-inbox-item strong {
+    font-size:13px;
+    overflow-wrap:anywhere
+}
+.zen-inbox-item:hover,.zen-inbox-item.is-unread {
+    background:color-mix(in srgb,#007fce 5%,var(--wm-surface,#fff))
+}
+.zen-inbox-dot {
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    flex-shrink:0
+}
+.is-unread .zen-inbox-dot {
+    background:#007fce
+}
+.zen-inbox-state {
+    padding:24px 18px;
+    font-size:13px
+}
+.zen-language {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    font-size:12px
+}
+.zen-language select {
+    background:var(--wm-surface,#fff);
+    color:inherit;
+    border:1px solid var(--wm-border,#e2e8f0);
+    padding:6px 8px;
+    border-radius:8px
+}
+.zen-bell:focus-visible,.zen-inbox button:focus-visible {
+    outline:2px solid #007fce;
+    outline-offset:2px
+}
+@media(max-width:640px) {
+    .zen-notifications {
+    right:22px;
+    bottom:calc(77px + env(safe-area-inset-bottom,0px))
+}
+
+}
+

@@ -1,0 +1,287 @@
+<!-- ═══ PRACOWNICY I ZESPOŁY ═══ -->
+<div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'users'" x-cloak class="space-y-4">
+    <!-- Pasek zakładek i akcji -->
+    <div class="flex items-center justify-between gap-4 flex-wrap pb-1 border-b border-gray-200 dark:border-gray-700">
+        <!-- Zakładki -->
+        <div class="flex items-center gap-2">
+            <button type="button" @click="userTab = 'employees'"
+                    :class="userTab === 'employees' ? 'border-brand-600 text-brand-600 dark:text-brand-400 font-bold border-b-2' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'"
+                    class="px-3 py-2 text-sm transition flex items-center gap-2 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span x-text="window.ZenI18n.t('Pracownicy')">Pracownicy</span>
+                <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-semibold" x-text="(users || []).length"></span>
+            </button>
+            <button type="button" @click="userTab = 'teams'"
+                    :class="userTab === 'teams' ? 'border-brand-600 text-brand-600 dark:text-brand-400 font-bold border-b-2' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'"
+                    class="px-3 py-2 text-sm transition flex items-center gap-2 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                <span x-text="window.ZenI18n.t('Zespoły')">Zespoły</span>
+                <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-semibold" x-text="(teams || []).length"></span>
+            </button>
+        </div>
+
+        <!-- Przyciski akcji -->
+        <div class="flex items-center gap-2">
+            <template x-if="userTab === 'employees'">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <input type="search" class="ux-input text-xs" x-model.debounce.150ms="userSearch" :placeholder="window.ZenI18n.t('Szukaj pracownika...')" :aria-label="window.ZenI18n.t('Szukaj pracownika')">
+                    <select class="ux-input text-xs" x-model="userTeamFilter" :aria-label="window.ZenI18n.t('Filtruj wg zespołu')">
+                        <option value="" x-text="window.ZenI18n.t('Wszystkie zespoły')">Wszystkie zespoły</option>
+                        <template x-for="t in teams" :key="'opt-team-' + t.id">
+                            <option :value="t.id" x-text="t.name"></option>
+                        </template>
+                    </select>
+                    <button type="button" @click="openModal(null, null, false, 'users')"
+                            class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-white" x-text="window.ZenI18n.t('Dodaj pracownika')">Dodaj pracownika</span>
+                    </button>
+                </div>
+            </template>
+            <template x-if="userTab === 'teams'">
+                <button type="button" @click="openTeamModal()"
+                        class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <span class="text-white" x-text="window.ZenI18n.t('Dodaj zespół')">Dodaj zespół</span>
+                </button>
+            </template>
+        </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <!-- 1. ZAKŁADKA PRACOWNICY -->
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <div x-show="userTab === 'employees'" class="space-y-4">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <template x-for="u in pagedItems('users', filteredUsers)" :key="u.id">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 text-center flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <template x-if="u.avatar_url">
+                            <img :src="u.avatar_url" class="w-16 h-16 rounded-full object-cover mx-auto mb-3 shadow-sm border border-gray-100 dark:border-gray-700">
+                        </template>
+                        <template x-if="!u.avatar_url">
+                            <div class="w-16 h-16 rounded-full avatar-gradient text-white mx-auto flex items-center justify-center text-2xl font-bold mb-3 shadow-sm" x-text="initialsFrom(u)"></div>
+                        </template>
+                        <p class="font-bold text-gray-900 dark:text-gray-100 text-base" x-text="fullName(u)"></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3 truncate" x-text="u.email"></p>
+                        
+                        <div class="flex items-center justify-center gap-1.5 flex-wrap mb-3">
+                            <span class="px-2.5 py-0.5 text-xs rounded-full font-medium inline-block"
+                                  :class="{'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300': u.role === 'admin', 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300': u.role === 'manager', 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300': u.role === 'employee'}"
+                                  x-text="roleLabel(u.role)"></span>
+                        </div>
+
+                        <!-- Zespoły pracownika -->
+                        <div class="min-h-[26px] mb-3 flex items-center justify-center gap-1 flex-wrap">
+                            <template x-for="tm in (u.teams || [])" :key="'u-' + u.id + '-t-' + tm.id">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold"
+                                      :style="{ backgroundColor: (tm.color || '#018bfc') + '15', color: tm.color || '#018bfc', border: '1px solid ' + (tm.color || '#018bfc') + '35' }">
+                                    <span class="w-1.5 h-1.5 rounded-full" :style="{ backgroundColor: tm.color || '#018bfc' }"></span>
+                                    <span x-text="tm.name"></span>
+                                </span>
+                            </template>
+                            <span x-show="!(u.teams || []).length" class="text-xs text-gray-400 italic" x-text="window.ZenI18n.t('Brak zespołu')">Brak zespołu</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700/60">
+                        <button @click="openModal(u, null, false, 'users')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div x-show="filteredUsers.length === 0" class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <p class="text-sm font-medium text-gray-500" x-text="window.ZenI18n.t('Brak pracowników spełniających kryteria')">Brak pracowników spełniających kryteria</p>
+            <button x-show="userSearch || userTeamFilter" @click="userSearch = ''; userTeamFilter = '';" class="mt-2 text-xs text-brand-600 dark:text-brand-400 hover:underline cursor-pointer" x-text="window.ZenI18n.t('Wyczyść filtry')">Wyczyść filtry</button>
+        </div>
+        <div x-data="{ pagerView: 'users', get pagerItems() { return this.filteredUsers } }"><% include "views/pagination.html" %></div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <!-- 2. ZAKŁADKA ZESPOŁY -->
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <div x-show="userTab === 'teams'" class="space-y-4">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <template x-for="team in teams" :key="'team-card-' + team.id">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition">
+                    <!-- Kolorowy pasek zespołu -->
+                    <div class="h-2 w-full" :style="{ backgroundColor: team.color || '#018bfc' }"></div>
+
+                    <div class="p-5 flex-1">
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full" :style="{ backgroundColor: team.color || '#018bfc' }"></span>
+                                <h3 class="font-bold text-gray-900 dark:text-gray-100 text-lg" x-text="team.name"></h3>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                  x-text="(team.member_ids || []).length + ' ' + window.ZenI18n.t('członków')"></span>
+                        </div>
+
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 line-clamp-2" x-text="team.description || window.ZenI18n.t('Brak opisu zespołu')"></p>
+
+                        <!-- Lider zespołu -->
+                        <div class="mb-4 pt-3 border-t border-gray-100 dark:border-gray-700/60">
+                            <div class="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5" x-text="window.ZenI18n.t('Lider zespołu')">Lider zespołu</div>
+                            <template x-if="team.leader">
+                                <div class="flex items-center gap-2">
+                                    <template x-if="team.leader.avatar_url">
+                                        <img :src="team.leader.avatar_url" class="w-6 h-6 rounded-full object-cover">
+                                    </template>
+                                    <template x-if="!team.leader.avatar_url">
+                                        <div class="w-6 h-6 rounded-full avatar-gradient text-white flex items-center justify-center text-[9px] font-bold" x-text="initialsFrom(team.leader)"></div>
+                                    </template>
+                                    <span class="text-xs font-semibold text-gray-800 dark:text-gray-200" x-text="fullName(team.leader)"></span>
+                                </div>
+                            </template>
+                            <span x-show="!team.leader" class="text-xs text-gray-400 italic" x-text="window.ZenI18n.t('Nie przypisano lidera')">Nie przypisano lidera</span>
+                        </div>
+
+                        <!-- Członkowie zespołu -->
+                        <div>
+                            <div class="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2" x-text="window.ZenI18n.t('Członkowie')">Członkowie</div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <template x-for="m in (team.members || []).slice(0, 6)" :key="'tm-m-' + m.id">
+                                    <div class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700/50 px-2 py-1 rounded-md text-xs border border-gray-200 dark:border-gray-600" :title="m.email">
+                                        <template x-if="m.avatar_url">
+                                            <img :src="m.avatar_url" class="w-4 h-4 rounded-full object-cover">
+                                        </template>
+                                        <template x-if="!m.avatar_url">
+                                            <span class="w-4 h-4 rounded-full avatar-gradient text-white flex items-center justify-center text-[8px] font-bold" x-text="initialsFrom(m)"></span>
+                                        </template>
+                                        <span class="text-[11px] text-gray-800 dark:text-gray-200" x-text="fullName(m)"></span>
+                                    </div>
+                                </template>
+                                <span x-show="(team.members || []).length > 6" class="text-xs text-gray-400 font-semibold self-center" x-text="'+' + ((team.members || []).length - 6)"></span>
+                                <span x-show="!(team.members || []).length" class="text-xs text-gray-400 italic" x-text="window.ZenI18n.t('Brak przypisanych członków')">Brak przypisanych członków</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Przyciski akcji zespołu -->
+                    <div class="px-5 py-3 bg-gray-50 dark:bg-gray-800/60 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                        <button type="button" @click="openTeamModal(team)"
+                                class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer">
+                            <span x-html="zenIcon('edit')"></span>
+                            <span x-text="window.ZenI18n.t('Edytuj zespół')">Edytuj zespół</span>
+                        </button>
+                        <button type="button" @click="deleteTeam(team.id)"
+                                class="text-xs font-semibold text-red-500 hover:text-red-700 flex items-center gap-1 cursor-pointer">
+                            <span x-html="zenIcon('trash')"></span>
+                            <span x-text="window.ZenI18n.t('Usuń')">Usuń</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div x-show="teams.length === 0" class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <h4 class="font-bold text-gray-800 dark:text-gray-200 text-base" x-text="window.ZenI18n.t('Brak utworzonych zespołów')">Brak utworzonych zespołów</h4>
+            <p class="text-xs text-gray-500 mt-1 mb-4" x-text="window.ZenI18n.t('Możesz podzielić pracowników na zespoły np. Sprzedaż, Wsparcie, Realizacja.')">Możesz podzielić pracowników na zespoły np. Sprzedaż, Wsparcie, Realizacja.</p>
+            <button type="button" @click="openTeamModal()"
+                    class="px-4 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-xs font-semibold rounded-lg shadow-sm transition inline-flex items-center gap-1.5 cursor-pointer">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span class="text-white" x-text="window.ZenI18n.t('Utwórz pierwszy zespół')">Utwórz pierwszy zespół</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <!-- 3. MODAL TWORZENIA / EDYCJI ZESPOŁU -->
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <div x-show="teamModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+         @keydown.escape.window="closeTeamModal()">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100"
+                    x-text="teamModal.editingId ? window.ZenI18n.t('Edytuj zespół') : window.ZenI18n.t('Nowy zespół')"></h3>
+                <button type="button" @click="closeTeamModal()" class="text-2xl leading-none hover:text-red-500 text-gray-400 cursor-pointer">&times;</button>
+            </div>
+
+            <form @submit.prevent="saveTeamModal()" class="p-6 space-y-4 overflow-y-auto flex-1">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        <span x-text="window.ZenI18n.t('Nazwa zespołu')">Nazwa zespołu</span>
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" x-model="teamModal.form.name" required
+                           class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none"
+                           :placeholder="window.ZenI18n.t('np. Dział Sprzedaży')">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        <span x-text="window.ZenI18n.t('Kolor zespołu')">Kolor zespołu</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" x-model="teamModal.form.color" class="w-10 h-10 p-0.5 rounded cursor-pointer border border-gray-300 dark:border-gray-600">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <template x-for="c in ['#018bfc', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b']" :key="'col-' + c">
+                                <button type="button" @click="teamModal.form.color = c"
+                                        class="w-6 h-6 rounded-full border-2 transition cursor-pointer"
+                                        :style="{ backgroundColor: c, borderColor: teamModal.form.color === c ? '#000' : 'transparent' }"></button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        <span x-text="window.ZenI18n.t('Opiekun / Lider zespołu')">Opiekun / Lider zespołu</span>
+                    </label>
+                    <select x-model="teamModal.form.leader_id" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                        <option :value="null" x-text="window.ZenI18n.t('Brak lidera')">Brak lidera</option>
+                        <template x-for="u in users" :key="'ldr-' + u.id">
+                            <option :value="u.id" x-text="fullName(u) + ' (' + u.email + ')'"></option>
+                        </template>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        <span x-text="window.ZenI18n.t('Opis')">Opis</span>
+                    </label>
+                    <textarea x-model="teamModal.form.description" rows="2"
+                              class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none"
+                              :placeholder="window.ZenI18n.t('Opis zadań i odpowiedzialności zespołu...')"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        <span x-text="window.ZenI18n.t('Członkowie zespołu')">Członkowie zespołu</span>
+                    </label>
+                    <div class="max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-1 bg-gray-50 dark:bg-gray-900/40">
+                        <template x-for="u in users" :key="'chk-usr-' + u.id">
+                            <label class="flex items-center gap-2.5 p-1.5 rounded hover:bg-white dark:hover:bg-gray-800 cursor-pointer transition">
+                                <input type="checkbox" :checked="isTeamMember(u.id)" @change="toggleTeamMember(u.id)"
+                                       class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                <template x-if="u.avatar_url">
+                                    <img :src="u.avatar_url" class="w-6 h-6 rounded-full object-cover">
+                                </template>
+                                <template x-if="!u.avatar_url">
+                                    <span class="w-6 h-6 rounded-full avatar-gradient text-white flex items-center justify-center text-[9px] font-bold" x-text="initialsFrom(u)"></span>
+                                </template>
+                                <span class="text-xs font-medium text-gray-800 dark:text-gray-200" x-text="fullName(u)"></span>
+                                <span class="text-[11px] text-gray-400 ml-auto" x-text="roleLabel(u.role)"></span>
+                            </label>
+                        </template>
+                    </div>
+                </div>
+
+                <p x-show="teamModal.error" x-text="teamModal.error" class="text-red-500 text-xs font-medium"></p>
+
+                <div class="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <button type="button" @click="closeTeamModal()"
+                            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-semibold cursor-pointer">
+                        <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                    </button>
+                    <button type="submit" :disabled="teamModal.saving"
+                            class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-wait">
+                        <span x-text="teamModal.editingId ? window.ZenI18n.t('Zapisz zmiany') : window.ZenI18n.t('Utwórz zespół')">Zapisz zmiany</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

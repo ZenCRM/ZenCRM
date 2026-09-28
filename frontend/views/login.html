@@ -1,0 +1,246 @@
+<!-- ═══════════════ EKRAN LOGOWANIA (PREMIUM DESIGN) ═══════════════ -->
+<div id="zen-login-screen" x-show="!token" x-cloak
+     class="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-950 relative overflow-hidden select-none">
+    
+    <!-- Animacja w tle (Aurora Glow Blobs & Mesh) -->
+    <style>
+        @keyframes zenFloat1 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(60px, -50px) scale(1.18); }
+            66% { transform: translate(-40px, 40px) scale(0.92); }
+        }
+        @keyframes zenFloat2 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(-60px, 50px) scale(1.15); }
+            66% { transform: translate(40px, -50px) scale(0.9); }
+        }
+        @keyframes zenFloat3 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(50px, 40px) scale(1.12); }
+        }
+        .zen-blob-1 { animation: zenFloat1 20s ease-in-out infinite; }
+        .zen-blob-2 { animation: zenFloat2 25s ease-in-out infinite; }
+        .zen-blob-3 { animation: zenFloat3 22s ease-in-out infinite; }
+        .zen-grid-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+            background-size: 28px 28px;
+        }
+    </style>
+
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="zen-blob-1 absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-brand-600/35 to-indigo-600/30 blur-[110px]"></div>
+        <div class="zen-blob-2 absolute top-1/4 -right-32 w-[520px] h-[520px] rounded-full bg-gradient-to-bl from-cyan-500/25 via-blue-600/25 to-teal-500/25 blur-[120px]"></div>
+        <div class="zen-blob-3 absolute -bottom-36 left-1/3 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-purple-600/30 via-brand-500/25 to-pink-500/20 blur-[130px]"></div>
+        <div class="zen-grid-pattern absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_90%)] pointer-events-none"></div>
+    </div>
+
+    <!-- Główny kontener logowania (pojedyncza elegancka karta) -->
+    <div class="relative w-full max-w-md bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/60 p-7 sm:p-9 transition-all duration-300 z-10">
+        
+        <!-- Logo -->
+        <div class="flex items-center justify-center mb-6">
+            <div class="flex items-center">
+                <img id="zen-login-logo"
+                     :src="(darkMode && settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
+                     @error="$el.src = '/logo.png'"
+                     :alt="settingsForm?.brand_name || 'ZenCRM'"
+                     class="h-10 w-auto max-h-12 object-contain">
+            </div>
+
+        </div>
+
+        <!-- Formularz Logowania -->
+        <div>
+            <div class="mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                    x-text="window.ZenI18n.t('Witaj ponownie!')">Witaj ponownie!</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+                   x-text="settingsForm?.login_welcome_text || window.ZenI18n.t('Zaloguj się do systemu')">
+                    Zaloguj się do systemu
+                </p>
+            </div>
+
+            <!-- Błąd logowania -->
+            <div x-show="loginError" x-cloak
+                 class="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs flex items-start gap-2.5 animate-shake">
+                <svg class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span x-text="loginError" class="font-medium"></span>
+            </div>
+
+            <form @submit.prevent="login()" class="space-y-4">
+                <!-- Pole Email -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5"
+                           x-text="window.ZenI18n.t('Email')">Email</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                        </span>
+                        <input type="email" x-model="loginForm.email" required autocomplete="email"
+                               placeholder="nazwisko@twojafirma.pl"
+                               class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+                    </div>
+                </div>
+
+                <!-- Pole Hasło -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300"
+                               x-text="window.ZenI18n.t('Hasło')">Hasło</label>
+                        <!-- Link Zapomniałem hasła -->
+                        <button type="button" @click="openForgotPassword()"
+                                class="text-xs font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 hover:underline transition">
+                            <span x-text="window.ZenI18n.t('Nie pamiętasz hasła?')">Nie pamiętasz hasła?</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </span>
+                        <input :type="showPassword ? 'text' : 'password'" x-model="loginForm.password" required autocomplete="current-password"
+                               placeholder="••••••••"
+                               class="w-full pl-10 pr-11 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+                        <button type="button" @click="showPassword = !showPassword"
+                                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"
+                                :title="showPassword ? window.ZenI18n.t('Ukryj hasło') : window.ZenI18n.t('Pokaż hasło')">
+                            <template x-if="showPassword">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </template>
+                            <template x-if="!showPassword">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </template>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Przycisk zaloguj -->
+                <button type="submit" :disabled="loginLoading"
+                        class="w-full mt-2 relative group overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-brand-500/25 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:pointer-events-none">
+                    <template x-if="loginLoading">
+                        <svg class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                    </template>
+                    <template x-if="!loginLoading">
+                        <div class="flex items-center gap-2">
+                            <span x-text="window.ZenI18n.t('Zaloguj się')">Zaloguj się</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </div>
+                    </template>
+                </button>
+            </form>
+            <div class="zen-login-preferences">
+                <label class="zen-login-language">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+                    <span x-text="window.ZenI18n.t('Język')">Język</span>
+                    <select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t('Język')">
+                        <option value="pl">🇵🇱 Polski</option>
+                        <option value="en">🇬🇧 English</option>
+                    </select>
+                </label>
+                <button type="button" class="zen-login-theme"
+                        @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode); document.documentElement.classList.toggle('dark', darkMode); if (typeof applyTheme === 'function') applyTheme();"
+                        :aria-label="darkMode ? window.ZenI18n.t('Tryb jasny') : window.ZenI18n.t('Tryb ciemny')"
+                        :aria-pressed="darkMode"
+                        :title="darkMode ? window.ZenI18n.t('Tryb jasny') : window.ZenI18n.t('Tryb ciemny')">
+                    <svg x-show="!darkMode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+                    <svg x-show="darkMode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"/></svg>
+                    <span x-text="darkMode ? window.ZenI18n.t('Tryb ciemny') : window.ZenI18n.t('Tryb jasny')">Tryb jasny</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stopka formularza -->
+        <div class="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700/60 text-center">
+            <div x-show="settingsForm?.login_footer" x-html="settingsForm.login_footer" class="text-xs text-gray-400 dark:text-gray-500"></div>
+            <div x-show="!settingsForm?.login_footer" class="text-[11px] text-gray-400 dark:text-gray-500">
+                ZenCRM &copy; <span x-text="new Date().getFullYear()"></span>. Wszystkie prawa zastrzeżone.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MODAL: ZAPOMNIAŁEM HASŁA ═══════════════ -->
+    <div x-show="forgotModal.open" x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+         @keydown.escape.window="forgotModal.open = false">
+        
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 w-full max-w-md p-6 sm:p-8 relative"
+             @click.outside="forgotModal.open = false">
+            
+            <button type="button" @click="forgotModal.open = false"
+                    class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none">
+                &times;
+            </button>
+
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-3 shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white" x-text="window.ZenI18n.t('Odzyskiwanie hasła')">Odzyskiwanie hasła</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed"
+                   x-text="window.ZenI18n.t('Wprowadź adres e-mail powiązany ze swoim kontem. Jeśli konto istnieje, zgłoszenie zostanie zarejestrowane i możesz skontaktować się z administratorem.')">
+                    Wprowadź adres e-mail powiązany ze swoim kontem. Jeśli konto istnieje, zgłoszenie zostanie zarejestrowane i możesz skontaktować się z administratorem.
+                </p>
+            </div>
+
+            <!-- Komunikat sukcesu -->
+            <div x-show="forgotModal.success" x-cloak class="mb-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300">
+                <div class="flex items-center gap-2 font-semibold mb-1">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span x-text="window.ZenI18n.t('Zgłoszenie zostało wysłane')">Zgłoszenie zostało wysłane</span>
+                </div>
+                <p x-text="forgotModal.success"></p>
+                <div class="mt-3 pt-2 border-t border-emerald-200/50 dark:border-emerald-800/50 flex items-center justify-between text-[11px]">
+                    <span class="text-emerald-700 dark:text-emerald-400">Kontakt z administratorem:</span>
+                    <a href="mailto:admin@zencrm.pl" class="font-bold underline hover:text-emerald-900 dark:hover:text-emerald-200">admin@zencrm.pl</a>
+                </div>
+            </div>
+
+            <!-- Błąd w modalu -->
+            <div x-show="forgotModal.error" x-cloak class="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-xs text-red-700 dark:text-red-300 flex items-start gap-2">
+                <svg class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span x-text="forgotModal.error"></span>
+            </div>
+
+            <!-- Formularz resetu hasła -->
+            <form x-show="!forgotModal.success" @submit.prevent="submitForgotPassword()" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5"
+                           x-text="window.ZenI18n.t('Email')">Email</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                        </span>
+                        <input type="email" x-model="forgotModal.email" required placeholder="twoj@email.pl"
+                               class="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex flex-col gap-2">
+                    <button type="submit" :disabled="forgotModal.loading"
+                            class="w-full py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-md transition flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer">
+                        <template x-if="forgotModal.loading">
+                            <span x-text="window.ZenI18n.t('Wysyłanie…')">Wysyłanie…</span>
+                        </template>
+                        <template x-if="!forgotModal.loading">
+                            <span x-text="window.ZenI18n.t('Wyślij instrukcję')">Wyślij instrukcję</span>
+                        </template>
+                    </button>
+                    <button type="button" @click="forgotModal.open = false"
+                            class="w-full py-2 px-4 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-xs font-medium transition cursor-pointer">
+                        <span x-text="window.ZenI18n.t('Wróć do logowania')">Wróć do logowania</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Przycisk powrotu gdy jest sukces -->
+            <div x-show="forgotModal.success" class="pt-2">
+                <button type="button" @click="forgotModal.open = false"
+                        class="w-full py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition cursor-pointer">
+                    <span x-text="window.ZenI18n.t('Wróć do logowania')">Wróć do logowania</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

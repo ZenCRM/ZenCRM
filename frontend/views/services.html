@@ -1,0 +1,62 @@
+<!-- ═══ USŁUGI ═══ -->
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;services&#x27;" x-cloak>
+                <div class="flex justify-end mb-4"><button type="button" x-show="canRecordAction('services', 'create')" @click="openModal(null, null, false, 'services')" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj usługę')">+ Dodaj usługę</button></div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="overflow-x-auto">
+                        <table class="svc-table">
+                            <thead>
+                                <tr>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Nazwa&quot;)">Nazwa</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Klient&quot;)">Klient</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Typ&quot;)">Typ</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Cena&quot;)">Cena</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Status&quot;)">Status</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Ryzyko&quot;)">Ryzyko</span></th>
+                                    <th><span x-text="window.ZenI18n.t(&quot;Opiekunowie&quot;)">Opiekunowie</span></th>
+                                    <th class="text-right"><span x-text="window.ZenI18n.t(&quot;Akcje&quot;)">Akcje</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="s in pagedItems('services', services)" :key="s.id">
+                                    <tr>
+                                        <td>
+                                            <button @click="openDetail(&#x27;service&#x27;, s.id)" class="font-medium text-brand-600 hover:underline text-left" x-text="s.name"></button>
+                                        </td>
+                                        <td class="text-sm" x-text="clientName(s.client_id) || &#x27;—&#x27;"></td>
+                                        <td><span class="text-xs text-gray-500" x-text="s.billing_type === &#x27;subscription&#x27; ? window.ZenI18n.t(&#x27;Abonament&#x27;) : window.ZenI18n.t(&#x27;Jednorazowa&#x27;)"></span></td>
+                                        <td class="font-semibold" x-text="formatNumber(s.price) + window.ZenI18n.t(&#x27; zł&#x27;)"></td>
+                                        <td><span class="px-2 py-0.5 text-xs font-semibold rounded-full" :class="serviceStatusClass(s.status)" x-text="serviceStatusLabel(s.status)"></span></td>
+                                        <td><span class="px-2 py-0.5 text-xs font-semibold rounded-full" :class="serviceRiskClass(s.risk_level)" x-text="s.risk_level || &#x27;—&#x27;"></span></td>
+                                        <td>
+                                            <div class="flex -space-x-1">
+                                                <template x-for="u in (s.assignees || []).slice(0,3)" :key="u.id">
+                                                    <div :title="fullName(u)">
+                                                        <template x-if="u.avatar_url">
+                                                            <img :src="u.avatar_url" class="w-6 h-6 rounded-full object-cover border-2 border-white dark:border-gray-800">
+                                                        </template>
+                                                        <template x-if="!u.avatar_url">
+                                                            <div class="w-6 h-6 rounded-full avatar-gradient text-white flex items-center justify-center text-[9px] font-bold border-2 border-white dark:border-gray-800" x-text="initialsFrom(u)"></div>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                                <span x-show="(s.assignees || []).length === 0" class="text-xs text-gray-400">—</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-right whitespace-nowrap">
+                                            <button @click="openDetail(&#x27;service&#x27;, s.id)" class="zen-list-action zen-action-arrow" :aria-label="window.ZenI18n.t(&quot;Otwórz&quot;)" :title="window.ZenI18n.t(&quot;Otwórz&quot;)"><span x-html="zenIcon(&#x27;arrow&#x27;)" aria-hidden="true"></span></button>
+                                            <button @click="openModal(s, null, false, &#x27;services&#x27;)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
+                                            <button @click="remove(s.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div x-show="services.length === 0" class="detail-empty">
+                        <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak usług&quot;)">Brak usług</span></p>
+                    </div>
+                    <div x-data="{ pagerView: 'services', get pagerItems() { return this.services } }"><% include "views/pagination.html" %></div>
+                </div>
+            </div>
+
+            
