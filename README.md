@@ -194,21 +194,99 @@ Zmiany w kodzie możesz zaproponować przez pull request. Dołącz opis rozwiąz
 
 ---
 
+<div align="center">
+
+**ZenCRM · Zadbaj o relacje. Uporządkuj pracę.**
+
+[Strona projektu](https://zencrm.pl) · [Zgłoszenia i pomysły](https://github.com/ZenCRM/ZenCRM/issues) · [Powrót na górę](#zencrm)
+
+Jeśli ZenCRM przydaje się w Twojej pracy, zostaw ⭐ na GitHubie.
+
+</div>
+---
+
 ## English
 
-### About the application
+<div align="center">
 
-ZenCRM is an application for sales and customer service management. Its backend uses Flask, while the Alpine.js interface is served by the same application. The frontend has no separate build step.
+<img src="https://zencrm.pl/logow.png" alt="ZenCRM" width="240">
 
-Main features:
+### Less chaos. Stronger relationships. Everything in one CRM.
 
-- clients, contacts, and leads with a Kanban board and configurable stages;
-- tasks, projects, meetings, and a calendar;
-- services, a service catalog, offers, documents, and templates;
-- tickets, a customer portal, and an activity and call log;
-- a dashboard with metrics and charts;
-- roles, teams, permissions, custom fields, and an archive;
-- Polish and English interfaces with light and dark themes.
+Sales, projects, and customer service — from the first contact to service delivery.
+
+**On your server. In your language. At your team's pace.**
+
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.1%2B-111827?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Alpine.js](https://img.shields.io/badge/Alpine.js-Frontend-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black)](https://alpinejs.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
+
+[Website](https://zencrm.pl) · [Installation](#docker-compose-installation) · [Documentation](#documentation) · [Report a bug](https://github.com/ZenCRM/ZenCRM/issues)
+
+[Polski](#polski) · [English](#english)
+
+</div>
+
+---
+
+<a href="https://zencrm.pl/screens/1a.png">
+  <img src="https://zencrm.pl/screens/1a.png" alt="ZenCRM — screenshot of the sales and customer service management application" width="100%">
+</a>
+
+<p align="center"><sub>ZenCRM in action · Click the screenshot to view it at full size.</sub></p>
+
+### Your customer management hub
+
+ZenCRM brings customer information, your sales process, and your team's daily work together. Manage leads on a Kanban board, prepare offers, plan delivery, and handle support tickets in one application.
+
+- **From lead to customer** — converting a sales opportunity transfers its linked contacts, tasks, and documents.
+- **Teamwork with clear assignments** — projects, teams, and tasks with individual statuses for each assignee.
+- **Stay connected after the sale** — a customer portal, helpdesk, and activity history on records.
+- **Your own installation** — Docker Compose or Python, with SQLite by default.
+- **A comfortable interface** — Polish and English, with light and dark themes.
+
+### Features
+
+| Area | What you can do |
+| --- | --- |
+| 🤝 **Clients and contacts** | Store company and individual details, assign account owners, and review relationship history. |
+| 🎯 **Leads and Kanban** | Manage sales stages, opportunity values, and closing probabilities. |
+| ✅ **Projects and tasks** | Organize work stages, project members, and tasks with multiple assignees. |
+| 📅 **Meetings and calendar** | Schedule meetings and view dates in the calendar. |
+| 🛠️ **Services and catalog** | Maintain a service catalog and manage individual deliveries with assigned team members. |
+| 📄 **Offers and documents** | Work with templates, generate PDFs, and share materials through token-based links. |
+| 🎫 **Helpdesk** | Handle tickets, configure categories, and set automatic assignment rules. |
+| 🌐 **Customer portal** | Manage portal members, shared modules, and the appearance of their workspace. |
+| 📱 **Telephony and SMS** | Connect a device to synchronize call and message history. |
+| 📊 **Dashboard** | Review metrics and charts on the application dashboard. |
+| ⚙️ **Administration** | Manage roles, teams, permissions, custom fields, and the archive. |
+
+### How does it fit together?
+
+```mermaid
+flowchart LR
+    A[Contact and lead] --> B[Sales process]
+    B --> C[Offer]
+    C --> D[Customer]
+    D --> E[Project and services]
+    E --> F[Support and helpdesk]
+```
+
+An example workflow from acquiring a contact to support after the sale. Use individual modules to suit your team's process.
+
+### Technology
+
+| Layer | Solution |
+| --- | --- |
+| Backend | Python, Flask, SQLAlchemy, Flask-Migrate |
+| Interface | Alpine.js, Jinja views, JavaScript, and CSS |
+| Database | SQLite by default; connection configured through `DATABASE_URL` |
+| CRM authentication | JWT tokens through Flask-JWT-Extended |
+| Documents | Jinja2, WeasyPrint, and xhtml2pdf |
+| Container deployment | Docker Compose and Gunicorn |
+
+The frontend is served by Flask and **requires no separate build step**. Node.js is only needed for frontend tests.
 
 ### Local installation
 
@@ -276,22 +354,58 @@ Open **http://localhost/**, sign in with the administrator account above, and ch
 The application creates missing tables on startup. Before updating an installation with existing data, back up the database and `uploads/` directory and review the migrations in `migrations/`. Use HTTPS for an Internet-facing installation and protect the secrets in `.env`.
 
 
-### Documentation & development
+### Documentation
 
-- [User guide (Polish)](docs/uzytkownik.md)
-- [API reference (Polish)](docs/api.md)
-- [Frontend guide (Polish)](frontend/README.md)
+| Resource | Contents |
+| --- | --- |
+| [User guide (Polish)](docs/uzytkownik.md) | Working with modules, the customer portal, roles, and notifications. |
+| [API reference (Polish)](docs/api.md) | Authentication, endpoint map, and request examples. |
+| [Frontend (Polish)](frontend/README.md) | View structure, JavaScript modules, translations, and tests. |
+| [Dockerfile](Dockerfile) | Image build and system dependencies. |
 
-After installing dependencies, run `python -m unittest discover -s tests` and `node tests/test_frontend.cjs` from the repository root. Contributions and [issue reports](https://github.com/ZenCRM/ZenCRM/issues) are welcome.
+### Development
+
+Clone the code and enter the project directory, then follow the local installation steps:
+
+```bash
+git clone https://github.com/ZenCRM/ZenCRM.git
+cd ZenCRM
+```
+
+Key directories:
+
+```text
+ZenCRM/
+├── app/               # Backend: API, models, schemas, and services
+├── frontend/          # Views, JavaScript modules, styles, and translations
+├── docs/              # User guide and API reference
+├── migrations/        # Database migrations
+├── tests/             # Backend and frontend tests
+├── run.py             # Application entry point
+└── seed.py            # Initial administrator creation
+```
+
+After installing dependencies, run the tests from the repository root with your Python environment activated:
+
+```bash
+python -m unittest discover -s tests
+node tests/test_frontend.cjs
+```
+
+### Ideas and contributions
+
+Have an improvement in mind or found a bug? [Open an issue](https://github.com/ZenCRM/ZenCRM/issues). Describe the expected behavior, steps to reproduce, and your runtime environment; for interface issues, include a screenshot without customer data.
+
+You can propose code changes through a pull request. Include a description of the solution and results of the relevant tests. For interface changes, remember both languages and the light and dark themes.
 
 ---
 
 <div align="center">
 
-**ZenCRM · Zadbaj o relacje. Uporządkuj pracę.**
+**ZenCRM · Build relationships. Organize your work.**
 
-[Strona projektu](https://zencrm.pl) · [Zgłoszenia i pomysły](https://github.com/ZenCRM/ZenCRM/issues) · [Powrót na górę](#zencrm)
+[Website](https://zencrm.pl) · [Issues and ideas](https://github.com/ZenCRM/ZenCRM/issues) · [Back to English](#english)
 
-Jeśli ZenCRM przydaje się w Twojej pracy, zostaw ⭐ na GitHubie.
+If ZenCRM helps you in your work, give it a ⭐ on GitHub.
 
 </div>
