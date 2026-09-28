@@ -1,5 +1,5 @@
 # ZenCRM
-![Logo](https://zencrm.pl/logow.png)
+<img src="https://zencrm.pl/logow.png" alt="Logo" width="200">
 
 [Polski](#polski) · [English](#english)
 
