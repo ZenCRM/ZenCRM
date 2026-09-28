@@ -10,9 +10,6 @@ tests/
 docs/
 frontend/docs/
 frontend/README.md
-docs/
-frontend/docs/
-frontend/README.md
 *.log
 instance/
 uploads/
