@@ -10,6 +10,8 @@ Sprzedaż, projekty i obsługa klienta — od pierwszego kontaktu po realizację
 
 **Na Twoim serwerze. W Twoim języku. W rytmie Twojego zespołu.**
 
+[![Demo na żywo — wypróbuj ZenCRM](https://img.shields.io/badge/DEMO_NA_%C5%BBYWO-WYPR%C3%93BUJ_ZENCRM-16a34a?style=for-the-badge&logo=rocket&logoColor=white)](https://zencrmdemo.tw5.org/)
+
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.1%2B-111827?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Alpine.js](https://img.shields.io/badge/Alpine.js-Frontend-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black)](https://alpinejs.dev/)
@@ -216,6 +218,8 @@ Jeśli ZenCRM przydaje się w Twojej pracy, zostaw ⭐ na GitHubie.
 Sales, projects, and customer service — from the first contact to service delivery.
 
 **On your server. In your language. At your team's pace.**
+
+[![Live demo — try ZenCRM](https://img.shields.io/badge/LIVE_DEMO-TRY_ZENCRM-16a34a?style=for-the-badge&logo=rocket&logoColor=white)](https://zencrmdemo.tw5.org/)
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.1%2B-111827?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
