@@ -1,4 +1,5 @@
 # ZenCRM
+![Logo](https://zencrm.pl/logow.png)
 
 [Polski](#polski) · [English](#english)
 
