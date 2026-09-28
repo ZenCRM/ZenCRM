@@ -61,12 +61,14 @@ ZenCRM łączy informacje o klientach, proces sprzedaży i codzienną pracę zes
 
 ### Jak to się łączy?
 
+```mermaid
 flowchart LR
     A[Kontakt i lead] --> B[Proces sprzedaży]
     B --> C[Oferta]
     C --> D[Klient]
     D --> E[Projekt i usługi]
     E --> F[Obsługa i helpdesk]
+```
 
 Przykładowy przebieg pracy: od pozyskania kontaktu po obsługę po sprzedaży. Poszczególne moduły możesz wykorzystywać zgodnie z procesem swojego zespołu.
 
@@ -266,14 +268,14 @@ ZenCRM brings customer information, your sales process, and your team's daily wo
 
 ### How does it fit together?
 
-
+```mermaid
 flowchart LR
     A[Contact and lead] --> B[Sales process]
     B --> C[Offer]
     C --> D[Customer]
     D --> E[Project and services]
     E --> F[Support and helpdesk]
-
+```
 
 An example workflow from acquiring a contact to support after the sale. Use individual modules to suit your team's process.
 
