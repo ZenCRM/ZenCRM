@@ -14,7 +14,7 @@ window.renderZenDashboard = async function(app) {
     const border = styles.getPropertyValue('--wm-border').trim();
     const surface = styles.getPropertyValue('--wm-surface').trim();
     const colors = stages.map(s => s.accent);
-    const money = n => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: window.ZenI18n.t('PLN'), maximumFractionDigits: 0 }).format(n);
+    const money = n => new Intl.NumberFormat(window.ZenI18n.locale, { style: 'currency', currency: window.ZenI18n.t('PLN'), maximumFractionDigits: 0 }).format(n);
     const common = {
         responsive: true, maintainAspectRatio: false,
         animation: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : { duration: 350 },
@@ -49,7 +49,7 @@ window.renderZenDashboard = async function(app) {
         }, scales: {
             x: { beginAtZero: true, grid: { color: border }, border: { display: false }, ticks: {
                 color: muted, maxTicksLimit: 5,
-                callback: n => new Intl.NumberFormat('pl-PL', { notation: 'compact', maximumFractionDigits: 1 }).format(n) + window.ZenI18n.t(' zł'),
+                callback: n => new Intl.NumberFormat(window.ZenI18n.locale, { notation: 'compact', maximumFractionDigits: 1 }).format(n) + window.ZenI18n.t(' zł'),
             } },
             y: { grid: { display: false }, border: { display: false }, ticks: { color: muted, font: { size: 12 } } },
         } },

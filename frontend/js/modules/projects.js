@@ -56,16 +56,17 @@ window.ZenModules.projects = function () {
             return list;
         },
 
-        get projectStages() {
+        get rawProjectStages() {
             if (this.activeProject?.task_stages && Array.isArray(this.activeProject.task_stages) && this.activeProject.task_stages.length > 0) {
                 return this.activeProject.task_stages;
             }
             return [
-                { id: 'todo', label: window.ZenI18n.t('Do zrobienia'), accent: '#64748b' },
-                { id: 'in_progress', label: window.ZenI18n.t('W toku'), accent: '#f59e0b' },
-                { id: 'done', label: window.ZenI18n.t('Zrobione'), accent: '#10b981' }
+                { id: 'todo', label: window.ZenI18n.taskStageLabels.todo, accent: '#64748b' },
+                { id: 'in_progress', label: window.ZenI18n.taskStageLabels.in_progress, accent: '#f59e0b' },
+                { id: 'done', label: window.ZenI18n.taskStageLabels.done, accent: '#10b981' }
             ];
         },
+        get projectStages() { return this.rawProjectStages.map(stage => window.ZenI18n.taskStage(stage)); },
 
         get filteredProjectTasks() {
             let list = this.projectTasks || [];
@@ -136,7 +137,7 @@ window.ZenModules.projects = function () {
 
         editProjectStages() {
             if (!this.activeProject) return;
-            this.projectStageDraft = JSON.parse(JSON.stringify(this.projectStages));
+            this.projectStageDraft = JSON.parse(JSON.stringify(this.rawProjectStages));
             this.projectStageError = '';
             this.projectStageEditorOpen = true;
         },

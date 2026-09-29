@@ -4,7 +4,7 @@
 
                     <!-- NAWIGACJA -->
                     <nav class="settings-nav">
-                        <button class="settings-nav-item" :class="settingsTab === 'recordViews' ? 'active' : ''" @click="settingsTab = 'recordViews'">Domyślne widoki</button>
+                        <button class="settings-nav-item" :class="settingsTab === 'recordViews' ? 'active' : ''" @click="settingsTab = 'recordViews'"><span x-text="window.ZenI18n.t(&quot;Domyślne widoki&quot;)">Domyślne widoki</span></button>
                         <button class="settings-nav-item" :class="settingsTab === 'customFields' ? 'active' : ''" @click="settingsTab = 'customFields'">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
                             <span x-text="window.ZenI18n.t('Pola własne')">Pola własne</span>
@@ -15,7 +15,7 @@
                         </button>
                         <button class="settings-nav-item" :class="settingsTab === 'permissions' ? 'active' : ''" @click="settingsTab = 'permissions'; loadPermissions()">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V7l8-4zM9 12l2 2 4-4"/></svg>
-                            <span>Role i uprawnienia</span>
+                            <span><span x-text="window.ZenI18n.t(&quot;Role i uprawnienia&quot;)">Role i uprawnienia</span></span>
                         </button>
                         <button class="settings-nav-item" :class="settingsTab === 'customValues' ? 'active' : ''" @click="settingsTab = 'customValues'">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M5 4h14v16H5z"/></svg>
@@ -60,54 +60,54 @@
                     <!-- PANEL -->
                     <div class="settings-panel">
                         <div x-show="settingsTab === 'recordViews'" x-cloak>
-                            <h2 class="settings-section-title">Domyślny widok rekordu</h2>
-                            <p class="settings-section-desc">Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.</p>
+                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Domyślny widok rekordu&quot;)">Domyślny widok rekordu</span></h2>
+                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.&quot;)">Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.</span></p>
                             <div class="space-y-4 mt-6">
-                                <template x-for="item in [{key:'client',label:'Klienci'},{key:'lead',label:'Leady'},{key:'task',label:'Zadania'},{key:'service',label:'Usługi'}]" :key="item.key">
-                                    <label class="flex items-center justify-between gap-4"><span x-text="item.label"></span><select class="ux-input" x-model="settingsForm['ui_detail_' + item.key]"><option value="compact">Skrócony — panel boczny</option><option value="full">Pełny — karta rekordu</option></select></label>
+                                <template x-for="item in [{key:&#x27;client&#x27;,label:window.ZenI18n.t(&#x27;Klienci&#x27;)},{key:&#x27;lead&#x27;,label:window.ZenI18n.t(&#x27;Leady&#x27;)},{key:&#x27;task&#x27;,label:window.ZenI18n.t(&#x27;Zadania&#x27;)},{key:&#x27;service&#x27;,label:window.ZenI18n.t(&#x27;Usługi&#x27;)}]" :key="item.key">
+                                    <label class="flex items-center justify-between gap-4"><span x-text="item.label"></span><select class="ux-input" x-model="settingsForm['ui_detail_' + item.key]"><option value="compact" x-text="window.ZenI18n.t(&quot;Skrócony — panel boczny&quot;)">Skrócony — panel boczny</option><option value="full" x-text="window.ZenI18n.t(&quot;Pełny — karta rekordu&quot;)">Pełny — karta rekordu</option></select></label>
                                 </template>
                             </div>
                         </div>
 
                         <div x-show="settingsTab === 'permissions'" x-cloak class="space-y-5">
                             <div>
-                                <h2 class="settings-section-title">Role i uprawnienia</h2>
-                                <p class="settings-section-desc">Ustaw działania dostępne dla roli lub zespołu. Odmowa w dowolnym zespole ma pierwszeństwo. Administrator zawsze ma pełny dostęp i tylko on może usuwać trwale.</p>
+                                <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Role i uprawnienia&quot;)">Role i uprawnienia</span></h2>
+                                <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Ustaw działania dostępne dla roli lub zespołu. Odmowa w dowolnym zespole ma pierwszeństwo. Administrator zawsze ma pełny dostęp i tylko on może usuwać trwale.&quot;)">Ustaw działania dostępne dla roli lub zespołu. Odmowa w dowolnym zespole ma pierwszeństwo. Administrator zawsze ma pełny dostęp i tylko on może usuwać trwale.</span></p>
                             </div>
                             <form @submit.prevent="createManagedRole()" class="flex gap-2 flex-wrap">
-                                <input x-model="newRoleName" required maxlength="100" placeholder="Nazwa nowej roli" class="ux-input flex-1 min-w-40" aria-label="Nazwa nowej roli">
-                                <button type="submit" class="ux-button">Dodaj rolę</button>
+                                <input x-model="newRoleName" required maxlength="100" :placeholder="window.ZenI18n.t(&quot;Nazwa nowej roli&quot;)" class="ux-input flex-1 min-w-40" :aria-label="window.ZenI18n.t(&quot;Nazwa nowej roli&quot;)">
+                                <button type="submit" class="ux-button"><span x-text="window.ZenI18n.t(&quot;Dodaj rolę&quot;)">Dodaj rolę</span></button>
                             </form>
                             <div class="flex gap-2 items-end flex-wrap">
-                                <label class="flex-1 min-w-48 text-sm">Konfiguracja dla
+                                <label class="flex-1 min-w-48 text-sm"><span x-text="window.ZenI18n.t(&quot;Konfiguracja dla&quot;)">Konfiguracja dla</span>
                                     <select x-model="permissionSubject" @change="roleNameDraft = managedRoles.find(r => 'role:' + r.key === permissionSubject)?.name || ''" class="ux-input block w-full mt-1">
-                                        <optgroup label="Role">
+                                        <optgroup :label="window.ZenI18n.t('Role')">
                                             <template x-for="role in managedRoles" :key="role.key"><option :value="'role:' + role.key" x-text="role.name"></option></template>
                                         </optgroup>
-                                        <optgroup label="Zespoły">
+                                        <optgroup :label="window.ZenI18n.t('Zespoły')">
                                             <template x-for="team in teams" :key="team.id"><option :value="'team:' + team.id" x-text="team.name"></option></template>
                                         </optgroup>
                                     </select>
                                 </label>
-                                <button type="button" x-show="permissionSubject.startsWith('role:') && !['role:admin','role:manager','role:employee'].includes(permissionSubject)" @click="deleteManagedRole()" class="ux-text-button text-red-600">Usuń rolę</button>
+                                <button type="button" x-show="permissionSubject.startsWith('role:') && !['role:admin','role:manager','role:employee'].includes(permissionSubject)" @click="deleteManagedRole()" class="ux-text-button text-red-600"><span x-text="window.ZenI18n.t(&quot;Usuń rolę&quot;)">Usuń rolę</span></button>
                             </div>
                             <form x-show="permissionSubject.startsWith('role:') && !['role:admin','role:manager','role:employee'].includes(permissionSubject)" @submit.prevent="renameManagedRole()" class="flex gap-2 flex-wrap">
-                                <input x-model="roleNameDraft" required maxlength="100" class="ux-input flex-1 min-w-40" aria-label="Nowa nazwa roli">
-                                <button type="submit" class="ux-text-button">Zmień nazwę</button>
+                                <input x-model="roleNameDraft" required maxlength="100" class="ux-input flex-1 min-w-40" :aria-label="window.ZenI18n.t(&quot;Nowa nazwa roli&quot;)">
+                                <button type="submit" class="ux-text-button"><span x-text="window.ZenI18n.t(&quot;Zmień nazwę&quot;)">Zmień nazwę</span></button>
                             </form>
-                            <p x-show="permissionSubject === 'role:admin'" class="ux-muted">Uprawnienia administratora są stałe.</p>
-                            <p x-show="permissionSubject.startsWith('role:') && permissionSubject !== 'role:admin'" class="ux-muted">Dla roli „Dziedzicz” zachowuje dotychczasowy dostęp ról systemowych. Nowa rola domyślnie nie ma uprawnień.</p>
+                            <p x-show="permissionSubject === 'role:admin'" class="ux-muted"><span x-text="window.ZenI18n.t(&quot;Uprawnienia administratora są stałe.&quot;)">Uprawnienia administratora są stałe.</span></p>
+                            <p x-show="permissionSubject.startsWith('role:') && permissionSubject !== 'role:admin'" class="ux-muted"><span x-text="window.ZenI18n.t(&quot;Dla roli „Dziedzicz” zachowuje dotychczasowy dostęp ról systemowych. Nowa rola domyślnie nie ma uprawnień.&quot;)">Dla roli „Dziedzicz” zachowuje dotychczasowy dostęp ról systemowych. Nowa rola domyślnie nie ma uprawnień.</span></p>
                             <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
                                 <template x-for="permission in permissionCatalog" :key="permission.key">
                                     <div class="flex items-center justify-between gap-3 px-4 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
                                         <span class="text-sm" x-text="permission.label"></span>
                                         <select :value="permissionRule(permission.key)" @change="setPermissionRule(permission.key, $event.target.value)" :disabled="permissionSubject === 'role:admin'" class="ux-input w-36 text-sm" :aria-label="permission.label">
-                                            <option value="inherit">Dziedzicz</option><option value="allow">Zezwól</option><option value="deny">Odmów</option>
+                                            <option value="inherit" x-text="window.ZenI18n.t(&quot;Dziedzicz&quot;)">Dziedzicz</option><option value="allow" x-text="window.ZenI18n.t(&quot;Zezwól&quot;)">Zezwól</option><option value="deny" x-text="window.ZenI18n.t(&quot;Odmów&quot;)">Odmów</option>
                                         </select>
                                     </div>
                                 </template>
                             </div>
-                            <div class="flex justify-end"><button type="button" @click="savePermissions()" :disabled="permissionSubject === 'role:admin'" class="ux-button">Zapisz uprawnienia</button></div>
+                            <div class="flex justify-end"><button type="button" @click="savePermissions()" :disabled="permissionSubject === 'role:admin'" class="ux-button"><span x-text="window.ZenI18n.t(&quot;Zapisz uprawnienia&quot;)">Zapisz uprawnienia</span></button></div>
                             <p x-show="permissionError" x-text="permissionError" role="alert" class="text-red-600 text-sm"></p>
                             <p x-show="permissionSaved" x-text="permissionSaved" role="status" class="text-green-600 text-sm"></p>
                         </div>
@@ -210,7 +210,7 @@
                                         </template>
                                     </select>
                                 </div>
-                                <span class="text-xs text-gray-500" x-text="'Łącznie pól: ' + (customFieldDefs || []).length"></span>
+                                <span class="text-xs text-gray-500" x-text="window.ZenI18n.t(&#x27;Łącznie pól: &#x27;) + (customFieldDefs || []).length"></span>
                             </div>
 
                             <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-xs">
@@ -342,7 +342,7 @@
                                         <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                     </div>
                                 </div>
-                                <span class="text-xs text-gray-500" x-text="'Łącznie pól standardowych: ' + getAllStandardFields().length"></span>
+                                <span class="text-xs text-gray-500" x-text="window.ZenI18n.t(&#x27;Łącznie pól standardowych: &#x27;) + getAllStandardFields().length"></span>
                             </div>
 
                             <!-- Tabela pól standardowych -->
@@ -444,9 +444,9 @@
                                 <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
                                     <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                                         <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                        <span>Wartości pól dla wybranego rekordu</span>
+                                        <span><span x-text="window.ZenI18n.t(&quot;Wartości pól dla wybranego rekordu&quot;)">Wartości pól dla wybranego rekordu</span></span>
                                     </h3>
-                                    <span class="text-xs text-gray-400" x-text="'Liczba pól: ' + (customValuesFields || []).length"></span>
+                                    <span class="text-xs text-gray-400" x-text="window.ZenI18n.t(&#x27;Liczba pól: &#x27;) + (customValuesFields || []).length"></span>
                                 </div>
 
                                 <form @submit.prevent="saveCustomValues()" class="space-y-4">
@@ -483,7 +483,7 @@
                                     </div>
 
                                     <p x-show="!customValuesFields.length" class="text-sm text-gray-500 dark:text-gray-400 italic py-4 text-center">
-                                        Brak zdefiniowanych pól własnych dla tego elementu. Dodaj je w zakładce „Pola własne”.
+                                        <span x-text="window.ZenI18n.t(&quot;Brak zdefiniowanych pól własnych dla tego elementu. Dodaj je w zakładce „Pola własne”.&quot;)">Brak zdefiniowanych pól własnych dla tego elementu. Dodaj je w zakładce „Pola własne”.</span>
                                     </p>
 
                                     <div x-show="customValuesSuccess" class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
@@ -518,7 +518,7 @@
                                 <div class="settings-field">
                                     <label><span x-text="window.ZenI18n.t(&quot;Logo – tryb jasny&quot;)">Logo – tryb jasny</span></label>
                                     <div class="logo-preview-box">
-                                        <img :src="settingsForm.brand_logo_light || &#x27;/logo.png&#x27;" alt="Light logo">
+                                        <img :src="settingsForm.brand_logo_light || &#x27;/logo.png&#x27;" :alt="window.ZenI18n.t(&quot;Light logo&quot;)">
                                     </div>
                                     <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;light&#x27;)"
                                            class="text-xs w-full">
@@ -526,7 +526,7 @@
                                 <div class="settings-field">
                                     <label><span x-text="window.ZenI18n.t(&quot;Logo – tryb ciemny&quot;)">Logo – tryb ciemny</span></label>
                                     <div class="logo-preview-box dark-bg">
-                                        <img :src="settingsForm.brand_logo_dark || &#x27;/logo.png&#x27;" alt="Dark logo">
+                                        <img :src="settingsForm.brand_logo_dark || &#x27;/logo.png&#x27;" :alt="window.ZenI18n.t(&quot;Dark logo&quot;)">
                                     </div>
                                     <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;dark&#x27;)"
                                            class="text-xs w-full">
@@ -679,14 +679,14 @@
                                     </div>
                                     <div class="settings-field">
                                         <label><span x-text="window.ZenI18n.t(&#x27;Adres URL portalu (ścieżka)&#x27;)">Adres URL portalu (ścieżka)</span></label>
-                                        <input type="text" x-model="helpdeskForm.helpdesk_path" placeholder="/pomoc">
+                                        <input type="text" x-model="helpdeskForm.helpdesk_path" :placeholder="window.ZenI18n.t(&quot;/pomoc&quot;)">
                                     </div>
                                 </div>
 
                                 <!-- LOGO I WYGLĄD -->
                                 <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-4">
                                     <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-xs uppercase tracking-wider" x-text="window.ZenI18n.t(&#x27;Logo i wygląd portalu&#x27;)">Logo i wygląd portalu</h4>
-                                    
+
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
                                         <div>
                                             <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2" x-text="window.ZenI18n.t(&#x27;Logo portalu&#x27;)">Logo portalu</label>
@@ -694,7 +694,7 @@
                                                 <div class="w-36 h-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center justify-center p-2 overflow-hidden shadow-xs">
                                                     <img :src="helpdeskForm.helpdesk_logo || settingsForm?.brand_logo_light || &#x27;/logo.png&#x27;"
                                                          @error="$el.src = &#x27;/logo.png&#x27;"
-                                                         alt="Logo portalu" class="max-h-full max-w-full object-contain">
+                                                         :alt="window.ZenI18n.t(&quot;Logo portalu&quot;)" class="max-h-full max-w-full object-contain">
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition">
@@ -723,48 +723,48 @@
                                 <!-- TREŚCI I TEKSTY PORTALU -->
                                 <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-4">
                                     <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-xs uppercase tracking-wider" x-text="window.ZenI18n.t(&#x27;Treści i teksty na stronie portalu&#x27;)">Treści i teksty na stronie portalu</h4>
-                                    
+
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Tytuł portalu (nagłówek w menu)&#x27;)">Tytuł portalu (nagłówek w menu)</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_title" placeholder="Centrum Pomocy">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_title" :placeholder="window.ZenI18n.t(&quot;Centrum Pomocy&quot;)">
                                         </div>
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Podtytuł w nagłówku&#x27;)">Podtytuł w nagłówku</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_header_subtitle" placeholder="Wsparcie i obsługa zgłoszeń">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_header_subtitle" :placeholder="window.ZenI18n.t(&quot;Wsparcie i obsługa zgłoszeń&quot;)">
                                         </div>
                                     </div>
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Etykieta formularza (badge)&#x27;)">Etykieta formularza (badge)</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_badge" placeholder="Zgłoszenie serwisowe">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_badge" :placeholder="window.ZenI18n.t(&quot;Zgłoszenie serwisowe&quot;)">
                                         </div>
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Główny nagłówek formularza&#x27;)">Główny nagłówek formularza</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_heading" placeholder="W czym możemy Ci pomóc?">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_heading" :placeholder="window.ZenI18n.t(&quot;W czym możemy Ci pomóc?&quot;)">
                                         </div>
                                     </div>
 
                                     <div class="settings-field">
                                         <label><span x-text="window.ZenI18n.t(&#x27;Opis / Podtytuł na stronie pomocy&#x27;)">Opis / Podtytuł na stronie pomocy</span></label>
-                                        <textarea x-model="helpdeskForm.helpdesk_description" rows="2" placeholder="Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail."></textarea>
+                                        <textarea x-model="helpdeskForm.helpdesk_description" rows="2" :placeholder="window.ZenI18n.t(&quot;Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail.&quot;)"></textarea>
                                     </div>
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Tytuł po wysłaniu zgłoszenia&#x27;)">Tytuł po wysłaniu zgłoszenia</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_success_heading" placeholder="Zgłoszenie zostało wysłane!">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_success_heading" :placeholder="window.ZenI18n.t(&quot;Zgłoszenie zostało wysłane!&quot;)">
                                         </div>
                                         <div class="settings-field">
                                             <label><span x-text="window.ZenI18n.t(&#x27;Tekst stopki portalu&#x27;)">Tekst stopki portalu</span></label>
-                                            <input type="text" x-model="helpdeskForm.helpdesk_footer_text" placeholder="Obsługa klienta · Bezpieczny portal pomocy">
+                                            <input type="text" x-model="helpdeskForm.helpdesk_footer_text" :placeholder="window.ZenI18n.t(&quot;Obsługa klienta · Bezpieczny portal pomocy&quot;)">
                                         </div>
                                     </div>
 
                                     <div class="settings-field">
                                         <label><span x-text="window.ZenI18n.t(&#x27;Komunikat po wysłaniu zgłoszenia&#x27;)">Komunikat po wysłaniu zgłoszenia</span></label>
-                                        <textarea x-model="helpdeskForm.helpdesk_success_description" rows="2" placeholder="Wysłaliśmy potwierdzenie na Twój adres e-mail wraz z bezpośrednim linkiem do śledzenia statusu zgłoszenia."></textarea>
+                                        <textarea x-model="helpdeskForm.helpdesk_success_description" rows="2" :placeholder="window.ZenI18n.t(&quot;Wysłaliśmy potwierdzenie na Twój adres e-mail wraz z bezpośrednim linkiem do śledzenia statusu zgłoszenia.&quot;)"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -838,11 +838,11 @@
                                 <div class="flex items-end gap-3 flex-wrap pt-2">
                                     <div class="flex-1 min-w-[140px]">
                                         <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Identyfikator (np. sales)&#x27;)"></label>
-                                        <input type="text" x-model="newHelpdeskCategory.id" placeholder="np. sales" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
+                                        <input type="text" x-model="newHelpdeskCategory.id" :placeholder="window.ZenI18n.t(&quot;np. sales&quot;)" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
                                     </div>
                                     <div class="flex-2 min-w-[200px]">
                                         <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Nazwa kategorii (np. Zapytania handlowe)&#x27;)"></label>
-                                        <input type="text" x-model="newHelpdeskCategory.name" placeholder="np. Zapytania handlowe" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
+                                        <input type="text" x-model="newHelpdeskCategory.name" :placeholder="window.ZenI18n.t(&quot;np. Zapytania handlowe&quot;)" class="w-full text-xs py-1.5 px-2.5 rounded border border-gray-300 dark:border-gray-600">
                                     </div>
                                     <button type="button" @click="addHelpdeskCategory()"
                                             class="px-3 py-1.5 text-xs font-semibold rounded bg-brand-600 hover:bg-brand-700 text-white shadow-2xs">
@@ -916,7 +916,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Host / Serwer SMTP&#x27;)">Host / Serwer SMTP</label>
-                                        <input type="text" x-model="smtpForm.smtp_host" placeholder="np. smtp.twojadomena.pl"
+                                        <input type="text" x-model="smtpForm.smtp_host" :placeholder="window.ZenI18n.t(&quot;np. smtp.twojadomena.pl&quot;)"
                                                class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                                     </div>
                                     <div>
@@ -935,7 +935,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Użytkownik / Login SMTP&#x27;)">Użytkownik / Login SMTP</label>
-                                        <input type="text" x-model="smtpForm.smtp_user" placeholder="np. kontakt@twojadomena.pl"
+                                        <input type="text" x-model="smtpForm.smtp_user" :placeholder="window.ZenI18n.t(&quot;np. kontakt@twojadomena.pl&quot;)"
                                                class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                                     </div>
                                     <div>
@@ -948,12 +948,12 @@
                                     </div>
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Adres e-mail nadawcy (From)&#x27;)">Adres e-mail nadawcy (From)</label>
-                                        <input type="email" x-model="smtpForm.smtp_from_email" placeholder="np. powiadomienia@twojadomena.pl"
+                                        <input type="email" x-model="smtpForm.smtp_from_email" :placeholder="window.ZenI18n.t(&quot;np. powiadomienia@twojadomena.pl&quot;)"
                                                class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                                     </div>
                                     <div class="md:col-span-2 lg:col-span-3">
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t(&#x27;Nazwa nadawcy wyświetlana odbiorcy&#x27;)">Nazwa nadawcy wyświetlana odbiorcy</label>
-                                        <input type="text" x-model="smtpForm.smtp_from_name" placeholder="np. ZenCRM - Twoja Firma"
+                                        <input type="text" x-model="smtpForm.smtp_from_name" :placeholder="window.ZenI18n.t(&quot;np. ZenCRM - Twoja Firma&quot;)"
                                                class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                                     </div>
                                 </div>
@@ -973,7 +973,7 @@
                                 <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40 space-y-3">
                                     <h4 class="text-xs font-semibold text-gray-900 dark:text-gray-100" x-text="window.ZenI18n.t(&#x27;Test wysyłki e-mail&#x27;)">Test wysyłki e-mail</h4>
                                     <div class="flex items-center gap-2 flex-wrap">
-                                        <input type="email" x-model="smtpTestEmail" placeholder="Podaj e-mail docelowy do testu"
+                                        <input type="email" x-model="smtpTestEmail" :placeholder="window.ZenI18n.t(&quot;Podaj e-mail docelowy do testu&quot;)"
                                                class="flex-1 min-w-[240px] px-3 py-2 text-xs border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                                         <button type="button" @click="testSmtpSettings()" :disabled="smtpTestLoading"
                                                 class="px-4 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 inline-flex items-center gap-2">
@@ -1072,11 +1072,11 @@
                                                     <div class="p-3.5 bg-gray-50 dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 text-xs space-y-1.5 font-mono">
                                                         <div class="flex items-center gap-2">
                                                             <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Nadawca:&#x27;)">Nadawca:</span>
-                                                            <span class="text-gray-800 dark:text-gray-200" x-text="(smtpForm.smtp_from_name || &#x27;ZenCRM&#x27;) + &#x27; &lt;&#x27; + (smtpForm.smtp_from_email || &#x27;powiadomienia@twojadomena.pl&#x27;) + &#x27;&gt;&#x27;"></span>
+                                                            <span class="text-gray-800 dark:text-gray-200" x-text="(smtpForm.smtp_from_name || window.ZenI18n.t(&#x27;ZenCRM&#x27;)) + &#x27; &lt;&#x27; + (smtpForm.smtp_from_email || &#x27;powiadomienia@twojadomena.pl&#x27;) + &#x27;&gt;&#x27;"></span>
                                                         </div>
                                                         <div class="flex items-center gap-2">
                                                             <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Odbiorca:&#x27;)">Odbiorca:</span>
-                                                            <span class="text-gray-800 dark:text-gray-200">Jan Kowalski &lt;jan.kowalski@example.com&gt;</span>
+                                                            <span class="text-gray-800 dark:text-gray-200"><span x-text="window.ZenI18n.t(&quot;Jan Kowalski&quot;)">Jan Kowalski</span> &lt;<span x-text="window.ZenI18n.t(&quot;jan.kowalski@example.com&quot;)">jan.kowalski@example.com</span>&gt;</span>
                                                         </div>
                                                         <div class="flex items-center gap-2 pt-1 border-t border-gray-200 dark:border-gray-700/60">
                                                             <span class="font-bold text-gray-400 w-16" x-text="window.ZenI18n.t(&#x27;Temat:&#x27;)">Temat:</span>

@@ -10,6 +10,7 @@ from ..models.team import Team
 from ..models.user import User
 from ..utils.deletion import current_user, is_admin
 from ..utils.permissions import PERMISSIONS, ensure_builtin_roles, effective_permissions
+from ..utils.i18n import t
 
 permissions_bp = Blueprint('permissions', __name__)
 
@@ -37,7 +38,7 @@ def list_permissions():
     roles = Role.query.order_by(Role.built_in.desc(), Role.name).all()
     rules = PermissionRule.query.all()
     return jsonify({
-        'permissions': [{'key': key, 'label': label} for key, label in PERMISSIONS.items()],
+        'permissions': [{'key': key, 'label': ' · '.join(t(part) for part in label.split(' · '))} for key, label in PERMISSIONS.items()],
         'roles': [role.to_dict() for role in roles],
         'role_rules': {role.key: {r.permission: r.allowed for r in rules if r.role_key == role.key}
                        for role in roles},

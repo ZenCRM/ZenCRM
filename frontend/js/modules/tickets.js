@@ -139,7 +139,9 @@ window.ZenModules.tickets = function () {
             try {
                 const conf = await this.api('/tickets/settings');
                 this.ticketConfig = conf;
-                this.ticketCategories = conf.helpdesk_categories || [];
+                const defaults = {technical: 'Pomoc techniczna', billing: 'Rozliczenia i faktury', bug: 'Zgłoszenie błędu', general: 'Zapytanie ogólne'};
+                this.ticketCategories = (conf.helpdesk_categories || []).map(category => ({...category,
+                    name: category.name === defaults[category.id] ? window.ZenI18n.t(category.name) : category.name}));
             } catch (e) {
                 console.warn('Nie udało się załadować konfiguracji ticketów:', e.message);
             }

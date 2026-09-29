@@ -10,6 +10,9 @@ SKIP_FIELDS = frozenset({
     'updated_at',
     'password_hash',
     'public_token',
+    'pdf_path',
+    'rendered_html',
+    'deleted_at',
 })
 
 

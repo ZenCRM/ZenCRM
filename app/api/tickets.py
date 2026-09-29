@@ -308,7 +308,10 @@ def add_agent_message(ticket_id):
 @tickets_bp.route('/settings', methods=['GET'])
 @jwt_required()
 def get_settings():
-    return jsonify(get_helpdesk_config()), 200
+    config = get_helpdesk_config()
+    if current_user().role not in ('admin', 'manager'):
+        config.pop('helpdesk_webhook_token', None)
+    return jsonify(config), 200
 
 
 @tickets_bp.route('/settings', methods=['PUT'])
@@ -328,6 +331,15 @@ def update_settings():
 @tickets_bp.route('/public/config', methods=['GET'])
 def public_helpdesk_config():
     config = get_helpdesk_config()
+    from ..utils.i18n import t
+    from ..utils.helpdesk import DEFAULT_HELPDESK_CONFIG, DEFAULT_HELPDESK_CATEGORIES
+    # Localize only unchanged system defaults, never administrator-authored copy.
+    for key in ('title', 'header_subtitle', 'badge', 'heading', 'description', 'success_heading', 'success_description', 'footer_text'):
+        name = 'helpdesk_' + key
+        if config.get(name) == DEFAULT_HELPDESK_CONFIG.get(name):
+            config[name] = t(config[name])
+    defaults = {row['id']: row['name'] for row in DEFAULT_HELPDESK_CATEGORIES}
+    config['helpdesk_categories'] = [dict(row, name=t(row['name']) if row.get('name') == defaults.get(row.get('id')) else row.get('name', '')) for row in config.get('helpdesk_categories', [])]
     logo = config.get('helpdesk_logo')
     if not logo:
         from ..models.setting import Setting

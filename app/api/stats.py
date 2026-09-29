@@ -54,9 +54,30 @@ def get_stats():
     task_status = dict(db.session.query(Task.status, func.count(Task.id))
                        .filter(Task.deleted_at.is_(None)).group_by(Task.status).all())
 
-    # ── Ostatnie zadania ──
-    upcoming = Task.query.filter(Task.status != 'done', Task.deleted_at.is_(None)) \
-        .order_by(Task.due_date.asc().nullslast()).limit(5).all()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+    # ── Zadania dla dashboardu (zaległe, dzisiaj, najbliższe) ──
+    overdue_tasks = Task.query.filter(
+        Task.status != 'done',
+        Task.deleted_at.is_(None),
+        Task.due_date.isnot(None),
+        Task.due_date < now,
+    ).order_by(Task.due_date.asc()).limit(20).all()
+
+    today_tasks = Task.query.filter(
+        Task.status != 'done',
+        Task.deleted_at.is_(None),
+        Task.due_date.isnot(None),
+        Task.due_date >= today_start,
+        Task.due_date <= today_end,
+    ).order_by(Task.due_date.asc()).limit(20).all()
+
+    upcoming_tasks = Task.query.filter(
+        Task.status != 'done',
+        Task.deleted_at.is_(None),
+        (Task.due_date > today_end) | (Task.due_date.is_(None)),
+    ).order_by(Task.due_date.asc().nullslast()).limit(20).all()
 
     # ── Nadchodzące spotkania ──
     upcoming_meetings = Meeting.query.filter(Meeting.start_time >= now) \
@@ -94,11 +115,11 @@ def get_stats():
         for r in top_users_rows
     ]
 
-    # ── Zadania do zrobienia dziś ──
-    today_end = now.replace(hour=23, minute=59, second=59)
+    # ── Zadania do zrobienia dziś (licznik) ──
     tasks_today = Task.query.filter(
         Task.status != 'done',
-        Task.due_date != None,
+        Task.deleted_at.is_(None),
+        Task.due_date.isnot(None),
         Task.due_date <= today_end,
     ).count()
 
@@ -107,7 +128,9 @@ def get_stats():
         'funnel': funnel,
         'lead_values': {stage: float(lead_values.get(stage, 0)) for stage in stages},
         'task_status': task_status,
-        'upcoming_tasks': [t.to_dict() for t in upcoming],
+        'overdue_tasks': [t.to_dict() for t in overdue_tasks],
+        'today_tasks': [t.to_dict() for t in today_tasks],
+        'upcoming_tasks': [t.to_dict() for t in upcoming_tasks],
         'upcoming_meetings': [m.to_dict() for m in upcoming_meetings],
         'recent_activities': [a.to_dict() for a in recent],
         'top_clients': top_clients,

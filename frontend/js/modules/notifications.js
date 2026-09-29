@@ -42,19 +42,19 @@ window.ZenModules.notifications = () => ({
         } else await this.openDetail(item.entity_type,item.entity_id);
     },
     notificationAction(action) {
-        const labels={assigned:'Przypisano do Ciebie',created:'Utworzono',updated:'Zaktualizowano',comment:'Nowy komentarz',commented:'Nowy komentarz',status:'Zmieniono status',status_changed:'Zmieniono status',team:'Zmieniono zespół',call:'Zapisano rozmowę',email:'Zapisano e-mail',converted:'Przekonwertowano na klienta'};
-        return this.t(labels[action] || 'Nowa aktywność');
+        const labels={assigned:window.ZenI18n.t('Przypisano do Ciebie'),created:window.ZenI18n.t('Utworzono'),updated:window.ZenI18n.t('Zaktualizowano'),comment:window.ZenI18n.t('Nowy komentarz'),commented:window.ZenI18n.t('Nowy komentarz'),status:window.ZenI18n.t('Zmieniono status'),status_changed:window.ZenI18n.t('Zmieniono status'),team:window.ZenI18n.t('Zmieniono zespół'),call:window.ZenI18n.t('Zapisano rozmowę'),email:window.ZenI18n.t('Zapisano e-mail'),converted:window.ZenI18n.t('Przekonwertowano na klienta')};
+        return this.t(labels[action] || window.ZenI18n.t('Nowa aktywność'));
     },
     entityLabel(entityType) {
         const labels = {
-            client: 'Klient',
-            lead: 'Lead',
-            task: 'Zadanie',
-            service: 'Usługa',
-            meeting: 'Spotkanie',
-            project: 'Projekt',
-            reminder: 'Przypomnienie'
+            client: window.ZenI18n.t('Klient'),
+            lead: window.ZenI18n.t('Lead'),
+            task: window.ZenI18n.t('Zadanie'),
+            service: window.ZenI18n.t('Usługa'),
+            meeting: window.ZenI18n.t('Spotkanie'),
+            project: window.ZenI18n.t('Projekt'),
+            reminder: window.ZenI18n.t('Przypomnienie')
         };
-        return this.t(labels[entityType] || entityType || 'Element');
+        return this.t(labels[entityType] || entityType || window.ZenI18n.t('Element'));
     },
 });

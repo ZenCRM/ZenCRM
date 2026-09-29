@@ -125,11 +125,11 @@ window.ZenModules.records = function () { return {
             projects: ['name', 'status', 'client', 'manager', 'members', 'budget', 'dates', 'progress', 'actions'],
         },
         columnLabels: {
-            clients: { name: 'Nazwa', email: 'Email', phone: 'Telefon', company: 'Firma', assignee: 'Opiekun', status: 'Status', actions: 'Akcje' },
-            leads: { title: 'Tytuł', client: 'Klient', stage: 'Etap', value: 'Wartość', assignee: 'Opiekun', expected_close_date: 'Data zamknięcia', source: 'Źródło', probability: 'Prawdopodobieństwo', actions: 'Akcje' },
-            contacts: { name: 'Osoba', client: 'Klient', position: 'Stanowisko', email: 'E-mail', phone: 'Telefon', actions: 'Akcje' },
-            tasks: { title: 'Zadanie', status: 'Status', priority: 'Priorytet', due_date: 'Termin', context: 'Klient / kontekst', assignees: 'Wykonawcy', actions: 'Akcje' },
-            projects: { name: 'Nazwa projektu', status: 'Status', client: 'Klient', manager: 'Opiekun', members: 'Zespół', budget: 'Budżet', dates: 'Terminy', progress: 'Postęp', actions: 'Akcje' },
+            clients: { name: window.ZenI18n.t('Nazwa'), email: window.ZenI18n.t('Email'), phone: window.ZenI18n.t('Telefon'), company: window.ZenI18n.t('Firma'), assignee: window.ZenI18n.t('Opiekun'), status: window.ZenI18n.t('Status'), actions: window.ZenI18n.t('Akcje') },
+            leads: { title: window.ZenI18n.t('Tytuł'), client: window.ZenI18n.t('Klient'), stage: window.ZenI18n.t('Etap'), value: window.ZenI18n.t('Wartość'), assignee: window.ZenI18n.t('Opiekun'), expected_close_date: window.ZenI18n.t('Data zamknięcia'), source: window.ZenI18n.t('Źródło'), probability: window.ZenI18n.t('Prawdopodobieństwo'), actions: window.ZenI18n.t('Akcje') },
+            contacts: { name: window.ZenI18n.t('Osoba'), client: window.ZenI18n.t('Klient'), position: window.ZenI18n.t('Stanowisko'), email: window.ZenI18n.t('E-mail'), phone: window.ZenI18n.t('Telefon'), actions: window.ZenI18n.t('Akcje') },
+            tasks: { title: window.ZenI18n.t('Zadanie'), status: window.ZenI18n.t('Status'), priority: window.ZenI18n.t('Priorytet'), due_date: window.ZenI18n.t('Termin'), context: window.ZenI18n.t('Klient / kontekst'), assignees: window.ZenI18n.t('Wykonawcy'), actions: window.ZenI18n.t('Akcje') },
+            projects: { name: window.ZenI18n.t('Nazwa projektu'), status: window.ZenI18n.t('Status'), client: window.ZenI18n.t('Klient'), manager: window.ZenI18n.t('Opiekun'), members: window.ZenI18n.t('Zespół'), budget: window.ZenI18n.t('Budżet'), dates: window.ZenI18n.t('Terminy'), progress: window.ZenI18n.t('Postęp'), actions: window.ZenI18n.t('Akcje') },
         },
         availableColumns(entity) {
             const standard = Object.entries(this.columnLabels[entity] || {}).map(([key, label]) => ({
@@ -173,8 +173,8 @@ window.ZenModules.records = function () { return {
         getCustomFieldValue(entity, recordId, fieldId) {
             const val = this.customTableValues[entity]?.[String(recordId)]?.[String(fieldId)];
             if (val === undefined || val === null || val === '') return '—';
-            if (val === 'true') return 'Tak';
-            if (val === 'false') return 'Nie';
+            if (val === 'true') return window.ZenI18n.t('Tak');
+            if (val === 'false') return window.ZenI18n.t('Nie');
             return val;
         },
         allCustomFields: [],
@@ -209,7 +209,7 @@ window.ZenModules.records = function () { return {
             if (this.currentView === 'dashboard' && !keepDetail && !viewOverride) return;
             const actionView = viewOverride || this.currentView;
             if (!this.canRecordAction(actionView, item ? 'edit' : 'create')) {
-                this.notify('Brak uprawnienia do tej operacji');
+                this.notify(window.ZenI18n.t('Brak uprawnienia do tej operacji'));
                 return false;
             }
             this.modal.view = viewOverride;
@@ -322,7 +322,7 @@ window.ZenModules.records = function () { return {
             if (this.savingRecord) return;
             this.modal.error = '';
             if (!this.canRecordAction(this.modal.view || this.currentView, this.modal.editingId ? 'edit' : 'create')) {
-                this.modal.error = 'Brak uprawnienia do tej operacji';
+                this.modal.error = window.ZenI18n.t('Brak uprawnienia do tej operacji');
                 return;
             }
             const payload = { ...this.modal.form };
@@ -340,7 +340,7 @@ window.ZenModules.records = function () { return {
                     if (payload.reminder_offset === 'off') payload.reminder_at = null;
                     else {
                         const at = new Date(payload.due_date).getTime() - Number(payload.reminder_offset)*60000;
-                        if (!Number.isFinite(at) || at <= Date.now()) throw new Error('Ustaw termin zadania tak, aby przypomnienie wypadało w przyszłości.');
+                        if (!Number.isFinite(at) || at <= Date.now()) throw new Error(window.ZenI18n.t('Ustaw termin zadania tak, aby przypomnienie wypadało w przyszłości.'));
                         payload.reminder_at = new Date(at).toISOString();
                         this.enableReminderSound();
                     }

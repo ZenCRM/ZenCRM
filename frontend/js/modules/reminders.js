@@ -87,7 +87,7 @@ window.ZenModules.reminders = () => {
             this.enableReminderSound(); this.reminderBusy=true; this.reminderError=''; const generation=++session; loading=false;
             try {
                 const date=new Date(this.reminderDate);
-                if (!this.reminderTitle.trim() || !Number.isFinite(+date) || +date<=Date.now()) throw new Error('Wpisz treść i wybierz przyszłą datę oraz godzinę.');
+                if (!this.reminderTitle.trim() || !Number.isFinite(+date) || +date<=Date.now()) throw new Error(window.ZenI18n.t('Wpisz treść i wybierz przyszłą datę oraz godzinę.'));
                 const link = this.reminderLink.trim() || null;
                 const row=await this.api('/reminders',{method:'POST',body:JSON.stringify({title:this.reminderTitle,remind_at:date.toISOString(),link})});
                 if(generation!==session) return;
@@ -119,7 +119,7 @@ window.ZenModules.reminders = () => {
                 const saved = await this.api('/reminders/' + row.id, { method: 'PUT', body: JSON.stringify({ action: 'restore' }) });
                 this.allReminders = this.allReminders.map(r => r.id === saved.id ? saved : r);
                 this.reminders = [...this.reminders.filter(r => r.id !== saved.id), saved].sort((a,b)=>Date.parse(a.remind_at)-Date.parse(b.remind_at));
-                if (typeof this.notify === 'function') this.notify('Przywrócono przypomnienie do aktywnych');
+                if (typeof this.notify === 'function') this.notify(window.ZenI18n.t('Przywrócono przypomnienie do aktywnych'));
             } catch (e) {
                 if (typeof this.notify === 'function') this.notify(e.message, 'error');
             } finally {
@@ -128,14 +128,14 @@ window.ZenModules.reminders = () => {
         },
         async deleteReminder(row) {
             if (!row || this.reminderBusy) return;
-            if (!confirm('Czy na pewno chcesz trwale usunąć to przypomnienie?')) return;
+            if (!confirm(window.ZenI18n.t('Czy na pewno chcesz trwale usunąć to przypomnienie?'))) return;
             this.reminderBusy = true;
             try {
                 await this.api('/reminders/' + row.id, { method: 'DELETE' });
                 this.reminders = this.reminders.filter(r => r.id !== row.id);
                 this.allReminders = this.allReminders.filter(r => r.id !== row.id);
                 if (this.reminderActive?.id === row.id) this.reminderActive = null;
-                if (typeof this.notify === 'function') this.notify('Usunięto przypomnienie');
+                if (typeof this.notify === 'function') this.notify(window.ZenI18n.t('Usunięto przypomnienie'));
             } catch (e) {
                 if (typeof this.notify === 'function') this.notify(e.message, 'error');
             } finally {

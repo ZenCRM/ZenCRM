@@ -32,7 +32,7 @@
             <div class="flex-1 min-h-0 bg-gray-50 dark:bg-gray-900">
                 <iframe :key="currentView + '-' + (darkMode ? 'dark' : 'light')"
                         :src="'/workspace.html?embed=1' + (darkMode ? '&dark=1' : '') + '#' + ({portalSettings:'portal-settings', portalUsers:'portal-users', portalTickets:'portal-tickets', portalSpaces:'portal-spaces'}[currentView] || 'portal-users')"
-                        :title="({portalSettings:'Ustawienia portalu', portalUsers:'Użytkownicy portalu', portalTickets:'Tickety portalu', portalSpaces:'Portale klientów'}[currentView] || 'Portal użytkownika')"
+                        :title="({portalSettings:window.ZenI18n.t(&#x27;Ustawienia portalu&#x27;), portalUsers:window.ZenI18n.t(&#x27;Użytkownicy portalu&#x27;), portalTickets:window.ZenI18n.t(&#x27;Tickety portalu&#x27;), portalSpaces:window.ZenI18n.t(&#x27;Portale klientów&#x27;)}[currentView] || window.ZenI18n.t(&#x27;Portal użytkownika&#x27;))"
                         class="w-full h-full border-0">
                 </iframe>
             </div>

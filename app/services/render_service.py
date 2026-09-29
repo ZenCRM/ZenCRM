@@ -1,6 +1,7 @@
 """Renderowanie szablonów ofert/dokumentów do HTML (Jinja2)."""
+from ..utils.i18n import t
 from datetime import datetime, timedelta
-from jinja2 import Template as JinjaTemplate
+from jinja2.sandbox import SandboxedEnvironment
 from ..models.client import Client
 from ..models.template import Template
 
@@ -61,7 +62,7 @@ def build_context(obj, entity_type="offer"):
 
 
 def render_template_string(t, ctx):
-    return JinjaTemplate(t).render(**ctx)
+    return SandboxedEnvironment(autoescape=True).from_string(t).render(**ctx)
 
 
 def render_offer(offer):
@@ -89,11 +90,11 @@ def render_document(doc):
 def render_preview(template_str, entity_type="offer"):
     class DC:
         id = 1
-        name = "Przykladowy Klient"
+        name = t("Przykladowy Klient")
         email = "k@example.com"
         phone = "+48 22 111 22 33"
-        company = "Przykladowy"
-        address = "ul. Testowa 10"
+        company = t("Przykladowy")
+        address = t("ul. Testowa 10")
         status = "active"
         def to_dict(self):
             return {"id": self.id, "name": self.name, "email": self.email,
@@ -104,17 +105,17 @@ def render_preview(template_str, entity_type="offer"):
         def __init__(self):
             self.id = 1
             self.number = "OF/2026/001"
-            self.title = "Przykladowa oferta"
+            self.title = t("Przykladowa oferta")
             self.client_id = 1
             self.total_amount = 12500.0
             self.valid_until = datetime.now() + timedelta(days=30)
             self.data = {
                 "items": [
-                    {"name": "Wdrozenie", "qty": 1, "price": 8000, "total": 8000},
-                    {"name": "Szkolenie", "qty": 2, "price": 1500, "total": 3000},
-                    {"name": "Wsparcie", "qty": 1, "price": 1500, "total": 1500},
+                    {"name": t("Wdrozenie"), "qty": 1, "price": 8000, "total": 8000},
+                    {"name": t("Szkolenie"), "qty": 2, "price": 1500, "total": 3000},
+                    {"name": t("Wsparcie"), "qty": 1, "price": 1500, "total": 1500},
                 ],
-                "description": "Dziekujemy za zainteresowanie oferta.",
+                "description": t("Dziekujemy za zainteresowanie oferta."),
             }
         def to_dict(self):
             return {"id": self.id, "number": self.number, "title": self.title,

@@ -46,12 +46,26 @@ function crmApp() {
         showPassword: false,
         loginLoading: false,
         forgotModal: {
+            code: '',
+            password: '',
+            awaitingCode: false,
             open: false,
             email: '',
             loading: false,
             success: '',
             error: '',
         },
+        needsSetup: false,
+        setupForm: {
+            first_name: '',
+            last_name: '',
+            email: '',
+            password: '',
+            password_confirm: '',
+        },
+        setupLoading: false,
+        setupError: '',
+        showSetupPassword: false,
 
         // ═══════════════════════════════════════════════════════════
         // UI
@@ -121,7 +135,8 @@ function crmApp() {
         // ═══════════════════════════════════════════════════════════
         // DANE
         // ═══════════════════════════════════════════════════════════
-        stats: { cards: {}, funnel: {}, upcoming_tasks: [], upcoming_meetings: [] },
+        stats: { cards: {}, funnel: {}, overdue_tasks: [], today_tasks: [], upcoming_tasks: [], upcoming_meetings: [] },
+        dashboardTaskTab: 'today',
         clients: [], leads: [], tasks: [], meetings: [], projects: [], teams: [],
         services: [], serviceCatalog: [], offers: [], documents: [], templates: [], users: [], contacts: [],
         archiveItems: [], isAdmin: false,
@@ -241,7 +256,43 @@ function crmApp() {
 
         // ═══════════════════════════════════════════════════════════
         // AUTH
-        // ═══════════════════════════════════════════════════════════
+        async submitSetup() {
+            this.setupError = '';
+            const form = this.setupForm;
+            if (!form.email || !form.email.includes('@')) {
+                this.setupError = window.ZenI18n.t('Podaj poprawny adres e-mail');
+                return;
+            }
+            if (!form.password || form.password.length < 8) {
+                this.setupError = window.ZenI18n.t('Hasło musi mieć co najmniej 8 znaków');
+                return;
+            }
+            if (form.password !== form.password_confirm) {
+                this.setupError = window.ZenI18n.t('Hasła nie są identyczne');
+                return;
+            }
+            this.setupLoading = true;
+            try {
+                const data = await window.ZenApi.setupAdmin({
+                    first_name: form.first_name,
+                    last_name: form.last_name,
+                    email: form.email,
+                    password: form.password
+                });
+                this.token = data.access_token;
+                this.user = data.user;
+                this.isAdmin = true;
+                this.needsSetup = false;
+                localStorage.setItem('token', this.token);
+                localStorage.setItem('user', JSON.stringify(this.user));
+                await this.init();
+            } catch (e) {
+                this.setupError = e.message;
+            } finally {
+                this.setupLoading = false;
+            }
+        },
+
         async login() {
             this.loginError = '';
             this.loginLoading = true;
@@ -262,6 +313,9 @@ function crmApp() {
         },
 
         openForgotPassword() {
+            this.forgotModal.code = '';
+            this.forgotModal.password = '';
+            this.forgotModal.awaitingCode = false;
             this.forgotModal.open = true;
             this.forgotModal.email = this.loginForm.email || '';
             this.forgotModal.loading = false;
@@ -279,7 +333,27 @@ function crmApp() {
             this.forgotModal.success = '';
             try {
                 const res = await window.ZenApi.forgotPassword(this.forgotModal.email);
-                this.forgotModal.success = res.message || window.ZenI18n.t('Zgłoszenie zostało wysłane');
+                this.forgotModal.awaitingCode = true;
+                this.forgotModal.success = window.ZenI18n.t(res.message || window.ZenI18n.t('Zgłoszenie zostało wysłane'));
+            } catch (e) {
+                this.forgotModal.error = e.message;
+            } finally {
+                this.forgotModal.loading = false;
+            }
+        },
+
+        async confirmPasswordReset() {
+            this.forgotModal.loading = true;
+            this.forgotModal.error = '';
+            try {
+                const res = await window.ZenApi.request('/auth/reset-password', {
+                    method: 'POST',
+                    body: JSON.stringify({ token: this.forgotModal.code.trim(), password: this.forgotModal.password }),
+                });
+                this.forgotModal.success = res.message;
+                this.forgotModal.awaitingCode = false;
+                this.forgotModal.code = '';
+                this.forgotModal.password = '';
             } catch (e) {
                 this.forgotModal.error = e.message;
             } finally {
@@ -298,6 +372,8 @@ function crmApp() {
             this.user = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            this.settingsForm = {};
+            await this.loadSettings(true);
             // Nie czyścimy lastView – po ponownym zalogowaniu wróci tam, gdzie byłeś
         },
 
@@ -724,7 +800,7 @@ function crmApp() {
             try {
                 const d = new Date(dateStr);
                 if (isNaN(d.getTime())) return dateStr;
-                return d.toLocaleString(window.ZenI18n.locale || 'pl-PL', {
+                return d.toLocaleString(window.ZenI18n.locale || window.ZenI18n.locale, {
                     year: 'numeric', month: '2-digit', day: '2-digit',
                     hour: '2-digit', minute: '2-digit'
                 });
@@ -817,7 +893,7 @@ function crmApp() {
 
         async archiveFromModal() {
             if (!this.canRecordAction(this.modal.view || this.currentView, 'delete')) {
-                this.modal.error = 'Brak uprawnienia do tej operacji';
+                this.modal.error = window.ZenI18n.t('Brak uprawnienia do tej operacji');
                 return;
             }
             if (!this.modal.editingId || !confirm(window.ZenI18n.t('Przenieść do archiwum?'))) return;

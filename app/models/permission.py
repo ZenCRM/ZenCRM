@@ -8,7 +8,8 @@ class Role(db.Model):
     built_in = db.Column(db.Boolean, nullable=False, default=False)
 
     def to_dict(self):
-        return {'key': self.key, 'name': self.name, 'built_in': self.built_in}
+        from ..utils.i18n import t
+        return {'key': self.key, 'name': t(self.name) if self.built_in else self.name, 'built_in': self.built_in}
 
 
 class PermissionRule(db.Model):

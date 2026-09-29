@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.setting import Setting
 from ..utils.settings_defaults import seed_defaults, _category
-from ..utils.deletion import is_admin
+from ..utils.deletion import is_admin, current_user
 
 settings_bp = Blueprint('settings', __name__)
 
@@ -13,10 +13,57 @@ BRAND_DIR = os.path.abspath(os.path.join(
 ALLOWED_EXT = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'}
 MAX_SIZE = 2 * 1024 * 1024
 
+# Explicit lists prevent newly added credentials from becoming public.
+PUBLIC_KEYS = frozenset({
+    'brand_name', 'brand_color_primary', 'brand_color_secondary',
+    'brand_logo_light', 'brand_logo_dark', 'brand_logo_size', 'brand_favicon',
+    'login_bg_type', 'login_bg_color', 'login_bg_color2', 'login_bg_image',
+    'login_welcome_text', 'login_footer', 'login_show_logo',
+})
+UI_KEYS = PUBLIC_KEYS | frozenset({
+    'ui_detail_client', 'ui_detail_lead', 'ui_detail_task', 'ui_detail_service',
+    'ui_show_footer', 'ui_footer_text', 'ui_dark_default',
+    'lead_stages', 'task_stages', 'required_standard_fields', 'standard_field_labels',
+})
+
+
+@settings_bp.after_request
+def prevent_settings_cache(response):
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
+def selected_settings(keys):
+    seed_defaults()
+    items = Setting.query.filter(Setting.key.in_(keys)).all()
+    return jsonify({s.key: s.value for s in items}), 200
+
+
+@settings_bp.route('/public', methods=['GET'])
+def public_settings():
+    from ..models.user import User
+    seed_defaults()
+    items = Setting.query.filter(Setting.key.in_(PUBLIC_KEYS)).all()
+    data = {s.key: s.value for s in items}
+    data['needs_setup'] = (User.query.first() is None)
+    return jsonify(data), 200
+
+
+@settings_bp.route('/ui', methods=['GET'])
+@jwt_required()
+def ui_settings():
+    user = current_user()
+    if user is None or not user.is_active:
+        abort(403)
+    return selected_settings(UI_KEYS)
+
 
 @settings_bp.route('', methods=['GET'])
+@jwt_required()
 def list_settings():
-    """Publiczne - zwraca wszystkie ustawienia jako dict."""
+    """All settings are restricted to active administrators."""
+    if not is_admin():
+        return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     seed_defaults()
     items = Setting.query.all()
     return jsonify({s.key: s.value for s in items}), 200

@@ -33,7 +33,7 @@ window.ZenModules.documents = function () { return {
         async downloadPdf(mod, item) {
             try {
                 const r = await fetch(`/api/${mod}/${item.id}/pdf`, {
-                    headers: { 'Authorization': 'Bearer ' + this.token },
+                    headers: { 'Authorization': 'Bearer ' + this.token, 'Accept-Language': window.ZenI18n.locale },
                 });
                 if (!r.ok) {
                     const err = await r.json().catch(() => ({ error: window.ZenI18n.t('Błąd PDF') }));
@@ -59,7 +59,7 @@ window.ZenModules.documents = function () { return {
                 const r = await this.api(endpoint, { method: 'POST' });
                 const fullUrl = window.location.origin + r.public_url;
                 await navigator.clipboard.writeText(fullUrl);
-                this.notify('Link skopiowany:\n' + fullUrl);
+                this.notify(window.ZenI18n.t('Link skopiowany:\n') + fullUrl);
             } catch (e) { this.notify(window.ZenI18n.t('Błąd: ') + e.message); }
         },
 
@@ -116,6 +116,7 @@ window.ZenModules.documents = function () { return {
                 const r = await fetch('/api/templates/preview', {
                     method: 'POST',
                     headers: {
+                        'Accept-Language': window.ZenI18n.locale,
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + this.token,
                     },

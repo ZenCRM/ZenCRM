@@ -173,7 +173,7 @@ window.ZenModules.sms = function () {
                 }
             } catch (err) {
                 console.error('Błąd ładowania danych SMS:', err);
-                this.smsError = err.message || 'Nie udało się pobrać danych SMS';
+                this.smsError = err.message || window.ZenI18n.t('Nie udało się pobrać danych SMS');
             } finally {
                 this.smsLoading = false;
             }
@@ -253,8 +253,8 @@ window.ZenModules.sms = function () {
             const dev = onlineDev || this.smsDevices[0];
 
             const confirmMsg = targetName
-                ? `Czy chcesz zlecić telefonowi "${dev.name}" natychmiastowe połączenie z: ${targetName} (${phone})?`
-                : `Czy chcesz zlecić telefonowi "${dev.name}" natychmiastowe połączenie z numerem: ${phone}?`;
+                ? window.ZenI18n.t('Czy chcesz zlecić telefonowi „{device}” natychmiastowe połączenie z {name} ({phone})?', {device: dev.name, name: targetName, phone})
+                : window.ZenI18n.t('Czy chcesz zlecić telefonowi „{device}” natychmiastowe połączenie z numerem {phone}?', {device: dev.name, phone});
 
             if (!confirm(confirmMsg)) return;
 
@@ -285,7 +285,7 @@ window.ZenModules.sms = function () {
 
         callContact(targetPhone = null, targetName = null) {
             if (this.user?.default_call_method === 'android') {
-                if (!this.hasConnectedPhone()) { this.notify('Brak podłączonego telefonu Android', 'warning'); return; }
+                if (!this.hasConnectedPhone()) { this.notify(window.ZenI18n.t('Brak podłączonego telefonu Android'), 'warning'); return; }
                 return this.makePhoneCall(targetPhone, targetName);
             }
             let phone = targetPhone;
@@ -853,7 +853,7 @@ window.ZenModules.sms = function () {
         },
 
         // ═══════ POMOCNICZE ═══════
-        copyToClipboard(text, label = 'Skopiowano do schowka') {
+        copyToClipboard(text, label = window.ZenI18n.t('Skopiowano do schowka')) {
             if (!text) return;
             navigator.clipboard.writeText(text).then(() => {
                 this.notify(window.ZenI18n.t(label));

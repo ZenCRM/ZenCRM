@@ -100,20 +100,68 @@
                         <div class="zen-task-chart"><canvas id="taskStatusChart" role="img" :aria-label="window.ZenI18n.t('Zadania według statusu. Liczby znajdują się poniżej wykresu.')"></canvas></div>
                         <div class="zen-task-chart-legend"><template x-for="item in dashboardTaskStages" :key="item.id"><div><span class="zen-legend-dot" :style="{background:item.accent}"></span><span x-text="item.label"></span><strong x-text="stats.task_status?.[item.id] || 0"></strong></div></template></div>
                     </div>
-<div class="zen-dashboard-panel zen-upcoming-panel"><h3 class="font-semibold text-lg mb-4"><span x-text="window.ZenI18n.t(&quot;Nadchodzące zadania&quot;)">Nadchodzące zadania</span></h3>
-                        <div class="space-y-3">
-                            <template x-for="t in stats.upcoming_tasks || []" :key="t.id">
+<div class="zen-dashboard-panel zen-upcoming-panel">
+                        <div class="flex items-center justify-between mb-3.5 flex-wrap gap-2">
+                            <h3 class="font-semibold text-lg text-gray-900 dark:text-gray-100"><span x-text="window.ZenI18n.t(&#x27;Zadania&#x27;)">Zadania</span></h3>
+                            <button type="button" @click="selectView('tasks')" class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer">
+                                <span x-text="window.ZenI18n.t(&#x27;Wszystkie zadania&#x27;)">Wszystkie zadania</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                        <div class="zen-task-tabs-nav inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/80 p-0.5 text-xs mb-3.5 w-full">
+                            <button type="button"
+                                    @click="dashboardTaskTab = 'overdue'"
+                                    :class="dashboardTaskTab === 'overdue' ? 'bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 font-semibold shadow-xs' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'"
+                                    class="flex-1 py-1.5 px-2 rounded-md flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <span x-text="window.ZenI18n.t(&#x27;Zaległe&#x27;)">Zaległe</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold tabular-nums"
+                                      :class="dashboardTaskTab === 'overdue' ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300' : 'bg-gray-200/80 text-gray-600 dark:bg-gray-700 dark:text-gray-300'"
+                                      x-text="(dashboardTasksByTab(&#x27;overdue&#x27;) || []).length"></span>
+                            </button>
+                            <button type="button"
+                                    @click="dashboardTaskTab = 'today'"
+                                    :class="dashboardTaskTab === 'today' ? 'bg-white dark:bg-gray-700 text-brand-600 dark:text-brand-400 font-semibold shadow-xs' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'"
+                                    class="flex-1 py-1.5 px-2 rounded-md flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <span x-text="window.ZenI18n.t(&#x27;Dzisiaj&#x27;)">Dzisiaj</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold tabular-nums"
+                                      :class="dashboardTaskTab === 'today' ? 'bg-brand-100 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'bg-gray-200/80 text-gray-600 dark:bg-gray-700 dark:text-gray-300'"
+                                      x-text="(dashboardTasksByTab(&#x27;today&#x27;) || []).length"></span>
+                            </button>
+                            <button type="button"
+                                    @click="dashboardTaskTab = 'upcoming'"
+                                    :class="dashboardTaskTab === 'upcoming' ? 'bg-white dark:bg-gray-700 text-brand-600 dark:text-brand-400 font-semibold shadow-xs' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'"
+                                    class="flex-1 py-1.5 px-2 rounded-md flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <span x-text="window.ZenI18n.t(&#x27;Najbliższe&#x27;)">Najbliższe</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold tabular-nums"
+                                      :class="dashboardTaskTab === 'upcoming' ? 'bg-brand-100 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'bg-gray-200/80 text-gray-600 dark:bg-gray-700 dark:text-gray-300'"
+                                      x-text="(dashboardTasksByTab(&#x27;upcoming&#x27;) || []).length"></span>
+                            </button>
+                        </div>
+                        <div class="space-y-2.5 zen-upcoming-list">
+                            <template x-for="t in dashboardTasksByTab(dashboardTaskTab) || []" :key="t.id">
                                 <div class="flex items-center gap-3">
-                                    <span class="w-2 h-2 rounded-full" :class="{&#x27;bg-red-500&#x27;: t.priority === &#x27;high&#x27;, &#x27;bg-yellow-500&#x27;: t.priority === &#x27;medium&#x27;, &#x27;bg-green-500&#x27;: t.priority === &#x27;low&#x27;}"></span>
-                                    <span class="flex-1 text-sm truncate" x-text="t.title"></span>
-                                    <span class="text-xs text-gray-500" x-text="t.due_date ? new Date(t.due_date).toLocaleDateString(locale) : &#x27;—&#x27;"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                          :class="{&#x27;bg-red-500&#x27;: t.priority === &#x27;high&#x27;, &#x27;bg-yellow-500&#x27;: t.priority === &#x27;medium&#x27;, &#x27;bg-green-500&#x27;: t.priority === &#x27;low&#x27;}"
+                                          :title="t.priority ? window.ZenI18n.t(t.priority) : &#x27;&#x27;"></span>
+                                    <a :href="'#task/' + t.id"
+                                       @click.prevent="openDetail('task', t.id)"
+                                       class="flex-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-brand-600 dark:hover:text-brand-400 hover:underline truncate cursor-pointer"
+                                       :title="t.title"
+                                       x-text="t.title"></a>
+                                    <span class="text-xs whitespace-nowrap flex-shrink-0"
+                                          :class="dashboardTaskTab === 'overdue' || isOverdue(t) ? 'text-red-500 font-medium' : 'text-gray-500 dark:text-gray-400'"
+                                          x-text="formatTaskDate(t, dashboardTaskTab)"></span>
                                 </div>
                             </template>
-                            <p x-show="!stats.upcoming_tasks?.length" class="text-sm text-gray-500 text-center py-4"><span x-text="window.ZenI18n.t(&quot;Brak zadań&quot;)">Brak zadań</span></p>
+                            <p x-show="!(dashboardTasksByTab(dashboardTaskTab) || []).length" class="text-sm text-gray-500 dark:text-gray-400 text-center py-6">
+                                <span x-show="dashboardTaskTab === 'overdue'" x-text="window.ZenI18n.t(&#x27;Brak zaległych zadań&#x27;)">Brak zaległych zadań</span>
+                                <span x-show="dashboardTaskTab === 'today'" x-text="window.ZenI18n.t(&#x27;Brak zadań na dzisiaj&#x27;)">Brak zadań na dzisiaj</span>
+                                <span x-show="dashboardTaskTab === 'upcoming'" x-text="window.ZenI18n.t(&#x27;Brak najbliższych zadań&#x27;)">Brak najbliższych zadań</span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
 <div class="ux-error" x-show="!detailView.open &amp;&amp; listError" x-cloak role="alert"><span x-text="listError"></span><button @click="reload()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div><div class="ux-error" x-show="detailView.open &amp;&amp; detailError" x-cloak role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>
-            
+

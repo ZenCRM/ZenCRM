@@ -2,7 +2,7 @@
 <div x-show="modal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 md:p-6"
      @keydown.escape.window="closeModal()">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
-        
+
         <!-- HEADER -->
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/80 flex justify-between items-center flex-shrink-0">
             <div class="flex items-center gap-3">
@@ -34,7 +34,7 @@
                     </p>
                 </div>
             </div>
-            <button type="button" @click="closeModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition" aria-label="Zamknij">
+            <button type="button" @click="closeModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition" :aria-label="window.ZenI18n.t(&quot;Zamknij&quot;)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -335,7 +335,7 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300">
                         <span x-text="window.ZenI18n.t('Wykonawcy zadania')">Wykonawcy zadania</span>
                     </label>
-                    <span class="text-xs text-gray-400" x-text="(taskAssigneesUI || []).length + ' przypisanych'"></span>
+                    <span class="text-xs text-gray-400" x-text="(taskAssigneesUI || []).length + window.ZenI18n.t(&#x27; przypisanych&#x27;)"></span>
                 </div>
 
                 <div class="space-y-2 mb-3">

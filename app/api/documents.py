@@ -1,3 +1,4 @@
+from ..utils.i18n import t
 import os
 import secrets
 from flask import Blueprint, request, jsonify, send_file, Response
@@ -25,9 +26,9 @@ def _validate_relations(doc):
             continue
         related = db.session.get(model, value)
         if not related:
-            raise ValueError(f'{label} nie istnieje')
+            raise ValueError(t('{label} nie istnieje', {'label': t(label)}))
         if doc.client_id and related.client_id != doc.client_id:
-            raise ValueError(f'{label} nie należy do wybranego klienta')
+            raise ValueError(t('{label} nie należy do wybranego klienta', {'label': t(label)}))
 
 
 def _ensure_token(doc):

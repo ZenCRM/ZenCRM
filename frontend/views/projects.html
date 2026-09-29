@@ -36,7 +36,7 @@
             <div class="flex items-center gap-3 flex-wrap flex-1">
                 <input type="text" x-model="projectSearch" :placeholder="window.ZenI18n.t('Szukaj projektu...')"
                        class="w-full sm:w-64 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none text-sm">
-                
+
                 <select x-model="projectStatusFilter" class="px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                     <option value="" x-text="window.ZenI18n.t('Wszystkie statusy')">Wszystkie statusy</option>
                     <option value="planned" x-text="window.ZenI18n.t('Planowany')">Planowany</option>
@@ -70,7 +70,7 @@
                             <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
                                 <input type="checkbox" :checked="isColumnVisible('projects', col.key)" @change="toggleColumn('projects', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
                                 <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
-                                <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                                <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium"><span x-text="window.ZenI18n.t(&quot;(pole)&quot;)">(pole)</span></span>
                             </label>
                         </template>
                     </div>
@@ -146,7 +146,7 @@
                                         <span x-show="(p.members || []).length > 4" class="text-[10px] text-gray-500 font-bold ml-1.5" x-text="'+' + ((p.members || []).length - 4)"></span>
                                     </div>
                                 </td>
-                                <td x-show="isColumnVisible('projects', 'budget')" class="font-medium" x-text="p.budget ? (formatNumber(p.budget) + ' PLN') : '—'"></td>
+                                <td x-show="isColumnVisible('projects', 'budget')" class="font-medium" x-text="p.budget ? (formatNumber(p.budget) + window.ZenI18n.t(&#x27; PLN&#x27;)) : &#x27;—&#x27;"></td>
                                 <td x-show="isColumnVisible('projects', 'dates')" class="text-xs text-gray-500 whitespace-nowrap">
                                     <span x-text="formatDate(p.start_date)"></span>
                                     <span x-show="p.start_date || p.end_date"> - </span>
@@ -216,20 +216,20 @@
                     <div class="flex items-center gap-4 mt-3 text-sm opacity-90 flex-wrap">
                         <span x-show="activeProject?.client_id" class="inline-flex items-center gap-1.5">
                             <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                            <span class="opacity-75">Klient:</span>
+                            <span class="opacity-75"><span x-text="window.ZenI18n.t(&quot;Klient:&quot;)">Klient:</span></span>
                             <span class="font-semibold cursor-pointer hover:underline" @click="openDetail('client', activeProject.client_id)" x-text="clientName(activeProject?.client_id)"></span>
                         </span>
 
                         <span x-show="activeProject?.manager" class="inline-flex items-center gap-1.5">
                             <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            <span class="opacity-75">Opiekun:</span>
+                            <span class="opacity-75"><span x-text="window.ZenI18n.t(&quot;Opiekun:&quot;)">Opiekun:</span></span>
                             <span class="font-semibold" x-text="fullName(activeProject?.manager)"></span>
                         </span>
 
                         <span x-show="activeProject?.budget" class="inline-flex items-center gap-1.5">
                             <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span class="opacity-75">Budżet:</span>
-                            <span class="font-semibold" x-text="formatNumber(activeProject?.budget) + ' PLN'"></span>
+                            <span class="opacity-75"><span x-text="window.ZenI18n.t(&quot;Budżet:&quot;)">Budżet:</span></span>
+                            <span class="font-semibold" x-text="formatNumber(activeProject?.budget) + window.ZenI18n.t(&#x27; PLN&#x27;)"></span>
                         </span>
 
                         <span x-show="activeProject?.start_date || activeProject?.end_date" class="inline-flex items-center gap-1.5">
@@ -323,7 +323,7 @@
                                  @dragenter.prevent="if (draggedProjectTask) dragOverProjectStage = stage.id"
                                  @dragover.prevent="if (draggedProjectTask) dragOverProjectStage = stage.id"
                                  @drop.prevent.stop="moveProjectTask(stage.id)">
-                                
+
                                 <div class="kanban-col-header">
                                     <div class="title flex items-center justify-between w-full">
                                         <div class="flex items-center gap-2">
@@ -344,7 +344,7 @@
                                              @dragend="endProjectTaskDrag()"
                                              :class="{ 'ux-card-dragged': draggedProjectTask?.id === task.id }"
                                              @click="openDetail('task', task.id)">
-                                            
+
                                             <button class="ux-card-open zen-card-open-icon" @click.stop="openDetail('task', task.id)" :aria-label="window.ZenI18n.t('Otwórz zadanie: ') + task.title">
                                                 <span class="zen-icon-wrap" x-html="zenIcon('arrow')" aria-hidden="true"></span>
                                             </button>
@@ -490,11 +490,11 @@
                             <div>
                                 <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-base" x-text="fullName(activeProject.manager)"></h4>
                                 <p class="text-xs text-gray-500" x-text="activeProject.manager.email"></p>
-                                <span class="inline-block mt-1 px-2 py-0.5 rounded text-[11px] font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300">Project Manager</span>
+                                <span class="inline-block mt-1 px-2 py-0.5 rounded text-[11px] font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300"><span x-text="window.ZenI18n.t(&quot;Project Manager&quot;)">Project Manager</span></span>
                             </div>
                         </div>
                     </template>
-                    <p x-show="!activeProject?.manager" class="text-sm text-gray-400 italic">Brak przypisanego opiekuna projektu.</p>
+                    <p x-show="!activeProject?.manager" class="text-sm text-gray-400 italic"><span x-text="window.ZenI18n.t(&quot;Brak przypisanego opiekuna projektu.&quot;)">Brak przypisanego opiekuna projektu.</span></p>
                 </div>
 
                 <!-- Dodawanie członka do zespołu -->
@@ -512,7 +512,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 mb-1" x-text="window.ZenI18n.t('Rola w projekcie')">Rola w projekcie</label>
-                            <input type="text" x-model="newMemberRole" placeholder="np. Deweloper, Tester, Grafik"
+                            <input type="text" x-model="newMemberRole" :placeholder="window.ZenI18n.t(&quot;np. Deweloper, Tester, Grafik&quot;)"
                                    class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                         <button type="submit" :disabled="!newMemberUserId"
@@ -544,7 +544,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300" x-text="m.role || 'Członek'"></span>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300" x-text="m.role || window.ZenI18n.t(&#x27;Członek&#x27;)"></span>
                                 <button type="button" @click="removeProjectMember(m.user_id)"
                                         class="zen-list-action zen-action-trash text-red-500 hover:text-red-700 p-1"
                                         :title="window.ZenI18n.t('Usuń')">
@@ -554,7 +554,7 @@
                         </div>
                     </template>
                     <div x-show="!(activeProject?.members || []).length" class="p-8 text-center text-gray-400 text-sm">
-                        Brak dodatkowych członków zespołu.
+                        <span x-text="window.ZenI18n.t(&quot;Brak dodatkowych członków zespołu.&quot;)">Brak dodatkowych członków zespołu.</span>
                     </div>
                 </div>
             </div>
@@ -566,22 +566,22 @@
         <div x-show="projectTab === 'overview'" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xs space-y-4">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 pb-2 border-b border-gray-100 dark:border-gray-700">Opis projektu</h3>
-                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed" x-text="activeProject?.description || 'Brak opisu dla tego projektu.'"></p>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 pb-2 border-b border-gray-100 dark:border-gray-700"><span x-text="window.ZenI18n.t(&quot;Opis projektu&quot;)">Opis projektu</span></h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed" x-text="activeProject?.description || window.ZenI18n.t(&#x27;Brak opisu dla tego projektu.&#x27;)"></p>
                 </div>
 
                 <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xs space-y-3">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 pb-2 border-b border-gray-100 dark:border-gray-700">Kluczowe metryki</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 pb-2 border-b border-gray-100 dark:border-gray-700"><span x-text="window.ZenI18n.t(&quot;Kluczowe metryki&quot;)">Kluczowe metryki</span></h3>
                     <div>
-                        <span class="text-xs text-gray-400 block">Zadania łącznie</span>
+                        <span class="text-xs text-gray-400 block"><span x-text="window.ZenI18n.t(&quot;Zadania łącznie&quot;)">Zadania łącznie</span></span>
                         <strong class="text-lg text-gray-900 dark:text-gray-100" x-text="projectTasks.length"></strong>
                     </div>
                     <div>
-                        <span class="text-xs text-gray-400 block">Zadania ukończone</span>
+                        <span class="text-xs text-gray-400 block"><span x-text="window.ZenI18n.t(&quot;Zadania ukończone&quot;)">Zadania ukończone</span></span>
                         <strong class="text-lg text-green-600 dark:text-green-400" x-text="(projectTasks || []).filter(t => t.status === 'done').length"></strong>
                     </div>
                     <div>
-                        <span class="text-xs text-gray-400 block">Postęp projektu</span>
+                        <span class="text-xs text-gray-400 block"><span x-text="window.ZenI18n.t(&quot;Postęp projektu&quot;)">Postęp projektu</span></span>
                         <div class="flex items-center gap-2 mt-1">
                             <div class="flex-1 bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
                                 <div class="bg-brand-600 h-full rounded-full" :style="{ width: projectProgress(activeProject) + '%' }"></div>

@@ -1,4 +1,6 @@
 /* No cached CRM pages or credentials; this worker only handles Web Push. */
+const window = self;
+importScripts('/locales/pl.js', '/locales/en.js');
 const bindingDb = () => new Promise((resolve, reject) => {
     const req = indexedDB.open('zencrm-push', 1);
     req.onupgradeneeded = () => req.result.createObjectStore('binding');
@@ -18,14 +20,17 @@ async function binding(value) {
 self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('message', event => {
-    if (event.data?.type === 'PUSH_BIND') event.waitUntil(binding(event.data.userId).then(() => event.ports[0]?.postMessage({ok:true})));
+    if (event.data?.type === 'PUSH_BIND') event.waitUntil(binding({userId: event.data.userId, locale: event.data.locale === 'en' ? 'en' : 'pl'}).then(() => event.ports[0]?.postMessage({ok:true})));
 });
 self.addEventListener('push', event => {
     event.waitUntil((async () => {
         if (!event.data) return;
         const data = event.data.json();
-        if (Number(await binding()) !== Number(data.user_id)) return;
-        await self.registration.showNotification(data.title || 'Przypomnienie ZenCRM', {
+        const user = await binding();
+        if (Number(user?.userId ?? user) !== Number(data.user_id)) return;
+        const key = data.title || 'Przypomnienie ZenCRM';
+        const title = self.ZenLocales[user?.locale || 'pl']?.[key] || key;
+        await self.registration.showNotification(title, {
             body: data.body, icon:'/icon.png', badge:'/icon.png', tag:data.tag,
             requireInteraction:true, data:{url:'/?reminder='+encodeURIComponent(data.reminder_id)},
         });

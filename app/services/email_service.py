@@ -1,3 +1,4 @@
+from ..utils.i18n import t
 import logging
 import smtplib
 from datetime import datetime
@@ -86,12 +87,16 @@ def render_template(template_key, context):
         from ..models.email_template import DEFAULT_TEMPLATES
         fallback = next((t for t in DEFAULT_TEMPLATES if t['key'] == template_key), None)
         if not fallback:
-            return f"Powiadomienie ZenCRM", "<p>Powiadomienie z systemu ZenCRM.</p>"
+            return t("Powiadomienie ZenCRM"), "<p>" + t("Powiadomienie z systemu ZenCRM.") + "</p>"
         subject = fallback['subject']
         body_html = fallback['body_html']
     else:
         subject = tpl.subject
         body_html = tpl.body_html
+
+    from ..utils.i18n import default_email
+    subject = default_email(template_key, 'subject', subject)
+    body_html = default_email(template_key, 'body_html', body_html)
 
     # Domyślne zmienne globalne
     company_name = Setting.get_value('company_name', Setting.get_value('brand_name', 'ZenCRM'))
@@ -180,16 +185,16 @@ def test_smtp_connection(cfg, test_recipient):
 
     try:
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = Header("ZenCRM - Test konfiguracji SMTP", 'utf-8')
+        msg['Subject'] = Header(t("ZenCRM - Test konfiguracji SMTP"), 'utf-8')
         from_display = str(Header(cfg.get('from_name') or 'ZenCRM Test', 'utf-8'))
         msg['From'] = formataddr((from_display, cfg.get('from_email') or 'test@zencrm.pl'))
         msg['To'] = test_recipient
 
         html = (
             "<div style='font-family: Arial, sans-serif; padding: 20px; color: #1f2937;'>"
-            "<h2 style='color: #10b981;'>Konfiguracja SMTP działa poprawnie!</h2>"
-            "<p>To jest testowa wiadomość potwierdzająca prawidłowe ustawienia serwera poczty wychodzącej w ZenCRM.</p>"
-            "<p style='color: #6b7280; font-size: 12px;'>Data testu: " + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC') + "</p>"
+            "<h2 style='color: #10b981;'>" + t("Konfiguracja SMTP działa poprawnie!") + "</h2>"
+            "<p>" + t("To jest testowa wiadomość potwierdzająca prawidłowe ustawienia serwera poczty wychodzącej w ZenCRM.") + "</p>"
+            "<p style='color: #6b7280; font-size: 12px;'>" + t("Data testu: ") + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC') + "</p>"
             "</div>"
         )
         msg.attach(MIMEText(html, 'html', 'utf-8'))
@@ -211,4 +216,4 @@ def test_smtp_connection(cfg, test_recipient):
         server.quit()
         return True, "Wiadomość testowa została wysłana pomyślnie!"
     except Exception as e:
-        return False, f"Błąd połączenia SMTP: {str(e)}"
+        return False, t("Błąd połączenia SMTP: {error}", {"error": str(e)})

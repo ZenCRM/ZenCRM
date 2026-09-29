@@ -2,10 +2,22 @@
 set -e
 
 # Ensure runtime directories exist
-mkdir -p /app/instance /app/uploads/branding /app/uploads/avatars
+mkdir -p /app/instance /app/uploads/branding /app/uploads/avatars 2>/dev/null || true
 
-# Ensure database tables exist
-python -c "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all()" 2>/dev/null || true
+# If container starts as root, automatically fix volume ownership for existing
+# installations and drop privileges to the non-root 'zencrm' user.
+if [ "$(id -u)" = "0" ]; then
+    chown -R zencrm:zencrm /app/instance /app/uploads 2>/dev/null || true
+    exec runuser -u zencrm -- "$0" "$@"
+fi
+
+# If a custom command is provided, execute it directly
+if [ "$#" -gt 0 ]; then
+    exec "$@"
+fi
+
+# Initialize database tables on empty installation (without creating hardcoded admin).
+python seed.py
 
 PORT="${PORT:-80}"
 echo "[ZenCRM] Uruchamianie serwera na porcie ${PORT}..."

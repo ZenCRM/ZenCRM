@@ -16,7 +16,7 @@ window.ZenModules.people = function () { return {
             try {
                 const r = await fetch(`/api/users/${this.user.id}/avatar`, {
                     method: 'POST',
-                    headers: { 'Authorization': 'Bearer ' + this.token },
+                    headers: { 'Authorization': 'Bearer ' + this.token, 'Accept-Language': window.ZenI18n.locale },
                     body: fd,
                 });
                 const data = await r.json();
@@ -43,7 +43,7 @@ window.ZenModules.people = function () { return {
             try {
                 const r = await fetch(`/api/users/${this.user.id}/avatar`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': 'Bearer ' + this.token },
+                    headers: { 'Authorization': 'Bearer ' + this.token, 'Accept-Language': window.ZenI18n.locale },
                 });
                 if (!r.ok) throw new Error(window.ZenI18n.t('Nie udało się usunąć'));
                 this.user.avatar_url = null;

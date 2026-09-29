@@ -8,7 +8,7 @@ window.formatDate = function(dateStr) {
         }
         const d = new Date(dateStr);
         if (isNaN(d.getTime())) return dateStr;
-        return d.toLocaleDateString(window.ZenI18n?.locale || 'pl-PL', {
+        return d.toLocaleDateString(window.ZenI18n?.locale || window.ZenI18n.locale, {
             year: 'numeric', month: '2-digit', day: '2-digit'
         });
     } catch (_) {
@@ -20,7 +20,7 @@ window.formatDateTime = function(dateStr) {
     try {
         const d = new Date(dateStr);
         if (isNaN(d.getTime())) return dateStr;
-        return d.toLocaleString(window.ZenI18n?.locale || 'pl-PL', {
+        return d.toLocaleString(window.ZenI18n?.locale || window.ZenI18n.locale, {
             year: 'numeric', month: '2-digit', day: '2-digit',
             hour: '2-digit', minute: '2-digit'
         });
@@ -33,6 +33,7 @@ window.ZenUX = {
     formatDate(d) { return window.formatDate(d); },
     formatDateTime(d) { return window.formatDateTime(d); },
     dashboardSearch: '', directory: [], directoryLoading: false, directoryError: '',
+    dashboardTaskTab: 'today',
     journal: {open:false,kind:'note',status:'',content:'',address:'',selected:null,search:'',history:[],saving:false,error:'',loading:false,revision:0,editingId:null},
     recordLabel(r) { return r.name || r.title || r.full_name || [r.first_name,r.last_name].filter(Boolean).join(' '); },
     recordType(type) { return {client:window.ZenI18n.t('Klient'),lead:window.ZenI18n.t('Lead'),contact:window.ZenI18n.t('Kontakt'),task:window.ZenI18n.t('Zadanie')}[type] || type; },
@@ -76,22 +77,23 @@ window.ZenUX = {
 
     contactSearch: '', customLeadStages: null, stageEditorOpen: false, stageDraft: [], stageError: '', stageSaving: false,
     taskStatusStages: [
-        { id: 'todo', label: window.ZenI18n.t('Do zrobienia'), accent: '#865528' },
-        { id: 'in_progress', label: window.ZenI18n.t('W toku'), accent: '#008c9f' },
-        { id: 'done', label: window.ZenI18n.t('Zrobione'), accent: '#16886e' },
+        { id: 'todo', label: window.ZenI18n.taskStageLabels.todo, accent: '#865528' },
+        { id: 'in_progress', label: window.ZenI18n.taskStageLabels.in_progress, accent: '#008c9f' },
+        { id: 'done', label: window.ZenI18n.taskStageLabels.done, accent: '#16886e' },
     ],
     taskStageEditorOpen: false, taskStageDraft: [], taskStageError: '', taskStageSaving: false,
-    taskStageLabel(id) { return this.taskStatusStages.find(stage => stage.id === id)?.label || id || '—'; },
+    get displayedTaskStages() { return (this.taskStatusStages || []).map(stage => window.ZenI18n.taskStage(stage)); },
+    taskStageLabel(id) { return this.displayedTaskStages.find(stage => stage.id === id)?.label || id || '—'; },
     taskStageColor(id) { return this.taskStatusStages.find(stage => stage.id === id)?.accent || '#8b9cad'; },
     get taskBoardStages() {
-        const configured = this.taskStatusStages || [];
+        const configured = this.displayedTaskStages;
         const known = new Set(configured.map(stage => stage.id));
         return [...configured, ...(this.tasks || []).filter(task => !known.has(task.status)).map(task => task.status)
             .filter((status, index, statuses) => status && statuses.indexOf(status) === index)
             .map(id => ({ id, label: id, accent: '#8b9cad' }))];
     },
     get dashboardTaskStages() {
-        const configured = this.taskStatusStages || [];
+        const configured = this.displayedTaskStages;
         const known = new Set(configured.map(stage => stage.id));
         return [...configured, ...Object.keys(this.stats?.task_status || {}).filter(id => !known.has(id))
             .map(id => ({ id, label: id, accent: '#8b9cad' }))];
@@ -274,6 +276,51 @@ window.ZenUX = {
                 && (this.taskScope !== 'upcoming' || (date >= end && t.status !== 'done'))
                 && (this.taskScope !== 'undated' || (!t.due_date && t.status !== 'done'));
         });
+    },
+    dashboardTasksByTab(tab) {
+        if (tab === 'overdue' && Array.isArray(this.stats?.overdue_tasks)) {
+            return this.stats.overdue_tasks;
+        }
+        if (tab === 'today' && Array.isArray(this.stats?.today_tasks)) {
+            return this.stats.today_tasks;
+        }
+        if (tab === 'upcoming' && Array.isArray(this.stats?.upcoming_tasks)) {
+            return this.stats.upcoming_tasks;
+        }
+        const all = this.tasks?.length ? this.tasks : (this.stats?.upcoming_tasks || []);
+        const now = new Date();
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime();
+        return all.filter(t => {
+            if (t.status === 'done') return false;
+            const d = t.due_date ? new Date(t.due_date).getTime() : NaN;
+            if (tab === 'overdue') return !isNaN(d) && d < now.getTime();
+            if (tab === 'today') return !isNaN(d) && d >= start && d < end;
+            if (tab === 'upcoming') return isNaN(d) || d >= end;
+            return true;
+        });
+    },
+    formatTaskDate(task, tab) {
+        if (!task || !task.due_date) return window.ZenI18n.t('Bez terminu');
+        try {
+            const d = new Date(task.due_date);
+            if (isNaN(d.getTime())) return task.due_date;
+            const now = new Date();
+            const isToday = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+            const hasTime = task.due_date.includes('T') && !task.due_date.endsWith('00:00:00') && !task.due_date.endsWith('T00:00');
+            if (tab === 'today') {
+                if (hasTime) {
+                    return d.toLocaleTimeString(window.ZenI18n?.locale || window.ZenI18n.locale, { hour: '2-digit', minute: '2-digit' });
+                }
+                return window.ZenI18n.t('Dzisiaj');
+            }
+            if (tab === 'overdue' && isToday && hasTime) {
+                return window.ZenI18n.t('Dzisiaj') + ', ' + d.toLocaleTimeString(window.ZenI18n?.locale || window.ZenI18n.locale, { hour: '2-digit', minute: '2-digit' });
+            }
+            return window.formatDate ? window.formatDate(task.due_date) : d.toLocaleDateString(window.ZenI18n?.locale || window.ZenI18n.locale);
+        } catch (_) {
+            return task.due_date || '—';
+        }
     },
     get nextDetailTask() {
         return [...(this.detailView.tasks || [])].filter(t => t.status !== 'done')

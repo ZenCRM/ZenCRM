@@ -1,6 +1,6 @@
 <!-- ═══ LEADY ═══ -->
             <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'leads'" x-init="$watch('leads', list => { loadAllCustomFields(); loadCustomValuesForTable('leads', (list||[]).map(l => l.id)); }); loadAllCustomFields(); if (leads.length) loadCustomValuesForTable('leads', leads.map(l => l.id));" x-cloak>
-                <div class="zen-pipeline-summary"><div><span class="zen-eyebrow" x-text="window.ZenI18n.t('SPRZEDAŻ')"></span><h2 x-text="window.ZenI18n.t('Lejek sprzedaży')"></h2></div><div class="zen-pipeline-metrics"><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Leady')">Leady</span><strong x-text="boardLeads.length"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('activity')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Wartość lejka')">Wartość lejka</span><strong x-text="formatNumber(boardLeads.reduce((sum,l)=>sum+Number(l.value || 0),0)) + ' PLN'"></strong></div></div></div>
+                <div class="zen-pipeline-summary"><div><span class="zen-eyebrow" x-text="window.ZenI18n.t('SPRZEDAŻ')"></span><h2 x-text="window.ZenI18n.t('Lejek sprzedaży')"></h2></div><div class="zen-pipeline-metrics"><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Leady')">Leady</span><strong x-text="boardLeads.length"></strong></div><div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('activity')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Wartość lejka')">Wartość lejka</span><strong x-text="formatNumber(boardLeads.reduce((sum,l)=&gt;sum+Number(l.value || 0),0)) + window.ZenI18n.t(&#x27; PLN&#x27;)"></strong></div></div></div>
                 <div class="kanban-toolbar">
                     <div class="kanban-tabs">
                         <button type="button" @click="kanbanMode = 'kanban'" class="kanban-tab" :class="{ 'active': kanbanMode === 'kanban' }">
@@ -46,7 +46,7 @@
                                     <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
                                         <input type="checkbox" :checked="isColumnVisible('leads', col.key)" @change="toggleColumn('leads', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
                                         <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
-                                        <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                                        <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium"><span x-text="window.ZenI18n.t(&quot;(pole)&quot;)">(pole)</span></span>
                                     </label>
                                 </template>
                             </div>
@@ -135,7 +135,7 @@
                                                   :style="{ backgroundColor: (leadStages.find(s => s.id === l.stage)?.accent || '#94a3b8') + '22', color: leadStages.find(s => s.id === l.stage)?.accent || '#64748b' }"
                                                   x-text="leadStages.find(s => s.id === l.stage)?.label || l.stage"></span>
                                         </td>
-                                        <td class="font-semibold text-gray-900 dark:text-gray-100" x-show="isColumnVisible('leads', 'value')" x-text="formatNumber(l.value) + ' PLN'"></td>
+                                        <td class="font-semibold text-gray-900 dark:text-gray-100" x-show="isColumnVisible('leads', 'value')" x-text="formatNumber(l.value) + window.ZenI18n.t(&#x27; PLN&#x27;)"></td>
                                         <td x-show="isColumnVisible('leads', 'assignee')">
                                             <template x-if="l.assignee">
                                                 <div class="flex items-center gap-1.5">
@@ -172,4 +172,4 @@
                 </div>
             </div>
 
-            
+

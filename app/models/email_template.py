@@ -189,10 +189,11 @@ class EmailTemplate(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
+        from ..utils.i18n import default_email
         return {
             'id': self.id,
             'key': self.key,
-            'name': self.name,
+            'name': default_email(self.key, 'name', self.name),
             'category': self.category,
             'subject': self.subject,
             'body_html': self.body_html,

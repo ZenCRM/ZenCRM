@@ -1,7 +1,7 @@
 <!-- ═══ ZADANIA – TABELA ═══ -->
             <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'tasks'" x-init="$watch('tasks', list => { loadAllCustomFields(); loadCustomValuesForTable('tasks', (list||[]).map(t => t.id)); }); loadAllCustomFields(); if (tasks.length) loadCustomValuesForTable('tasks', tasks.map(t => t.id));" x-cloak class="space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-3"><h1 class="text-xl font-bold" x-text="window.ZenI18n.t('Zadania')">Zadania</h1><div class="flex flex-wrap items-center gap-3"><button type="button" @click="editTaskStages()" class="zen-task-status-link"><span class="zen-icon-wrap" x-html="zenIcon('settings')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Ustaw statusy')">Ustaw statusy</span></button><button type="button" x-show="canRecordAction('tasks', 'create')" @click="openModal(null, null, false, 'tasks')" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj zadanie')">+ Dodaj zadanie</button></div></div>
-                <div class="zen-task-summary zen-task-summary--dynamic"><button class="zen-task-summary-tile" @click="taskFilter = ''" :aria-pressed="taskFilter === ''"><span class="zen-icon-wrap" x-html="zenIcon('calendar')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Wszystkie zadania')">Wszystkie zadania</span><strong x-text="(tasks || []).length"></strong></button><template x-for="stage in taskStatusStages" :key="'summary-' + stage.id"><button class="zen-task-summary-tile" :style="{backgroundColor: stage.accent}" @click="taskFilter = stage.id" :aria-pressed="taskFilter === stage.id"><span class="zen-icon-wrap" x-html="zenIcon(stage.id === 'done' ? 'check' : 'flag')" aria-hidden="true"></span><span x-text="stage.label"></span><strong x-text="(tasks || []).filter(task => task.status === stage.id).length"></strong></button></template></div>
+                <div class="zen-task-summary zen-task-summary--dynamic"><button class="zen-task-summary-tile" @click="taskFilter = ''" :aria-pressed="taskFilter === ''"><span class="zen-icon-wrap" x-html="zenIcon('calendar')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Wszystkie zadania')">Wszystkie zadania</span><strong x-text="(tasks || []).length"></strong></button><template x-for="stage in displayedTaskStages" :key="'summary-' + stage.id"><button class="zen-task-summary-tile" :style="{backgroundColor: stage.accent}" @click="taskFilter = stage.id" :aria-pressed="taskFilter === stage.id"><span class="zen-icon-wrap" x-html="zenIcon(stage.id === 'done' ? 'check' : 'flag')" aria-hidden="true"></span><span x-text="stage.label"></span><strong x-text="(tasks || []).filter(task => task.status === stage.id).length"></strong></button></template></div>
                 <!-- Filtry i kolumny -->
                 <div class="ux-toolbar flex items-center justify-between gap-3 flex-wrap">
                     <div class="flex items-center gap-2 flex-1 flex-wrap">
@@ -51,7 +51,7 @@
                                         <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 p-1 rounded">
                                             <input type="checkbox" :checked="isColumnVisible('tasks', col.key)" @change="toggleColumn('tasks', col.key)" class="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5">
                                             <span class="text-gray-700 dark:text-gray-200" x-text="col.label"></span>
-                                            <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium">(pole)</span>
+                                            <span x-show="col.isCustom" class="text-[10px] text-brand-600 dark:text-brand-400 ml-auto font-medium"><span x-text="window.ZenI18n.t(&quot;(pole)&quot;)">(pole)</span></span>
                                         </label>
                                     </template>
                                 </div>
@@ -66,7 +66,7 @@
                             class="px-3 py-1.5 rounded-lg text-sm border border-gray-200 dark:border-gray-600 font-medium">
                         <span x-text="window.ZenI18n.t('Wszystkie')">Wszystkie</span>
                     </button>
-                    <template x-for="stage in taskStatusStages" :key="'filter-' + stage.id">
+                    <template x-for="stage in displayedTaskStages" :key="'filter-' + stage.id">
                         <button @click="taskFilter = stage.id" :style="taskFilter === stage.id ? {backgroundColor: stage.accent, borderColor: stage.accent, color: '#fff'} : {}"
                                 class="px-3 py-1.5 rounded-lg text-sm border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 font-medium">
                             <span x-text="stage.label"></span>
@@ -96,7 +96,7 @@
                                 <template x-for="t in pagedItems('tasks', visibleTasks)" :key="t.id">
                                     <tr class="task-row" :class="{ 'ux-overdue': isOverdue(t) }" @click="openDetail('task', t.id)">
                                         <td x-show="isColumnVisible('tasks', 'title')">
-                                            <div class="font-semibold text-gray-900 dark:text-gray-100" 
+                                            <div class="font-semibold text-gray-900 dark:text-gray-100"
                                                  :class="t.status === 'done' ? 'line-through text-gray-400' : ''"
                                                  x-text="t.title"></div>
                                             <div class="text-xs text-gray-500 mt-0.5 truncate" x-show="t.description"
@@ -128,7 +128,7 @@
                                         <td class="text-xs" x-show="isColumnVisible('tasks', 'context')">
                                             <button x-show="t.client_id" @click.stop="openDetail('client', t.client_id)" class="ux-text-button" x-text="clientName(t.client_id)"></button>
                                             <button x-show="t.project_id" @click.stop="openDetail('project', t.project_id)" class="ux-text-button" x-text="projectName(t.project_id) || ('Projekt #' + t.project_id)"></button>
-                                            <button x-show="t.service_id" @click.stop="openDetail('service', t.service_id)" class="ux-text-button" x-text="services.find(s => s.id === t.service_id)?.name || ('Usługa #' + t.service_id)"></button>
+                                            <button x-show="t.service_id" @click.stop="openDetail('service', t.service_id)" class="ux-text-button" x-text="services.find(s =&gt; s.id === t.service_id)?.name || (window.ZenI18n.t(&#x27;Usługa #&#x27;) + t.service_id)"></button>
                                             <button x-show="t.lead_id" @click.stop="openDetail('lead', t.lead_id)" class="ux-text-button" x-text="leads.find(l => l.id === t.lead_id)?.title || ('Lead #' + t.lead_id)"></button>
                                             <span x-show="!t.client_id && !t.service_id && !t.lead_id && !t.project_id" class="text-gray-400">—</span>
                                         </td>
@@ -182,7 +182,7 @@
                                      @dragover.prevent="if (draggedTask) dragOverTaskStatus = st.id"
                                      @dragleave="if (dragOverTaskStatus === st.id) dragOverTaskStatus = null"
                                      @drop.prevent.stop="moveTaskToStatus($event, st.id)">
-                                    
+
                                     <div class="kanban-col-header">
                                         <div class="title flex items-center justify-between w-full">
                                             <div class="flex items-center gap-2">
@@ -204,7 +204,7 @@
                                                  @dragend="endTaskDrag()"
                                                  :class="{ 'ux-card-dragged': draggedTask?.id === task.id, 'opacity-70': task.status === 'done' }"
                                                  @click="openDetail('task', task.id)">
-                                                
+
                                                 <button class="ux-card-open zen-card-open-icon" @click.stop="openDetail('task', task.id)" :aria-label="window.ZenI18n.t('Otwórz zadanie: ') + task.title">
                                                     <span class="zen-icon-wrap" x-html="zenIcon('arrow')" aria-hidden="true"></span>
                                                 </button>
@@ -221,9 +221,9 @@
                                                 <!-- Kontekst klienta / projektu / leada / usługi -->
                                                 <div class="mt-2 text-xs text-brand-600 dark:text-brand-400 font-medium truncate" x-show="task.client_id || task.lead_id || task.service_id || task.project_id">
                                                     <span x-show="task.client_id" x-text="clientName(task.client_id)"></span>
-                                                    <span x-show="task.project_id" class="text-gray-500 dark:text-gray-400 font-normal" x-text="(task.client_id ? ' · ' : '') + (projectName(task.project_id) || 'Projekt')"></span>
+                                                    <span x-show="task.project_id" class="text-gray-500 dark:text-gray-400 font-normal" x-text="(task.client_id ? &#x27; · &#x27; : &#x27;&#x27;) + (projectName(task.project_id) || window.ZenI18n.t(&#x27;Projekt&#x27;))"></span>
                                                     <span x-show="!task.client_id && task.lead_id" x-text="leads.find(l => l.id === task.lead_id)?.title || ('Lead #' + task.lead_id)"></span>
-                                                    <span x-show="!task.client_id && !task.lead_id && task.service_id" x-text="services.find(s => s.id === task.service_id)?.name || ('Usługa #' + task.service_id)"></span>
+                                                    <span x-show="!task.client_id && !task.lead_id && task.service_id" x-text="services.find(s =&gt; s.id === task.service_id)?.name || (window.ZenI18n.t(&#x27;Usługa #&#x27;) + task.service_id)"></span>
                                                 </div>
 
                                                 <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 dark:border-gray-700/60">

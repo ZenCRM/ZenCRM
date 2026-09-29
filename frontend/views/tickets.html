@@ -156,7 +156,7 @@
                                     <span class="font-medium text-gray-900 dark:text-gray-100" x-text="tck.client_name || tck.contact_name || tck.contact_email"></span>
                                     <template x-if="tck.client_id">
                                         <span class="ml-1 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                                            Klient CRM
+                                            <span x-text="window.ZenI18n.t(&quot;Klient CRM&quot;)">Klient CRM</span>
                                         </span>
                                     </template>
                                 </div>
@@ -256,7 +256,7 @@
                             <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300"
                                   x-text="ticketDrawer.ticket?.ticket_number"></span>
                             <span class="text-xs text-gray-500 dark:text-gray-400"
-                                  x-text="'Źródło: ' + (ticketDrawer.ticket?.source || 'web')"></span>
+                                  x-text="window.ZenI18n.t(&#x27;Źródło: &#x27;) + (ticketDrawer.ticket?.source || &#x27;web&#x27;)"></span>
                         </div>
                         <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100" x-text="ticketDrawer.ticket?.title"></h2>
                     </div>
@@ -351,7 +351,7 @@
                     <template x-if="!(ticketDrawer.ticket?.messages || []).length && ticketDrawer.ticket?.description">
                         <div class="p-4 rounded-xl bg-blue-50/40 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40">
                             <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                <span class="font-semibold text-gray-900 dark:text-gray-100" x-text="ticketDrawer.ticket?.contact_name || ticketDrawer.ticket?.contact_email || 'Klient'"></span>
+                                <span class="font-semibold text-gray-900 dark:text-gray-100" x-text="ticketDrawer.ticket?.contact_name || ticketDrawer.ticket?.contact_email || window.ZenI18n.t(&#x27;Klient&#x27;)"></span>
                                 <span x-text="new Date(ticketDrawer.ticket?.created_at).toLocaleString(locale)"></span>
                             </div>
                             <div class="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap" x-text="ticketDrawer.ticket?.description"></div>
@@ -377,7 +377,7 @@
                                     </template>
                                     <template x-if="!msg.is_internal && msg.sender_type === 'agent'">
                                         <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold bg-brand-100 text-brand-800 dark:bg-brand-900/60 dark:text-brand-300">
-                                            Konsultant
+                                            <span x-text="window.ZenI18n.t(&quot;Konsultant&quot;)">Konsultant</span>
                                         </span>
                                     </template>
                                 </div>
@@ -440,7 +440,7 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t('Wprowadź szczegóły problemu lub zapytania od klienta')"></p>
                     </div>
                 </div>
-                <button type="button" @click="closeNewTicketModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition" aria-label="Zamknij">
+                <button type="button" @click="closeNewTicketModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition" :aria-label="window.ZenI18n.t(&quot;Zamknij&quot;)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>

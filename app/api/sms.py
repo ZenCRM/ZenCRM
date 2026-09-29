@@ -1,3 +1,4 @@
+from ..utils.i18n import t
 import json
 import re
 import secrets
@@ -353,6 +354,8 @@ def report_sms_status():
     status = data.get('status', 'sent')
 
     task = db.session.get(SmsQueue, task_id) if task_id else None
+    if task and task.device_id != device.id:
+        return jsonify({'error': 'Brak dostępu'}), 403
     if task:
         task.status = status
         task.sent_at = datetime.utcnow()
@@ -582,6 +585,9 @@ def list_devices():
     result = []
     for d in devices:
         item = d.to_dict()
+        from ..utils.deletion import is_admin
+        if not is_admin():
+            item.pop('token', None)
         item['pending_tasks'] = SmsQueue.query.filter_by(device_id=d.id, status='pending').count()
         item['total_calls'] = PhoneCall.query.filter_by(device_id=d.id).count()
         item['total_messages'] = SmsMessage.query.filter_by(device_id=d.id).count()
@@ -1009,7 +1015,7 @@ def make_call():
         'task': task.to_dict(),
         'device_name': device.name,
         'caller_name': user_name,
-        'message': f'Zlecono połączenie z {phone_number} na telefonie {device.name}'
+        'message': t('Zlecono połączenie z {phone} na telefonie {device}', {'phone': phone_number, 'device': device.name})
     }), 201
 
 

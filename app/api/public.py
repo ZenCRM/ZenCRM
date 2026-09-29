@@ -1,5 +1,6 @@
 """Publiczne endpointy bez autoryzacji – widok ofert/dokumentów przez token."""
 from flask import Blueprint, Response, abort
+from markupsafe import escape
 from ..models.offer import Offer
 from ..models.document import Document
 
@@ -9,7 +10,7 @@ public_bp = Blueprint('public', __name__)
 @public_bp.route('/offer/<token>', methods=['GET'])
 def view_offer(token):
     offer = Offer.query.filter_by(public_token=token).first()
-    if not offer:
+    if not offer or offer.deleted_at:
         abort(404, description='Oferta nie znaleziona lub link wygasł')
     if not offer.rendered_html:
         abort(404, description='Oferta nie została jeszcze wygenerowana')
@@ -21,7 +22,7 @@ def view_offer(token):
 @public_bp.route('/document/<token>', methods=['GET'])
 def view_document(token):
     doc = Document.query.filter_by(public_token=token).first()
-    if not doc:
+    if not doc or doc.deleted_at:
         abort(404, description='Dokument nie znaleziony lub link wygasł')
     if not doc.rendered_html:
         abort(404, description='Dokument nie został jeszcze wygenerowany')
@@ -31,6 +32,7 @@ def view_document(token):
 
 def _wrap_public_page(content, title, subtitle=''):
     """Opakowuje treść w stronę z przyciskiem 'Drukuj / Zapisz PDF'."""
+    title, subtitle = escape(title), escape(subtitle)
     return f"""<!DOCTYPE html>
 <html lang="pl"><head>
 <meta charset="utf-8">

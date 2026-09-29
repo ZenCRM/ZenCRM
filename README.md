@@ -126,7 +126,7 @@ python seed.py
 PORT=5000 python run.py
 ```
 
-Otwórz **http://localhost:5000/**. Skrypt `seed.py` tworzy konto `admin@zencrm.pl` z hasłem `admin123`, jeśli jeszcze nie istnieje. **Zmień hasło po pierwszym logowaniu.** `run.py` uruchamia serwer deweloperski Flask z włączonym debugowaniem. Jeśli nie ustawisz `PORT`, użyje portu 80.
+Otwórz **http://localhost:5000/**. Skrypt `seed.py` tworzy konto `admin@zencrm.pl` z hasłem `admin123`, jeśli baza nie zawiera żadnych użytkowników. Istniejące konta i hasła pozostają bez zmian. **Zmień hasło po pierwszym logowaniu.** `run.py` uruchamia serwer deweloperski Flask z włączonym debugowaniem. Jeśli nie ustawisz `PORT`, użyje portu 80.
 
 ### Instalacja przez Docker Compose
 
@@ -136,6 +136,8 @@ Plik `docker-compose.yml` uruchamia opublikowany obraz `kosiorekmateusz/zencrm:l
 docker compose up -d
 docker compose exec zencrm python seed.py
 ```
+
+Obrazy zbudowane z aktualnego kodu uruchamiają `seed.py` automatycznie przy starcie kontenera. Ręczne polecenie powyżej jest potrzebne tylko dla starszych obrazów. Aby uzyskać tę poprawkę we własnym obrazie, przebuduj go i odtwórz kontener z zachowaniem wolumenów.
 
 Otwórz **http://localhost/**, zaloguj się kontem administratora podanym wyżej i od razu zmień hasło. Wolumen `zencrm_data` przechowuje bazę w `/app/instance`, a `zencrm_uploads` przesłane pliki w `/app/uploads`. Compose pobiera gotowy obraz; aby uruchomić własny kod po zmianach w repozytorium, zbuduj obraz lokalnie i wskaż go w konfiguracji Compose.
 
@@ -333,7 +335,7 @@ python seed.py
 PORT=5000 python run.py
 ```
 
-Open **http://localhost:5000/**. If it does not exist yet, `seed.py` creates the account `admin@zencrm.pl` with password `admin123`. **Change this password after your first login.** `run.py` starts Flask's development server with debugging enabled. Without `PORT`, it listens on port 80.
+Open **http://localhost:5000/**. If the database contains no users, `seed.py` creates the account `admin@zencrm.pl` with password `admin123`. Existing accounts and passwords remain unchanged. **Change this password after your first login.** `run.py` starts Flask's development server with debugging enabled. Without `PORT`, it listens on port 80.
 
 ### Docker Compose installation
 
@@ -345,6 +347,8 @@ docker compose exec zencrm python seed.py
 ```
 
 Open **http://localhost/**, sign in with the administrator account above, and change its password immediately. The `zencrm_data` volume stores the database in `/app/instance`; `zencrm_uploads` stores uploaded files in `/app/uploads`. Compose pulls a published image. To run changes from this repository, build a local image and reference it in your Compose configuration.
+
+Images built from the current source run `seed.py` automatically at container startup. The manual command above is only needed for older images. Rebuild your image and recreate the container while keeping its volumes to apply this fix.
 
 ### Configuration and data
 

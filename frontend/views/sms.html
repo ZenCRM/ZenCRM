@@ -10,7 +10,7 @@
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium"
                           :class="smsDevices.some(d => d.is_online) ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'">
                         <span class="w-2 h-2 rounded-full" :class="smsDevices.some(d => d.is_online) ? 'bg-green-500 animate-pulse' : 'bg-gray-400'"></span>
-                        <span x-text="smsDevices.filter(d => d.is_online).length + '/' + smsDevices.length + ' online'"></span>
+                        <span x-text="smsDevices.filter(d =&gt; d.is_online).length + &#x27;/&#x27; + smsDevices.length + window.ZenI18n.t(&#x27; online&#x27;)"></span>
                     </span>
                 </template>
             </div>
@@ -54,7 +54,7 @@
 
     <!-- ZAKŁADKI / NAWIGACJA WEWNĘTRZNA -->
     <div class="border-b border-gray-200 dark:border-gray-700">
-        <nav class="flex space-x-2 sm:space-x-6 overflow-x-auto pb-1" aria-label="Tabs">
+        <nav class="flex space-x-2 sm:space-x-6 overflow-x-auto pb-1" :aria-label="window.ZenI18n.t(&quot;Tabs&quot;)">
             <button @click="switchSmsTab('messages')"
                     class="py-3 px-2 border-b-2 text-sm font-medium whitespace-nowrap transition flex items-center gap-2"
                     :class="smsTab === 'messages' ? 'border-brand-600 text-brand-600 dark:text-brand-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200'">
@@ -402,9 +402,9 @@
                                 <div class="text-2xl font-bold text-gray-900 dark:text-white" x-text="smsStats.all_time.calls_total">0</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t('Połączenia łącznie')">Połączenia łącznie</div>
                                 <div class="text-[11px] text-gray-400 mt-0.5">
-                                    <span class="text-green-600" x-text="smsStats.all_time.calls_incoming + ' przych.'"></span> · 
-                                    <span class="text-blue-600" x-text="smsStats.all_time.calls_outgoing + ' wych.'"></span> · 
-                                    <span class="text-red-500" x-text="smsStats.all_time.calls_missed + ' nieod.'"></span>
+                                    <span class="text-green-600" x-text="smsStats.all_time.calls_incoming + window.ZenI18n.t(&#x27; przych.&#x27;)"></span> ·
+                                    <span class="text-blue-600" x-text="smsStats.all_time.calls_outgoing + window.ZenI18n.t(&#x27; wych.&#x27;)"></span> ·
+                                    <span class="text-red-500" x-text="smsStats.all_time.calls_missed + window.ZenI18n.t(&#x27; nieod.&#x27;)"></span>
                                 </div>
                             </div>
                         </div>
@@ -417,7 +417,7 @@
                             <div>
                                 <div class="text-2xl font-bold text-gray-900 dark:text-white" x-text="smsStats.all_time.duration_formatted">0m 0s</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t('Łączny czas rozmów')">Łączny czas rozmów</div>
-                                <div class="text-[11px] text-gray-400 mt-0.5" x-text="'30 dni: ' + smsStats.month.duration_formatted"></div>
+                                <div class="text-[11px] text-gray-400 mt-0.5" x-text="window.ZenI18n.t(&#x27;30 dni: &#x27;) + smsStats.month.duration_formatted"></div>
                             </div>
                         </div>
 
@@ -430,8 +430,8 @@
                                 <div class="text-2xl font-bold text-gray-900 dark:text-white" x-text="smsStats.all_time.sms_total">0</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t('Wiadomości SMS w bazie')">Wiadomości SMS</div>
                                 <div class="text-[11px] text-gray-400 mt-0.5">
-                                    <span class="text-blue-600" x-text="smsStats.all_time.sms_sent + ' wysł.'"></span> · 
-                                    <span class="text-green-600" x-text="smsStats.all_time.sms_received + ' odebr.'"></span>
+                                    <span class="text-blue-600" x-text="smsStats.all_time.sms_sent + window.ZenI18n.t(&#x27; wysł.&#x27;)"></span> ·
+                                    <span class="text-green-600" x-text="smsStats.all_time.sms_received + window.ZenI18n.t(&#x27; odebr.&#x27;)"></span>
                                 </div>
                             </div>
                         </div>
@@ -464,17 +464,17 @@
                             <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/40">
                                 <div class="text-xs text-gray-400" x-text="window.ZenI18n.t('Rozmowy')">Rozmowy</div>
                                 <div class="text-xl font-bold text-gray-900 dark:text-white mt-1" x-text="smsStats.today.calls_total">0</div>
-                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.calls_incoming + ' przych. / ' + smsStats.today.calls_outgoing + ' wych.'"></div>
+                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.calls_incoming + window.ZenI18n.t(&#x27; przych. / &#x27;) + smsStats.today.calls_outgoing + window.ZenI18n.t(&#x27; wych.&#x27;)"></div>
                             </div>
                             <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/40">
                                 <div class="text-xs text-gray-400" x-text="window.ZenI18n.t('Czas rozmów')">Czas</div>
                                 <div class="text-xl font-bold text-gray-900 dark:text-white mt-1" x-text="smsStats.today.duration_formatted">0s</div>
-                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.calls_missed + ' nieodebranych'"></div>
+                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.calls_missed + window.ZenI18n.t(&#x27; nieodebranych&#x27;)"></div>
                             </div>
                             <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/40">
                                 <div class="text-xs text-gray-400" x-text="window.ZenI18n.t('SMS')">SMS</div>
                                 <div class="text-xl font-bold text-gray-900 dark:text-white mt-1" x-text="smsStats.today.sms_total">0</div>
-                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.sms_sent + ' wysł. / ' + smsStats.today.sms_received + ' odebr.'"></div>
+                                <div class="text-[10px] text-gray-400" x-text="smsStats.today.sms_sent + window.ZenI18n.t(&#x27; wysł. / &#x27;) + smsStats.today.sms_received + window.ZenI18n.t(&#x27; odebr.&#x27;)"></div>
                             </div>
                         </div>
                     </div>
@@ -564,12 +564,12 @@
                                         <td class="px-4 py-3 text-center font-bold text-gray-900 dark:text-white" x-text="tc.sms"></td>
                                         <td class="px-4 py-3 text-right whitespace-nowrap">
                                             <button @click="openEntityTelephonyModal(tc.entities?.clients?.[0] ? 'client' : (tc.entities?.leads?.[0] ? 'lead' : (tc.entities?.contacts?.[0] ? 'contact' : 'phone')), { id: tc.entities?.clients?.[0]?.id || tc.entities?.leads?.[0]?.id || tc.entities?.contacts?.[0]?.id, name: tc.name || tc.number, phone: tc.number })"
-                                                    title="Historia połączeń i SMS"
+                                                    :title="window.ZenI18n.t(&quot;Historia połączeń i SMS&quot;)"
                                                     class="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition inline-flex items-center">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                                             </button>
                                             <button @click="openSmsModal({ phone: tc.number })"
-                                                    title="Wyślij SMS"
+                                                    :title="window.ZenI18n.t(&quot;Wyślij SMS&quot;)"
                                                     class="p-1.5 rounded-lg text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/30 transition inline-flex items-center ml-1">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                                             </button>
@@ -612,8 +612,8 @@
                                     </div>
                                 </div>
                                 <div class="text-[11px] text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
-                                    <span>Ostatnia aktywność: <strong class="text-gray-700 dark:text-gray-300" x-text="formatLastSeen(d.last_seen)"></strong></span>
-                                    <span x-show="d.last_sync_at">Ostatnia synchronizacja: <strong class="text-gray-700 dark:text-gray-300" x-text="formatLastSeen(d.last_sync_at)"></strong></span>
+                                    <span><span x-text="window.ZenI18n.t(&quot;Ostatnia aktywność:&quot;)">Ostatnia aktywność:</span> <strong class="text-gray-700 dark:text-gray-300" x-text="formatLastSeen(d.last_seen)"></strong></span>
+                                    <span x-show="d.last_sync_at"><span x-text="window.ZenI18n.t(&quot;Ostatnia synchronizacja:&quot;)">Ostatnia synchronizacja:</span> <strong class="text-gray-700 dark:text-gray-300" x-text="formatLastSeen(d.last_sync_at)"></strong></span>
                                 </div>
                             </div>
                         </template>
@@ -651,11 +651,11 @@
 
                         <!-- Ostatnia aktywność -->
                         <div class="text-xs text-gray-500 dark:text-gray-400 my-2">
-                            <span x-text="window.ZenI18n.t('Ostatni kontakt:')">Ostatni kontakt:</span> 
+                            <span x-text="window.ZenI18n.t('Ostatni kontakt:')">Ostatni kontakt:</span>
                             <strong class="text-gray-700 dark:text-gray-300" x-text="formatLastSeen(dev.last_seen)"></strong>
                         </div>
                         <div class="text-xs text-gray-500 dark:text-gray-400 my-1" x-show="dev.sync_from">
-                            <span x-text="window.ZenI18n.t('Historia od:')">Historia od:</span> 
+                            <span x-text="window.ZenI18n.t('Historia od:')">Historia od:</span>
                             <strong class="text-emerald-700 dark:text-emerald-400 font-mono" x-text="dev.sync_from"></strong>
                         </div>
 
@@ -693,12 +693,12 @@
                     <div class="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-700">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <button @click="quickTrigger(dev.id, 'get_stats')"
-                                    title="Zleć telefonowi wysłanie raportu statystyk"
+                                    :title="window.ZenI18n.t(&quot;Zleć telefonowi wysłanie raportu statystyk&quot;)"
                                     class="flex-1 py-1.5 px-2 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition text-center">
                                 <span x-text="window.ZenI18n.t('Pobierz statystyki')">Pobierz statystyki</span>
                             </button>
                             <button @click="openActionModal(dev.id, 'get_full_history', window.ZenI18n.t('Pobierz historię połączeń'))"
-                                    title="Zleć telefonowi wysłanie bilingu połączeń"
+                                    :title="window.ZenI18n.t(&quot;Zleć telefonowi wysłanie bilingu połączeń&quot;)"
                                     class="flex-1 py-1.5 px-2 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition text-center">
                                 <span x-text="window.ZenI18n.t('Biling połączeń')">Biling połączeń</span>
                             </button>
@@ -744,7 +744,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 space-y-1.5">
-                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase">1. Adres serwera (Host)</div>
+                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase"><span x-text="window.ZenI18n.t(&quot;1. Adres serwera (Host)&quot;)">1. Adres serwera (Host)</span></div>
                     <div class="text-xs text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Wprowadź w aplikacji adres serwera CRM:')">Wprowadź adres:</div>
                     <div class="p-2 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-mono text-[11px] text-gray-900 dark:text-white select-all break-all"
                          x-text="window.location.origin"></div>
@@ -754,7 +754,7 @@
                 </div>
 
                 <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 space-y-1.5">
-                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase">2. Token autoryzacyjny</div>
+                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase"><span x-text="window.ZenI18n.t(&quot;2. Token autoryzacyjny&quot;)">2. Token autoryzacyjny</span></div>
                     <div class="text-xs text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Skopiuj wygenerowany token z karty powyżej i wklej w polu Token w aplikacji:')">Skopiuj token:</div>
                     <div class="p-2 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-mono text-[11px] text-gray-900 dark:text-white">
                         <span x-text="smsDevices.length > 0 ? smsDevices[0].token : 'zen_sms_...' "></span>
@@ -763,11 +763,11 @@
                 </div>
 
                 <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 space-y-1.5">
-                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase">3. Gotowe!</div>
+                    <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase"><span x-text="window.ZenI18n.t(&quot;3. Gotowe!&quot;)">3. Gotowe!</span></div>
                     <div class="text-xs text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Telefon co 5 sekund odpytuje serwer o oczekujące zadania i automatycznie wysyła powiadomienia i raporty.')">
                         Telefon co 5 sekund odpytuje serwer i wysyła raporty.
                     </div>
-                    <div class="text-xs text-green-600 dark:text-green-400 font-medium">✓ Automatyczny biling i SMS</div>
+                    <div class="text-xs text-green-600 dark:text-green-400 font-medium"><span x-text="window.ZenI18n.t(&quot;✓ Automatyczny biling i SMS&quot;)">✓ Automatyczny biling i SMS</span></div>
                 </div>
             </div>
         </div>
@@ -792,7 +792,7 @@
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 uppercase text-[11px] tracking-wider border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <th class="px-4 py-3">ID</th>
+                            <th class="px-4 py-3"><span x-text="window.ZenI18n.t(&quot;ID&quot;)">ID</span></th>
                             <th class="px-4 py-3" x-text="window.ZenI18n.t('Akcja')">Akcja</th>
                             <th class="px-4 py-3" x-text="window.ZenI18n.t('Telefon / Odbiorca')">Telefon / Odbiorca</th>
                             <th class="px-4 py-3" x-text="window.ZenI18n.t('Szczegóły / Treść')">Szczegóły</th>
@@ -913,7 +913,7 @@
                         <div class="flex items-center justify-between mb-1">
                             <label class="text-xs font-semibold text-gray-700 dark:text-gray-300" x-text="window.ZenI18n.t('Treść wiadomości:')">Treść wiadomości:</label>
                             <span class="text-[11px] text-gray-400"
-                                  x-text="(smsComposer.message?.length || 0) + ' zn. (' + Math.max(1, Math.ceil((smsComposer.message?.length || 0) / 160)) + ' SMS)'"></span>
+                                  x-text="(smsComposer.message?.length || 0) + &#x27; zn. (&#x27; + Math.max(1, Math.ceil((smsComposer.message?.length || 0) / 160)) + window.ZenI18n.t(&#x27; SMS)&#x27;)"></span>
                         </div>
                         <textarea x-model="smsComposer.message"
                                   rows="4"
@@ -962,7 +962,7 @@
                         </label>
                         <input type="text"
                                x-model="deviceModal.form.name"
-                               placeholder="np. Samsung S24 - Służbowy Jan"
+                               :placeholder="window.ZenI18n.t(&quot;np. Samsung S24 - Służbowy Jan&quot;)"
                                class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500">
                     </div>
 
@@ -1107,7 +1107,7 @@
                         <template x-if="smsThreadModal.address">
                             <button @click="callContact(smsThreadModal.address, smsThreadModal.contact?.name || smsThreadModal.client?.name)"
                                     class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-                                    title="Zadzwoń przez telefon">
+                                    :title="window.ZenI18n.t(&quot;Zadzwoń przez telefon&quot;)">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                 <span x-text="window.ZenI18n.t('Połącz')">Połącz</span>
                             </button>
@@ -1161,7 +1161,7 @@
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 flex items-center justify-center p-4">
         <div @click.outside="entityTelephonyModal.open = false"
              class="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col max-h-[90vh]">
-            
+
             <!-- Header -->
             <div class="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex items-center gap-3">
@@ -1177,9 +1177,9 @@
                                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-mono text-[11px]">
                                     <span x-text="formatPhoneLabel(p)"></span>
                                     <template x-if="p">
-                                        <button @click.stop="callContact(p)" class="ml-1 text-emerald-600 dark:text-emerald-400 font-sans font-bold text-[10px] hover:underline inline-flex items-center gap-0.5" title="Zadzwoń z telefonu">
+                                        <button @click.stop="callContact(p)" class="ml-1 text-emerald-600 dark:text-emerald-400 font-sans font-bold text-[10px] hover:underline inline-flex items-center gap-0.5" :title="window.ZenI18n.t(&quot;Zadzwoń z telefonu&quot;)">
                                             <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                            <span>Połącz</span>
+                                            <span><span x-text="window.ZenI18n.t(&quot;Połącz&quot;)">Połącz</span></span>
                                         </button>
                                     </template>
                                 </span>
@@ -1298,7 +1298,7 @@
                         <button type="button"
                                 @click="callContact(entityTelephonyModal.selectedPhone, entityTelephonyModal.name)"
                                 class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 transition shrink-0"
-                                title="Zadzwoń z połączonego telefonu">
+                                :title="window.ZenI18n.t(&quot;Zadzwoń z połączonego telefonu&quot;)">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                             <span x-text="window.ZenI18n.t('Połącz')"></span>
                         </button>

@@ -55,7 +55,7 @@ window.ZenModules.settings = function () { return {
                 await this.api(kind === 'role' ? `/permissions/roles/${id}/rules` : `/permissions/teams/${id}/rules`, {
                     method: 'PUT', body: JSON.stringify({ rules: Object.fromEntries(this.permissionCatalog.map(p => [p.key, Object.prototype.hasOwnProperty.call(rules, p.key) ? rules[p.key] : null])) }),
                 });
-                this.permissionSaved = 'Uprawnienia zapisane';
+                this.permissionSaved = window.ZenI18n.t('Uprawnienia zapisane');
                 await this.loadMyPermissions();
             } catch (e) { this.permissionError = e.message; }
         },
@@ -76,13 +76,13 @@ window.ZenModules.settings = function () { return {
             try {
                 await this.api(`/permissions/roles/${id}`, { method: 'PUT', body: JSON.stringify({ name: this.roleNameDraft }) });
                 await this.loadPermissions();
-                this.permissionSaved = 'Nazwa roli zapisana';
+                this.permissionSaved = window.ZenI18n.t('Nazwa roli zapisana');
             } catch (e) { this.permissionError = e.message; }
         },
         async deleteManagedRole() {
             const [kind, id] = this.permissionSubject.split(':');
             if (kind !== 'role' || ['admin', 'manager', 'employee'].includes(id)) return;
-            if (!confirm('Usunąć tę rolę?')) return;
+            if (!confirm(window.ZenI18n.t('Usunąć tę rolę?'))) return;
             try {
                 await this.api(`/permissions/roles/${id}`, { method: 'DELETE' });
                 this.permissionSubject = 'role:manager';
@@ -91,11 +91,13 @@ window.ZenModules.settings = function () { return {
         },
         async loadSettings(publicOnly = false) {
             try {
-                const path = publicOnly ? '/settings' : '/settings/full';
                 if (publicOnly) {
                     // publiczny endpoint zwraca dict {key: value}
-                    const data = await fetch('/api/settings').then(r => r.json());
+                    const data = await this.api(this.token ? '/settings/ui' : '/settings/public');
                     this.settingsForm = { ...data };
+                    if (typeof data.needs_setup !== 'undefined') {
+                        this.needsSetup = !!data.needs_setup;
+                    }
                 } else {
                     const items = await this.api('/settings/full');
                     const obj = {};
@@ -155,7 +157,7 @@ window.ZenModules.settings = function () { return {
             try {
                 const r = await fetch('/api/settings/upload-logo', {
                     method: 'POST',
-                    headers: { 'Authorization': 'Bearer ' + this.token },
+                    headers: { 'Authorization': 'Bearer ' + this.token, 'Accept-Language': window.ZenI18n.locale },
                     body: fd,
                 });
                 const data = await r.json();
@@ -276,35 +278,35 @@ window.ZenModules.settings = function () { return {
         customValuesSuccess: '',
         customValuesError: '',
         customEntityLabels: {
-            clients: 'Klienci',
-            leads: 'Leady',
-            projects: 'Projekty',
-            contacts: 'Kontakty',
-            tasks: 'Zadania',
-            meetings: 'Spotkania',
-            services: 'Usługi',
-            service_catalog: 'Katalog usług',
-            documents: 'Dokumenty',
-            offers: 'Oferty',
-            templates: 'Szablony',
-            users: 'Pracownicy'
+            clients: window.ZenI18n.t('Klienci'),
+            leads: window.ZenI18n.t('Leady'),
+            projects: window.ZenI18n.t('Projekty'),
+            contacts: window.ZenI18n.t('Kontakty'),
+            tasks: window.ZenI18n.t('Zadania'),
+            meetings: window.ZenI18n.t('Spotkania'),
+            services: window.ZenI18n.t('Usługi'),
+            service_catalog: window.ZenI18n.t('Katalog usług'),
+            documents: window.ZenI18n.t('Dokumenty'),
+            offers: window.ZenI18n.t('Oferty'),
+            templates: window.ZenI18n.t('Szablony'),
+            users: window.ZenI18n.t('Pracownicy')
         },
         customKindLabels: {
-            text: 'Tekst krótki',
-            textarea: 'Długi tekst',
-            number: 'Liczba',
-            date: 'Data',
-            boolean: 'Tak / Nie'
+            text: window.ZenI18n.t('Tekst krótki'),
+            textarea: window.ZenI18n.t('Długi tekst'),
+            number: window.ZenI18n.t('Liczba'),
+            date: window.ZenI18n.t('Data'),
+            boolean: window.ZenI18n.t('Tak / Nie')
         },
 
         // ═══════════════════════════════════════════════════════════
         // POLA STANDARDOWE & WYMAGANIA
         // ═══════════════════════════════════════════════════════════
         standardRequiredEntities: [
-            { key: 'clients', label: 'Klienci' },
-            { key: 'leads', label: 'Leady' },
-            { key: 'contacts', label: 'Osoby kontaktowe' },
-            { key: 'tasks', label: 'Zadania' },
+            { key: 'clients', label: window.ZenI18n.t('Klienci') },
+            { key: 'leads', label: window.ZenI18n.t('Leady') },
+            { key: 'contacts', label: window.ZenI18n.t('Osoby kontaktowe') },
+            { key: 'tasks', label: window.ZenI18n.t('Zadania') },
         ],
         standardRequiredFields: {
             clients: ['name'],
@@ -315,42 +317,42 @@ window.ZenModules.settings = function () { return {
         standardFieldLabels: {},
         standardFieldDefinitions: {
             clients: [
-                { key: 'name', label: 'Nazwa klienta', type: 'text', systemRequired: true },
-                { key: 'email', label: 'Adres e-mail', type: 'email' },
-                { key: 'phone', label: 'Numer telefonu', type: 'text' },
-                { key: 'company', label: 'Nazwa firmy', type: 'text' },
-                { key: 'address', label: 'Adres siedziby', type: 'textarea' },
-                { key: 'status', label: 'Status klienta', type: 'select' },
-                { key: 'notes', label: 'Dodatkowe informacje', type: 'textarea' },
+                { key: 'name', label: window.ZenI18n.t('Nazwa klienta'), type: 'text', systemRequired: true },
+                { key: 'email', label: window.ZenI18n.t('Adres e-mail'), type: 'email' },
+                { key: 'phone', label: window.ZenI18n.t('Numer telefonu'), type: 'text' },
+                { key: 'company', label: window.ZenI18n.t('Nazwa firmy'), type: 'text' },
+                { key: 'address', label: window.ZenI18n.t('Adres siedziby'), type: 'textarea' },
+                { key: 'status', label: window.ZenI18n.t('Status klienta'), type: 'select' },
+                { key: 'notes', label: window.ZenI18n.t('Dodatkowe informacje'), type: 'textarea' },
             ],
             leads: [
-                { key: 'title', label: 'Tytuł szansy / leadu', type: 'text', systemRequired: true },
-                { key: 'client_id', label: 'Klient powiązany', type: 'client-select' },
-                { key: 'value', label: 'Wartość szansy (zł)', type: 'number' },
-                { key: 'stage', label: 'Etap sprzedaży', type: 'select' },
-                { key: 'source', label: 'Źródło pozyskania', type: 'text' },
-                { key: 'probability', label: 'Prawdopodobieństwo (%)', type: 'number' },
-                { key: 'expected_close_date', label: 'Przewidywane zamknięcie', type: 'date' },
-                { key: 'notes', label: 'Notatki', type: 'textarea' },
+                { key: 'title', label: window.ZenI18n.t('Tytuł szansy / leadu'), type: 'text', systemRequired: true },
+                { key: 'client_id', label: window.ZenI18n.t('Klient powiązany'), type: 'client-select' },
+                { key: 'value', label: window.ZenI18n.t('Wartość szansy (zł)'), type: 'number' },
+                { key: 'stage', label: window.ZenI18n.t('Etap sprzedaży'), type: 'select' },
+                { key: 'source', label: window.ZenI18n.t('Źródło pozyskania'), type: 'text' },
+                { key: 'probability', label: window.ZenI18n.t('Prawdopodobieństwo (%)'), type: 'number' },
+                { key: 'expected_close_date', label: window.ZenI18n.t('Przewidywane zamknięcie'), type: 'date' },
+                { key: 'notes', label: window.ZenI18n.t('Notatki'), type: 'textarea' },
             ],
             contacts: [
-                { key: 'first_name', label: 'Imię', type: 'text', systemRequired: true },
-                { key: 'last_name', label: 'Nazwisko', type: 'text' },
-                { key: 'is_primary', label: 'Główna osoba kontaktowa', type: 'checkbox' },
-                { key: 'email', label: 'Adres e-mail', type: 'email' },
-                { key: 'phone', label: 'Numer telefonu', type: 'text' },
-                { key: 'position', label: 'Stanowisko / Rola', type: 'text' },
-                { key: 'client_id', label: 'Przypisany klient', type: 'client-select' },
-                { key: 'notes', label: 'Notatki o kontakcie', type: 'textarea' },
+                { key: 'first_name', label: window.ZenI18n.t('Imię'), type: 'text', systemRequired: true },
+                { key: 'last_name', label: window.ZenI18n.t('Nazwisko'), type: 'text' },
+                { key: 'is_primary', label: window.ZenI18n.t('Główna osoba kontaktowa'), type: 'checkbox' },
+                { key: 'email', label: window.ZenI18n.t('Adres e-mail'), type: 'email' },
+                { key: 'phone', label: window.ZenI18n.t('Numer telefonu'), type: 'text' },
+                { key: 'position', label: window.ZenI18n.t('Stanowisko / Rola'), type: 'text' },
+                { key: 'client_id', label: window.ZenI18n.t('Przypisany klient'), type: 'client-select' },
+                { key: 'notes', label: window.ZenI18n.t('Notatki o kontakcie'), type: 'textarea' },
             ],
             tasks: [
-                { key: 'title', label: 'Tytuł zadania', type: 'text', systemRequired: true },
-                { key: 'description', label: 'Opis zadania', type: 'textarea' },
-                { key: 'status', label: 'Status realizacji', type: 'select' },
-                { key: 'priority', label: 'Priorytet', type: 'select' },
-                { key: 'due_date', label: 'Termin wykonania', type: 'datetime-local' },
-                { key: 'client_id', label: 'Powiązany klient', type: 'client-select' },
-                { key: 'project_id', label: 'Powiązany projekt', type: 'project-select' },
+                { key: 'title', label: window.ZenI18n.t('Tytuł zadania'), type: 'text', systemRequired: true },
+                { key: 'description', label: window.ZenI18n.t('Opis zadania'), type: 'textarea' },
+                { key: 'status', label: window.ZenI18n.t('Status realizacji'), type: 'select' },
+                { key: 'priority', label: window.ZenI18n.t('Priorytet'), type: 'select' },
+                { key: 'due_date', label: window.ZenI18n.t('Termin wykonania'), type: 'datetime-local' },
+                { key: 'client_id', label: window.ZenI18n.t('Powiązany klient'), type: 'client-select' },
+                { key: 'project_id', label: window.ZenI18n.t('Powiązany projekt'), type: 'project-select' },
             ],
         },
 
@@ -652,7 +654,7 @@ window.ZenModules.settings = function () { return {
             try {
                 const r = await fetch('/api/settings/upload-logo', {
                     method: 'POST',
-                    headers: { 'Authorization': 'Bearer ' + this.token },
+                    headers: { 'Authorization': 'Bearer ' + this.token, 'Accept-Language': window.ZenI18n.locale },
                     body: fd,
                 });
                 const data = await r.json();
@@ -909,29 +911,29 @@ window.ZenModules.settings = function () { return {
                 company_email: compEmail,
                 company_logo: logoTag,
                 company_logo_url: fullLogoUrl,
-                client_name: 'Jan Kowalski',
-                client_email: 'jan.kowalski@example.com',
+                client_name: window.ZenI18n.t('Jan Kowalski'),
+                client_email: window.ZenI18n.t('jan.kowalski@example.com'),
                 client_phone: '+48 600 700 800',
                 employee_name: this.user?.first_name || 'Anna Nowak',
                 agent_name: this.user?.first_name || 'Anna Nowak',
-                user_name: 'Jan Kowalski',
+                user_name: window.ZenI18n.t('Jan Kowalski'),
                 ticket_number: 'TK-1042',
-                ticket_title: 'Problem z logowaniem do panelu',
-                ticket_priority: 'Wysoki',
-                ticket_category: 'Pomoc techniczna',
-                ticket_description: 'Dzień dobry, od wczoraj nie mogę zalogować się do panelu klienta. Proszę o weryfikację uprawnień.',
-                reply_content: 'Dzień dobry Panie Janie,\n\nSprawdziliśmy konfigurację konta. Dostęp został odblokowany. Prosimy o ponowną próbę logowania.',
+                ticket_title: window.ZenI18n.t('Problem z logowaniem do panelu'),
+                ticket_priority: window.ZenI18n.t('Wysoki'),
+                ticket_category: window.ZenI18n.t('Pomoc techniczna'),
+                ticket_description: window.ZenI18n.t('Dzień dobry, od wczoraj nie mogę zalogować się do panelu klienta. Proszę o weryfikację uprawnień.'),
+                reply_content: window.ZenI18n.t('Dzień dobry Panie Janie,\n\nSprawdziliśmy konfigurację konta. Dostęp został odblokowany. Prosimy o ponowną próbę logowania.'),
                 reply_date: '2026-09-28 11:30',
-                task_title: 'Wdrożenie raportowania dla klienta',
+                task_title: window.ZenI18n.t('Wdrożenie raportowania dla klienta'),
                 task_due_date: '2026-10-05 16:00',
-                task_priority: 'Wysoki',
-                task_description: 'Przygotować konfigurację eksportu danych i zweryfikować uprawnienia w panelu klienta.',
+                task_priority: window.ZenI18n.t('Wysoki'),
+                task_description: window.ZenI18n.t('Przygotować konfigurację eksportu danych i zweryfikować uprawnienia w panelu klienta.'),
                 portal_url: window.location.origin + '/portal',
                 login_url: window.location.origin,
                 crm_ticket_url: window.location.origin + '/#tickets',
                 crm_task_url: window.location.origin + '/#tasks',
                 crm_client_url: window.location.origin + '/#clients/1',
-                login_email: 'jan.kowalski@example.com',
+                login_email: window.ZenI18n.t('jan.kowalski@example.com'),
                 password: 'WymaganeHaslo123!',
                 temp_password: 'Xy9#mK2$pL',
             };

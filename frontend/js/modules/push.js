@@ -5,7 +5,7 @@ window.ZenModules.push = () => {
         pushEnabled:false, pushBusy:false, pushError:'',
         get pushSupported() { return window.isSecureContext && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; },
         async pushRegistration() {
-            if (!this.pushSupported) throw new Error('Powiadomienia poza CRM wymagają HTTPS i przeglądarki obsługującej Web Push.');
+            if (!this.pushSupported) throw new Error(window.ZenI18n.t('Powiadomienia poza CRM wymagają HTTPS i przeglądarki obsługującej Web Push.'));
             registration = await navigator.serviceWorker.register('/sw.js', {scope:'/'});
             await navigator.serviceWorker.ready;
             return registration;
@@ -14,9 +14,9 @@ window.ZenModules.push = () => {
             const reg = await this.pushRegistration();
             await new Promise((resolve,reject) => {
                 const channel = new MessageChannel();
-                const timer = setTimeout(() => { channel.port1.close(); reject(new Error('Nie udało się aktywować powiadomień. Spróbuj ponownie.')); },5000);
+                const timer = setTimeout(() => { channel.port1.close(); reject(new Error(window.ZenI18n.t('Nie udało się aktywować powiadomień. Spróbuj ponownie.'))); },5000);
                 channel.port1.onmessage=()=>{clearTimeout(timer);channel.port1.close();resolve();};
-                reg.active.postMessage({type:'PUSH_BIND',userId},[channel.port2]);
+                reg.active.postMessage({type:'PUSH_BIND',userId,locale:window.ZenI18n.locale},[channel.port2]);
             });
         },
         async initPush() {
@@ -44,12 +44,12 @@ window.ZenModules.push = () => {
             if(this.pushBusy) return;
             this.pushBusy=true;this.pushError='';
             try {
-                if(!this.pushSupported) throw new Error('Powiadomienia poza CRM wymagają HTTPS i obsługi Web Push.');
+                if(!this.pushSupported) throw new Error(window.ZenI18n.t('Powiadomienia poza CRM wymagają HTTPS i obsługi Web Push.'));
                 const uid=this.user.id;
                 const permission=await Notification.requestPermission();
-                if(permission!=='granted') throw new Error('Zezwól na powiadomienia w ustawieniach tej strony w przeglądarce.');
+                if(permission!=='granted') throw new Error(window.ZenI18n.t('Zezwól na powiadomienia w ustawieniach tej strony w przeglądarce.'));
                 const config=await this.api('/push/config');
-                if(!config.enabled) throw new Error('Powiadomienia push są wyłączone na serwerze.');
+                if(!config.enabled) throw new Error(window.ZenI18n.t('Powiadomienia push są wyłączone na serwerze.'));
                 const reg=await this.pushRegistration();
                 const raw=atob(config.public_key.replace(/-/g,'+').replace(/_/g,'/'));
                 const key=Uint8Array.from(raw,c=>c.charCodeAt(0));

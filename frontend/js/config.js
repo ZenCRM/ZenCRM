@@ -51,10 +51,10 @@ window.ZenConfig = {
                 { value: 'high',   label: window.ZenI18n.t('Wysoki') },
             ]},
             { key: 'due_date', label: window.ZenI18n.t('Termin'), type: 'datetime-local' },
-            { key: 'reminder_offset', label: 'Moje przypomnienie (dodaj lub zmień)', type: 'select', options: [
-                {value:'',label:'Bez zmian'}, {value:'off',label:'Wyłącz przypomnienie'},
-                {value:'0',label:'W terminie zadania'}, {value:'15',label:'15 minut przed terminem'},
-                {value:'60',label:'Godzinę przed terminem'}, {value:'1440',label:'24 godziny przed terminem'},
+            { key: 'reminder_offset', label: window.ZenI18n.t('Moje przypomnienie (dodaj lub zmień)'), type: 'select', options: [
+                {value:'',label:window.ZenI18n.t('Bez zmian')}, {value:'off',label:window.ZenI18n.t('Wyłącz przypomnienie')},
+                {value:'0',label:window.ZenI18n.t('W terminie zadania')}, {value:'15',label:window.ZenI18n.t('15 minut przed terminem')},
+                {value:'60',label:window.ZenI18n.t('Godzinę przed terminem')}, {value:'1440',label:window.ZenI18n.t('24 godziny przed terminem')},
             ]},
             { key: 'client_id', label: window.ZenI18n.t('Klient'), type: 'client-select' },
             { key: 'project_id', label: window.ZenI18n.t('Projekt (opcjonalnie)'), type: 'project-select' },
@@ -98,7 +98,7 @@ window.ZenConfig = {
                 { value: 'true',  label: window.ZenI18n.t('Tak - cena stala') },
                 { value: 'false', label: window.ZenI18n.t('Nie - do ustalenia') },
             ]},
-            { key: 'content', label: 'Wzory / warunki / informacje', type: 'textarea' },
+            { key: 'content', label: window.ZenI18n.t('Wzory / warunki / informacje'), type: 'textarea' },
             { key: 'is_active', label: window.ZenI18n.t('Aktywna'), type: 'select', options: [
                 { value: 'true',  label: window.ZenI18n.t('Tak') },
                 { value: 'false', label: window.ZenI18n.t('Nie') },
@@ -176,7 +176,7 @@ window.ZenConfig = {
                 { value: 'offer',    label: window.ZenI18n.t('Oferta') },
                 { value: 'document', label: window.ZenI18n.t('Dokument') },
             ]},
-            { key: 'content', label: 'Tresc (HTML/Jinja2)', type: 'textarea', required: true },
+            { key: 'content', label: window.ZenI18n.t('Tresc (HTML/Jinja2)'), type: 'textarea', required: true },
         ],
 
         contacts: [
@@ -267,11 +267,11 @@ window.ZenConfig = {
             ]
         },
         { id: 'sms',       label: window.ZenI18n.t('Telefonia & SMS'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>' },
-        { id: 'portal_group', label: 'Portal użytkownika', adminOnly: true, icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>', children: [
-            { id: 'portalTickets', label: 'Tickety', icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8m-8 4h5m-8 7l2.5-3H19a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2v3z"/></svg>' },
-            { id: 'portalSpaces', label: 'Portale', icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M5 7v12h14V7M8 11h3m-3 4h8"/></svg>' },
-            { id: 'portalSettings', label: 'Ustawienia portalu', icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>' },
-            { id: 'portalUsers', label: 'Użytkownicy portalu', icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>' },
+        { id: 'portal_group', label: window.ZenI18n.t('Portal użytkownika'), adminOnly: true, icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>', children: [
+            { id: 'portalTickets', label: window.ZenI18n.t('Tickety'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8m-8 4h5m-8 7l2.5-3H19a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2v3z"/></svg>' },
+            { id: 'portalSpaces', label: window.ZenI18n.t('Portale'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M5 7v12h14V7M8 11h3m-3 4h8"/></svg>' },
+            { id: 'portalSettings', label: window.ZenI18n.t('Ustawienia portalu'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>' },
+            { id: 'portalUsers', label: window.ZenI18n.t('Użytkownicy portalu'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>' },
         ] },
         { id: 'users',     label: window.ZenI18n.t('Pracownicy'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>' },
         { id: 'notifications', label: window.ZenI18n.t('Powiadomienia'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>' },

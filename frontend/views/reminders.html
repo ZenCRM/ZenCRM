@@ -1,37 +1,37 @@
 <div class="zen-notifications zen-reminders" @pointerdown.window="if (token &amp;&amp; !reminderSoundReady) enableReminderSound()" @keydown.window="if (token &amp;&amp; !reminderSoundReady) enableReminderSound()" @focus.window="if (token) loadReminders()" @click.outside="remindersOpen=false" @keydown.escape.stop="remindersOpen=false; $refs.reminderTrigger.focus()">
-    <button class="zen-bell" x-ref="reminderTrigger" @click="toggleReminders()" :aria-expanded="remindersOpen" aria-controls="reminder-panel" aria-label="Przypomnienia" title="Przypomnienia">
+    <button class="zen-bell" x-ref="reminderTrigger" @click="toggleReminders()" :aria-expanded="remindersOpen" aria-controls="reminder-panel" :aria-label="window.ZenI18n.t(&quot;Przypomnienia&quot;)" :title="window.ZenI18n.t(&quot;Przypomnienia&quot;)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 8v5l3 2M3 4l3-2m12 0 3 2M6 20l-2 2m14-2 2 2"/></svg>
         <span class="zen-bell-count" x-show="reminders.length" x-text="reminders.length"></span>
     </button>
-    <section id="reminder-panel" class="zen-inbox" x-show="remindersOpen" x-cloak aria-label="Przypomnienia">
+    <section id="reminder-panel" class="zen-inbox" x-show="remindersOpen" x-cloak :aria-label="window.ZenI18n.t(&quot;Przypomnienia&quot;)">
         <header>
             <div>
-                <h2>Przypomnienia</h2>
-                <p>Zaplanowane powiadomienia i alarmy</p>
+                <h2><span x-text="window.ZenI18n.t(&quot;Przypomnienia&quot;)">Przypomnienia</span></h2>
+                <p><span x-text="window.ZenI18n.t(&quot;Zaplanowane powiadomienia i alarmy&quot;)">Zaplanowane powiadomienia i alarmy</span></p>
             </div>
-            <button @click="remindersOpen=false" aria-label="Zamknij panel">×</button>
+            <button @click="remindersOpen=false" :aria-label="window.ZenI18n.t(&quot;Zamknij panel&quot;)">×</button>
         </header>
         <div class="zen-inbox-tools">
-            <button @click="addReminder()">+ Dodaj przypomnienie</button>
-            <button @click="await enableReminderSound(); playReminderSound()" x-text="reminderSoundReady ? 'Test dźwięku' : 'Włącz dźwięk'"></button>
+            <button @click="addReminder()"><span x-text="window.ZenI18n.t(&quot;+ Dodaj przypomnienie&quot;)">+ Dodaj przypomnienie</span></button>
+            <button @click="await enableReminderSound(); playReminderSound()" x-text="reminderSoundReady ? window.ZenI18n.t(&#x27;Test dźwięku&#x27;) : window.ZenI18n.t(&#x27;Włącz dźwięk&#x27;)"></button>
         </div>
         <div class="reminder-hint">
-            <button @click="pushEnabled ? disablePush() : enablePush()" :disabled="pushBusy" x-text="pushBusy ? 'Zapisywanie…' : pushEnabled ? 'Wyłącz powiadomienia push w tle' : 'Włącz powiadomienia push w tle'"></button>
+            <button @click="pushEnabled ? disablePush() : enablePush()" :disabled="pushBusy" x-text="pushBusy ? window.ZenI18n.t(&#x27;Zapisywanie…&#x27;) : pushEnabled ? window.ZenI18n.t(&#x27;Wyłącz powiadomienia push w tle&#x27;) : window.ZenI18n.t(&#x27;Włącz powiadomienia push w tle&#x27;)"></button>
             <p x-show="pushError" x-text="pushError" role="alert" class="reminder-error"></p>
         </div>
         <div class="zen-inbox-list">
             <!-- Formularz dodawania inline -->
             <form class="reminder-form" x-show="reminderAdding" @submit.prevent="saveReminder()">
-                <label>Treść przypomnienia<input x-ref="reminderTitle" x-model="reminderTitle" placeholder="np. Zadzwonić do klienta..." maxlength="200" required></label>
-                <label>Data i godzina<input type="datetime-local" x-model="reminderDate" required></label>
-                <label>Link (opcjonalny)<input type="text" x-model="reminderLink" placeholder="np. /#clients lub https://…" maxlength="500"><small class="reminder-link-hint">Wypełniony automatycznie bieżącym widokiem CRM</small></label>
+                <label><span x-text="window.ZenI18n.t(&quot;Treść przypomnienia&quot;)">Treść przypomnienia</span><input x-ref="reminderTitle" x-model="reminderTitle" :placeholder="window.ZenI18n.t(&quot;np. Zadzwonić do klienta...&quot;)" maxlength="200" required></label>
+                <label><span x-text="window.ZenI18n.t(&quot;Data i godzina&quot;)">Data i godzina</span><input type="datetime-local" x-model="reminderDate" required></label>
+                <label><span x-text="window.ZenI18n.t(&quot;Link (opcjonalny)&quot;)">Link (opcjonalny)</span><input type="text" x-model="reminderLink" :placeholder="window.ZenI18n.t(&quot;np. /#clients lub https://…&quot;)" maxlength="500"><small class="reminder-link-hint"><span x-text="window.ZenI18n.t(&quot;Wypełniony automatycznie bieżącym widokiem CRM&quot;)">Wypełniony automatycznie bieżącym widokiem CRM</span></small></label>
                 <div class="reminder-actions">
-                    <button type="submit" :disabled="reminderBusy" style="background:#007fce;color:#fff;">Zapisz</button>
-                    <button type="button" @click="reminderAdding=false" style="background:#e2e8f0;color:#334155;">Anuluj</button>
+                    <button type="submit" :disabled="reminderBusy" style="background:#007fce;color:#fff;"><span x-text="window.ZenI18n.t(&quot;Zapisz&quot;)">Zapisz</span></button>
+                    <button type="button" @click="reminderAdding=false" style="background:#e2e8f0;color:#334155;"><span x-text="window.ZenI18n.t(&quot;Anuluj&quot;)">Anuluj</span></button>
                 </div>
             </form>
 
-            <p class="zen-inbox-state" x-show="!reminders.length &amp;&amp; !reminderAdding">Brak zaplanowanych przypomnień.</p>
+            <p class="zen-inbox-state" x-show="!reminders.length &amp;&amp; !reminderAdding"><span x-text="window.ZenI18n.t(&quot;Brak zaplanowanych przypomnień.&quot;)">Brak zaplanowanych przypomnień.</span></p>
 
             <template x-for="r in reminders" :key="r.id">
                 <article class="zen-inbox-item">
@@ -39,12 +39,12 @@
                     <span>
                         <strong x-text="r.title"></strong>
                         <small x-text="new Date(r.remind_at).toLocaleString(locale)"></small>
-                        <small x-show="r.task_id" style="color:#007fce;font-weight:600;">Przypomnienie o zadaniu</small>
+                        <small x-show="r.task_id" style="color:#007fce;font-weight:600;"><span x-text="window.ZenI18n.t(&quot;Przypomnienie o zadaniu&quot;)">Przypomnienie o zadaniu</span></small>
                         <small x-show="r.link">
                             <a :href="r.link" @click.stop="openLink(r.link)" target="_blank" rel="noopener noreferrer" class="reminder-link-anchor" x-text="'↗ ' + r.link"></a>
                         </small>
                     </span>
-                    <button @click="resolveReminder(r,'dismiss')" :disabled="reminderBusy" aria-label="Usuń przypomnienie" title="Oznacz jako wykonane">×</button>
+                    <button @click="resolveReminder(r,'dismiss')" :disabled="reminderBusy" :aria-label="window.ZenI18n.t(&quot;Usuń przypomnienie&quot;)" :title="window.ZenI18n.t(&quot;Oznacz jako wykonane&quot;)">×</button>
                 </article>
             </template>
         </div>
@@ -77,7 +77,7 @@
             <p id="reminder-content" x-text="reminderActive?.title"></p>
             <span class="task-tag" x-show="reminderActive?.task_id">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                <span>Przypomnienie powiązane z zadaniem</span>
+                <span><span x-text="window.ZenI18n.t(&quot;Przypomnienie powiązane z zadaniem&quot;)">Przypomnienie powiązane z zadaniem</span></span>
             </span>
         </div>
 
@@ -96,19 +96,19 @@
         </template>
 
         <p class="reminder-hint" x-show="!reminderSoundReady" style="padding:0 0 12px 0;">
-            Dźwięk wymaga interakcji w tej karcie. <button type="button" @click="enableReminderSound()">Włącz dźwięk</button>
+            <span x-text="window.ZenI18n.t(&quot;Dźwięk wymaga interakcji w tej karcie.&quot;)">Dźwięk wymaga interakcji w tej karcie.</span> <button type="button" @click="enableReminderSound()"><span x-text="window.ZenI18n.t(&quot;Włącz dźwięk&quot;)">Włącz dźwięk</span></button>
         </p>
 
         <!-- ODŁÓŻ / SNOOZE -->
         <div class="reminder-dialog-snooze">
-            <label>Przypomnij ponownie za:</label>
+            <label><span x-text="window.ZenI18n.t(&quot;Przypomnij ponownie za:&quot;)">Przypomnij ponownie za:</span></label>
             <div class="reminder-quick-pills">
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '5' ? 'active' : ''" @click="reminderSnooze = '5'">5 min</button>
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '10' ? 'active' : ''" @click="reminderSnooze = '10'">10 min</button>
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '15' ? 'active' : ''" @click="reminderSnooze = '15'">15 min</button>
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '30' ? 'active' : ''" @click="reminderSnooze = '30'">30 min</button>
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '60' ? 'active' : ''" @click="reminderSnooze = '60'">1 godz.</button>
-                <button type="button" class="reminder-pill" :class="reminderSnooze === '1440' ? 'active' : ''" @click="reminderSnooze = '1440'">24 godz.</button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '5' ? 'active' : ''" @click="reminderSnooze = '5'"><span x-text="window.ZenI18n.t(&quot;5 min&quot;)">5 min</span></button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '10' ? 'active' : ''" @click="reminderSnooze = '10'"><span x-text="window.ZenI18n.t(&quot;10 min&quot;)">10 min</span></button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '15' ? 'active' : ''" @click="reminderSnooze = '15'"><span x-text="window.ZenI18n.t(&quot;15 min&quot;)">15 min</span></button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '30' ? 'active' : ''" @click="reminderSnooze = '30'"><span x-text="window.ZenI18n.t(&quot;30 min&quot;)">30 min</span></button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '60' ? 'active' : ''" @click="reminderSnooze = '60'"><span x-text="window.ZenI18n.t(&quot;1 godz.&quot;)">1 godz.</span></button>
+                <button type="button" class="reminder-pill" :class="reminderSnooze === '1440' ? 'active' : ''" @click="reminderSnooze = '1440'"><span x-text="window.ZenI18n.t(&quot;24 godz.&quot;)">24 godz.</span></button>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
 
         <div class="reminder-dialog-footer">
             <button type="button" class="reminder-btn-snooze" @click="resolveReminder(reminderActive,'snooze')" :disabled="reminderBusy">
-                <span x-text="'Przypomnij za ' + ({'5':'5 min','10':'10 min','15':'15 min','30':'30 min','60':'1 godz.','1440':'24 godz.'}[reminderSnooze] || (reminderSnooze + ' min'))"></span>
+                <span x-text="&#x27;Przypomnij za &#x27; + ({&#x27;5&#x27;:window.ZenI18n.t(&#x27;5 min&#x27;),&#x27;10&#x27;:window.ZenI18n.t(&#x27;10 min&#x27;),&#x27;15&#x27;:window.ZenI18n.t(&#x27;15 min&#x27;),&#x27;30&#x27;:window.ZenI18n.t(&#x27;30 min&#x27;),&#x27;60&#x27;:window.ZenI18n.t(&#x27;1 godz.&#x27;),&#x27;1440&#x27;:window.ZenI18n.t(&#x27;24 godz.&#x27;)}[reminderSnooze] || (reminderSnooze + window.ZenI18n.t(&#x27; min&#x27;)))"></span>
             </button>
             <button type="button" class="reminder-btn-dismiss" x-ref="reminderDismiss" @click="resolveReminder(reminderActive,'dismiss')" :disabled="reminderBusy">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>

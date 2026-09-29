@@ -1,17 +1,19 @@
-"""Tworzy domyślnego admina: admin@zencrm.pl / admin123"""
+"""Initialize database tables. Administrator is created via the web setup form on first launch."""
 from app import create_app
 from app.extensions import db
 from app.models.user import User
 
-app = create_app()
-with app.app_context():
+
+def seed_admin():
     db.create_all()
-    if not User.query.filter_by(email='admin@zencrm.pl').first():
-        u = User(email='admin@zencrm.pl', first_name='Admin',
-                 last_name='Zen', role='admin')
-        u.set_password('admin123')
-        db.session.add(u)
-        db.session.commit()
-        print('✅ Admin utworzony: admin@zencrm.pl / admin123')
-    else:
-        print('ℹ️  Admin już istnieje')
+    if User.query.first() is not None:
+        print('[ZenCRM] Baza danych gotowa. Istniejący użytkownicy znalezieni.')
+        return False
+    print('[ZenCRM] Nowa instalacja. Otwórz CRM w przeglądarce, aby utworzyć konto administratora.')
+    return True
+
+
+if __name__ == '__main__':
+    app = create_app()
+    with app.app_context():
+        seed_admin()

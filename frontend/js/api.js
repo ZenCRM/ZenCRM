@@ -15,6 +15,7 @@ window.ZenApi = {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
+                'Accept-Language': window.ZenI18n.locale,
                 'Authorization': 'Bearer ' + token,
                 ...(options.headers || {}),
             },
@@ -26,7 +27,7 @@ window.ZenApi = {
         }
 
         const data = r.status === 204 ? null : await r.json();
-        if (!r.ok) throw new Error(window.ZenI18n.t((data && data.error) || 'Błąd API'));
+        if (!r.ok) throw new Error(window.ZenI18n.t((data && data.error) || window.ZenI18n.t('Błąd API')));
         return data;
     },
 
@@ -36,11 +37,11 @@ window.ZenApi = {
     async login(email, password) {
         const r = await fetch('/api/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Accept-Language': window.ZenI18n.locale },
             body: JSON.stringify({ email, password }),
         });
         const data = await r.json();
-        if (!r.ok) throw new Error(window.ZenI18n.t(data.error || 'Błąd logowania'));
+        if (!r.ok) throw new Error(window.ZenI18n.t(data.error || window.ZenI18n.t('Błąd logowania')));
         return data;
     },
 
@@ -50,11 +51,35 @@ window.ZenApi = {
     async forgotPassword(email) {
         const r = await fetch('/api/auth/forgot-password', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Accept-Language': window.ZenI18n.locale },
             body: JSON.stringify({ email }),
         });
         const data = await r.json();
-        if (!r.ok) throw new Error(window.ZenI18n.t(data.error || 'Błąd żądania'));
+        if (!r.ok) throw new Error(window.ZenI18n.t(data.error || window.ZenI18n.t('Błąd żądania')));
+        return data;
+    },
+
+    /**
+     * Sprawdza status konfiguracji początkowej.
+     */
+    async getSetupStatus() {
+        const r = await fetch('/api/auth/setup-status', {
+            headers: { 'Accept-Language': window.ZenI18n.locale }
+        });
+        return await r.json();
+    },
+
+    /**
+     * Tworzy pierwsze konto administratora.
+     */
+    async setupAdmin(payload) {
+        const r = await fetch('/api/auth/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept-Language': window.ZenI18n.locale },
+            body: JSON.stringify(payload),
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(window.ZenI18n.t(data.error || window.ZenI18n.t('Błąd żądania')));
         return data;
     },
 };

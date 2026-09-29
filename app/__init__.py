@@ -26,6 +26,10 @@ def create_app(config_class=Config):
     frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend')
     app = Flask(__name__, static_folder=frontend_dir, static_url_path='', template_folder=frontend_dir)
     app.config.from_object(config_class)
+    from .utils.security_keys import configure_secrets
+    configure_secrets(app)
+    from .utils.i18n import init_i18n
+    init_i18n(app)
     # Distinct delimiters preserve the Jinja examples in the document editor.
     app.jinja_env.block_start_string = '<%'
     app.jinja_env.block_end_string = '%>'
@@ -36,11 +40,16 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
     ma.init_app(app)
-    CORS(app, resources={r'/api/*': {'origins': '*'}})
+    from .utils.api_security import init_api_security
+    init_api_security(app)
+    if app.config.get('CORS_ORIGINS'):
+        CORS(app, resources={r'/api/*': {'origins': app.config['CORS_ORIGINS']}})
+    else:
+        CORS(app, resources={r'/api/*': {'origins': '*'}})
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, auth_security)
 
     from .api.push import push_bp
     app.register_blueprint(push_bp, url_prefix="/api/push")
@@ -156,7 +165,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, email_template)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, email_template, auth_security)
 
     with app.app_context():
         db.create_all()

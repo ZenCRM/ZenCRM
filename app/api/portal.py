@@ -1,3 +1,4 @@
+from ..utils.i18n import t
 import hashlib
 import secrets
 import re
@@ -23,6 +24,7 @@ from .tickets import _apply_auto_assignment
 from ..utils.portal import portal_settings, MODULES
 
 portal_bp = Blueprint('portal', __name__)
+from ..utils.auth_limits import auth_limit
 
 
 def admin():
@@ -62,11 +64,12 @@ def module_access(member, kind):
 def text(data, key, limit, required=False):
     value = data.get(key, '')
     if not isinstance(value, str) or len(value) > limit or (required and not value.strip()):
-        abort(400, description='Nieprawidłowe pole: ' + key)
+        abort(400, description=t('Nieprawidłowe pole: {field}', {'field': key}))
     return value if key == 'password' else value.strip()
 
 
 @portal_bp.route('/login', methods=['POST'])
+@auth_limit(30)
 def login():
     if not portal_settings()['enabled']:
         return jsonify(error='Portal jest wyłączony'), 403

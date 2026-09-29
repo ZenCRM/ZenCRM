@@ -13,6 +13,7 @@ class Activity(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
+        from ..utils.i18n import activity_text
         user = None
         if self.user_id:
             from .user import User
@@ -25,7 +26,7 @@ class Activity(db.Model):
         return {
             'id': self.id,
             'action': self.action,
-            'description': self.description,
+            'description': activity_text(self.description, self.action, self.meta),
             'entity_type': self.entity_type,
             'entity_id': self.entity_id,
             'user_id': self.user_id,

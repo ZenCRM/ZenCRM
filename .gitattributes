@@ -1,3 +1,6 @@
 # Keep GitHub language statistics focused on the Python backend.
 # Frontend files retain their actual language and syntax highlighting.
 frontend/** linguist-detectable=false
+
+# Container entrypoint must remain executable by Linux sh after Windows checkouts.
+*.sh text eol=lf
