@@ -261,6 +261,13 @@ window.ZenUX = {
     isOverdue(task) {
         return task.status !== 'done' && task.due_date && new Date(task.due_date).getTime() < Date.now();
     },
+    taskProgress(task) {
+        const assignees = Array.isArray(task?.assignees) ? task.assignees : [];
+        if (assignees.length) {
+            return Math.round(assignees.filter(person => person.status === 'done').length / assignees.length * 100);
+        }
+        return task?.status === 'done' ? 100 : 0;
+    },
     get visibleTasks() {
         const q = this.taskSearch.trim().toLocaleLowerCase(window.ZenI18n.locale);
         const now = new Date();

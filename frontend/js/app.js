@@ -484,6 +484,7 @@ function crmApp() {
             localStorage.setItem('lastView', id);
 
             if (!skipReload) await this.reload();
+            if (this.currentView !== id) return;
 
             // Jeśli to widok leadów – policz widoczne kolumny po renderze
             if (id === 'leads') {
@@ -495,26 +496,28 @@ function crmApp() {
         },
 
         async reload() {
+            const view = this.currentView;
+            const requestId = this._reloadRequest = (this._reloadRequest || 0) + 1;
             this.listError = '';
-            if (['portalSettings', 'portalUsers', 'portalTickets', 'portalSpaces'].includes(this.currentView)) return;
-            if (this.currentView === 'dashboard') {
+            if (['portalSettings', 'portalUsers', 'portalTickets', 'portalSpaces'].includes(view)) return;
+            if (view === 'dashboard') {
                 await this.loadStats();
-                this.renderFunnel();
+                if (requestId === this._reloadRequest && this.currentView === view) this.renderFunnel();
                 return;
             }
-            if (this.currentView === 'settings') {
+            if (view === 'settings') {
                 await this.loadSettings();
                 return;
             }
-            if (this.currentView === 'sms') {
+            if (view === 'sms') {
                 await this.loadSmsData();
                 return;
             }
-            if (this.currentView === 'archive') {
+            if (view === 'archive') {
                 await this.loadArchive();
                 return;
             }
-            if (this.currentView === 'notifications') {
+            if (view === 'notifications') {
                 await Promise.all([
                     this.loadNotifications(),
                     this.loadAllReminders(),
@@ -524,39 +527,45 @@ function crmApp() {
                 return;
             }
             try {
-                const data = this.currentView === 'clients' ? await this.loadClientOptions() : await this.api('/' + this.apiPath(this.currentView));
+                const data = view === 'clients' ? await this.loadClientOptions() : await this.api('/' + this.apiPath(view));
+                if (requestId !== this._reloadRequest || this.currentView !== view) return;
                 const list = Array.isArray(data)
                     ? data
                     : (data.clients || data.items || data.data || []);
-                this[this.currentView] = list;
+                this[view] = list;
             } catch (e) {
+                if (requestId !== this._reloadRequest || this.currentView !== view) return;
                 console.error(e);
                 this.listError = e.message;
             }
 
-            if (this.currentView === 'leads') {
+            if (view === 'leads') {
                 try { this.boardTasks = await this.api('/tasks'); this.boardTasksLoaded = true; }
                 catch (e) { this.boardTasksLoaded = false; this.notify(window.ZenI18n.t('Nie pobrano następnych działań: ') + e.message); }
+                if (requestId !== this._reloadRequest || this.currentView !== view) return;
                 this.$nextTick(() => this.recomputeVisibleCols());
             }
 
-            if (this.currentView === 'tasks') {
+            if (view === 'tasks') {
                 try { this.taskStatusStages = (await this.api('/tasks/board-settings')).stages; }
                 catch (e) { this.listError = e.message; }
             }
 
-            if (this.currentView === 'meetings') {
+            if (requestId !== this._reloadRequest || this.currentView !== view) return;
+            if (view === 'meetings') {
                 try { this.tasks = await this.api('/tasks'); }
                 catch (e) { this.listError = window.ZenI18n.t('Nie pobrano zadań do kalendarza: ') + e.message; }
             }
 
-            if (this.currentView === 'users') {
+            if (requestId !== this._reloadRequest || this.currentView !== view) return;
+            if (view === 'users') {
                 try { await this.loadTeams(); }
                 catch (e) { console.warn('Nie pobrano zespołów:', e.message); }
                 if (this.isAdmin) await this.loadPermissions();
             }
 
-            if (this.currentView === 'tickets') {
+            if (requestId !== this._reloadRequest || this.currentView !== view) return;
+            if (view === 'tickets') {
                 if (this.teams.length === 0) {
                     try { await this.loadTeams(); } catch (_) {}
                 }
@@ -566,7 +575,8 @@ function crmApp() {
             }
 
             // Klienci potrzebni do selectów i nazw
-            if (this.clients.length === 0 && this.currentView !== 'clients') {
+            if (requestId !== this._reloadRequest || this.currentView !== view) return;
+            if (this.clients.length === 0 && view !== 'clients') {
                 try {
                     const c = await this.loadClientOptions();
                     this.clients = Array.isArray(c) ? c : (c.clients || []);
