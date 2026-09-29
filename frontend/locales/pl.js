@@ -1878,7 +1878,7 @@ window.ZenLocales.pl = {
   "Brak uprawnień do tego telefonu": "Brak uprawnień do tego telefonu",
   "Brak uprawnień do anulowania tego zadania": "Brak uprawnień do anulowania tego zadania",
   "Wybrany użytkownik nie istnieje": "Wybrany użytkownik nie istnieje",
-  "Nieprawidłowy identyfikator użytkownika": "Nieprawidłowy identyfikator użytkownika"
+  "Nieprawidłowy identyfikator użytkownika": "Nieprawidłowy identyfikator użytkownika",
   "Ustawienia menu": "Ustawienia menu",
   "Ustawienia leadów": "Ustawienia leadów",
   "Ustawienia widoczności menu i modułów": "Ustawienia widoczności menu i modułów",

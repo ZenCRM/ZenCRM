@@ -1878,7 +1878,7 @@ window.ZenLocales.en = {
   "Brak uprawnień do tego telefonu": "No permission for this phone",
   "Brak uprawnień do anulowania tego zadania": "No permission to cancel this task",
   "Wybrany użytkownik nie istnieje": "Selected user does not exist",
-  "Nieprawidłowy identyfikator użytkownika": "Invalid user ID"
+  "Nieprawidłowy identyfikator użytkownika": "Invalid user ID",
   "Ustawienia menu": "Menu settings",
   "Ustawienia leadów": "Lead settings",
   "Ustawienia widoczności menu i modułów": "Menu & module visibility settings",
