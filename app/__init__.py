@@ -49,7 +49,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment)
 
     from .api.push import push_bp
     app.register_blueprint(push_bp, url_prefix="/api/push")
@@ -70,6 +70,7 @@ def create_app(config_class=Config):
     from .api.task_assignees  import task_assignees_bp
     from .api.offers     import offers_bp
     from .api.documents  import documents_bp
+    from .api.attachments import attachments_bp
     from .api.templates  import templates_bp
     from .api.users      import users_bp
     from .api.stats      import stats_bp
@@ -104,6 +105,7 @@ def create_app(config_class=Config):
     app.register_blueprint(task_assignees_bp,  url_prefix='/api/task-assignees')
     app.register_blueprint(offers_bp,     url_prefix='/api/offers')
     app.register_blueprint(documents_bp,  url_prefix='/api/documents')
+    app.register_blueprint(attachments_bp, url_prefix='/api/attachments')
     app.register_blueprint(templates_bp,  url_prefix='/api/templates')
     app.register_blueprint(users_bp,      url_prefix='/api/users')
     app.register_blueprint(stats_bp,      url_prefix='/api/stats')
@@ -165,7 +167,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment)
 
     with app.app_context():
         db.create_all()

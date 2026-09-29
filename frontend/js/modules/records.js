@@ -244,6 +244,9 @@ window.ZenModules.records = function () { return {
             this.modal.form = item
                 ? { ...item, is_primary: Boolean(item.is_primary) }
                 : (defaultStage ? { stage: defaultStage, is_primary: false } : { is_primary: false });
+            if (['documents', 'offers'].includes(actionView)) {
+                this.modal.form.data = { ...(this.modal.form.data || {}), custom: { ...(this.modal.form.data?.custom || {}) } };
+            }
             if (actionView === 'leads' && this.modal.form.probability == null) {
                 this.modal.form.probability = 0;
             }

@@ -36,8 +36,20 @@
                     <code class="text-[10px]">{{ total_amount }}</code>, <code class="text-[10px]">{{ description }}</code>,
                     <code class="text-[10px]">{{ client.name }}</code>, <code class="text-[10px]">{{ client.email }}</code>,
                     <code class="text-[10px]">{{ client.company }}</code>, <code class="text-[10px]">{{ client.address }}</code>,
-                    <code class="text-[10px]">{{ company.name }}</code>, <code class="text-[10px]">{{ company.nip }}</code><br>
+                    <code class="text-[10px]">{{ client.phone }}</code>,
+                    <code class="text-[10px]">{{ company.name }}</code>, <code class="text-[10px]">{{ company.nip }}</code>,
+                    <code class="text-[10px]">{{ company.address }}</code>, <code class="text-[10px]">{{ company.email }}</code>,
+                    <code class="text-[10px]">{{ company.phone }}</code>, <code class="text-[10px]">{{ company.www }}</code>,
+                    <code class="text-[10px]">{{ items }}</code>, <code class="text-[10px]">{{ offer }}</code>, <code class="text-[10px]">{{ document }}</code><br>
                     <strong><span x-text="window.ZenI18n.t(&quot;Pętla:&quot;)">Pętla:</span></strong> <code class="text-[10px]">{% for item in items %}{{ item.name }} – {{ item.total }} zł{% endfor %}</code>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center"><strong x-text="window.ZenI18n.t('Własne pola szablonu')">Własne pola szablonu</strong><button type="button" class="ux-text-button" @click="addTemplateField()" x-text="window.ZenI18n.t('+ Dodaj pole')">+ Dodaj pole</button></div>
+                    <template x-for="(field, index) in templateModal.form.variables" :key="index">
+                        <div class="flex gap-2"><input class="ux-input flex-1" x-model="field.label" :placeholder="window.ZenI18n.t('Etykieta')" maxlength="120"><input class="ux-input flex-1 font-mono" x-model="field.name" placeholder="nazwa_pola" maxlength="50"><button type="button" class="ux-text-button" @click="templateModal.form.variables.splice(index, 1)" :aria-label="window.ZenI18n.t('Usuń')">×</button></div>
+                    </template>
+                    <p class="text-xs text-gray-500" x-text="window.ZenI18n.t('W treści użyj:') + ' {{ custom.nazwa_pola }}'"></p>
+                    <div class="flex flex-wrap gap-2"><template x-for="field in templateModal.form.variables" :key="field.name"><code class="text-xs" x-text="'{{ custom.' + field.name + ' }}'"></code></template></div>
                 </div>
                 <p x-show="templateModal.error" x-text="templateModal.error" class="text-red-500 text-sm"></p>
             </div>

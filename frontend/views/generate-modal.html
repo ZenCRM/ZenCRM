@@ -1,0 +1,9 @@
+<div x-show="generateModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" @keydown.escape.window="generateModal.open = false">
+    <form @submit.prevent="submitGeneration()" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 space-y-4">
+        <div class="flex justify-between items-center"><h3 class="text-lg font-bold" x-text="window.ZenI18n.t('Generuj dokument')">Generuj dokument</h3><button type="button" @click="generateModal.open = false" class="text-2xl" aria-label="Zamknij">×</button></div>
+        <label class="block text-sm"><span x-text="window.ZenI18n.t('Szablon')">Szablon</span><select class="ux-input w-full mt-1" x-model="generateModal.templateId" required><option value="">— wybierz —</option><template x-for="tpl in templates.filter(t => t.type === generateModal.type && t.is_active)" :key="tpl.id"><option :value="tpl.id" x-text="tpl.name"></option></template></select></label>
+        <template x-for="field in generationFields()" :key="field.name"><label class="block text-sm"><span x-text="field.label"></span><code class="ml-2 text-xs" x-text="'{{ custom.' + field.name + ' }}'"></code><input class="ux-input w-full mt-1" x-model="generateModal.custom[field.name]"></label></template>
+        <p x-show="generateModal.error" x-text="generateModal.error" class="text-red-600" role="alert"></p>
+        <div class="flex justify-end gap-2"><button type="button" class="ux-text-button" @click="generateModal.open = false" x-text="window.ZenI18n.t('Anuluj')">Anuluj</button><button type="submit" class="ux-button" x-text="window.ZenI18n.t('Generuj')">Generuj</button></div>
+    </form>
+</div>

@@ -183,9 +183,11 @@ function crmApp() {
         templateModal: {
             open: false,
             editingId: null,
-            form: { name: '', type: 'offer', content: '' },
+            form: { name: '', type: 'offer', content: '', variables: [] },
             error: '',
         },
+        generateModal: { open: false, type: 'document', item: null, templateId: '', custom: {}, error: '' },
+        attachmentModal: { open: false, entity: '', recordId: null, files: [], busy: false, error: '' },
 
         // ═══════════════════════════════════════════════════════════
         // KALENDARZ

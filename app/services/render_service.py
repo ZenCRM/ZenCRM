@@ -54,6 +54,7 @@ def build_context(obj, entity_type="offer"):
         "number": number,
         "title": obj.title,
         "description": data.get("description", ""),
+        "custom": data.get("custom", {}) if isinstance(data.get("custom", {}), dict) else {},
     }
     for k, v in data.items():
         if k not in ctx:
@@ -87,7 +88,7 @@ def render_document(doc):
     return html
 
 
-def render_preview(template_str, entity_type="offer"):
+def render_preview(template_str, entity_type="offer", variables=None):
     class DC:
         id = 1
         name = t("Przykladowy Klient")
@@ -140,6 +141,7 @@ def render_preview(template_str, entity_type="offer"):
         "number": obj.number,
         "title": obj.title,
         "description": d["description"],
+        "custom": {v['name']: v['label'] for v in (variables or []) if isinstance(v, dict) and 'name' in v and 'label' in v},
     }
     for k, v in d.items():
         if k not in ctx:

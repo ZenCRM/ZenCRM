@@ -243,6 +243,7 @@
 
                 <!-- Przyciski akcji projektu -->
                 <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" class="ux-text-button" @click="openAttachments('project', activeProject.id)" x-text="window.ZenI18n.t('Pliki')">Pliki</button>
                     <button type="button" @click="quickAddProjectTask()"
                             class="px-4 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-sm font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                         <svg class="w-4 h-4 !text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
