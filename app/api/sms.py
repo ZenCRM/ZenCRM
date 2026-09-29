@@ -578,41 +578,30 @@ def receive_sms_history():
 # ═══════════════════════════════════════════════════════════════════════
 
 def get_user_accessible_device_ids():
-    """Zwraca listę ID telefonów dostępnych dla bieżącego użytkownika (None = admin, wszystkie)."""
-    from ..utils.deletion import is_admin, current_user
-    if is_admin():
-        return None
+    """Zwraca listę ID telefonów należących do bieżącego użytkownika (każdy widzi tylko swój telefon)."""
+    from ..utils.deletion import current_user
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
     if not curr_u_id:
         return []
-    devs = SmsDevice.query.filter(db.or_(SmsDevice.user_id == curr_u_id, SmsDevice.user_id == None)).all()
+    devs = SmsDevice.query.filter_by(user_id=curr_u_id).all()
     return [d.id for d in devs]
 
 
 @sms_bp.route('/devices', methods=['GET'])
 @jwt_required()
 def list_devices():
-    """Lista wszystkich skonfigurowanych telefonów/urządzeń."""
-    from ..utils.deletion import is_admin, current_user
-    admin = is_admin()
+    """Lista wszystkich telefonów należących do bieżącego użytkownika."""
+    from ..utils.deletion import current_user
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
+    if not curr_u_id:
+        return jsonify([]), 200
 
-    q = SmsDevice.query
-    if not admin:
-        q = q.filter(db.or_(SmsDevice.user_id == curr_u_id, SmsDevice.user_id == None))
-    else:
-        user_id_param = request.args.get('user_id', type=int)
-        if user_id_param:
-            q = q.filter(SmsDevice.user_id == user_id_param)
-
-    devices = q.order_by(SmsDevice.created_at.desc()).all()
+    devices = SmsDevice.query.filter_by(user_id=curr_u_id).order_by(SmsDevice.created_at.desc()).all()
     result = []
     for d in devices:
         item = d.to_dict()
-        if not admin and d.user_id != curr_u_id:
-            item.pop('token', None)
         item['pending_tasks'] = SmsQueue.query.filter_by(device_id=d.id, status='pending').count()
         item['total_calls'] = PhoneCall.query.filter_by(device_id=d.id).count()
         item['total_messages'] = SmsMessage.query.filter_by(device_id=d.id).count()
@@ -623,8 +612,8 @@ def list_devices():
 @sms_bp.route('/devices', methods=['POST'])
 @jwt_required()
 def add_device():
-    """Dodaj nowy telefon do CRM."""
-    from ..utils.deletion import is_admin, current_user
+    """Dodaj nowy telefon do CRM (przypisany do bieżącego użytkownika)."""
+    from ..utils.deletion import current_user
     data = request.get_json(silent=True) or {}
     name = data.get('name', '').strip()
     if not name:
@@ -646,26 +635,15 @@ def add_device():
         except Exception:
             pass
 
-    admin = is_admin()
     curr_u = current_user()
-    target_user_id = None
-    if 'user_id' in data and data['user_id'] is not None and data['user_id'] != '':
-        try:
-            target_user_id = int(data['user_id'])
-            if not db.session.get(User, target_user_id):
-                return jsonify({'error': 'Wybrany użytkownik nie istnieje'}), 400
-        except (ValueError, TypeError):
-            return jsonify({'error': 'Nieprawidłowy identyfikator użytkownika'}), 400
-    elif not admin and curr_u:
-        target_user_id = curr_u.id
-    elif admin and curr_u and 'user_id' not in data:
-        target_user_id = curr_u.id
+    if not curr_u:
+        return jsonify({'error': 'Brak identyfikatora użytkownika'}), 401
 
     device = SmsDevice(
         name=name,
         phone_number=phone,
         token=token,
-        user_id=target_user_id,
+        user_id=curr_u.id,
         is_active=bool(data.get('is_active', True)),
         sync_from=sync_from_dt
     )
@@ -677,15 +655,14 @@ def add_device():
 @sms_bp.route('/devices/<int:device_id>', methods=['PUT'])
 @jwt_required()
 def update_device(device_id):
-    """Edycja parametrów telefonu."""
-    from ..utils.deletion import is_admin, current_user
+    """Edycja parametrów własnego telefonu."""
+    from ..utils.deletion import current_user
     device = db.session.get(SmsDevice, device_id)
     if not device:
         return jsonify({'error': 'Urządzenie nie istnieje'}), 404
 
-    admin = is_admin()
     curr_u = current_user()
-    if not admin and curr_u and device.user_id != curr_u.id:
+    if not curr_u or device.user_id != curr_u.id:
         return jsonify({'error': 'Brak uprawnień do edycji tego telefonu'}), 403
 
     data = request.get_json(silent=True) or {}
@@ -695,19 +672,6 @@ def update_device(device_id):
         device.phone_number = data['phone_number'].strip() or None
     if 'is_active' in data:
         device.is_active = bool(data['is_active'])
-
-    if 'user_id' in data:
-        uid = data.get('user_id')
-        if uid is None or uid == '' or uid == 0:
-            device.user_id = None
-        else:
-            try:
-                target_uid = int(uid)
-                if not db.session.get(User, target_uid):
-                    return jsonify({'error': 'Wybrany użytkownik nie istnieje'}), 400
-                device.user_id = target_uid
-            except (ValueError, TypeError):
-                return jsonify({'error': 'Nieprawidłowy identyfikator użytkownika'}), 400
 
     if 'sync_from' in data:
         sync_from_raw = data.get('sync_from')
@@ -746,15 +710,14 @@ def update_device(device_id):
 @sms_bp.route('/devices/<int:device_id>', methods=['DELETE'])
 @jwt_required()
 def delete_device(device_id):
-    """Usunięcie urządzenia z CRM."""
-    from ..utils.deletion import is_admin, current_user
+    """Usunięcie własnego urządzenia z CRM."""
+    from ..utils.deletion import current_user
     device = db.session.get(SmsDevice, device_id)
     if not device:
         return jsonify({'error': 'Urządzenie nie istnieje'}), 404
 
-    admin = is_admin()
     curr_u = current_user()
-    if not admin and curr_u and device.user_id != curr_u.id:
+    if not curr_u or device.user_id != curr_u.id:
         return jsonify({'error': 'Brak uprawnień do usunięcia tego telefonu'}), 403
 
     db.session.delete(device)
@@ -949,10 +912,11 @@ def get_entity_history():
 @jwt_required()
 def send_sms():
     """Wstawienie wiadomości SMS do kolejki wysyłkowej."""
-    from ..utils.deletion import is_admin, current_user
-    admin = is_admin()
+    from ..utils.deletion import current_user
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
+    if not curr_u_id:
+        return jsonify({'error': 'Brak identyfikatora użytkownika'}), 401
 
     data = request.get_json(silent=True) or {}
     phone_number = str(data.get('phone_number', '')).strip()
@@ -968,22 +932,13 @@ def send_sms():
         device = db.session.get(SmsDevice, device_id)
         if not device or not device.is_active:
             return jsonify({'error': 'Wybrane urządzenie nie jest aktywne'}), 400
-        if not admin and device.user_id and device.user_id != curr_u_id:
+        if device.user_id != curr_u_id:
             return jsonify({'error': 'Nie masz uprawnień do wysyłania z tego telefonu'}), 403
     else:
-        device = None
-        if curr_u_id:
-            user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
-            if user_devices:
-                device = next((d for d in user_devices if d.is_online), user_devices[0])
-        if not device:
-            unassigned = SmsDevice.query.filter_by(user_id=None, is_active=True).all()
-            if unassigned:
-                device = next((d for d in unassigned if d.is_online), unassigned[0])
-            elif admin:
-                device = SmsDevice.query.filter_by(is_active=True).first()
-        if not device:
+        user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
+        if not user_devices:
             return jsonify({'error': 'Brak podłączonego aktywnego telefonu'}), 400
+        device = next((d for d in user_devices if d.is_online), user_devices[0])
         device_id = device.id
 
     client_id = data.get('client_id')
@@ -1011,10 +966,11 @@ def send_sms():
 @jwt_required()
 def make_call():
     """Wstawienie zlecenia wykonania połączenia do kolejki telefonu."""
-    from ..utils.deletion import is_admin, current_user
-    admin = is_admin()
+    from ..utils.deletion import current_user
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
+    if not curr_u_id:
+        return jsonify({'error': 'Brak identyfikatora użytkownika'}), 401
 
     data = request.get_json(silent=True) or {}
     phone_number = str(data.get('phone_number', '')).strip()
@@ -1027,43 +983,20 @@ def make_call():
         device = db.session.get(SmsDevice, device_id)
         if not device or not device.is_active:
             return jsonify({'error': 'Wybrane urządzenie nie jest aktywne'}), 400
-        if not admin and device.user_id and device.user_id != curr_u_id:
+        if device.user_id != curr_u_id:
             return jsonify({'error': 'Nie masz uprawnień do dzwonienia z tego telefonu'}), 403
     else:
-        device = None
-        if curr_u_id:
-            user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
-            if user_devices:
-                device = next((d for d in user_devices if d.is_online), user_devices[0])
-        if not device:
-            unassigned = SmsDevice.query.filter_by(user_id=None, is_active=True).all()
-            if unassigned:
-                device = next((d for d in unassigned if d.is_online), unassigned[0])
-            elif admin:
-                devices = SmsDevice.query.filter_by(is_active=True).all()
-                if not devices:
-                    return jsonify({'error': 'Brak podłączonych aktywnych telefonów. Dodaj telefon w zakładce Telefonia & SMS.'}), 400
-                online_device = next((d for d in devices if d.is_online), None)
-                device = online_device or devices[0]
-        if not device:
+        user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
+        if not user_devices:
             return jsonify({'error': 'Brak podłączonych aktywnych telefonów. Dodaj telefon w zakładce Telefonia & SMS.'}), 400
+        device = next((d for d in user_devices if d.is_online), user_devices[0])
         device_id = device.id
 
     client_id = data.get('client_id')
     if not client_id:
         client_id = find_client_by_phone(phone_number)
 
-    user_id = None
-    user_name = None
-    try:
-        ident = get_jwt_identity()
-        if ident:
-            user_id = int(ident)
-            u = db.session.get(User, user_id)
-            if u:
-                user_name = f"{u.first_name} {u.last_name}".strip()
-    except Exception:
-        pass
+    user_name = f"{curr_u.first_name} {curr_u.last_name}".strip() if curr_u else None
 
     task = SmsQueue(
         device_id=device_id,
@@ -1072,13 +1005,13 @@ def make_call():
         action='make_call',
         status='pending',
         client_id=client_id,
-        user_id=user_id
+        user_id=curr_u_id
     )
     db.session.add(task)
 
     # Zapisz zdarzenie w aktywności od razu po kliknięciu "Połącz"
     now_dt = datetime.utcnow()
-    caller_info = f" przez: {user_name}" if user_name else (f" przez użytkownika #{user_id}" if user_id else "")
+    caller_info = f" przez: {user_name}" if user_name else (f" przez użytkownika #{curr_u_id}" if curr_u_id else "")
     dev_name = device.name or "telefon Android"
     ents = find_entities_by_phone(phone_number)
     target_clients = set()
@@ -1093,7 +1026,7 @@ def make_call():
             description=f"Zlecono połączenie z telefonu ({dev_name}) na numer {phone_number}{caller_info}",
             entity_type='client',
             entity_id=c_id,
-            user_id=user_id,
+            user_id=curr_u_id,
             created_at=now_dt,
             meta={'phone': phone_number, 'device_id': device.id, 'device_name': dev_name, 'caller_name': user_name, 'direction': 'outgoing'}
         )
@@ -1105,7 +1038,7 @@ def make_call():
             description=f"Zlecono połączenie z telefonu ({dev_name}) na numer {phone_number}{caller_info}",
             entity_type='lead',
             entity_id=ld['id'],
-            user_id=user_id,
+            user_id=curr_u_id,
             created_at=now_dt,
             meta={'phone': phone_number, 'device_id': device.id, 'device_name': dev_name, 'caller_name': user_name, 'direction': 'outgoing'}
         )
@@ -1135,31 +1068,23 @@ def trigger_action():
     if not action:
         return jsonify({'error': 'Brak akcji'}), 400
 
-    from ..utils.deletion import is_admin, current_user
-    admin = is_admin()
+    from ..utils.deletion import current_user
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
+    if not curr_u_id:
+        return jsonify({'error': 'Brak identyfikatora użytkownika'}), 401
 
     if not device_id:
-        device = None
-        if curr_u_id:
-            user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
-            if user_devices:
-                device = next((d for d in user_devices if d.is_online), user_devices[0])
-        if not device:
-            unassigned = SmsDevice.query.filter_by(user_id=None, is_active=True).all()
-            if unassigned:
-                device = next((d for d in unassigned if d.is_online), unassigned[0])
-            elif admin:
-                device = SmsDevice.query.filter_by(is_active=True).first()
-        if not device:
+        user_devices = SmsDevice.query.filter_by(user_id=curr_u_id, is_active=True).all()
+        if not user_devices:
             return jsonify({'error': 'Brak podłączonego aktywnego telefonu'}), 400
+        device = next((d for d in user_devices if d.is_online), user_devices[0])
         device_id = device.id
     else:
         device = db.session.get(SmsDevice, device_id)
         if not device:
             return jsonify({'error': 'Urządzenie nie istnieje'}), 404
-        if not admin and device.user_id and device.user_id != curr_u_id:
+        if device.user_id != curr_u_id:
             return jsonify({'error': 'Brak uprawnień do tego telefonu'}), 403
 
     payload = {}
@@ -1206,14 +1131,24 @@ def trigger_action():
 @sms_bp.route('/calls', methods=['GET'])
 @jwt_required()
 def list_calls():
-    """Lista połączeń zarejestrowanych z telefonów z multi-dopasowaniem podmiotów."""
+    """Lista połączeń zarejestrowanych z własnego telefonu z multi-dopasowaniem podmiotów."""
     search = request.args.get('search', '').strip()
     call_type = request.args.get('type', '').strip()
     device_id = request.args.get('device_id', type=int)
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 50, type=int)
 
+    allowed_dev_ids = get_user_accessible_device_ids()
+    if not allowed_dev_ids:
+        return jsonify({
+            'calls': [],
+            'total': 0,
+            'pages': 0,
+            'current_page': page
+        }), 200
+
     q = PhoneCall.query.outerjoin(SmsDevice, PhoneCall.device_id == SmsDevice.id).filter(
+        PhoneCall.device_id.in_(allowed_dev_ids),
         db.or_(
             SmsDevice.sync_from == None,
             PhoneCall.call_time == None,
@@ -1221,15 +1156,7 @@ def list_calls():
         )
     )
 
-    allowed_dev_ids = get_user_accessible_device_ids()
-    if allowed_dev_ids is not None:
-        q = q.filter(PhoneCall.device_id.in_(allowed_dev_ids))
-    else:
-        user_id_param = request.args.get('user_id', type=int)
-        if user_id_param:
-            q = q.filter(SmsDevice.user_id == user_id_param)
-
-    if device_id:
+    if device_id and device_id in allowed_dev_ids:
         q = q.filter(PhoneCall.device_id == device_id)
     if call_type and call_type != 'all':
         q = q.filter(PhoneCall.type == call_type)
@@ -1290,7 +1217,17 @@ def list_messages():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 50, type=int)
 
+    allowed_dev_ids = get_user_accessible_device_ids()
+    if not allowed_dev_ids:
+        return jsonify({
+            'messages': [],
+            'total': 0,
+            'pages': 0,
+            'current_page': page
+        }), 200
+
     q = SmsMessage.query.outerjoin(SmsDevice, SmsMessage.device_id == SmsDevice.id).filter(
+        SmsMessage.device_id.in_(allowed_dev_ids),
         db.or_(
             SmsDevice.sync_from == None,
             SmsMessage.message_time == None,
@@ -1298,15 +1235,7 @@ def list_messages():
         )
     )
 
-    allowed_dev_ids = get_user_accessible_device_ids()
-    if allowed_dev_ids is not None:
-        q = q.filter(SmsMessage.device_id.in_(allowed_dev_ids))
-    else:
-        user_id_param = request.args.get('user_id', type=int)
-        if user_id_param:
-            q = q.filter(SmsDevice.user_id == user_id_param)
-
-    if device_id:
+    if device_id and device_id in allowed_dev_ids:
         q = q.filter(SmsMessage.device_id == device_id)
     if msg_type and msg_type != 'all':
         q = q.filter(SmsMessage.type == msg_type)
@@ -1345,15 +1274,17 @@ def list_messages():
 def list_threads():
     """Wątki konwersacji pogrupowane po numerze telefonu z pełnymi powiązaniami."""
     allowed_dev_ids = get_user_accessible_device_ids()
+    if not allowed_dev_ids:
+        return jsonify([]), 200
+
     q = SmsMessage.query.outerjoin(SmsDevice, SmsMessage.device_id == SmsDevice.id).filter(
+        SmsMessage.device_id.in_(allowed_dev_ids),
         db.or_(
             SmsDevice.sync_from == None,
             SmsMessage.message_time == None,
             SmsMessage.message_time >= SmsDevice.sync_from
         )
     )
-    if allowed_dev_ids is not None:
-        q = q.filter(SmsMessage.device_id.in_(allowed_dev_ids))
     all_msgs = q.order_by(SmsMessage.timestamp.desc(), SmsMessage.id.desc()).all()
     threads_map = {}
 
@@ -1394,12 +1325,18 @@ def list_threads():
 def list_queue():
     """Lista ostatnich i oczekujących zadań w kolejce."""
     allowed_dev_ids = get_user_accessible_device_ids()
+    from ..utils.deletion import current_user
+    curr_u = current_user()
+    curr_u_id = curr_u.id if curr_u else None
+    if not allowed_dev_ids and not curr_u_id:
+        return jsonify([]), 200
+
     q = SmsQueue.query
-    if allowed_dev_ids is not None:
-        from ..utils.deletion import current_user
-        curr_u = current_user()
-        curr_u_id = curr_u.id if curr_u else None
+    if allowed_dev_ids:
         q = q.filter(db.or_(SmsQueue.device_id.in_(allowed_dev_ids), SmsQueue.user_id == curr_u_id))
+    else:
+        q = q.filter(SmsQueue.user_id == curr_u_id)
+
     tasks = q.order_by(SmsQueue.created_at.desc()).limit(100).all()
     return jsonify([t.to_dict() for t in tasks]), 200
 
@@ -1408,17 +1345,17 @@ def list_queue():
 @jwt_required()
 def cancel_queue_task(task_id):
     """Anulowanie oczekującego zadania."""
-    from ..utils.deletion import is_admin, current_user
+    from ..utils.deletion import current_user
     task = db.session.get(SmsQueue, task_id)
     if not task:
         return jsonify({'error': 'Zadanie nie istnieje'}), 404
-    admin = is_admin()
+
     curr_u = current_user()
     curr_u_id = curr_u.id if curr_u else None
-    if not admin and task.user_id and task.user_id != curr_u_id:
-        allowed_dev_ids = get_user_accessible_device_ids() or []
-        if task.device_id not in allowed_dev_ids:
-            return jsonify({'error': 'Brak uprawnień do anulowania tego zadania'}), 403
+    allowed_dev_ids = get_user_accessible_device_ids()
+    if task.user_id != curr_u_id and task.device_id not in allowed_dev_ids:
+        return jsonify({'error': 'Brak uprawnień do anulowania tego zadania'}), 403
+
     if task.status in ('sent', 'completed'):
         return jsonify({'error': 'Zadanie zostało już zrealizowane'}), 400
 
@@ -1432,12 +1369,12 @@ def cancel_queue_task(task_id):
 @sms_bp.route('/stats-summary', methods=['GET'])
 @jwt_required()
 def get_stats_summary():
-    """Statystyki obliczane w 100% ze wszystkich połączeń i SMS-ów zgromadzonych w bazie CRM."""
+    """Statystyki obliczane w 100% ze wszystkich połączeń i SMS-ów zgromadzonych w bazie CRM dla własnego telefonu."""
     allowed_dev_ids = get_user_accessible_device_ids()
-    if allowed_dev_ids is not None:
-        devices = SmsDevice.query.filter(SmsDevice.id.in_(allowed_dev_ids)).all()
+    if not allowed_dev_ids:
+        devices = []
     else:
-        devices = SmsDevice.query.all()
+        devices = SmsDevice.query.filter(SmsDevice.id.in_(allowed_dev_ids)).all()
     total_devices = len(devices)
     online_devices = sum(1 for d in devices if d.is_online)
 
@@ -1452,16 +1389,18 @@ def get_stats_summary():
     month_start_ms = int(month_start.timestamp() * 1000)
 
     # 1. Połączenia
-    calls_q = PhoneCall.query.outerjoin(SmsDevice, PhoneCall.device_id == SmsDevice.id).filter(
-        db.or_(
-            SmsDevice.sync_from == None,
-            PhoneCall.call_time == None,
-            PhoneCall.call_time >= SmsDevice.sync_from
+    if not allowed_dev_ids:
+        calls_all = []
+    else:
+        calls_q = PhoneCall.query.outerjoin(SmsDevice, PhoneCall.device_id == SmsDevice.id).filter(
+            PhoneCall.device_id.in_(allowed_dev_ids),
+            db.or_(
+                SmsDevice.sync_from == None,
+                PhoneCall.call_time == None,
+                PhoneCall.call_time >= SmsDevice.sync_from
+            )
         )
-    )
-    if allowed_dev_ids is not None:
-        calls_q = calls_q.filter(PhoneCall.device_id.in_(allowed_dev_ids))
-    calls_all = calls_q.all()
+        calls_all = calls_q.all()
     total_calls = len(calls_all)
     incoming_calls = sum(1 for c in calls_all if c.type == 'incoming')
     outgoing_calls = sum(1 for c in calls_all if c.type == 'outgoing')
@@ -1489,16 +1428,18 @@ def get_stats_summary():
     month_duration_sec = sum(c.duration_sec or 0 for c in month_calls_list)
 
     # 2. SMS-y
-    sms_q = SmsMessage.query.outerjoin(SmsDevice, SmsMessage.device_id == SmsDevice.id).filter(
-        db.or_(
-            SmsDevice.sync_from == None,
-            SmsMessage.message_time == None,
-            SmsMessage.message_time >= SmsDevice.sync_from
+    if not allowed_dev_ids:
+        sms_all = []
+    else:
+        sms_q = SmsMessage.query.outerjoin(SmsDevice, SmsMessage.device_id == SmsDevice.id).filter(
+            SmsMessage.device_id.in_(allowed_dev_ids),
+            db.or_(
+                SmsDevice.sync_from == None,
+                SmsMessage.message_time == None,
+                SmsMessage.message_time >= SmsDevice.sync_from
+            )
         )
-    )
-    if allowed_dev_ids is not None:
-        sms_q = sms_q.filter(SmsMessage.device_id.in_(allowed_dev_ids))
-    sms_all = sms_q.all()
+        sms_all = sms_q.all()
     total_sms = len(sms_all)
     sms_received = sum(1 for m in sms_all if m.type == 'received')
     sms_sent = sum(1 for m in sms_all if m.type == 'sent')

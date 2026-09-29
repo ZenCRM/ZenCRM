@@ -404,11 +404,6 @@ window.ZenModules.sms = function () {
 
         // ═══════ URZĄDZENIA (TELEFONY) ═══════
         openDeviceModal(dev = null) {
-            if (!this.users || this.users.length === 0) {
-                try {
-                    this.api('/users').then(uList => { if (Array.isArray(uList)) this.users = uList; });
-                } catch (e) {}
-            }
             if (dev) {
                 this.deviceModal = {
                     open: true,
@@ -417,7 +412,6 @@ window.ZenModules.sms = function () {
                         name: dev.name || '',
                         phone_number: dev.phone_number || '',
                         token: dev.token || '',
-                        user_id: dev.user_id != null ? dev.user_id : '',
                         sync_from: dev.sync_from || '',
                         is_active: dev.is_active !== false,
                     },
@@ -431,7 +425,6 @@ window.ZenModules.sms = function () {
                         name: '',
                         phone_number: '',
                         token: '',
-                        user_id: this.user?.id || '',
                         sync_from: '',
                         is_active: true,
                     },
@@ -457,8 +450,7 @@ window.ZenModules.sms = function () {
 
             this.deviceModal.error = '';
             const payload = {
-                ...this.deviceModal.form,
-                user_id: this.deviceModal.form.user_id ? Number(this.deviceModal.form.user_id) : null
+                ...this.deviceModal.form
             };
 
             try {
