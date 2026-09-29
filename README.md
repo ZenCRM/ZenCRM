@@ -8,7 +8,7 @@
 Samodzielnie hostowany CRM do sprzedaży, projektów, dokumentów i obsługi klienta.  
 A self-hosted CRM for sales, projects, documents, and customer support.
 
-[![Demo](https://img.shields.io/badge/LIVE_DEMO-TRY_ZENCRM-16a34a?style=for-the-badge)](https://zencrmdemo.tw5.org/)
+[![Demo](https://img.shields.io/badge/LIVE_DEMO-TRY_ZENCRM-16a34a?style=for-the-badge)](https://demo.zencrm.pl/)
 [![Docker](https://img.shields.io/badge/DOCKER-HUB-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/kosiorekmateusz/zencrm)
 [![Release](https://img.shields.io/github/v/release/ZenCRM/ZenCRM?style=for-the-badge)](https://github.com/ZenCRM/ZenCRM/releases/latest)
 
