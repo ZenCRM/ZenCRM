@@ -38,6 +38,18 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
                             <span x-text="window.ZenI18n.t(&quot;Kolory&quot;)">Kolory</span>
                         </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'appearance' ? 'active' : ''" @click="settingsTab = 'appearance'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h18v14H3zM7 9h4m-4 4h10m-10 3h7"/></svg>
+                            <span x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'translations' ? 'active' : ''" @click="settingsTab = 'translations'; loadTranslations()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h12M10 3v2m4 0c-.6 5-3.2 9-8 12m1-8c1.2 2.4 3.2 4.5 6 6m2 4 3.5-9 3.5 9m-5.9-2h3.8"/></svg>
+                            <span x-text="window.ZenI18n.t('Tłumaczenia')">Tłumaczenia</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'updates' ? 'active' : ''" @click="settingsTab = 'updates'; loadReleases()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"/></svg>
+                            <span x-text="window.ZenI18n.t('Aktualizacja')">Aktualizacja</span>
+                        </button>
                         <button class="settings-nav-item" :class="settingsTab === &#x27;login&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;login&#x27;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                             <span x-text="window.ZenI18n.t(&quot;Ekran logowania&quot;)">Ekran logowania</span>
@@ -67,6 +79,52 @@
 
                     <!-- PANEL -->
                     <div class="settings-panel">
+                        <div x-show="settingsTab === 'updates'" x-cloak class="space-y-5">
+                            <div>
+                                <h2 class="settings-section-title" x-text="window.ZenI18n.t('Aktualizacja')">Aktualizacja</h2>
+                                <p class="settings-section-desc" x-text="window.ZenI18n.t('Informacje o wydaniach pochodzą z GitHub: ZenCRM/ZenCRM.')">Informacje o wydaniach pochodzą z GitHub: ZenCRM/ZenCRM.</p>
+                            </div>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4"><div class="text-xs text-gray-500" x-text="window.ZenI18n.t('Zainstalowana wersja')">Zainstalowana wersja</div><strong x-text="releaseInfo?.installed || window.ZenI18n.t('Nieustalona')"></strong></div>
+                                <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4"><div class="text-xs text-gray-500" x-text="window.ZenI18n.t('Najnowsze stabilne wydanie')">Najnowsze stabilne wydanie</div><strong x-text="releaseInfo?.latest?.tag || window.ZenI18n.t('Brak danych')"></strong></div>
+                            </div>
+                            <p x-show="releaseInfo?.update_available === true" class="text-green-700 dark:text-green-400" x-text="window.ZenI18n.t('Dostępna jest nowsza wersja.')">Dostępna jest nowsza wersja.</p>
+                            <p x-show="releaseInfo?.update_available === false" class="text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Masz najnowszą wersję stabilną.')">Masz najnowszą wersję stabilną.</p>
+                            <p x-show="releaseInfo &amp;&amp; releaseInfo.update_available === null" class="text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Nie można porównać wersji automatycznie. Sprawdź opis wydania.')">Nie można porównać wersji automatycznie. Sprawdź opis wydania.</p>
+                            <button type="button" class="ux-button" @click="loadReleases()" :disabled="releaseLoading" x-text="window.ZenI18n.t(releaseLoading ? 'Sprawdzanie…' : 'Sprawdź wydania')"></button>
+                            <p x-show="releaseError" x-text="releaseError" role="alert" class="text-red-600 text-sm"></p>
+                            <div class="space-y-3">
+                                <template x-for="release in releaseInfo?.releases || []" :key="release.tag">
+                                    <article class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                                        <div class="flex items-center justify-between gap-3 flex-wrap"><div><strong x-text="release.name"></strong><span class="text-xs ml-2 text-gray-500" x-text="release.published_at ? new Date(release.published_at).toLocaleDateString(locale) : ''"></span><span x-show="release.prerelease" class="text-xs ml-2" x-text="window.ZenI18n.t('Przedpremierowe')">Przedpremierowe</span></div><a :href="release.url" target="_blank" rel="noopener noreferrer" class="ux-text-button" x-text="window.ZenI18n.t('Otwórz wydanie') + ' ↗'">Otwórz wydanie ↗</a></div>
+                                        <p class="mt-3 text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap max-h-52 overflow-y-auto" x-text="release.body || window.ZenI18n.t('Brak opisu wydania.')"></p>
+                                    </article>
+                                </template>
+                            </div>
+                            <p class="text-xs text-gray-500" x-text="window.ZenI18n.t('Wdrożenie wydania wykonaj zgodnie ze sposobem instalacji aplikacji. Ta strona nie zastępuje plików działającego serwera.')">Wdrożenie wydania wykonaj zgodnie ze sposobem instalacji aplikacji. Ta strona nie zastępuje plików działającego serwera.</p>
+                        </div>
+
+                        <div x-show="settingsTab === 'translations'" x-cloak class="space-y-5">
+                            <div><h2 class="settings-section-title" x-text="window.ZenI18n.t('Tłumaczenia')">Tłumaczenia</h2><p class="settings-section-desc" x-text="window.ZenI18n.t('Własne tłumaczenia są zapisane w bazie i mają pierwszeństwo przed tekstami dostarczonymi z aplikacją.')">Własne tłumaczenia są zapisane w bazie i mają pierwszeństwo przed tekstami dostarczonymi z aplikacją.</p></div>
+                            <form @submit.prevent="createTranslationLanguage()" class="grid gap-3 sm:grid-cols-4 items-end rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                                <label class="text-sm"><span x-text="window.ZenI18n.t('Kod języka')">Kod języka</span><input x-model="newTranslationLanguage.code" required maxlength="16" placeholder="np. de" class="ux-input w-full mt-1"></label>
+                                <label class="text-sm"><span x-text="window.ZenI18n.t('Nazwa')">Nazwa</span><input x-model="newTranslationLanguage.name" required maxlength="80" placeholder="np. Deutsch" class="ux-input w-full mt-1"></label>
+                                <label class="text-sm"><span x-text="window.ZenI18n.t('Na podstawie')">Na podstawie</span><select x-model="newTranslationLanguage.base_locale" class="ux-input w-full mt-1"><option value="pl">Polski</option><option value="en">English</option></select></label>
+                                <button type="submit" class="ux-button" x-text="window.ZenI18n.t('Dodaj język')">Dodaj język</button>
+                            </form>
+                            <div class="flex flex-wrap gap-3 items-end">
+                                <label class="text-sm flex-1 min-w-44"><span x-text="window.ZenI18n.t('Język')">Język</span><select class="ux-input w-full mt-1" :value="translationLocale" @change="selectTranslationLocale($event.target.value)"><template x-for="(language, code) in translationData.languages" :key="code"><option :value="code" x-text="language.name"></option></template></select></label>
+                                <label class="text-sm flex-[2] min-w-56"><span x-text="window.ZenI18n.t('Szukaj tekstu')">Szukaj tekstu</span><input x-model="translationSearch" @input="translationLimit = 80" class="ux-input w-full mt-1" :placeholder="window.ZenI18n.t('Wpisz fragment tekstu')"></label>
+                            </div>
+                            <p class="text-xs text-gray-500" x-text="window.ZenI18n.t('Puste pole używa tłumaczenia bazowego. Zmienione wpisy pozostają po aktualizacji aplikacji.')">Puste pole używa tłumaczenia bazowego. Zmienione wpisy pozostają po aktualizacji aplikacji.</p>
+                            <div class="zen-translations-list rounded-xl border border-gray-200 dark:border-gray-700 overflow-y-auto">
+                                <template x-for="key in translationKeys().slice(0, translationLimit)" :key="key"><label class="zen-translation-row block p-3 border-b border-gray-100 dark:border-gray-700 last:border-0"><span class="block text-sm font-semibold" x-text="key"></span><span class="block text-xs text-gray-500 mb-2" x-text="translationBase(key)"></span><input class="ux-input w-full" :value="translationDraft[key] || ''" @input="translationDraft[key] = $event.target.value" :placeholder="translationBase(key)" :aria-label="'Tłumaczenie: ' + key"></label></template>
+                            </div>
+                            <button x-show="translationKeys().length > translationLimit" type="button" class="ux-text-button" @click="translationLimit += 80" x-text="window.ZenI18n.t('Pokaż więcej')">Pokaż więcej</button>
+                            <div class="flex justify-end"><button type="button" class="ux-button" @click="saveTranslations()" x-text="window.ZenI18n.t('Zapisz tłumaczenia')">Zapisz tłumaczenia</button></div>
+                            <p x-show="translationError" x-text="translationError" role="alert" class="text-sm text-red-600"></p>
+                            <p x-show="translationSaved" x-text="translationSaved" role="status" class="text-sm text-green-700"></p>
+                        </div>
                         <div x-show="settingsTab === 'recordViews'" x-cloak>
                             <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Domyślny widok rekordu&quot;)">Domyślny widok rekordu</span></h2>
                             <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.&quot;)">Wybierz sposób otwierania rekordów dla wszystkich użytkowników CRM. Skrócony widok otwiera panel boczny, pełny — całą kartę rekordu.</span></p>
@@ -559,6 +617,34 @@
                                     <input type="file" accept="image/*" @change="uploadBrandFile($event, &#x27;favicon&#x27;)"
                                            class="text-xs w-full">
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══ SZABLONY WYGLĄDU ═══ -->
+                        <div x-show="settingsTab === 'appearance'" x-cloak>
+                            <h2 class="settings-section-title" x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</h2>
+                            <p class="settings-section-desc" x-text="window.ZenI18n.t('Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.')">Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.</p>
+                            <div class="zen-template-options" role="radiogroup" :aria-label="window.ZenI18n.t('Szablon interfejsu')">
+                                <label class="zen-template-option" :class="(settingsForm.ui_template || 'classic') === 'classic' ? 'selected' : ''">
+                                    <input type="radio" name="ui-template" value="classic" x-model="settingsForm.ui_template" @change="applyTheme()">
+                                    <span class="zen-template-preview zen-template-preview-classic" aria-hidden="true"><span class="zen-preview-sidebar"><i></i><i></i><i></i></span><span class="zen-preview-page"><b class="zen-preview-topbar"></b><b class="zen-preview-hero"></b><span class="zen-preview-metrics"><em></em><em></em><em></em></span><span class="zen-preview-list"></span></span></span>
+                                    <span><strong x-text="window.ZenI18n.t('Klasyczny')">Klasyczny</strong><small x-text="window.ZenI18n.t('Obecny wygląd · domyślny')">Obecny wygląd · domyślny</small></span>
+                                </label>
+                                <label class="zen-template-option" :class="settingsForm.ui_template === 'modern' ? 'selected' : ''">
+                                    <input type="radio" name="ui-template" value="modern" x-model="settingsForm.ui_template" @change="applyTheme()">
+                                    <span class="zen-template-preview zen-template-preview-modern" aria-hidden="true"><span class="zen-preview-sidebar"><i></i><i></i><i></i></span><span class="zen-preview-page"><b class="zen-preview-topbar"></b><b class="zen-preview-hero"></b><span class="zen-preview-metrics"><em></em><em></em><em></em></span><span class="zen-preview-list"></span></span></span>
+                                    <span><strong>Modern</strong><small x-text="window.ZenI18n.t('Ciemny sidebar, krajobrazowe tło hero')">Ciemny sidebar, krajobrazowe tło hero</small></span>
+                                </label>
+                            </div>
+                            <div class="settings-field mt-6" x-show="settingsForm.ui_template === 'modern'">
+                                <label for="ui-hero-background" x-text="window.ZenI18n.t('Grafika sekcji hero')">Grafika sekcji hero</label>
+                                <select id="ui-hero-background" x-model="settingsForm.ui_hero_background" @change="chooseModernHeroBackground()">
+                                    <option value="random">Losowo przy otwarciu rekordu</option>
+                                    <option value="mountains">Góry i jezioro</option>
+                                    <option value="forest">Las i dolina</option>
+                                    <option value="coast">Wybrzeże</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-2" x-text="window.ZenI18n.t('Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.')">Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.</p>
                             </div>
                         </div>
 
@@ -1291,7 +1377,7 @@
                         </div>
 
                         <!-- ZAPISZ -->
-                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;, &#x27;menu&#x27;, &#x27;leads&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
+                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;, &#x27;menu&#x27;, &#x27;leads&#x27;, &#x27;translations&#x27;, &#x27;updates&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
                             <button @click="loadSettings()" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium">
                                 <span x-text="window.ZenI18n.t(&quot;Cofnij zmiany&quot;)">Cofnij zmiany</span>
                             </button>

@@ -21,6 +21,7 @@ PUBLIC_KEYS = frozenset({
     'login_welcome_text', 'login_footer', 'login_show_logo',
 })
 UI_KEYS = PUBLIC_KEYS | frozenset({
+    'ui_template', 'ui_hero_background',
     'ui_detail_client', 'ui_detail_lead', 'ui_detail_task', 'ui_detail_service',
     'ui_show_footer', 'ui_footer_text', 'ui_dark_default',
     'lead_stages', 'task_stages', 'required_standard_fields', 'standard_field_labels',
@@ -104,6 +105,10 @@ def update_settings():
 
     data = request.get_json(silent=True) or {}
     try:
+        if 'ui_template' in data and data['ui_template'] not in ('classic', 'modern'):
+            raise ValueError('Wybierz dostępny szablon interfejsu.')
+        if 'ui_hero_background' in data and data['ui_hero_background'] not in ('random', 'mountains', 'forest', 'coast'):
+            raise ValueError('Wybierz dostępne tło sekcji hero.')
         for kind in ('client', 'lead', 'task', 'service'):
             key = 'ui_detail_' + kind
             if key in data and data[key] not in ('full', 'compact'):

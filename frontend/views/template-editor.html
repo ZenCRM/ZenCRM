@@ -1,7 +1,7 @@
 <!-- MODAL SZABLONU (edytor z podglądem) -->
-<div x-show="templateModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2"
+<div x-show="templateModal.open" x-cloak class="zen-template-editor-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2"
      @keydown.escape.window="templateModal.open = false">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] flex flex-col">
+    <div class="zen-template-editor bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] flex flex-col">
         <div class="px-6 py-4 border-b flex justify-between items-center flex-shrink-0">
             <h3 class="text-lg font-semibold"
                 x-text="(templateModal.editingId ? window.ZenI18n.t(&#x27;Edytuj&#x27;) : window.ZenI18n.t(&#x27;Nowy&#x27;)) + window.ZenI18n.t(&#x27; szablon&#x27;)"></h3>
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Prawa: podgląd -->
-            <div class="flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden">
+            <div class="zen-template-preview-panel flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden">
                 <div class="px-4 py-2 bg-white dark:bg-gray-800 border-b flex justify-between items-center flex-shrink-0">
                     <span class="text-sm font-medium"><span x-text="window.ZenI18n.t(&quot;Podgląd (dane przykładowe)&quot;)">Podgląd (dane przykładowe)</span></span>
                     <button @click="refreshTemplatePreview()" :disabled="templateModal.previewLoading"
@@ -75,7 +75,7 @@
                 </div>
                 <p x-show="templateModal.previewError" x-text="templateModal.previewError" class="text-red-600 text-xs p-2"></p>
                 <iframe x-ref="templatePreviewFrame"
-                        class="flex-1 w-full bg-white"
+                        class="zen-template-preview-frame flex-1 w-full bg-white"
                         sandbox="allow-same-origin"></iframe>
             </div>
         </div>

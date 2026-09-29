@@ -20,6 +20,10 @@ RUN groupadd -g 1000 zencrm && \
 
 WORKDIR /app
 
+ARG ZENCRM_VERSION=0.9.0.1
+LABEL org.opencontainers.image.version="${ZENCRM_VERSION}"
+ENV ZENCRM_VERSION=${ZENCRM_VERSION}
+
 # Install Python requirements (pinned)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

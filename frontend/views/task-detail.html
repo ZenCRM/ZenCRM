@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="detail-tabs-v2"><button class="detail-tab-v2" :class="detailView.tab !== 'files' ? 'active' : ''" @click="detailView.tab = 'overview'" x-text="window.ZenI18n.t('Szczegóły')">Szczegóły</button><button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('task', detailView.data.id)"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button></div>
+                    <div class="detail-tabs-v2"><button class="detail-tab-v2" :class="detailView.tab !== 'files' ? 'active' : ''" @click="detailView.tab = 'overview'" x-text="window.ZenI18n.t('Szczegóły')">Szczegóły</button><button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('task', detailView.data.id)" x-text="window.ZenI18n.t('Pliki')">Pliki</button></div>
                     <div class="detail-body" x-show="detailView.tab !== 'files'">
                         <div x-show="detailView.loading" class="text-center py-12 text-gray-500">
                             <div class="inline-block w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>

@@ -26,6 +26,9 @@ window.ZenApi = {
             throw new Error(window.ZenI18n.t('Sesja wygasła – zaloguj się ponownie'));
         }
 
+        if (r.status !== 204 && !r.headers.get('Content-Type')?.toLowerCase().includes('application/json')) {
+            throw new Error(window.ZenI18n.t('Serwer zwrócił stronę zamiast odpowiedzi API. Uruchom ponownie serwer aplikacji.'));
+        }
         const data = r.status === 204 ? null : await r.json();
         if (!r.ok) throw new Error(window.ZenI18n.t((data && data.error) || window.ZenI18n.t('Błąd API')));
         return data;

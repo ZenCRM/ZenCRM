@@ -5,11 +5,12 @@ window.ZenI18n = {
     taskStage(stage) {
         return {...stage, label: stage.label === this.taskStageLabels[stage.id] ? this.t(stage.label) : stage.label};
     },
-    locale: localStorage.getItem('zen-locale') === 'en' ? 'en' : 'pl',
+    locale: Object.prototype.hasOwnProperty.call(window.ZenCustomI18n?.languages || {}, localStorage.getItem('zen-locale')) ? localStorage.getItem('zen-locale') : 'pl',
     t(key, params = {}) {
         if (typeof key !== 'string') return key;
         const own = (catalog, name) => catalog && Object.prototype.hasOwnProperty.call(catalog, name) ? catalog[name] : undefined;
-        const message = own(window.ZenLocales[this.locale], key) ?? own(window.ZenLocales.pl, key) ?? key;
+        const base = window.ZenCustomI18n?.languages?.[this.locale]?.base || this.locale;
+        const message = own(window.ZenCustomI18n?.overrides?.[this.locale], key) ?? own(window.ZenCustomI18n?.overrides?.[base], key) ?? own(window.ZenLocales[base], key) ?? own(window.ZenLocales.pl, key) ?? key;
         return message.replace(/\{([^{}]+)\}/g, (match, name) => Object.prototype.hasOwnProperty.call(params, name) ? String(params[name]) : match);
     },
 };
@@ -19,7 +20,7 @@ window.ZenModules.locale = () => ({
     locale: window.ZenI18n.locale,
     t(key,params) { return window.ZenI18n.t(key,params); },
     setLocale(locale) {
-        if (!['pl','en'].includes(locale) || locale===this.locale) return;
+        if (!Object.prototype.hasOwnProperty.call(window.ZenCustomI18n?.languages || {}, locale) || locale===this.locale) return;
         if ((this.modal?.open || this.journal?.open || this.templateModal?.open || this.detailView?.newComment?.trim()) && !confirm(this.t('Zmiana języka odświeży stronę. Odrzucić niezapisane zmiany?'))) return;
         localStorage.setItem('zen-locale',locale); location.reload();
     },

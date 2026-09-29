@@ -9,7 +9,7 @@ from pathlib import Path
 from flask import has_request_context, request
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=4)
 def catalog(locale):
     try:
         source = (Path(__file__).resolve().parents[2] / 'frontend' / 'locales' / f'{locale}.js').read_text(encoding='utf-8')
@@ -25,18 +25,37 @@ def catalog(locale):
             return {}
 
 
+def browser_catalogs():
+    from ..models.translation import TranslationLanguage, TranslationEntry
+    languages = {'pl': {'name': 'Polski', 'base': 'pl'}, 'en': {'name': 'English', 'base': 'en'}}
+    for row in TranslationLanguage.query.all():
+        languages[row.code] = {'name': row.name, 'base': row.base_locale}
+    overrides = {}
+    for row in TranslationEntry.query.all():
+        overrides.setdefault(row.locale, {})[row.key] = row.value
+    return {'languages': languages, 'overrides': overrides}
+
+
 def language():
     if not has_request_context():
         return 'pl'
-    return request.accept_languages.best_match(['pl', 'en']) or 'pl'
+    from ..models.translation import TranslationLanguage
+    codes = ['pl', 'en'] + [row.code for row in TranslationLanguage.query.all()]
+    return request.accept_languages.best_match(codes) or 'pl'
 
 
 def t(key, params=None, locale=None):
     if not isinstance(key, str):
         return key
     try:
-        cat = catalog(locale or language())
-        result = cat.get(key, key) if isinstance(cat, dict) else key
+        from ..models.translation import TranslationLanguage, TranslationEntry
+        selected = locale or language()
+        custom = TranslationEntry.query.filter_by(locale=selected, key=key).first()
+        base = TranslationLanguage.query.filter_by(code=selected).first()
+        fallback = base.base_locale if base else selected
+        cat = catalog(fallback)
+        inherited = TranslationEntry.query.filter_by(locale=fallback, key=key).first() if fallback != selected else None
+        result = custom.value if custom else inherited.value if inherited else cat.get(key, catalog('pl').get(key, key))
     except Exception:
         result = key
     return re.sub(r'\{([^{}]+)\}', lambda match: str(params[match[1]]) if params and match[1] in params else match[0], result)

@@ -3,8 +3,9 @@ window.ZenModules.details = function () { return {
         async openDetail(type, id, skipHash = false) {
             if (Date.now() - this.lastDragEnd < 300) return;
             if (this.detailView.newComment?.trim() && !confirm(window.ZenI18n.t('Odrzucić niezapisany komentarz?'))) return;
+            if (this.settingsForm?.ui_template === 'modern') this.chooseModernHeroBackground();
             if (!this.detailView.open) { this.returnScroll = document.querySelector('main')?.scrollTop || 0; this.returnFocus = document.activeElement; }
-            this.detailPanel = this.settingsForm?.['ui_detail_' + type] !== 'full';
+            this.detailPanel = this.settingsForm?.ui_template === 'modern' ? false : this.settingsForm?.['ui_detail_' + type] !== 'full';
             this.detailError = '';
             this.detailView = {
                 open: true,

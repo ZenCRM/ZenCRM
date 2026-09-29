@@ -131,7 +131,7 @@
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
                         </button>
-                        <button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('service', detailView.data.id)"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button>
+                        <button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('service', detailView.data.id)" x-text="window.ZenI18n.t('Pliki')">Pliki</button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;comments&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;comments&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Komentarze&quot;)">Komentarze</span> <span class="detail-tab-count" x-text="(detailView.comments || []).length"></span>
                         </button>

@@ -1,0 +1,43 @@
+/* Calendar layout shared by Classic and Modern. */
+.windmill-app .zen-calendar { display:flex;flex-direction:column;min-height:calc(100dvh - 64px);border:1px solid var(--wm-border);border-radius:18px;background:var(--wm-surface);box-shadow:0 8px 28px #14364b0d;overflow:hidden; }
+.windmill-app .zen-calendar-toolbar { flex:none;padding:24px 26px 18px;align-items:center;border-bottom:1px solid var(--wm-border);gap:16px; }
+.windmill-app .zen-calendar-toolbar h2 { margin-top:3px;font-size:clamp(24px,2vw,30px);line-height:1.15;color:var(--wm-text); }
+.windmill-app .zen-calendar-toolbar .zen-list-action { margin:0;width:36px;height:36px;border-radius:9px; }
+.windmill-app .zen-calendar-toolbar .ux-text-button { min-height:36px;padding:7px 13px;border:1px solid var(--wm-border);border-radius:9px;background:var(--wm-surface);font-weight:650;text-decoration:none; }
+.windmill-app .zen-calendar-toolbar .ux-text-button:hover { background:var(--wm-tint); }
+.windmill-app .zen-calendar-toolbar .ux-button { min-height:36px;padding:8px 14px; }
+.windmill-app .zen-calendar-filters { flex:none;gap:8px;padding:14px 26px;background:var(--wm-surface); }
+.windmill-app .zen-calendar-filters button { min-height:32px;padding:6px 12px;border:1px solid transparent;border-radius:8px;font-weight:600; }
+.windmill-app .zen-calendar-filters button[aria-pressed="true"] { border-color:color-mix(in srgb,var(--wm-accent) 25%,var(--wm-border));background:var(--wm-tint); }
+.windmill-app .zen-calendar-filters>span:first-of-type { margin-left:auto; }
+.windmill-app .zen-calendar-layout { flex:1;min-height:0;grid-template-columns:minmax(0,1fr) minmax(280px,310px);border-top:1px solid var(--wm-border); }
+.windmill-app .zen-calendar-scroll { min-width:0;overflow-x:auto; }
+.windmill-app .zen-calendar-month { display:flex;flex-direction:column;min-width:630px;min-height:100%; }
+.windmill-app .zen-calendar-weekdays { flex:none;padding:12px 0;background:var(--wm-subtle);border-bottom:1px solid var(--wm-border);font-size:11px;font-weight:750;letter-spacing:.045em; }
+.windmill-app .zen-calendar-grid { flex:1;grid-auto-rows:minmax(110px,1fr); }
+.windmill-app .zen-calendar-day { display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;min-height:110px;padding:9px;border-right:1px solid var(--wm-border);border-top:1px solid var(--wm-border);background:var(--wm-surface);transition:background .15s; }
+.windmill-app .zen-calendar-day:nth-child(7n) { border-right:0; }
+.windmill-app .zen-calendar-day:nth-child(7n+6),.windmill-app .zen-calendar-day:nth-child(7n+7) { background:color-mix(in srgb,var(--wm-subtle) 50%,var(--wm-surface)); }
+.windmill-app .zen-calendar-day.outside { background:var(--wm-subtle);opacity:.64; }
+.windmill-app .zen-calendar-day.selected { background:var(--wm-tint);box-shadow:inset 0 0 0 2px var(--wm-accent);opacity:1; }
+.windmill-app .zen-day-number { display:grid;place-items:center;flex:none;width:32px;height:32px;margin:0;border-radius:10px;color:var(--wm-text);font-size:13px;font-weight:700; }
+.windmill-app .zen-day-number:hover { background:var(--wm-subtle); }
+.windmill-app .zen-day-number.today { background:var(--wm-accent);color:#fff;box-shadow:0 3px 8px #0a71843d; }
+.windmill-app .zen-calendar-event { min-height:26px;margin:0;padding:5px 7px;border-radius:6px;gap:6px;overflow:hidden; }
+.windmill-app .zen-calendar-event span { font-size:10px;font-weight:700; }
+.windmill-app .zen-calendar-event strong { min-width:0;font-size:11px;line-height:1.3; }
+.windmill-app .zen-calendar-more { margin-top:auto;padding:2px 4px;font-size:10px; }
+.windmill-app aside.zen-calendar-agenda { width:auto!important;max-width:none;padding:24px 22px;background:var(--wm-surface)!important;color:var(--wm-text);border:0;border-left:1px solid var(--wm-border)!important;box-shadow:none!important;overflow-y:auto; }
+.windmill-app .zen-calendar-agenda h3 { margin:5px 0 17px;font-size:18px;line-height:1.3;text-transform:capitalize; }
+.windmill-app .zen-agenda-event { gap:11px;padding:12px 0; }
+.windmill-app .zen-agenda-event:first-of-type { border-top:1px solid var(--wm-border); }
+.windmill-app .zen-agenda-event:hover { background:var(--wm-tint); }
+.windmill-app .zen-agenda-event .zen-icon-wrap { flex:none;width:34px;height:34px;display:grid;place-items:center; }
+.windmill-app .zen-agenda-event strong { color:var(--wm-text);font-size:13px;overflow-wrap:anywhere; }
+.windmill-app .zen-calendar-agenda>p.ux-muted { margin-top:18px;padding:20px 14px;border:1px dashed var(--wm-border);border-radius:10px;background:var(--wm-subtle);text-align:center;line-height:1.5; }
+.theme-modern .windmill-app main>.zen-calendar { min-height:100%;padding:0!important;border:0;border-radius:0;box-shadow:none; }
+.theme-modern .windmill-app .zen-calendar-toolbar { background:linear-gradient(110deg,#eef7fa,#f7fbfc); }
+.theme-modern.dark .windmill-app .zen-calendar-toolbar { background:linear-gradient(110deg,#1b3545,#1a2c3a); }
+.dark .windmill-app .zen-calendar-day.outside { opacity:.58; }
+@media(max-width:1150px) { .windmill-app .zen-calendar-layout { grid-template-columns:1fr; }.windmill-app aside.zen-calendar-agenda { border-left:0!important;border-top:1px solid var(--wm-border)!important;overflow:visible; }.windmill-app .zen-calendar-month { min-height:0; } }
+@media(max-width:640px) { .windmill-app .zen-calendar { min-height:0; }.windmill-app .zen-calendar-toolbar { padding:18px 16px; }.windmill-app .zen-calendar-toolbar h2 { font-size:23px; }.windmill-app .zen-calendar-filters { padding:11px 16px; }.windmill-app .zen-calendar-filters>span:first-of-type { margin-left:0; }.windmill-app .zen-calendar-month { min-width:0; }.windmill-app .zen-calendar-weekdays { padding:10px 0; }.windmill-app .zen-calendar-grid { grid-auto-rows:minmax(76px,1fr); }.windmill-app .zen-calendar-day { align-items:center;min-height:76px;padding:6px 2px; }.windmill-app .zen-calendar-day .zen-calendar-event,.windmill-app .zen-calendar-day .zen-calendar-more { display:none; }.windmill-app .zen-day-number { width:30px;height:30px; }.windmill-app .zen-mobile-event-count { display:block;margin:3px auto 0; }.windmill-app aside.zen-calendar-agenda { grid-row:auto;padding:18px 16px; }.windmill-app .zen-agenda-event { padding:11px 0; } }

@@ -1,18 +1,20 @@
 <!-- ═══ SZABLONY ═══ -->
-            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;templates&#x27;" x-cloak>
-                <div class="flex justify-end mb-4"><button type="button" x-show="canRecordAction('templates', 'create')" @click="openTemplateModal()" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj szablon')">+ Dodaj szablon</button></div>
-                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;templates&#x27;" x-cloak class="zen-document-templates">
+                <div class="zen-templates-heading"><div><span class="zen-eyebrow" x-text="window.ZenI18n.t('DOKUMENTY')">DOKUMENTY</span><h1 x-text="window.ZenI18n.t('Szablony')">Szablony</h1><p x-text="templates.length + ' ' + window.ZenI18n.t('szablonów ofert i dokumentów')"></p></div><button type="button" x-show="canRecordAction('templates', 'create')" @click="openTemplateModal()" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj szablon')">+ Dodaj szablon</button></div>
+                <div class="zen-templates-grid">
                     <template x-for="t in pagedItems('templates', templates)" :key="t.id">
-                        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5">
-                            <h3 class="font-semibold" x-text="t.name"></h3>
-                            <span class="px-2 py-0.5 text-xs rounded-full" x-text="t.type === &#x27;offer&#x27; ? window.ZenI18n.t(&#x27;Oferta&#x27;) : window.ZenI18n.t(&#x27;Dokument&#x27;)"></span>
-                            <div class="flex gap-2 mt-3">
-                                <button @click="openTemplateModal(t)" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" :title="window.ZenI18n.t(&quot;Edytuj&quot;)"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span></button>
-                                <button @click="remove(t.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;)" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
+                        <article class="zen-template-card">
+                            <div class="zen-template-card-top"><span class="zen-template-card-icon" aria-hidden="true" x-html="zenIcon(t.type === 'offer' ? 'folder' : 'document')"></span><span class="zen-template-card-type" x-text="t.type === 'offer' ? window.ZenI18n.t('Oferta') : window.ZenI18n.t('Dokument')"></span></div>
+                            <h2 x-text="t.name"></h2>
+                            <p class="zen-template-card-meta" x-text="t.document_type_key ? (documentTypes.find(kind => kind.key === t.document_type_key)?.name || t.document_type_key) : (t.type === 'document' ? window.ZenI18n.t('Każdy typ dokumentu') : window.ZenI18n.t('Szablon oferty'))"></p>
+                            <div class="zen-template-card-actions">
+                                <button type="button" @click="openTemplateModal(t)" class="ux-text-button"><span x-html="zenIcon('edit')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Edytuj')">Edytuj</span></button>
+                                <button type="button" @click="remove(t.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;) + ' ' + t.name" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon('trash')" aria-hidden="true"></span></button>
                             </div>
-                        </div>
+                        </article>
                     </template>
                 </div>
+                <div x-show="!templates.length" class="zen-templates-empty"><span x-html="zenIcon('document')" aria-hidden="true"></span><h2 x-text="window.ZenI18n.t('Brak szablonów')">Brak szablonów</h2><p x-text="window.ZenI18n.t('Dodaj pierwszy szablon oferty lub dokumentu.')">Dodaj pierwszy szablon oferty lub dokumentu.</p></div>
                 <div x-data="{ pagerView: 'templates', get pagerItems() { return this.templates } }"><% include "views/pagination.html" %></div>
             </div>
 

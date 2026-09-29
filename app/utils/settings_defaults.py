@@ -33,6 +33,8 @@ DEFAULTS = {
     'ui_detail_service': 'compact',
 
     # ── UI ──
+    'ui_template':           'classic',
+    'ui_hero_background':    'random',
     'ui_show_footer':        'false',
     'ui_footer_text':        '© 2026 ZenCRM',
     'ui_dark_default':       'false',

@@ -87,6 +87,18 @@ function crmApp() {
         settingsForm: {},
         settingsSaved: '',
         settingsError: '',
+        releaseInfo: null,
+        releaseLoading: false,
+        releaseError: '',
+        translationData: window.ZenCustomI18n || {languages:{pl:{name:'Polski',base:'pl'},en:{name:'English',base:'en'}},overrides:{}},
+        translationLocale: 'pl',
+        translationSearch: '',
+        translationLimit: 80,
+        translationDraft: {},
+        translationOriginal: {},
+        translationError: '',
+        translationSaved: '',
+        newTranslationLanguage: {code:'',name:'',base_locale:'pl'},
         emailTemplates: [],
         selectedEmailTemplate: null,
         emailTemplateForm: { subject: '', body_html: '' },
@@ -375,6 +387,7 @@ function crmApp() {
             this.user = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            sessionStorage.removeItem('zen-i18n-catalog');
             this.settingsForm = {};
             await this.loadSettings(true);
             // Nie czyścimy lastView – po ponownym zalogowaniu wróci tam, gdzie byłeś
@@ -679,10 +692,22 @@ function crmApp() {
         prevMonth() {
             this.calendarDate = new Date(this.calendarDate.getFullYear(),
                                          this.calendarDate.getMonth() - 1, 1);
+            this.calendarSelected = new Date(this.calendarDate);
         },
         nextMonth() {
             this.calendarDate = new Date(this.calendarDate.getFullYear(),
                                          this.calendarDate.getMonth() + 1, 1);
+            this.calendarSelected = new Date(this.calendarDate);
+        },
+        goToToday() {
+            this.calendarDate = new Date();
+            this.calendarSelected = new Date(this.calendarDate);
+        },
+        selectCalendarDay(date) {
+            this.calendarSelected = new Date(date);
+            if (date.getMonth() !== this.calendarDate.getMonth() || date.getFullYear() !== this.calendarDate.getFullYear()) {
+                this.calendarDate = new Date(date.getFullYear(), date.getMonth(), 1);
+            }
         },
 
         // ═══════════════════════════════════════════════════════════
@@ -1071,6 +1096,18 @@ function crmApp() {
         // INIT
         // ═══════════════════════════════════════════════════════════
         async init() {
+            if (this.token) {
+                try {
+                    const catalog = await this.api('/translations/catalog');
+                    const serialized = JSON.stringify(catalog);
+                    if (sessionStorage.getItem('zen-i18n-catalog') !== serialized) {
+                        sessionStorage.setItem('zen-i18n-catalog', serialized);
+                        location.reload();
+                        return;
+                    }
+                    window.ZenCustomI18n = catalog;
+                } catch (e) { console.warn('Nie pobrano tłumaczeń:', e.message); }
+            }
             this.startNotifications();
             this.startReminders();
             this.initPush();

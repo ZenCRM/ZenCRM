@@ -2,14 +2,14 @@
 <div x-show="token" x-cloak class="flex h-screen overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto bg-white dark:bg-gray-800
+    <aside class="zen-app-sidebar fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto bg-white dark:bg-gray-800
                   border-r border-gray-200 dark:border-gray-700 transition-transform duration-200
                   lg:static lg:translate-x-0 lg:flex-shrink-0"
            :class="sidebarOpen ? &#x27;translate-x-0&#x27; : &#x27;-translate-x-full&#x27;">
         <div class="px-3 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center">
             <a href="#dashboard" @click.prevent="selectView('dashboard')" :aria-label="window.ZenI18n.t('Przejdź do dashboardu')" class="inline-flex items-center justify-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-500">
             <img id="zen-sidebar-logo"
-                 :src="(darkMode &amp;&amp; settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
+                 :src="((darkMode || settingsForm?.ui_template === 'modern') &amp;&amp; settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
                  @error="$el.src = '/logo.png'"
                  :alt="settingsForm?.brand_name || window.ZenI18n.t(&quot;ZenCRM&quot;)"
                  class="h-20 w-auto max-w-full object-contain">
@@ -164,7 +164,7 @@
                                   x-text="roleLabel(user?.role)"></span>
                         </div>
 
-                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t(&#x27;Język&#x27;)"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t(&#x27;Język&#x27;)"><option value="pl" x-text="window.ZenI18n.t(&quot;Polski&quot;)">Polski</option><option value="en" x-text="window.ZenI18n.t(&quot;English&quot;)">English</option></select></label></div>
+                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t('Język')"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t('Język')"><template x-for="(language, code) in window.ZenCustomI18n.languages" :key="code"><option :value="code" x-text="language.name"></option></template></select></label></div>
                         <div class="py-1">
                             <button @click="open = false; openProfile()"
                                     class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">

@@ -245,6 +245,7 @@
                 <select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t('Język')">
                     <option value="pl" x-text="window.ZenI18n.t(&quot;🇵🇱 Polski&quot;)">🇵🇱 Polski</option>
                     <option value="en" x-text="window.ZenI18n.t(&quot;🇬🇧 English&quot;)">🇬🇧 English</option>
+                    <template x-for="code in Object.keys(window.ZenCustomI18n.languages).filter(code =&gt; !['pl','en'].includes(code))" :key="code"><option :value="code" x-text="window.ZenCustomI18n.languages[code].name"></option></template>
                 </select>
             </label>
             <button type="button" class="zen-login-theme"

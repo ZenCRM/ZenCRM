@@ -1,7 +1,7 @@
 <!-- ═══ PROJEKTY ═══ -->
 <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'projects'"
      x-init="$watch('projects', list => { loadAllCustomFields(); loadCustomValuesForTable('projects', (list||[]).map(p => p.id)); }); loadAllCustomFields(); if (projects.length) loadCustomValuesForTable('projects', projects.map(p => p.id));"
-     x-cloak class="space-y-6">
+     x-cloak class="zen-projects-view space-y-6">
 
     <!-- ─────────────────────────────────────────────────────────── -->
     <!-- 1. LISTA PROJEKTÓW (gdy żaden projekt nie jest otwarty) -->
@@ -290,7 +290,7 @@
                 <span x-html="zenIcon('activity')"></span>
                 <span x-text="window.ZenI18n.t('Szczegóły projektu')">Szczegóły</span>
             </button>
-            <button type="button" @click="openAttachments('project', activeProject.id)" class="px-4 py-2.5 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap" :class="projectTab === 'files' ? 'border-brand-600 text-brand-600' : 'border-transparent text-gray-500'"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button>
+            <button type="button" @click="openAttachments('project', activeProject.id)" class="px-4 py-2.5 text-sm font-semibold border-b-2 transition whitespace-nowrap" :class="projectTab === 'files' ? 'border-brand-600 text-brand-600' : 'border-transparent text-gray-500'" x-text="window.ZenI18n.t('Pliki')">Pliki</button>
         </div>
 
         <div x-show="projectTab === 'files'" x-cloak class="p-5"><% include "views/attachments-panel.html" %></div>

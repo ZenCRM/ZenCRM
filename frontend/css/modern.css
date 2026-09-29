@@ -1,0 +1,176 @@
+/* UI template selector is available in both themes; Classic keeps existing styles. */
+.zen-template-options { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px; }
+.zen-template-option { display:flex;flex-direction:column;gap:14px;padding:16px;border:2px solid var(--wm-border,#e5e7eb);border-radius:16px;cursor:pointer;background:var(--wm-surface,#fff);transition:border-color .15s,box-shadow .15s,transform .15s; }
+.zen-template-option:hover { transform:translateY(-2px);box-shadow:0 9px 24px #12344b14; }
+.zen-template-option.selected { border-color:#009fb9;box-shadow:0 0 0 3px #009fb920; }
+.zen-template-option:focus-within { outline:3px solid #6acbda;outline-offset:2px; }
+.zen-template-option input { position:absolute;opacity:0;width:1px;height:1px; }
+.zen-template-option>span:last-child { display:flex;flex-direction:column;gap:2px; }
+.zen-template-option strong { color:var(--wm-text,#183247);font-size:14px; }
+.zen-template-option small { color:var(--wm-muted,#667784);font-size:12px; }
+.zen-template-preview { display:flex;height:170px;overflow:hidden;border-radius:10px;background:#edf3f6;box-shadow:inset 0 0 0 1px #133a541c; }
+.zen-template-preview .zen-preview-sidebar { display:flex;flex-direction:column;gap:10px;width:22%;padding:15px 8px;background:#f8fbfd;border-right:1px solid #dce8ed; }
+.zen-template-preview .zen-preview-sidebar i { display:block;width:80%;height:7px;border-radius:4px;background:#ccdce4; }
+.zen-template-preview .zen-preview-sidebar i:first-child { width:58%;height:13px;margin-bottom:10px;background:#168bbb; }
+.zen-template-preview .zen-preview-page { display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;padding:9px 11px; }
+.zen-template-preview .zen-preview-topbar { display:block;height:14px;border-radius:5px;background:#fff;box-shadow:0 1px 3px #11334b12; }
+.zen-template-preview .zen-preview-hero { display:block;height:51px;border-radius:7px;background:linear-gradient(110deg,#e8f5fc,#e6f9f3); }
+.zen-template-preview .zen-preview-metrics { display:flex;gap:6px;height:27px; }
+.zen-template-preview .zen-preview-metrics em { display:block;flex:1;border-radius:5px;background:#dceefa; }
+.zen-template-preview .zen-preview-metrics em:nth-child(2) { background:#e1f5ed; }
+.zen-template-preview .zen-preview-metrics em:nth-child(3) { background:#eee9fb; }
+.zen-template-preview .zen-preview-list { display:block;flex:1;border-radius:6px;background:repeating-linear-gradient(to bottom,#fff 0 11px,#e5edf1 11px 12px,#fff 12px 23px); }
+.zen-template-preview-modern .zen-preview-sidebar { color:#fff;border:0;background:linear-gradient(160deg,#0b304a,#061f36); }
+.zen-template-preview-modern .zen-preview-sidebar i { background:#36708b; }
+.zen-template-preview-modern .zen-preview-sidebar i:first-child { background:#38c1c1; }
+.zen-template-preview-modern .zen-preview-page { gap:0;padding:0;background:#f1f7f9; }
+.zen-template-preview-modern .zen-preview-topbar { height:21px;flex:none;border-radius:0;background:#e9f2f6; }
+.zen-template-preview-modern .zen-preview-hero { height:63px;flex:none;border-radius:0;background:linear-gradient(90deg,#062b49ae,#0a315744),url('/images/hero-mountains-photo.png') center/cover; }
+.zen-template-preview-modern .zen-preview-metrics { position:relative;height:31px;flex:none;gap:5px;margin:-8px 8px 0; }
+.zen-template-preview-modern .zen-preview-metrics em { background:#e6f3fd;box-shadow:0 2px 5px #0d3a5422; }
+.zen-template-preview-modern .zen-preview-metrics em:nth-child(2) { background:#e4f6ed; }
+.zen-template-preview-modern .zen-preview-metrics em:nth-child(3) { background:#f0ebff; }
+.zen-template-preview-modern .zen-preview-list { margin:8px 8px 0;border-radius:5px 5px 0 0; }
+@media(max-width:640px) { .zen-template-options { grid-template-columns:1fr; } }
+
+/* Modern: navy navigation and scenic record headers. */
+.theme-modern .windmill-app { --wm-page:#f1f6f9;--wm-subtle:#eaf2f6;--wm-border:#dce9ef;--wm-text:#18354b;--wm-muted:#60798a;--wm-accent:#008baf;--wm-accent-hover:#006d91;--wm-tint:#e5f5f7;--wm-accent-text:#007c92; }
+.theme-modern.dark .windmill-app { --wm-page:#111e2b;--wm-subtle:#1c3142;--wm-border:#365063;--wm-text:#e7f3f8;--wm-muted:#aac0ca;--wm-tint:#214552;--wm-accent-text:#8ce1e9; }
+.theme-modern .windmill-app aside.zen-app-sidebar { background:linear-gradient(180deg,#0b304a 0%,#082a43 52%,#061f36 100%)!important;border-color:#16415a!important;color:#e3f2fa;box-shadow:5px 0 24px #082c4922; }
+.theme-modern .windmill-app aside.zen-app-sidebar>div:first-child { border-color:#ffffff1d!important; }
+.theme-modern .windmill-app aside.zen-app-sidebar nav :is(a,button) { color:#d2e5ef!important; }
+.theme-modern .windmill-app aside.zen-app-sidebar nav :is(a,button):hover { background:#154666!important;color:#fff!important; }
+.theme-modern .windmill-app aside.zen-app-sidebar nav a[aria-current="page"] { background:linear-gradient(90deg,#1c6288,#155275)!important;color:#fff!important;box-shadow:inset 3px 0 #35d0d5!important; }
+.theme-modern .windmill-app aside.zen-app-sidebar nav button:has(+div a[aria-current="page"]) { background:#10415f!important;color:#fff!important; }
+.theme-modern .windmill-app #zen-sidebar-logo { filter:drop-shadow(0 2px 8px #0003); }
+.theme-modern .windmill-app main { background:var(--wm-page); }
+.theme-modern .windmill-app :is(.detail-shell,.detail-section) { border-radius:14px;box-shadow:0 8px 28px #12344b0d; }
+.theme-modern .windmill-app .detail-shell .detail-hero,
+.theme-modern .windmill-app .detail-shell.zen-client-card .detail-hero { background:linear-gradient(90deg,#062943c9 0%,#0b355386 48%,#092f4a55 100%),var(--modern-hero-image,url('/images/hero-mountains-photo.png')) center/cover!important;background-position:center!important;background-size:cover!important;color:#fff!important;border-top:0;border-bottom:0;min-height:218px;padding:32px 32px 48px!important; }
+.theme-modern .windmill-app .detail-shell .detail-hero h1,
+.theme-modern .windmill-app .detail-shell.zen-client-card .detail-hero :is(h1,.text-white,.text-white\/80,.text-white\/90) { color:#fff!important;text-shadow:0 2px 10px #001a2b66; }
+.theme-modern .windmill-app .detail-shell .detail-hero .detail-type-badge { background:#18a88d;color:#fff;border-color:#47c8b0;border-radius:7px; }
+.theme-modern .windmill-app .detail-shell .detail-hero .detail-type-badge+span.detail-type-badge { background:#153f5cc9;border-color:#ffffff35; }
+.theme-modern .windmill-app .detail-shell .detail-hero :is(.quick-icon-btn,.detail-back) { background:#0a3555b8;color:#effbff;border:1px solid #ffffff43;backdrop-filter:blur(6px); }
+.theme-modern .windmill-app .detail-shell .detail-hero .quick-icon-btn:hover { background:#155a7d;color:#fff;border-color:#80d9e5; }
+.theme-modern .windmill-app .detail-shell .detail-hero .quick-icon-edit { background:#058e83;color:#fff;border-color:#40c5ad; }
+.theme-modern .windmill-app .detail-shell .detail-hero :is(.svc-info-tile .value,.detail-stat-value) { color:#fff; }
+.theme-modern .windmill-app .detail-shell .detail-hero :is(.svc-info-tile .label,.detail-stat-label) { color:#d2e8f1; }
+.theme-modern .windmill-app .zen-client-summary { position:relative;z-index:2;margin-top:-26px;padding:0 20px 16px;background:transparent;border:0; }
+.theme-modern .windmill-app .zen-client-metric { --metric:#eaf5ff;background:linear-gradient(145deg,#fff,var(--metric))!important;color:#173a53;border:1px solid #d7e8f0;border-radius:13px;box-shadow:0 5px 16px #0b345024; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(2) { --metric:#e4f7ef; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(3) { --metric:#f0edff; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(4) { --metric:#ffe9f1; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(5) { --metric:#fff0df; }
+.theme-modern .windmill-app .zen-client-metric :is(.zen-metric-label,strong,.zen-metric-arrow) { color:#173a53; }
+.theme-modern .windmill-app .zen-client-metric .zen-metric-label { opacity:.7; }
+.theme-modern .windmill-app .zen-metric-icon { background:#1689cf;color:#fff; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(2) .zen-metric-icon { background:#17a980; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(3) .zen-metric-icon { background:#8460ea; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(4) .zen-metric-icon { background:#f04471; }
+.theme-modern .windmill-app .zen-client-metric:nth-child(5) .zen-metric-icon { background:#efa63c; }
+.theme-modern .windmill-app .detail-shell.zen-client-card .ux-next-step { margin:0 20px 14px;padding:18px 22px;border:1px solid #ccece4;border-radius:12px;background:linear-gradient(100deg,#effaf6,#f4fbfc);color:#173e3b; }
+.theme-modern .windmill-app .detail-shell.zen-client-card .ux-next-step .ux-button { background:#009677;color:#fff; }
+.theme-modern.dark .windmill-app .zen-client-metric { background:linear-gradient(145deg,#243f52,#1d3445)!important;border-color:#365264; }
+.theme-modern.dark .windmill-app .zen-client-metric :is(.zen-metric-label,strong,.zen-metric-arrow) { color:#e8f5fa; }
+.theme-modern.dark .windmill-app .detail-shell.zen-client-card .ux-next-step { background:#173d3b;color:#e6f8f2;border-color:#31615b; }
+@media(max-width:640px) { .theme-modern .windmill-app .detail-shell .detail-hero,.theme-modern .windmill-app .detail-shell.zen-client-card .detail-hero { min-height:200px;padding:22px 16px 42px!important; }.theme-modern .windmill-app .zen-client-summary { padding:0 12px 12px; } }
+
+/* Modern list surfaces: quieter summaries, clearer rows and easier scanning. */
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile,
+.theme-modern .windmill-app .zen-pipeline-metrics .zen-task-summary-tile { background:linear-gradient(145deg,var(--wm-surface),var(--wm-tint))!important;color:var(--wm-text);border:1px solid var(--wm-border);border-radius:14px;box-shadow:0 5px 18px #12344b0c; }
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile:nth-child(2) { --wm-tint:#e9f7ef; }
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile:nth-child(3) { --wm-tint:#f0edff; }
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile:nth-child(4) { --wm-tint:#fff3e6; }
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile .zen-icon-wrap,
+.theme-modern .windmill-app .zen-pipeline-metrics .zen-task-summary-tile .zen-icon-wrap { background:#d9edf4;color:#087e9b; }
+.theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile strong,
+.theme-modern .windmill-app .zen-pipeline-metrics .zen-task-summary-tile strong { color:var(--wm-text); }
+.theme-modern .windmill-app main .overflow-x-auto:has(> table):not(.detail-section) { border:1px solid var(--wm-border);border-radius:14px;background:var(--wm-surface);box-shadow:0 8px 24px #12344b0c; }
+.theme-modern .windmill-app main table { background:var(--wm-surface);color:var(--wm-text);border-collapse:separate;border-spacing:0; }
+.theme-modern .windmill-app main table thead th { background:#e9f3f7;color:#526d7e;border-bottom:1px solid #d6e7ee;padding:13px 16px;font-size:11px;font-weight:750;letter-spacing:.045em;white-space:nowrap; }
+.theme-modern .windmill-app main table tbody td { padding:14px 16px;border-bottom:1px solid var(--wm-border);vertical-align:middle; }
+.theme-modern .windmill-app main table tbody tr:nth-child(even) { background:#f6fafc; }
+.theme-modern .windmill-app main table tbody tr:hover,
+.theme-modern .windmill-app main table tbody tr.task-row:hover { background:#eaf7fa!important; }
+.theme-modern .windmill-app main table tbody tr:last-child td { border-bottom:0; }
+.theme-modern .windmill-app main table tbody td:first-child { font-weight:600; }
+.theme-modern .windmill-app main .zen-list-action { border-radius:9px;box-shadow:none; }
+.theme-modern .windmill-app .zen-list-pagination { background:var(--wm-surface);border-top:1px solid var(--wm-border); }
+.theme-modern.dark .windmill-app .zen-list-summary .zen-task-summary-tile:nth-child(n) { --wm-tint:#244657; }
+.theme-modern.dark .windmill-app main table thead th { background:#233b4a;color:#b4ceda;border-color:#365263; }
+.theme-modern.dark .windmill-app main table tbody tr:nth-child(even) { background:#1b303e; }
+.theme-modern.dark .windmill-app main table tbody tr:hover,
+.theme-modern.dark .windmill-app main table tbody tr.task-row:hover { background:#244a57!important; }
+
+/* Lead and task boards share the same column and card rhythm in Modern. */
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-cols { gap:14px; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-new { background:color-mix(in srgb,var(--stage-accent) 5%,var(--wm-surface));border:1px solid var(--wm-border);border-top:4px solid var(--stage-accent);border-radius:14px;box-shadow:0 6px 18px #12344b0c; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-header { border-top:0;background:color-mix(in srgb,var(--stage-accent) 8%,var(--wm-surface));padding:15px;border-bottom:1px solid var(--wm-border); }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-header .title { font-size:14px;font-weight:750; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-header .count { border:1px solid color-mix(in srgb,var(--stage-accent) 24%,var(--wm-border));border-radius:8px; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-header .total { margin-left:16px;color:var(--wm-muted);font-size:11px; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-body { padding:11px;gap:10px; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-card-new { padding:15px;border:1px solid var(--wm-border);border-radius:12px;background:var(--wm-surface);box-shadow:0 3px 11px #12344b0a; }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-card-new:hover { border-color:var(--stage-accent);box-shadow:0 8px 20px #12344b1b;transform:translateY(-2px); }
+.theme-modern .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-card-new .title { font-size:14px;line-height:1.4;color:var(--wm-text);font-weight:700; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new { display:flex;flex-direction:column; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.title { order:1;margin:0 54px 8px 0;min-height:21px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.company { order:2;margin-bottom:10px;color:var(--wm-accent-text);font-size:11px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.zen-probability { order:3;margin:0 0 10px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.zen-probability>span { height:7px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.zen-probability i { opacity:1; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.ux-muted { order:4;display:block;color:var(--wm-muted);margin:0; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.ux-lead-next { order:5;margin:8px 0;color:var(--wm-muted);font-size:11px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.ux-stage-select { order:6;margin:3px 0 8px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.row { order:7;display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--wm-border); }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.row .value { color:var(--wm-text);font-size:14px; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.zen-card-open-icon { position:absolute;top:12px;right:12px;float:none; }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.zen-card-phone-btn { position:absolute;top:12px;right:46px;float:none;width:28px;height:28px;display:grid;place-items:center;padding:0;border-radius:8px;background:var(--wm-tint); }
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new>.row .avatar { width:26px;height:26px; }
+.theme-modern.dark .windmill-app :is(.zen-lead-board,.zen-task-board) .kanban-col-new { background:color-mix(in srgb,var(--stage-accent) 8%,var(--wm-surface)); }
+
+/* Document template library in Classic and Modern. */
+.zen-document-templates { display:flex;flex-direction:column;gap:20px; }
+.zen-templates-heading { display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap; }
+.zen-templates-heading h1 { margin:3px 0 2px;font-size:26px;font-weight:750;letter-spacing:-.035em;color:var(--wm-text,#1f3445); }
+.zen-templates-heading p { color:var(--wm-muted,#677984);font-size:13px; }
+.zen-templates-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:16px; }
+.zen-template-card { display:flex;flex-direction:column;min-height:190px;padding:20px;border:1px solid var(--wm-border,#dce8ee);border-radius:15px;background:var(--wm-surface,#fff);box-shadow:0 5px 18px #12344b0a; }
+.zen-template-card-top { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px; }
+.zen-template-card-icon { display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#e4f4f8;color:#087f9f; }
+.zen-template-card-icon svg { width:20px;height:20px; }
+.zen-template-card-type { display:inline-flex;padding:5px 9px;border-radius:7px;background:#edf5f8;color:#497287;font-size:11px;font-weight:700; }
+.zen-template-card h2 { font-size:16px;line-height:1.35;font-weight:700;color:var(--wm-text,#17364a);overflow-wrap:anywhere; }
+.zen-template-card-meta { margin-top:7px;color:var(--wm-muted,#627887);font-size:12px; }
+.zen-template-card-actions { display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:16px; }
+.zen-template-card-actions .ux-text-button { display:inline-flex;align-items:center;gap:7px;padding:5px 0;font-weight:650; }
+.zen-template-card-actions .ux-text-button svg { width:16px;height:16px; }
+.zen-templates-empty { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:260px;border:1px dashed var(--wm-border,#dce8ee);border-radius:16px;background:var(--wm-surface,#fff);text-align:center; }
+.zen-templates-empty>span { color:#359db7; }
+.zen-templates-empty>span svg { width:34px;height:34px; }
+.zen-templates-empty h2 { color:var(--wm-text,#17364a);font-size:18px;font-weight:700; }
+.zen-templates-empty p { color:var(--wm-muted,#627887);font-size:13px; }
+.zen-template-editor { height:min(92dvh,960px); }
+.zen-template-editor>div:nth-child(2) { min-height:0; }
+.zen-template-preview-panel { min-height:0;padding:0 18px 18px; }
+.zen-template-preview-panel>div:first-child { margin:0 -18px 16px; }
+.zen-template-preview-frame { align-self:center;max-width:820px;min-height:0;border:1px solid #dbe5e9;border-radius:4px;box-shadow:0 10px 30px #14324622; }
+.dark .zen-template-preview-frame { border-color:#445565; }
+.theme-modern .zen-template-card { border-top:3px solid #27a7b4; }
+.theme-modern.dark .zen-template-card-icon,.theme-modern.dark .zen-template-card-type { background:#244558;color:#a8e2ec; }
+
+/* Modern fills the available workspace; content scrolls inside the main pane. */
+.theme-modern .windmill-app > div[x-show="token"] { width:100%;height:100dvh; }
+.theme-modern .windmill-app main { width:100%!important;max-width:none!important;height:100%;min-height:0;padding:0!important;background:var(--wm-page); }
+.theme-modern .windmill-app main > div[x-show*="currentView"] { width:100%;max-width:none;min-height:100%;box-sizing:border-box;padding:22px 26px; }
+.theme-modern .windmill-app main > .zen-projects-view { padding:30px 34px!important; }
+.zen-translations-list { max-height: min(55dvh, 620px); }
+.zen-translation-row:hover { background: color-mix(in srgb, var(--wm-surface, #fff) 88%, #58b9ce); }
+.theme-modern .windmill-app main > div:not(.ux-detail-panel):has(> .detail-shell) { min-height:100%;padding:0; }
+.theme-modern .windmill-app main > div:not(.ux-detail-panel) > .detail-shell { width:100%;min-height:100dvh;margin:0!important;border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column; }
+.theme-modern .windmill-app main > div:not(.ux-detail-panel) > .detail-shell .detail-body { flex:1; }
+.theme-modern .zen-template-editor-overlay { padding:0; }
+.theme-modern .zen-template-editor { width:100%;max-width:none;max-height:100dvh;height:100dvh;border-radius:0; }
+@media(max-width:640px) { .theme-modern .windmill-app main > div[x-show*="currentView"] { padding:14px; }.theme-modern .windmill-app main > .zen-projects-view { padding:18px!important; }.theme-modern .windmill-app main > div:not(.ux-detail-panel):has(> .detail-shell) { padding:0; } }
+@media(max-width:1023px) { .zen-template-editor>div:nth-child(2) { grid-template-rows:minmax(0,1fr) minmax(220px,38dvh); }.zen-template-preview-panel { padding:0 10px 10px; }.zen-template-preview-panel>div:first-child { margin:0 -10px 10px; } }

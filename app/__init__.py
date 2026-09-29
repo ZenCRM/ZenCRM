@@ -10,7 +10,7 @@ if _venv_lib.is_dir():
         if _sp.is_dir() and str(_sp) not in sys.path:
             sys.path.insert(0, str(_sp))
 
-from flask import Flask, send_from_directory, render_template
+from flask import Flask, jsonify, send_from_directory, render_template
 try:
     from flask_cors import CORS
 except ImportError:
@@ -49,7 +49,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type, translation)
 
     from .api.push import push_bp
     app.register_blueprint(push_bp, url_prefix="/api/push")
@@ -87,6 +87,8 @@ def create_app(config_class=Config):
     from .api.teams      import teams_bp
     from .api.tickets    import tickets_bp
     from .api.permissions import permissions_bp
+    from .api.translations import translations_bp
+    from .api.updates import updates_bp
 
     from .utils.permissions import guard_action
     app.before_request(guard_action)
@@ -98,6 +100,8 @@ def create_app(config_class=Config):
     app.register_blueprint(projects_bp,   url_prefix='/api/projects')
     app.register_blueprint(teams_bp,      url_prefix='/api/teams')
     app.register_blueprint(permissions_bp, url_prefix='/api/permissions')
+    app.register_blueprint(translations_bp, url_prefix='/api/translations')
+    app.register_blueprint(updates_bp, url_prefix='/api/updates')
     app.register_blueprint(tickets_bp,    url_prefix='/api/tickets')
     app.register_blueprint(meetings_bp,   url_prefix='/api/meetings')
     app.register_blueprint(services_bp,   url_prefix='/api/services')
@@ -162,6 +166,8 @@ def create_app(config_class=Config):
 
     @app.route('/<path:path>')
     def static_files(path):
+        if path.startswith('api/'):
+            return jsonify({'error': 'Nie znaleziono endpointu API.'}), 404
         full = os.path.join(frontend_dir, path)
         if os.path.exists(full):
             return send_from_directory(frontend_dir, path)
@@ -169,13 +175,15 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type, translation)
 
     with app.app_context():
         db.create_all()
         # create_all does not add columns to installations created before these features.
         with db.engine.begin() as conn:
             inspector = db.inspect(conn)
+            if 'translation_languages' in inspector.get_table_names() and 'base_locale' not in {c['name'] for c in inspector.get_columns('translation_languages')}:
+                conn.execute(db.text("ALTER TABLE translation_languages ADD COLUMN base_locale VARCHAR(16) NOT NULL DEFAULT 'pl'"))
             if 'created_by_id' not in {c['name'] for c in inspector.get_columns('attachments')}:
                 conn.execute(db.text('ALTER TABLE attachments ADD COLUMN created_by_id INTEGER'))
             if 'document_type_key' not in {c['name'] for c in inspector.get_columns('templates')}:

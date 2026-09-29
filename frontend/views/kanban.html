@@ -60,7 +60,7 @@
                 </div>
 
                 <!-- Kanban View -->
-                <div class="kanban-board" x-show="kanbanMode === 'kanban'">
+                <div class="kanban-board zen-lead-board" x-show="kanbanMode === 'kanban'">
                     <div class="kanban-viewport" :class="{ 'ux-more-left': canScrollLeft, 'ux-more-right': canScrollRight }">
                         <div class="kanban-cols" :style="{ '--board-columns': boardColumns }" x-ref="kanbanCols" x-init="$nextTick(() => recomputeVisibleCols())" @scroll.passive="updateKanbanScroll()" @dragover.prevent="boardDrag($event)" @dragleave="if (!$el.contains($event.relatedTarget)) { stopBoardDrag(); dragOverStage = null; }" :class="{ 'ux-dragging': draggedLead }" tabindex="0" :aria-label="window.ZenI18n.t('Etapy leadów')" @keydown.left.self.prevent="scrollKanban(-1)" @keydown.right.self.prevent="scrollKanban(1)">
                             <template x-for="stage in leadStages" :key="stage.id">
