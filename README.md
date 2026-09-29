@@ -1,419 +1,312 @@
 <div align="center">
 
-<img src="https://zencrm.pl/logow.png" alt="ZenCRM" width="240">
+<img src="frontend/logo.png" alt="ZenCRM" width="240">
 
+# ZenCRM
 
+**Mniej chaosu. Więcej relacji. Wszystko w jednym CRM.**  
+**Less chaos. Stronger relationships. Everything in one CRM.**
 
-### Mniej chaosu. Więcej relacji. Wszystko w jednym CRM.
+Samodzielnie hostowany CRM do sprzedaży, projektów, dokumentów i obsługi klienta.  
+A self-hosted CRM for sales, projects, documents, and customer support.
 
-Sprzedaż, projekty i obsługa klienta — od pierwszego kontaktu po realizację usługi.
+[![Demo](https://img.shields.io/badge/LIVE_DEMO-TRY_ZENCRM-16a34a?style=for-the-badge)](https://zencrmdemo.tw5.org/)
+[![Docker](https://img.shields.io/badge/DOCKER-HUB-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/kosiorekmateusz/zencrm)
+[![Release](https://img.shields.io/github/v/release/ZenCRM/ZenCRM?style=for-the-badge)](https://github.com/ZenCRM/ZenCRM/releases/latest)
 
-**Na Twoim serwerze. W Twoim języku. W rytmie Twojego zespołu.**
-
-[![Demo na żywo — wypróbuj ZenCRM](https://img.shields.io/badge/DEMO_NA_%C5%BBYWO-WYPR%C3%93BUJ_ZENCRM-16a34a?style=for-the-badge&logo=rocket&logoColor=white)](https://zencrmdemo.tw5.org/)
-
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.1%2B-111827?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![Alpine.js](https://img.shields.io/badge/Alpine.js-Frontend-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black)](https://alpinejs.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
-
-[Strona projektu](https://zencrm.pl) · [Instalacja](#instalacja-przez-docker-compose) · [Dokumentacja](#dokumentacja) · [Zgłoś błąd](https://github.com/ZenCRM/ZenCRM/issues)
-
-[Polski](#polski) · [English](#english)
+[Polski](#polski) · [English](#english) · [Galeria / Gallery](#galeria--gallery) · [Zgłoś błąd / Report an issue](https://github.com/ZenCRM/ZenCRM/issues)
 
 </div>
 
 ---
 
-<a href="https://zencrm.pl/screens/1a.png">
-  <img src="https://zencrm.pl/screens/1a.png" alt="ZenCRM — zrzut ekranu aplikacji do zarządzania sprzedażą i obsługą klientów" width="100%">
-</a>
+## Galeria / Gallery
 
-<p align="center"><sub>ZenCRM w akcji · Kliknij zrzut ekranu, aby zobaczyć go w pełnym rozmiarze.</sub></p>
+Zrzuty pochodzą z katalogu <code>screens/</code>. Kliknij obraz, aby otworzyć go w pełnym rozmiarze.  
+Screenshots are stored in <code>screens/</code>. Click an image to open it at full size.
+
+| Classic — pulpit / dashboard | Modern — pulpit / dashboard |
+| :---: | :---: |
+| [![Pulpit ZenCRM w szablonie Classic / Classic dashboard](screens/normaltheme-dashboard.png)](screens/normaltheme-dashboard.png) | [![Pulpit ZenCRM w szablonie Modern / Modern dashboard](screens/modern-dashboard.png)](screens/modern-dashboard.png) |
+| **Classic — karta klienta / client record** | **Modern — karta klienta / client record** |
+| [![Karta klienta w szablonie Classic / Classic client record](screens/normaltheme-client.png)](screens/normaltheme-client.png) | [![Karta klienta w szablonie Modern / Modern client record](screens/modern-client.png)](screens/modern-client.png) |
+
+**Zadania w Kanban / Tasks in Kanban**
+
+[![Tablica Kanban zadań ZenCRM / ZenCRM task Kanban board](screens/normaltheme-canban.png)](screens/normaltheme-canban.png)
+
+---
 
 ## Polski
 
-### Twoje centrum pracy z klientem
+### Jeden system od pierwszego kontaktu do obsługi po sprzedaży
 
-ZenCRM łączy informacje o klientach, proces sprzedaży i codzienną pracę zespołu. Prowadź leady na tablicy Kanban, przygotowuj oferty, planuj realizację i obsługuj zgłoszenia w jednej aplikacji.
+ZenCRM łączy dane klientów, leady, zadania, projekty, komunikację i helpdesk. Przykładowy przebieg pracy to **lead → oferta → klient → projekt lub usługa → obsługa zgłoszeń**. Każdy moduł może też działać samodzielnie, zgodnie z procesem zespołu.
 
-- **Od leada do klienta** — konwersja szansy sprzedaży przenosi powiązane kontakty, zadania i dokumenty.
-- **Wspólna praca, jasne przypisania** — projekty, zespoły i zadania ze statusem każdego wykonawcy.
-- **Kontakt także po sprzedaży** — portal klienta, helpdesk i historia aktywności przy rekordach.
-- **Własna instalacja** — Docker Compose lub Python, domyślnie z bazą SQLite.
-- **Wygodny interfejs** — język polski i angielski oraz jasny i ciemny motyw.
+| 📱 **TWOJE POŁĄCZENIA I SMS-Y PROSTO W CRM** |
+| :--- |
+| Koniec z ręcznym przepisywaniem historii kontaktów. Połącz swój telefon Android z ZenCRM, a zsynchronizowane połączenia i SMS-y z klientem pojawią się w jego karcie. Możesz też zlecić połączenie lub wysłać wiadomość bezpośrednio z CRM. **Nie potrzebujesz Twilio ani zewnętrznej bramki SMS** — wiadomości obsługuje Twój telefon z kompatybilną aplikacją mobilną. |
 
-### Możliwości
+### Dwa szablony interfejsu
 
-| Obszar | Co możesz zrobić |
+| Szablon | Wygląd i zastosowanie |
 | --- | --- |
-| 🤝 **Klienci i kontakty** | Gromadź dane firm i osób, przypisuj opiekunów i przeglądaj historię współpracy. |
-| 🎯 **Leady i Kanban** | Zarządzaj etapami sprzedaży, wartością szans i prawdopodobieństwem zamknięcia. |
-| ✅ **Projekty i zadania** | Organizuj etapy pracy, członków projektu i zadania wielu wykonawców. |
-| 📅 **Spotkania i kalendarz** | Planuj spotkania i przeglądaj terminy w kalendarzu. |
-| 🛠️ **Usługi i katalog** | Utrzymuj katalog usług i prowadź konkretne realizacje z przypisanymi osobami. |
-| 📄 **Oferty i dokumenty** | Pracuj na szablonach, generuj PDF i udostępniaj materiały przez linki z tokenem. |
-| 🎫 **Helpdesk** | Obsługuj tickety, konfiguruj kategorie oraz reguły automatycznego przydziału. |
-| 🌐 **Portal klienta** | Zarządzaj członkami portalu, udostępnianymi modułami i wyglądem przestrzeni. |
-| 📱 **Telefonia i SMS** | Po podłączeniu urządzenia synchronizuj historię połączeń i wiadomości. |
-| 📊 **Dashboard** | Sprawdzaj metryki i wykresy na pulpicie aplikacji. |
-| ⚙️ **Administracja** | Zarządzaj rolami, zespołami, uprawnieniami, polami własnymi i archiwum. |
+| **Classic — domyślny** | Jasny, uporządkowany układ z tradycyjną nawigacją i kartami rekordów. |
+| **Modern** | Ciemny sidebar z delikatnym gradientem, szerszy obszar treści, odświeżone listy i Kanban oraz stonowane zdjęcia gór, lasów lub wybrzeża w nagłówkach rekordów. Tło można wybrać albo losować z kilku wariantów. |
 
-### Jak to się łączy?
+Szablon wybierzesz w **Ustawienia → Szablony wyglądu**. Oba współpracują z trybem jasnym i ciemnym. Zrzuty obu wersji znajdziesz w [galerii](#galeria--gallery).
 
-```mermaid
-flowchart LR
-    A[Kontakt i lead] --> B[Proces sprzedaży]
-    B --> C[Oferta]
-    C --> D[Klient]
-    D --> E[Projekt i usługi]
-    E --> F[Obsługa i helpdesk]
-```
+### Co potrafi ZenCRM?
 
-Przykładowy przebieg pracy: od pozyskania kontaktu po obsługę po sprzedaży. Poszczególne moduły możesz wykorzystywać zgodnie z procesem swojego zespołu.
-
-### Technologia
-
-| Warstwa | Rozwiązanie |
+| Obszar | Funkcje |
 | --- | --- |
-| Backend | Python, Flask, SQLAlchemy, Flask-Migrate |
-| Interfejs | Alpine.js, widoki Jinja, JavaScript i CSS |
-| Baza danych | Domyślnie SQLite; połączenie konfigurowane przez `DATABASE_URL` |
-| Logowanie do CRM | Tokeny JWT przez Flask-JWT-Extended |
-| Dokumenty | Jinja2, WeasyPrint i xhtml2pdf |
-| Uruchomienie w kontenerze | Docker Compose i Gunicorn |
+| **Pulpit** | Liczniki klientów, leadów, projektów, zadań i usług, wykresy lejka oraz skróty do codziennych działań. |
+| **Klienci i kontakty** | Dane firm i osób, opiekunowie, powiązane kontakty, pliki, notatki i historia aktywności w jednej karcie. |
+| **Leady** | Etapy sprzedaży, wartość i prawdopodobieństwo, widok tabeli i Kanban, konwersja leada na klienta oraz źródła i webhook leadów. |
+| **Projekty** | Statusy, etapy, członkowie, powiązania z klientami, zadania i pliki projektu. |
+| **Zadania** | Lista i Kanban, priorytety, terminy, postęp oraz przypisanie wielu wykonawców. |
+| **Kalendarz i spotkania** | Widok miesiąca i plan dnia, spotkania oraz terminy powiązane z pracą zespołu. |
+| **Usługi** | Katalog usług i obsługa konkretnych realizacji przypisanych do klientów i pracowników. |
+| **Oferty i dokumenty** | Szablony, podgląd, generowanie PDF, typy dokumentów z własnymi polami i publiczne linki oparte na tokenie. |
+| **Telefonia i SMS** | Telefony przypisane do użytkowników, synchronizacja połączeń i wiadomości, wątki SMS, statystyki oraz zlecanie akcji na telefonie. |
+| **E-mail** | Konfiguracja SMTP i szablony wiadomości używanych przez CRM. |
+| **Tickety i helpdesk** | Zgłoszenia, kategorie, reguły przydziału, publiczna strona pomocy oraz komunikacja w ramach ticketu. |
+| **Portal klienta** | Oddzielne logowanie, członkowie portalu, udostępniane moduły i wygląd przestrzeni klienta. |
+| **Powiadomienia** | Aktywność przy rekordach, przypomnienia oraz opcjonalne powiadomienia push w przeglądarce. |
+| **Administracja** | Role, zespoły, uprawnienia, pola własne, wymagane pola, konfiguracja menu, branding, archiwum i przywracanie rekordów. |
+| **Języki** | Polski i angielski w zestawie; administrator może utworzyć nowy język i edytować tłumaczenia. |
+| **Aktualizacje** | Porównanie zainstalowanej wersji z najnowszym stabilnym wydaniem GitHub i dostęp do opisów wydań. |
 
-Frontend jest serwowany przez Flask i **nie wymaga osobnego procesu budowania**. Node.js jest potrzebny wyłącznie do testów frontendu.
+### Generowanie ofert i dokumentów
 
-### Instalacja lokalna
+| 📄 **SZABLON → PODGLĄD → PDF → LINK DO UDOSTĘPNIENIA** |
+| :--- |
+| Przygotuj ofertę lub dokument na własnym szablonie, uzupełnij dane z CRM i wygeneruj PDF bez przepisywania informacji. Gotowy materiał można pobrać albo udostępnić przez link z indywidualnym tokenem. |
 
-Wymagany jest **Python 3.11 lub nowszy**. Domyślna baza to SQLite. Node.js jest potrzebny wyłącznie do testów frontendu. Na Linuxie generowanie PDF przez WeasyPrint może wymagać bibliotek systemowych, takich jak Pango i HarfBuzz; ich lista znajduje się w `Dockerfile`.
+1. Przygotuj szablon w edytorze i sprawdź jego podgląd. Dokumenty mogą korzystać z konfigurowalnych typów i dodatkowych pól.
+2. Utwórz ofertę lub dokument i powiąż go z właściwym klientem, a w razie potrzeby także z leadem lub usługą.
+3. Wygeneruj podgląd i plik PDF. Gotowy materiał możesz pobrać albo udostępnić przez indywidualny link z tokenem.
 
-W katalogu projektu wykonaj:
+Szablony i dane biznesowe pozostają w Twojej instalacji. Generowanie PDF wykorzystuje Jinja2 oraz biblioteki PDF zainstalowane po stronie serwera.
+
+### Telefonia i SMS w praktyce
+
+W **Telefonia & SMS** dodajesz urządzenie i łączysz je z aplikacją Android współpracującą z bramką CRM (SMS Manager / GoFlow) za pomocą indywidualnego tokenu. Aplikacja działa w tle telefonu i synchronizuje historię połączeń oraz wiadomości. ZenCRM wiąże ją z klientami, leadami i kontaktami po numerze telefonu. Z ich kart możesz przejrzeć wcześniejszy kontakt oraz zlecić wykonanie połączenia lub wysłanie SMS-a przez podłączony telefon. Dostęp do urządzeń i wysyłania jest powiązany z zalogowanym użytkownikiem.
+
+### Aktualizacje i tłumaczenia
+
+| 🔄 **AUTOMATYCZNE SPRAWDZANIE NOWYCH WYDAŃ** |
+| :--- |
+| Po wejściu w **Ustawienia → Aktualizacja** ZenCRM pobiera listę wydań GitHub i porównuje najnowszą stabilną wersję z wersją instalacji. Widzisz opis zmian i odnośnik do wydania. Wdrożenie nowej wersji wykonuje administrator. |
+
+Zakładka **Ustawienia → Aktualizacja** automatycznie pobiera informacje o wydaniach z [GitHub Releases](https://github.com/ZenCRM/ZenCRM/releases) po jej otwarciu. Pokazuje wersję instalacji, najnowsze stabilne wydanie i opis zmian. **Instalacja aktualizacji nie odbywa się samoczynnie**: administrator wdraża wybrane wydanie zgodnie ze sposobem instalacji, po wykonaniu kopii danych.
+
+W **Ustawienia → Tłumaczenia** można poprawiać polskie i angielskie teksty oraz utworzyć język na podstawie polskiego lub angielskiego. Własne wpisy są przechowywane w bazie i mają pierwszeństwo przed tekstami dostarczonymi z aplikacją. Brakujące frazy korzystają z języka bazowego, więc nowe teksty dodane wraz z wydaniem pojawiają się bez ręcznego kopiowania całego katalogu.
+
+### Szybki start: Docker Compose
+
+Wymagane są Docker i Docker Compose. Plik [docker-compose.yml](docker-compose.yml) używa obrazu [kosiorekmateusz/zencrm](https://hub.docker.com/r/kosiorekmateusz/zencrm). Przed uruchomieniem ustaw własne, różne wartości <code>SECRET_KEY</code> i <code>JWT_SECRET_KEY</code>.
+
+~~~bash
+docker compose pull zencrm
+docker compose up -d --no-build zencrm
+~~~
+
+Otwórz **http://localhost/**. Przy pierwszym uruchomieniu w przeglądarce pojawi się formularz utworzenia administratora. Skrypt startowy przygotowuje bazę automatycznie; nie tworzy konta z domyślnym hasłem. Wolumen <code>zencrm_data</code> przechowuje bazę, a <code>zencrm_uploads</code> przesłane pliki.
+
+Aby wdrożyć nowszy obraz po wykonaniu kopii danych:
+
+~~~bash
+docker compose pull zencrm
+docker compose up -d --no-build zencrm
+~~~
+
+Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.2</code>.
+
+### Uruchomienie lokalne
+
+Wymagany jest **Python 3.11 lub nowszy**. Frontend jest serwowany przez Flask i nie wymaga osobnego procesu budowania. Linux może wymagać bibliotek systemowych do PDF, wymienionych w [Dockerfile](Dockerfile).
 
 **Windows PowerShell**
 
-```powershell
+~~~powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
-```
+$env:PORT = "5000"
+python run.py
+~~~
 
 **Linux / macOS**
 
-```bash
+~~~bash
 python3 -m venv venv
 source venv/bin/activate
 python -m pip install -r requirements.txt
 cp .env.example .env
-```
-
-W `.env` zastąp przykładowe wartości `SECRET_KEY` i `JWT_SECRET_KEY` dwoma różnymi, długimi losowymi sekretami. Następnie utwórz pierwsze konto administratora i uruchom aplikację:
-
-**Windows PowerShell**
-
-```powershell
-python seed.py
-$env:PORT = "5000"
-python run.py
-```
-
-**Linux / macOS**
-
-```bash
-python seed.py
 PORT=5000 python run.py
-```
+~~~
 
-Otwórz **http://localhost:5000/**. Skrypt `seed.py` tworzy konto `admin@zencrm.pl` z hasłem `admin123`, jeśli baza nie zawiera żadnych użytkowników. Istniejące konta i hasła pozostają bez zmian. **Zmień hasło po pierwszym logowaniu.** `run.py` uruchamia serwer deweloperski Flask z włączonym debugowaniem. Jeśli nie ustawisz `PORT`, użyje portu 80.
+W pliku <code>.env</code> zastąp przykładowe sekrety własnymi. Otwórz **http://localhost:5000/** i utwórz administratora w formularzu pierwszego uruchomienia. <code>run.py</code> służy do pracy lokalnej i włącza tryb debugowania Flask; wdrożenie kontenerowe używa Gunicorn.
 
-### Instalacja przez Docker Compose
+### Konfiguracja, dane i bezpieczeństwo
 
-Plik `docker-compose.yml` uruchamia opublikowany obraz `kosiorekmateusz/zencrm:latest`. Przed startem wpisz w nim własne wartości `SECRET_KEY` i `JWT_SECRET_KEY`. Domyślnie aplikacja będzie dostępna na porcie 80:
+| Zmienna | Znaczenie |
+| --- | --- |
+| <code>SECRET_KEY</code> | Sekret aplikacji Flask. |
+| <code>JWT_SECRET_KEY</code> | Oddzielny sekret tokenów logowania. |
+| <code>DATABASE_URL</code> | Adres bazy SQLAlchemy; domyślnie SQLite. |
+| <code>PORT</code> | Port serwera; lokalnie w przykładach 5000, w Compose 80. |
+| <code>ZENCRM_VERSION</code> | Opcjonalny identyfikator wersji; obraz Docker ustawia go podczas budowania. |
 
-```bash
-docker compose up -d
-docker compose exec zencrm python seed.py
-```
+Przed wdrożeniem nowej wersji wykonaj kopię bazy i katalogu przesłanych plików. Aplikacja tworzy brakujące tabele i uzupełnia część starszych schematów przy starcie. Instalację dostępną przez Internet uruchamiaj przez HTTPS i chroń sekrety.
 
-Obrazy zbudowane z aktualnego kodu uruchamiają `seed.py` automatycznie przy starcie kontenera. Ręczne polecenie powyżej jest potrzebne tylko dla starszych obrazów. Aby uzyskać tę poprawkę we własnym obrazie, przebuduj go i odtwórz kontener z zachowaniem wolumenów.
-
-Otwórz **http://localhost/**, zaloguj się kontem administratora podanym wyżej i od razu zmień hasło. Wolumen `zencrm_data` przechowuje bazę w `/app/instance`, a `zencrm_uploads` przesłane pliki w `/app/uploads`. Compose pobiera gotowy obraz; aby uruchomić własny kod po zmianach w repozytorium, zbuduj obraz lokalnie i wskaż go w konfiguracji Compose.
-
-### Konfiguracja i dane
-
-| Zmienna | Opis | Przykład |
-| --- | --- | --- |
-| `SECRET_KEY` | Sekret aplikacji Flask | losowy ciąg |
-| `JWT_SECRET_KEY` | Sekret tokenów logowania | inny losowy ciąg |
-| `DATABASE_URL` | Adres bazy SQLAlchemy | `sqlite:///zencrm.db` |
-| `PORT` | Port serwera | `5000` lokalnie |
-
-Przy uruchomieniu aplikacja tworzy brakujące tabele. Przed aktualizacją instalacji z danymi wykonaj kopię bazy i katalogu `uploads/` oraz sprawdź migracje w `migrations/`. Instalację dostępną z Internetu uruchamiaj za HTTPS i chroń sekrety z `.env`.
-
-### Dokumentacja
+### Dokumentacja i współpraca
 
 | Materiał | Zawartość |
 | --- | --- |
-| [Przewodnik użytkownika](docs/uzytkownik.md) | Praca z modułami, portal klienta, role i powiadomienia. |
-| [Dokumentacja API](docs/api.md) | Uwierzytelnianie, mapa endpointów i przykłady żądań. |
-| [Frontend](frontend/README.md) | Struktura widoków, moduły JavaScript, tłumaczenia i testy. |
-| [Dockerfile](Dockerfile) | Budowanie obrazu i zależności systemowe. |
+| [Przewodnik użytkownika](docs/uzytkownik.md) | Praca z klientami, leadami, projektami, portalem i powiadomieniami. |
+| [Dokumentacja API](docs/api.md) | Logowanie, endpointy i przykładowe żądania. |
+| [Opis frontendu](frontend/README.md) | Widoki, moduły JavaScript i katalogi językowe. |
+| [Najnowsze wydanie](https://github.com/ZenCRM/ZenCRM/releases/latest) | Opis zmian i dostępne tagi. |
 
-### Praca nad projektem
+Błędy i pomysły zgłaszaj przez [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Zmiany można proponować przez pull request.
 
-Pobierz kod i przejdź do katalogu projektu, a następnie wykonaj kroki instalacji lokalnej:
-
-```bash
-git clone https://github.com/ZenCRM/ZenCRM.git
-cd ZenCRM
-```
-
-Najważniejsze katalogi:
-
-```text
-ZenCRM/
-├── app/               # Backend: API, modele, schematy i usługi
-├── frontend/          # Widoki, moduły JavaScript, style i tłumaczenia
-├── docs/              # Przewodnik użytkownika i dokumentacja API
-├── migrations/        # Migracje bazy danych
-├── tests/             # Testy backendu i frontendu
-├── run.py             # Uruchomienie aplikacji
-└── seed.py            # Utworzenie pierwszego administratora
-```
-
-Po instalacji zależności, w aktywnym środowisku Python, uruchom testy z katalogu głównego repozytorium:
-
-```bash
-python -m unittest discover -s tests
-node tests/test_frontend.cjs
-```
-
-### Pomysły i współpraca
-
-Masz pomysł na usprawnienie albo znalazłeś błąd? [Otwórz zgłoszenie](https://github.com/ZenCRM/ZenCRM/issues). Opisz oczekiwane zachowanie, kroki odtworzenia i środowisko uruchomienia; przy problemach z interfejsem dołącz zrzut ekranu bez danych klientów.
-
-Zmiany w kodzie możesz zaproponować przez pull request. Dołącz opis rozwiązania i wyniki odpowiednich testów. Przy zmianach interfejsu pamiętaj o obu językach oraz jasnym i ciemnym motywie.
-
----
-
-<div align="center">
-
-**ZenCRM · Zadbaj o relacje. Uporządkuj pracę.**
-
-[Strona projektu](https://zencrm.pl) · [Zgłoszenia i pomysły](https://github.com/ZenCRM/ZenCRM/issues) · [Powrót na górę](#zencrm)
-
-Jeśli ZenCRM przydaje się w Twojej pracy, zostaw ⭐ na GitHubie.
-
-</div>
 ---
 
 ## English
 
-<div align="center">
+### One system from first contact to after-sales support
 
-<img src="https://zencrm.pl/logow.png" alt="ZenCRM" width="240">
+ZenCRM brings customer records, leads, tasks, projects, communication, and support together. A typical workflow is **lead → offer → client → project or service → support**, while each module can also be used on its own.
 
-### Less chaos. Stronger relationships. Everything in one CRM.
+| 📱 **YOUR CALLS AND TEXTS, RIGHT IN THE CRM** |
+| :--- |
+| Stop copying contact history by hand. Connect your Android phone to ZenCRM and synchronized calls and texts with a client appear on their record. You can also request a call or send a message from the CRM. **No Twilio or external SMS gateway is needed** — your phone handles messaging through a compatible mobile app. |
 
-Sales, projects, and customer service — from the first contact to service delivery.
+### Two interface templates
 
-**On your server. In your language. At your team's pace.**
-
-[![Live demo — try ZenCRM](https://img.shields.io/badge/LIVE_DEMO-TRY_ZENCRM-16a34a?style=for-the-badge&logo=rocket&logoColor=white)](https://zencrmdemo.tw5.org/)
-
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.1%2B-111827?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![Alpine.js](https://img.shields.io/badge/Alpine.js-Frontend-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black)](https://alpinejs.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
-
-[Website](https://zencrm.pl) · [Installation](#docker-compose-installation) · [Documentation](#documentation) · [Report a bug](https://github.com/ZenCRM/ZenCRM/issues)
-
-[Polski](#polski) · [English](#english)
-
-</div>
-
----
-
-<a href="https://zencrm.pl/screens/1a.png">
-  <img src="https://zencrm.pl/screens/1a.png" alt="ZenCRM — screenshot of the sales and customer service management application" width="100%">
-</a>
-
-<p align="center"><sub>ZenCRM in action · Click the screenshot to view it at full size.</sub></p>
-
-### Your customer management hub
-
-ZenCRM brings customer information, your sales process, and your team's daily work together. Manage leads on a Kanban board, prepare offers, plan delivery, and handle support tickets in one application.
-
-- **From lead to customer** — converting a sales opportunity transfers its linked contacts, tasks, and documents.
-- **Teamwork with clear assignments** — projects, teams, and tasks with individual statuses for each assignee.
-- **Stay connected after the sale** — a customer portal, helpdesk, and activity history on records.
-- **Your own installation** — Docker Compose or Python, with SQLite by default.
-- **A comfortable interface** — Polish and English, with light and dark themes.
-
-### Features
-
-| Area | What you can do |
+| Template | Appearance |
 | --- | --- |
-| 🤝 **Clients and contacts** | Store company and individual details, assign account owners, and review relationship history. |
-| 🎯 **Leads and Kanban** | Manage sales stages, opportunity values, and closing probabilities. |
-| ✅ **Projects and tasks** | Organize work stages, project members, and tasks with multiple assignees. |
-| 📅 **Meetings and calendar** | Schedule meetings and view dates in the calendar. |
-| 🛠️ **Services and catalog** | Maintain a service catalog and manage individual deliveries with assigned team members. |
-| 📄 **Offers and documents** | Work with templates, generate PDFs, and share materials through token-based links. |
-| 🎫 **Helpdesk** | Handle tickets, configure categories, and set automatic assignment rules. |
-| 🌐 **Customer portal** | Manage portal members, shared modules, and the appearance of their workspace. |
-| 📱 **Telephony and SMS** | Connect a device to synchronize call and message history. |
-| 📊 **Dashboard** | Review metrics and charts on the application dashboard. |
-| ⚙️ **Administration** | Manage roles, teams, permissions, custom fields, and the archive. |
+| **Classic — default** | A light, structured layout with familiar navigation and record cards. |
+| **Modern** | A dark sidebar with a subtle gradient, a wider content area, refined lists and Kanban, and muted mountain, forest, or coast photos behind record headers. Choose a photo or rotate among several backgrounds. |
 
-### How does it fit together?
+Select a template under **Settings → Appearance templates**. Both work with light and dark mode. See the [gallery](#galeria--gallery) for screenshots of each template.
 
-```mermaid
-flowchart LR
-    A[Contact and lead] --> B[Sales process]
-    B --> C[Offer]
-    C --> D[Customer]
-    D --> E[Project and services]
-    E --> F[Support and helpdesk]
-```
+### What can ZenCRM do?
 
-An example workflow from acquiring a contact to support after the sale. Use individual modules to suit your team's process.
-
-### Technology
-
-| Layer | Solution |
+| Area | Features |
 | --- | --- |
-| Backend | Python, Flask, SQLAlchemy, Flask-Migrate |
-| Interface | Alpine.js, Jinja views, JavaScript, and CSS |
-| Database | SQLite by default; connection configured through `DATABASE_URL` |
-| CRM authentication | JWT tokens through Flask-JWT-Extended |
-| Documents | Jinja2, WeasyPrint, and xhtml2pdf |
-| Container deployment | Docker Compose and Gunicorn |
+| **Dashboard** | Counts for clients, leads, projects, tasks, and services, pipeline charts, and shortcuts to frequent actions. |
+| **Clients and contacts** | Company and person details, account owners, linked contacts, files, notes, and activity history in one record. |
+| **Leads** | Sales stages, value and probability, table and Kanban views, lead conversion, lead sources, and a lead webhook. |
+| **Projects** | Statuses, stages, members, client links, tasks, and project files. |
+| **Tasks** | List and Kanban, priorities, due dates, progress, and multiple assignees. |
+| **Calendar and meetings** | Month view and daily agenda for meetings and team deadlines. |
+| **Services** | A service catalog and individual client deliveries assigned to team members. |
+| **Offers and documents** | Templates, preview, PDF generation, document types with custom fields, and token-based public links. |
+| **Telephony and SMS** | User-owned phones, synchronized calls and messages, SMS threads, statistics, and actions queued to a phone. |
+| **Email** | SMTP configuration and email templates used by the CRM. |
+| **Tickets and helpdesk** | Requests, categories, assignment rules, a public help page, and conversations within tickets. |
+| **Customer portal** | Separate login, portal members, shared modules, and workspace appearance. |
+| **Notifications** | Record activity, reminders, and optional browser push notifications. |
+| **Administration** | Roles, teams, permissions, custom and required fields, menu configuration, branding, archive, and restore. |
+| **Languages** | Polish and English included; administrators can create languages and edit translations. |
+| **Updates** | Compare the installed version with the latest stable GitHub release and read release notes. |
 
-The frontend is served by Flask and **requires no separate build step**. Node.js is only needed for frontend tests.
+### Generate offers and documents
 
-### Local installation
+| 📄 **TEMPLATE → PREVIEW → PDF → SHAREABLE LINK** |
+| :--- |
+| Prepare an offer or document from your template, fill it with CRM data, and generate a PDF without copying information by hand. Download the result or share it using a link with an individual token. |
 
-You need **Python 3.11 or newer**. SQLite is the default database. Node.js is only needed for the frontend tests. On Linux, PDF generation with WeasyPrint may require system libraries such as Pango and HarfBuzz; see `Dockerfile` for the package list.
+1. Create a template in the editor and review its preview. Documents can use configurable types and extra fields.
+2. Create an offer or document and link it to a client, and where relevant to a lead or service.
+3. Generate a preview and PDF. Download the result or share it using an individual token-based link.
 
-Run these commands from the project directory:
+Templates and business data stay in your installation. PDF generation uses Jinja2 and server-side PDF libraries.
+
+### Telephony and SMS in practice
+
+In **Telephony & SMS**, add a device and pair a compatible Android app (SMS Manager / GoFlow) with the CRM gateway using an individual token. The app runs in the background on your phone and synchronizes call and message history. ZenCRM links it to clients, leads, and contacts by phone number. From their records, you can review earlier conversations and request a call or send a text through the connected phone. Device access and sending permissions are tied to the signed-in user.
+
+### Updates and translations
+
+| 🔄 **AUTOMATIC RELEASE CHECKS** |
+| :--- |
+| Opening **Settings → Updates** fetches GitHub releases and compares the latest stable version with the installed version. The screen shows release notes and a link to the release. An administrator deploys the new version. |
+
+Opening **Settings → Updates** automatically fetches releases from [GitHub Releases](https://github.com/ZenCRM/ZenCRM/releases). It shows the installed version, the latest stable release, and its notes. **The application does not install updates unattended**: an administrator deploys the chosen release using the installation method after backing up data.
+
+Under **Settings → Translations**, you can edit Polish and English text or create a language based on either one. Custom entries are stored in the database and take precedence over bundled translations. Missing phrases fall back to the base language, so new text from later releases appears without copying the entire catalog by hand.
+
+### Quick start: Docker Compose
+
+Docker and Docker Compose are required. [docker-compose.yml](docker-compose.yml) uses the published [kosiorekmateusz/zencrm](https://hub.docker.com/r/kosiorekmateusz/zencrm) image. Before starting, set your own, distinct <code>SECRET_KEY</code> and <code>JWT_SECRET_KEY</code> values.
+
+~~~bash
+docker compose pull zencrm
+docker compose up -d --no-build zencrm
+~~~
+
+Open **http://localhost/**. On the first launch, the browser displays a form to create the administrator. The entrypoint prepares the database automatically; it does not create an account with a default password. The <code>zencrm_data</code> volume stores the database and <code>zencrm_uploads</code> stores uploaded files.
+
+To deploy a newer image after backing up your data:
+
+~~~bash
+docker compose pull zencrm
+docker compose up -d --no-build zencrm
+~~~
+
+The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.2</code>.
+
+### Run locally
+
+You need **Python 3.11 or newer**. Flask serves the frontend without a separate build step. On Linux, PDF generation may require the system libraries listed in the [Dockerfile](Dockerfile).
 
 **Windows PowerShell**
 
-```powershell
+~~~powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
-```
+$env:PORT = "5000"
+python run.py
+~~~
 
 **Linux / macOS**
 
-```bash
+~~~bash
 python3 -m venv venv
 source venv/bin/activate
 python -m pip install -r requirements.txt
 cp .env.example .env
-```
-
-In `.env`, replace the sample `SECRET_KEY` and `JWT_SECRET_KEY` with two different, long random secrets. Then create the initial administrator account and start the application:
-
-**Windows PowerShell**
-
-```powershell
-python seed.py
-$env:PORT = "5000"
-python run.py
-```
-
-**Linux / macOS**
-
-```bash
-python seed.py
 PORT=5000 python run.py
-```
+~~~
 
-Open **http://localhost:5000/**. If the database contains no users, `seed.py` creates the account `admin@zencrm.pl` with password `admin123`. Existing accounts and passwords remain unchanged. **Change this password after your first login.** `run.py` starts Flask's development server with debugging enabled. Without `PORT`, it listens on port 80.
+Replace the sample secrets in <code>.env</code> with your own. Open **http://localhost:5000/** and create the administrator through the first-run form. <code>run.py</code> is intended for local work and enables Flask debug mode; the container deployment uses Gunicorn.
 
-### Docker Compose installation
+### Configuration, data, and security
 
-The included `docker-compose.yml` uses the published `kosiorekmateusz/zencrm:latest` image. Set your own `SECRET_KEY` and `JWT_SECRET_KEY` values in that file before starting. The default host port is 80:
+| Variable | Purpose |
+| --- | --- |
+| <code>SECRET_KEY</code> | Flask application secret. |
+| <code>JWT_SECRET_KEY</code> | Separate secret for login tokens. |
+| <code>DATABASE_URL</code> | SQLAlchemy database URL; SQLite by default. |
+| <code>PORT</code> | Server port; 5000 in the local examples and 80 in Compose. |
+| <code>ZENCRM_VERSION</code> | Optional version identifier; the Docker image sets it at build time. |
 
-```bash
-docker compose up -d
-docker compose exec zencrm python seed.py
-```
+Back up the database and uploaded files before deploying a new release. The application creates missing tables and updates some older schemas at startup. Use HTTPS for an Internet-facing installation and protect your secrets.
 
-Open **http://localhost/**, sign in with the administrator account above, and change its password immediately. The `zencrm_data` volume stores the database in `/app/instance`; `zencrm_uploads` stores uploaded files in `/app/uploads`. Compose pulls a published image. To run changes from this repository, build a local image and reference it in your Compose configuration.
-
-Images built from the current source run `seed.py` automatically at container startup. The manual command above is only needed for older images. Rebuild your image and recreate the container while keeping its volumes to apply this fix.
-
-### Configuration and data
-
-| Variable | Purpose | Example |
-| --- | --- | --- |
-| `SECRET_KEY` | Flask application secret | random string |
-| `JWT_SECRET_KEY` | Login token secret | a different random string |
-| `DATABASE_URL` | SQLAlchemy database URL | `sqlite:///zencrm.db` |
-| `PORT` | Server port | `5000` locally |
-
-The application creates missing tables on startup. Before updating an installation with existing data, back up the database and `uploads/` directory and review the migrations in `migrations/`. Use HTTPS for an Internet-facing installation and protect the secrets in `.env`.
-
-
-### Documentation
+### Documentation and contributions
 
 | Resource | Contents |
 | --- | --- |
-| [User guide (Polish)](docs/uzytkownik.md) | Working with modules, the customer portal, roles, and notifications. |
-| [API reference (Polish)](docs/api.md) | Authentication, endpoint map, and request examples. |
-| [Frontend (Polish)](frontend/README.md) | View structure, JavaScript modules, translations, and tests. |
-| [Dockerfile](Dockerfile) | Image build and system dependencies. |
+| [User guide (Polish)](docs/uzytkownik.md) | Clients, leads, projects, the portal, and notifications. |
+| [API reference (Polish)](docs/api.md) | Login, endpoints, and example requests. |
+| [Frontend notes (Polish)](frontend/README.md) | Views, JavaScript modules, and language catalogs. |
+| [Latest release](https://github.com/ZenCRM/ZenCRM/releases/latest) | Release notes and available tags. |
 
-### Development
-
-Clone the code and enter the project directory, then follow the local installation steps:
-
-```bash
-git clone https://github.com/ZenCRM/ZenCRM.git
-cd ZenCRM
-```
-
-Key directories:
-
-```text
-ZenCRM/
-├── app/               # Backend: API, models, schemas, and services
-├── frontend/          # Views, JavaScript modules, styles, and translations
-├── docs/              # User guide and API reference
-├── migrations/        # Database migrations
-├── tests/             # Backend and frontend tests
-├── run.py             # Application entry point
-└── seed.py            # Initial administrator creation
-```
-
-After installing dependencies, run the tests from the repository root with your Python environment activated:
-
-```bash
-python -m unittest discover -s tests
-node tests/test_frontend.cjs
-```
-
-### Ideas and contributions
-
-Have an improvement in mind or found a bug? [Open an issue](https://github.com/ZenCRM/ZenCRM/issues). Describe the expected behavior, steps to reproduce, and your runtime environment; for interface issues, include a screenshot without customer data.
-
-You can propose code changes through a pull request. Include a description of the solution and results of the relevant tests. For interface changes, remember both languages and the light and dark themes.
-
----
-
-<div align="center">
-
-**ZenCRM · Build relationships. Organize your work.**
-
-[Website](https://zencrm.pl) · [Issues and ideas](https://github.com/ZenCRM/ZenCRM/issues) · [Back to English](#english)
-
-If ZenCRM helps you in your work, give it a ⭐ on GitHub.
-
-</div>
+Report bugs and ideas through [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Code changes can be proposed in a pull request.

@@ -1,7 +1,7 @@
 <!-- ═══════════════ MODAL GENERYCZNY (CRUD) ═══════════════ -->
 <div x-show="modal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 md:p-6"
      @keydown.escape.window="closeModal()">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-h-[92vh] flex flex-col overflow-hidden" :class="['documents', 'offers'].includes(modal.view || currentView) ? 'max-w-4xl' : 'max-w-3xl'">
 
         <!-- HEADER -->
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/80 flex justify-between items-center flex-shrink-0">
@@ -216,7 +216,8 @@
 
                         <!-- TEMPLATE SELECT -->
                         <template x-if="field.type === 'document-type-select'">
-                            <select x-model="modal.form.type" @change="modal.form.template_id = ''; modal.form.data.type_fields = {}" class="ux-input w-full" required>
+                            <select x-model="modal.form.type" @change="changeDocumentType()" class="ux-input w-full" required>
+                                <option value="" disabled x-text="window.ZenI18n.t('— wybierz —')"></option>
                                 <template x-for="kind in documentTypes.filter(t => t.is_active || t.key === modal.form.type)" :key="kind.key"><option :value="kind.key" x-text="kind.name"></option></template>
                             </select>
                         </template>
@@ -298,24 +299,29 @@
                 </template>
             </div>
 
-            <div x-show="(modal.view || currentView) === 'documents' && selectedDocumentTypeFields().length" class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                <h4 class="text-sm font-bold" x-text="'Pola typu: ' + documentTypeLabel(modal.form.type)"></h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div x-show="(modal.view || currentView) === 'documents' && selectedDocumentTypeFields().length" class="rounded-2xl border border-brand-100 dark:border-brand-900/50 bg-brand-50/40 dark:bg-gray-750 p-4 sm:p-5 space-y-4">
+                <div class="flex items-center gap-3 border-b border-brand-100 dark:border-gray-700 pb-3">
+                    <div class="w-9 h-9 rounded-xl bg-white dark:bg-gray-800 text-brand-600 dark:text-brand-300 flex items-center justify-center shadow-xs" x-html="zenIcon('document')"></div>
+                    <div><h4 class="text-sm font-bold text-gray-900 dark:text-gray-100" x-text="documentTypeLabel(modal.form.type)"></h4><p class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t('Pola typu dokumentu')">Pola typu dokumentu</p></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
                     <template x-for="field in selectedDocumentTypeFields()" :key="field.key">
-                        <label class="block text-sm" :class="field.kind === 'textarea' ? 'sm:col-span-2' : ''"><span x-text="field.label + (field.required ? ' *' : '')"></span><code class="ml-2 text-xs" x-text="'{{ type_fields.' + field.key + ' }}'"></code>
-                            <template x-if="field.kind === 'textarea'"><textarea class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></textarea></template>
-                            <template x-if="field.kind === 'select'"><select class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"><option value="">— wybierz —</option><template x-for="option in field.options" :key="option"><option :value="option" x-text="option"></option></template></select></template>
-                            <input x-show="field.kind === 'boolean'" type="checkbox" class="mt-2" x-model="modal.form.data.type_fields[field.key]">
-                            <template x-if="!['textarea','select','boolean'].includes(field.kind)"><input :type="field.kind" class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></template>
-                        </label>
+                        <div :class="field.kind === 'textarea' ? 'sm:col-span-2' : ''">
+                            <template x-if="field.kind === 'boolean'"><label class="flex items-center gap-3 min-h-11 px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer"><input type="checkbox" class="w-4 h-4 rounded text-brand-600" x-model="modal.form.data.type_fields[field.key]"><span class="text-sm font-medium text-gray-800 dark:text-gray-200" x-text="field.label"></span></label></template>
+                            <template x-if="field.kind !== 'boolean'"><label class="block"><span class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5" x-text="field.label + (field.required ? ' *' : '')"></span>
+                                <template x-if="field.kind === 'textarea'"><textarea class="ux-input w-full" rows="3" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></textarea></template>
+                                <template x-if="field.kind === 'select'"><select class="ux-input w-full" x-model="modal.form.data.type_fields[field.key]" :required="field.required"><option value="" x-text="window.ZenI18n.t('— wybierz —')"></option><template x-for="option in field.options" :key="option"><option :value="option" x-text="option"></option></template></select></template>
+                                <template x-if="!['textarea','select'].includes(field.kind)"><input :type="field.kind" class="ux-input w-full" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></template>
+                            </label></template>
+                        </div>
                     </template>
                 </div>
             </div>
 
-            <div x-show="['documents', 'offers'].includes(modal.view || currentView) && selectedTemplateFields().length" class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                <h4 class="text-sm font-bold" x-text="window.ZenI18n.t('Pola szablonu')">Pola szablonu</h4>
+            <div x-show="['documents', 'offers'].includes(modal.view || currentView) && selectedTemplateFields().length" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-750 p-4 sm:p-5 space-y-3">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100" x-text="window.ZenI18n.t('Pola szablonu')">Pola szablonu</h4>
                 <template x-for="field in selectedTemplateFields()" :key="field.name">
-                    <label class="block text-sm"><span x-text="field.label"></span><code class="ml-2 text-xs" x-text="'{{ custom.' + field.name + ' }}'"></code><input class="ux-input w-full mt-1" x-model="modal.form.data.custom[field.name]"></label>
+                    <label class="block text-sm"><span class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5" x-text="field.label"></span><input class="ux-input w-full" x-model="modal.form.data.custom[field.name]"></label>
                 </template>
             </div>
 

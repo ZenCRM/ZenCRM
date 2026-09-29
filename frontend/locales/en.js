@@ -500,6 +500,8 @@ window.ZenLocales.en = {
   "Pokaż wartości": "Show values",
   "Pola wymagane": "Required fields",
   "Pola własne": "Custom fields",
+  "Pola typu dokumentu": "Document type fields",
+  "Pola szablonu": "Template fields",
   "Polski": "Polski",
   "Pomoc techniczna": "Technical support",
   "Poniedziałek": "Monday",

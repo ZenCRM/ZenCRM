@@ -500,6 +500,8 @@ window.ZenLocales.pl = {
   "Pokaż wartości": "Pokaż wartości",
   "Pola wymagane": "Pola wymagane",
   "Pola własne": "Pola własne",
+  "Pola typu dokumentu": "Pola typu dokumentu",
+  "Pola szablonu": "Pola szablonu",
   "Polski": "Polski",
   "Pomoc techniczna": "Pomoc techniczna",
   "Poniedziałek": "Poniedziałek",

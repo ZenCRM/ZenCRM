@@ -246,13 +246,13 @@ window.ZenModules.records = function () { return {
                 : (defaultStage ? { stage: defaultStage, is_primary: false } : { is_primary: false });
             if (['documents', 'offers'].includes(actionView)) {
                 this.modal.form.data = { ...(this.modal.form.data || {}), custom: { ...(this.modal.form.data?.custom || {}) }, type_fields: { ...(this.modal.form.data?.type_fields || {}) } };
-                if (actionView === 'documents' && !this.modal.form.type) this.modal.form.type = 'other';
             }
             if (actionView === 'leads' && this.modal.form.probability == null) {
                 this.modal.form.probability = 0;
             }
             this.modal.lockedRelations = context?.lockedRelations || [];
             if (!item && context?.prefill) Object.assign(this.modal.form, context.prefill);
+            if (actionView === 'documents') this.syncDocumentTypeSelection();
             if (this.modal.form && !Array.isArray(this.modal.form.assignee_ids)) {
                 this.modal.form.assignee_ids = [];
             }
@@ -278,6 +278,20 @@ window.ZenModules.records = function () { return {
                 }
             }
             return true;
+        },
+
+        syncDocumentTypeSelection() {
+            if ((this.modal.view || this.currentView) !== 'documents' || !this.documentTypes.length) return;
+            const selected = this.documentTypes.find(t => t.key === this.modal.form.type && (t.is_active || this.modal.editingId));
+            if (selected) return;
+            this.modal.form.type = this.documentTypes.find(t => t.is_active)?.key || '';
+            this.modal.form.template_id = '';
+            this.modal.form.data.type_fields = {};
+        },
+
+        changeDocumentType() {
+            this.modal.form.template_id = '';
+            this.modal.form.data.type_fields = {};
         },
 
         modalTitle() {
@@ -345,7 +359,10 @@ window.ZenModules.records = function () { return {
                 }
             } catch (_) {}
             try {
-                if (needDocumentTypes) this.documentTypes = await this.api('/document-types');
+                if (needDocumentTypes) {
+                    this.documentTypes = await this.api('/document-types');
+                    this.syncDocumentTypeSelection();
+                }
             } catch (_) {}
             try {
                 if (needProjects) {
