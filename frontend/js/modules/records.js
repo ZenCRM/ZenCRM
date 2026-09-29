@@ -84,6 +84,23 @@ window.ZenModules.records = function () { return {
                 let field = mod === 'leads' && f.key === 'stage'
                     ? { ...f, options: this.leadStages.map(s => ({ value: s.id, label: s.label })) }
                     : { ...f };
+                if (mod === 'leads' && f.key === 'source') {
+                    let sources = [];
+                    try {
+                        const raw = this.settingsForm?.lead_sources;
+                        if (raw) sources = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                    } catch (_) {}
+                    if (!Array.isArray(sources) || sources.length === 0) {
+                        sources = ['Strona WWW', 'Polecenie', 'Telefon', 'Social Media', 'Kampania Google', 'Inne'];
+                    }
+                    const currentVal = this.modal?.form?.source;
+                    const opts = sources.map(s => ({ value: s, label: s }));
+                    if (currentVal && !sources.includes(currentVal)) {
+                        opts.push({ value: currentVal, label: currentVal });
+                    }
+                    field.type = 'select';
+                    field.options = opts;
+                }
                 if (mod === 'tasks' && f.key === 'status') {
                     field.options = this.taskBoardStages.map(stage => ({ value: stage.id, label: stage.label }));
                 }

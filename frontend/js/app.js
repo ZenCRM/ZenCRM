@@ -387,6 +387,47 @@ function crmApp() {
         // ═══════════════════════════════════════════════════════════
         // NAVIGACJA
         // ═══════════════════════════════════════════════════════════
+        canAccessView(viewId) {
+            if (!viewId) return true;
+            if (viewId === 'settings') return this.user?.role === 'admin' || this.isAdmin;
+
+            let perms = {};
+            try {
+                if (this.settingsForm?.menu_permissions) {
+                    perms = typeof this.settingsForm.menu_permissions === 'string'
+                        ? JSON.parse(this.settingsForm.menu_permissions)
+                        : this.settingsForm.menu_permissions;
+                }
+            } catch (_) {}
+
+            const cfg = perms[viewId];
+            if (cfg) {
+                if (cfg.enabled === false) return false;
+                const role = cfg.role || 'all';
+                if (role === 'admin') return this.user?.role === 'admin' || this.isAdmin;
+                if (role === 'manager') return this.user?.role === 'admin' || this.user?.role === 'manager' || this.isAdmin;
+                if (role === 'all') return true;
+            }
+
+            if (['users', 'portal_group', 'portalSettings', 'portalUsers', 'portalSpaces', 'portalTickets'].includes(viewId)) {
+                return this.user?.role === 'admin' || this.isAdmin;
+            }
+            return true;
+        },
+
+        get visibleMenu() {
+            return (this.menu || []).map(item => {
+                if (item.children) {
+                    const visibleChildren = item.children.filter(c => this.canAccessView(c.id));
+                    if (!visibleChildren.length) return null;
+                    if (!this.canAccessView(item.id)) return null;
+                    return { ...item, children: visibleChildren };
+                }
+                if (!this.canAccessView(item.id)) return null;
+                return item;
+            }).filter(Boolean);
+        },
+
         isKnownView(id) {
             if (!id) return false;
             for (const item of this.menu) {
@@ -402,6 +443,14 @@ function crmApp() {
             // Sprawdź, czy to znany widok
             const valid = this.isKnownView(id);
             if (!valid) id = 'dashboard';
+
+            // Sprawdź uprawnienia do widoku w menu
+            if (!this.canAccessView(id)) {
+                if (id !== 'dashboard') {
+                    this.notify(window.ZenI18n.t('Brak dostępu do tego modułu'));
+                }
+                id = 'dashboard';
+            }
             // Zamknij detail view przy zmianie modułu
             if (this.detailView && this.detailView.open) this.detailView.open = false;
 

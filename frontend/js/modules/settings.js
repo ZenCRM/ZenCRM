@@ -10,6 +10,38 @@ window.ZenModules.settings = function () { return {
         newRoleName: '',
         roleNameDraft: '',
         effectivePermissions: {},
+        // Menu settings
+        menuModulesList: [
+            { id: 'dashboard', label: 'Dashboard', group: 'Główne' },
+            { id: 'clients', label: 'CRM - Klienci', group: 'CRM' },
+            { id: 'leads', label: 'CRM - Leady', group: 'CRM' },
+            { id: 'contacts', label: 'CRM - Kontakty', group: 'CRM' },
+            { id: 'projects', label: 'Projekty', group: 'Główne' },
+            { id: 'tasks', label: 'Zadania', group: 'Główne' },
+            { id: 'meetings', label: 'Kalendarz', group: 'Główne' },
+            { id: 'services', label: 'Usługi', group: 'Usługi' },
+            { id: 'serviceCatalog', label: 'Katalog usług', group: 'Usługi' },
+            { id: 'offers', label: 'Oferty', group: 'Dokumenty' },
+            { id: 'documents', label: 'Dokumenty', group: 'Dokumenty' },
+            { id: 'templates', label: 'Szablony', group: 'Dokumenty' },
+            { id: 'tickets', label: 'Lista ticketów', group: 'Tickety' },
+            { id: 'ticketSettings', label: 'Ustawienia ticketów', group: 'Tickety' },
+            { id: 'sms', label: 'Telefonia & SMS', group: 'Komunikacja' },
+            { id: 'archive', label: 'Archiwum', group: 'System' },
+        ],
+        menuPermissionsState: {},
+        savingMenuSettings: false,
+        menuSettingsSaved: false,
+
+        // Lead settings
+        leadSources: ['Strona WWW', 'Polecenie', 'Telefon', 'Social Media', 'Kampania Google', 'Inne'],
+        newLeadSourceName: '',
+        editingLeadSourceIndex: null,
+        editingLeadSourceName: '',
+        leadWebhookEnabled: false,
+        leadWebhookToken: '',
+        savingLeadSettings: false,
+        leadSettingsSaved: false,
         can(permission) {
             return this.user?.role === 'admin' || this.effectivePermissions[permission] !== false;
         },
@@ -106,6 +138,22 @@ window.ZenModules.settings = function () { return {
                 }
                 try { this.customLeadStages = JSON.parse(this.settingsForm.lead_stages || 'null'); } catch (_) { this.customLeadStages = null; }
                 try { const stages = JSON.parse(this.settingsForm.task_stages || 'null'); if (Array.isArray(stages) && stages.length >= 2) this.taskStatusStages = stages; } catch (_) {}
+                try {
+                    let mp = this.settingsForm.menu_permissions;
+                    if (typeof mp === 'string') mp = JSON.parse(mp);
+                    this.menuPermissionsState = (mp && typeof mp === 'object') ? mp : {};
+                } catch (_) {
+                    this.menuPermissionsState = {};
+                }
+                try {
+                    let ls = this.settingsForm.lead_sources;
+                    if (typeof ls === 'string') ls = JSON.parse(ls);
+                    if (Array.isArray(ls) && ls.length > 0) {
+                        this.leadSources = ls;
+                    }
+                } catch (_) {}
+                this.leadWebhookEnabled = this.settingsForm.lead_webhook_enabled === 'true' || this.settingsForm.lead_webhook_enabled === true;
+                this.leadWebhookToken = this.settingsForm.lead_webhook_token || '';
                 this.applyTheme();
                 this.loadStandardRequiredFields();
                 if (!publicOnly) {
@@ -973,6 +1021,144 @@ window.ZenModules.settings = function () { return {
 </body>
 </html>`;
             return { subject, html: fullHtml };
+        },
+
+        getMenuModuleConfig(id) {
+            const current = this.menuPermissionsState[id];
+            return {
+                enabled: current?.enabled !== false,
+                role: current?.role || 'all',
+            };
+        },
+        setMenuModuleEnabled(id, enabled) {
+            if (!this.menuPermissionsState[id]) {
+                this.menuPermissionsState[id] = { enabled: true, role: 'all' };
+            }
+            this.menuPermissionsState[id].enabled = !!enabled;
+            this.menuPermissionsState = { ...this.menuPermissionsState };
+            this.settingsForm.menu_permissions = JSON.stringify(this.menuPermissionsState);
+        },
+        setMenuModuleRole(id, role) {
+            if (!this.menuPermissionsState[id]) {
+                this.menuPermissionsState[id] = { enabled: true, role: 'all' };
+            }
+            this.menuPermissionsState[id].role = role;
+            this.menuPermissionsState = { ...this.menuPermissionsState };
+            this.settingsForm.menu_permissions = JSON.stringify(this.menuPermissionsState);
+        },
+        async saveMenuSettings() {
+            this.savingMenuSettings = true;
+            this.menuSettingsSaved = false;
+            try {
+                const jsonStr = JSON.stringify(this.menuPermissionsState);
+                const updated = await this.api('/settings', {
+                    method: 'PUT',
+                    body: JSON.stringify({ menu_permissions: jsonStr }),
+                });
+                this.settingsForm = { ...this.settingsForm, ...updated, menu_permissions: jsonStr };
+                this.menuSettingsSaved = true;
+                this.notify(window.ZenI18n.t('Ustawienia menu zostały zapisane'));
+                setTimeout(() => { this.menuSettingsSaved = false; }, 3000);
+            } catch (e) {
+                this.notify(window.ZenI18n.t('Błąd: ') + e.message);
+            } finally {
+                this.savingMenuSettings = false;
+            }
+        },
+
+        addLeadSource() {
+            const name = (this.newLeadSourceName || '').trim();
+            if (!name) return;
+            if (this.leadSources.includes(name)) {
+                this.notify(window.ZenI18n.t('Takie źródło już istnieje'));
+                return;
+            }
+            this.leadSources.push(name);
+            this.newLeadSourceName = '';
+            this.settingsForm.lead_sources = JSON.stringify(this.leadSources);
+        },
+        startEditLeadSource(index) {
+            this.editingLeadSourceIndex = index;
+            this.editingLeadSourceName = this.leadSources[index] || '';
+        },
+        saveEditLeadSource() {
+            if (this.editingLeadSourceIndex === null) return;
+            const name = (this.editingLeadSourceName || '').trim();
+            if (!name) return;
+            this.leadSources[this.editingLeadSourceIndex] = name;
+            this.editingLeadSourceIndex = null;
+            this.editingLeadSourceName = '';
+            this.settingsForm.lead_sources = JSON.stringify(this.leadSources);
+        },
+        cancelEditLeadSource() {
+            this.editingLeadSourceIndex = null;
+            this.editingLeadSourceName = '';
+        },
+        deleteLeadSource(index) {
+            if (!confirm(window.ZenI18n.t('Czy na pewno chcesz usunąć to źródło?'))) return;
+            this.leadSources.splice(index, 1);
+            if (this.editingLeadSourceIndex === index) {
+                this.cancelEditLeadSource();
+            }
+            this.settingsForm.lead_sources = JSON.stringify(this.leadSources);
+        },
+        async generateNewLeadWebhookToken() {
+            if (!confirm(window.ZenI18n.t('Wygenerować nowy token dla webhooka? Stary token przestanie działać!'))) return;
+            try {
+                const res = await this.api('/settings/lead-webhook/generate-token', { method: 'POST' });
+                if (res?.token) {
+                    this.leadWebhookToken = res.token;
+                    this.settingsForm.lead_webhook_token = res.token;
+                    this.notify(window.ZenI18n.t('Wygenerowano nowy token webhooka'));
+                }
+            } catch (e) {
+                this.notify(window.ZenI18n.t('Błąd: ') + e.message);
+            }
+        },
+        async copyLeadWebhookUrl() {
+            const url = window.location.origin + '/api/leads/webhook';
+            try {
+                await navigator.clipboard.writeText(url);
+                this.notify(window.ZenI18n.t('Skopiowano URL webhooka'));
+            } catch (_) {
+                this.notify(url);
+            }
+        },
+        async copyLeadWebhookToken() {
+            if (!this.leadWebhookToken) return;
+            try {
+                await navigator.clipboard.writeText(this.leadWebhookToken);
+                this.notify(window.ZenI18n.t('Skopiowano token'));
+            } catch (_) {
+                this.notify(this.leadWebhookToken);
+            }
+        },
+        async saveLeadSettings() {
+            this.savingLeadSettings = true;
+            this.leadSettingsSaved = false;
+            try {
+                const sourcesJson = JSON.stringify(this.leadSources);
+                const updated = await this.api('/settings', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        lead_sources: sourcesJson,
+                        lead_webhook_enabled: this.leadWebhookEnabled ? 'true' : 'false',
+                    }),
+                });
+                this.settingsForm = {
+                    ...this.settingsForm,
+                    ...updated,
+                    lead_sources: sourcesJson,
+                    lead_webhook_enabled: this.leadWebhookEnabled ? 'true' : 'false',
+                };
+                this.leadSettingsSaved = true;
+                this.notify(window.ZenI18n.t('Ustawienia leadów zostały zapisane'));
+                setTimeout(() => { this.leadSettingsSaved = false; }, 3000);
+            } catch (e) {
+                this.notify(window.ZenI18n.t('Błąd: ') + e.message);
+            } finally {
+                this.savingLeadSettings = false;
+            }
         },
 
 }; };

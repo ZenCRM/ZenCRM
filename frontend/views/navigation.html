@@ -16,7 +16,7 @@
             </a>
         </div>
         <nav class="space-y-1 px-3 py-4">
-            <template x-for="item in menu.filter(m =&gt; (!m.adminOnly &amp;&amp; m.id !== &#x27;settings&#x27;) || user?.role === &#x27;admin&#x27; || isAdmin)" :key="item.id">
+            <template x-for="item in visibleMenu" :key="item.id">
                 <div>
                     <!-- Pojedyncza pozycja bez podmenu -->
                     <template x-if="!item.children">

@@ -21,6 +21,14 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M5 4h14v16H5z"/></svg>
                             <span x-text="window.ZenI18n.t('Wartości pól')">Wartości pól</span>
                         </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'menu' ? 'active' : ''" @click="settingsTab = 'menu'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                            <span x-text="window.ZenI18n.t('Ustawienia menu')">Ustawienia menu</span>
+                        </button>
+                        <button class="settings-nav-item" :class="settingsTab === 'leads' ? 'active' : ''" @click="settingsTab = 'leads'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            <span x-text="window.ZenI18n.t('Ustawienia leadów')">Ustawienia leadów</span>
+                        </button>
 
                         <button class="settings-nav-item" :class="settingsTab === &#x27;branding&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;branding&#x27;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
@@ -1113,8 +1121,173 @@
                             </div>
                         </div>
 
+                        <!-- USTAWIENIA MENU -->
+                        <div x-show="settingsTab === 'menu'" x-cloak class="space-y-6">
+                            <div>
+                                <h2 class="settings-section-title"><span x-text="window.ZenI18n.t('Ustawienia widoczności menu i modułów')">Ustawienia widoczności menu i modułów</span></h2>
+                                <p class="settings-section-desc"><span x-text="window.ZenI18n.t('Określ, które pozycje menu są aktywne w systemie oraz dla jakich ról są dostępne. Wyłączenie pozycji powoduje jej ukrycie oraz blokadę dostępu.')">Określ, które pozycje menu są aktywne w systemie oraz dla jakich ról są dostępne. Wyłączenie pozycji powoduje jej ukrycie oraz blokadę dostępu.</span></p>
+                            </div>
+
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow-xs">
+                                <div class="bg-gray-50 dark:bg-gray-750 px-4 py-3 flex items-center justify-between font-semibold text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <div class="w-1/2" x-text="window.ZenI18n.t('Pozycja menu / Moduł')">Pozycja menu / Moduł</div>
+                                    <div class="w-1/4 text-center" x-text="window.ZenI18n.t('Status')">Status</div>
+                                    <div class="w-1/4 text-right" x-text="window.ZenI18n.t('Dostępność dla ról')">Dostępność dla ról</div>
+                                </div>
+                                <template x-for="mod in menuModulesList" :key="mod.id">
+                                    <div class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-gray-50/50 dark:hover:bg-gray-750/50 transition">
+                                        <div class="w-1/2 flex items-center gap-3">
+                                            <span class="text-xs px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium" x-text="mod.group"></span>
+                                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200" x-text="mod.label"></span>
+                                        </div>
+                                        <div class="w-1/4 flex justify-center">
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" :checked="getMenuModuleConfig(mod.id).enabled"
+                                                       @change="setMenuModuleEnabled(mod.id, $event.target.checked)"
+                                                       class="sr-only peer">
+                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                                                <span class="ml-2 text-xs font-medium"
+                                                      :class="getMenuModuleConfig(mod.id).enabled ? 'text-green-600 dark:text-green-400' : 'text-gray-400'"
+                                                      x-text="getMenuModuleConfig(mod.id).enabled ? window.ZenI18n.t('Włączone') : window.ZenI18n.t('Wyłączone')"></span>
+                                            </label>
+                                        </div>
+                                        <div class="w-1/4 flex justify-end">
+                                            <select :value="getMenuModuleConfig(mod.id).role"
+                                                    @change="setMenuModuleRole(mod.id, $event.target.value)"
+                                                    :disabled="!getMenuModuleConfig(mod.id).enabled"
+                                                    class="ux-input text-xs w-48">
+                                                <option value="all" x-text="window.ZenI18n.t('Wszyscy użytkownicy')">Wszyscy użytkownicy</option>
+                                                <option value="manager" x-text="window.ZenI18n.t('Tylko manager i admin')">Tylko manager i admin</option>
+                                                <option value="admin" x-text="window.ZenI18n.t('Tylko admin')">Tylko admin</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <span x-show="menuSettingsSaved" class="text-xs text-green-600 dark:text-green-400 font-medium" x-text="window.ZenI18n.t('Ustawienia menu zostały zapisane')"></span>
+                                </div>
+                                <button type="button" @click="saveMenuSettings()" :disabled="savingMenuSettings" class="ux-button">
+                                    <span x-show="!savingMenuSettings" x-text="window.ZenI18n.t('Zapisz ustawienia menu')">Zapisz ustawienia menu</span>
+                                    <span x-show="savingMenuSettings" x-text="window.ZenI18n.t('Zapisywanie...')">Zapisywanie...</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- USTAWIENIA LEADÓW -->
+                        <div x-show="settingsTab === 'leads'" x-cloak class="space-y-8">
+                            <!-- SEKCJA: ŹRÓDŁA LEADÓW -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h2 class="settings-section-title"><span x-text="window.ZenI18n.t('Źródła leadów')">Źródła leadów</span></h2>
+                                    <p class="settings-section-desc"><span x-text="window.ZenI18n.t('Zarządzaj listą dostępnych źródeł leadów. Będą one widoczne jako lista wyboru w formularzach dodawania i edycji leada.')">Zarządzaj listą dostępnych źródeł leadów. Będą one widoczne jako lista wyboru w formularzach dodawania i edycji leada.</span></p>
+                                </div>
+
+                                <form @submit.prevent="addLeadSource()" class="flex gap-2 flex-wrap">
+                                    <input x-model="newLeadSourceName" maxlength="80" :placeholder="window.ZenI18n.t('Nazwa nowego źródła (np. Strona WWW, Reklama FB)')" class="ux-input flex-1 min-w-56" :aria-label="window.ZenI18n.t('Nazwa nowego źródła')">
+                                    <button type="submit" class="ux-button"><span x-text="window.ZenI18n.t('Dodaj źródło')">Dodaj źródło</span></button>
+                                </form>
+
+                                <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-xs">
+                                    <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                                        <template x-for="(source, index) in leadSources" :key="index">
+                                            <div class="flex items-center justify-between gap-3 px-4 py-2.5">
+                                                <!-- Tryb wyświetlania -->
+                                                <div x-show="editingLeadSourceIndex !== index" class="flex items-center gap-2 flex-1">
+                                                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200" x-text="source"></span>
+                                                </div>
+                                                <div x-show="editingLeadSourceIndex !== index" class="flex items-center gap-1">
+                                                    <button type="button" @click="startEditLeadSource(index)" class="p-1.5 text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg transition" :title="window.ZenI18n.t('Edytuj')">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                                    </button>
+                                                    <button type="button" @click="deleteLeadSource(index)" class="p-1.5 text-gray-500 hover:text-red-600 dark:hover:text-red-400 rounded-lg transition" :title="window.ZenI18n.t('Usuń')">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Tryb edycji inline -->
+                                                <div x-show="editingLeadSourceIndex === index" class="flex items-center gap-2 flex-1">
+                                                    <input x-model="editingLeadSourceName" @keydown.enter.prevent="saveEditLeadSource()" @keydown.escape="cancelEditLeadSource()" class="ux-input flex-1 text-sm py-1.5" :aria-label="window.ZenI18n.t('Edytuj nazwę')">
+                                                    <button type="button" @click="saveEditLeadSource()" class="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold"><span x-text="window.ZenI18n.t('Zapisz')">Zapisz</span></button>
+                                                    <button type="button" @click="cancelEditLeadSource()" class="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-xs font-medium"><span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span></button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <div x-show="leadSources.length === 0" class="px-4 py-6 text-center text-sm text-gray-400">
+                                            <span x-text="window.ZenI18n.t('Brak zdefiniowanych źródeł. Dodaj pierwsze źródło powyżej.')">Brak zdefiniowanych źródeł. Dodaj pierwsze źródło powyżej.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEKCJA: WEBHOOK LEADA -->
+                            <div class="space-y-4 pt-6 border-t border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <h2 class="settings-section-title"><span x-text="window.ZenI18n.t('Webhook dla leadów (Integracja WWW)')">Webhook dla leadów (Integracja WWW)</span></h2>
+                                    <p class="settings-section-desc"><span x-text="window.ZenI18n.t('Pozwala na automatyczne przesyłanie nowych leadów z Twojej strony internetowej, landing page lub kampanii reklamowych do CRM przez zapytanie HTTP POST.')">Pozwala na automatyczne przesyłanie nowych leadów z Twojej strony internetowej, landing page lub kampanii reklamowych do CRM przez zapytanie HTTP POST.</span></p>
+                                </div>
+
+                                <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 space-y-4">
+                                    <label class="flex items-center gap-3 cursor-pointer select-none">
+                                        <input type="checkbox" x-model="leadWebhookEnabled" class="w-5 h-5 rounded text-brand-600 focus:ring-brand-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+                                        <div>
+                                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 block" x-text="window.ZenI18n.t('Włącz webhook dla leadów')">Włącz webhook dla leadów</span>
+                                            <span class="text-xs text-gray-500 dark:text-gray-400 block" x-text="window.ZenI18n.t('Gdy webhook jest wyłączony, serwer odrzuca wszystkie zewnętrzne żądania z kodem 403.')">Gdy webhook jest wyłączony, serwer odrzuca wszystkie zewnętrzne żądania z kodem 403.</span>
+                                        </div>
+                                    </label>
+
+                                    <div class="space-y-3 pt-2" :class="!leadWebhookEnabled ? 'opacity-50 pointer-events-none' : ''">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t('Adres URL Webhooka (POST)')">Adres URL Webhooka (POST)</label>
+                                            <div class="flex gap-2">
+                                                <input type="text" readonly :value="window.location.origin + '/api/leads/webhook'" class="ux-input flex-1 font-mono text-xs bg-gray-100 dark:bg-gray-900 select-all">
+                                                <button type="button" @click="copyLeadWebhookUrl()" class="ux-button text-xs px-3"><span x-text="window.ZenI18n.t('Kopiuj URL')">Kopiuj URL</span></button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t('Klucz autoryzacyjny (Token)')">Klucz autoryzacyjny (Token)</label>
+                                            <div class="flex gap-2">
+                                                <input type="text" readonly :value="leadWebhookToken" class="ux-input flex-1 font-mono text-xs bg-gray-100 dark:bg-gray-900 select-all" placeholder="Brak wygenerowanego tokenu">
+                                                <button type="button" @click="copyLeadWebhookToken()" class="ux-button text-xs px-3"><span x-text="window.ZenI18n.t('Kopiuj token')">Kopiuj token</span></button>
+                                                <button type="button" @click="generateNewLeadWebhookToken()" class="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-medium transition"><span x-text="window.ZenI18n.t('Generuj nowy token')">Generuj nowy token</span></button>
+                                            </div>
+                                            <p class="text-[11px] text-gray-500 mt-1" x-text="window.ZenI18n.t('Przesyłaj ten token w nagłówku HTTP: X-Webhook-Token: <twój_token> lub w treści JSON jako pole &quot;token&quot;.')">Przesyłaj ten token w nagłówku HTTP: X-Webhook-Token: &lt;twój_token&gt; lub w treści JSON jako pole "token".</p>
+                                        </div>
+
+                                        <div class="pt-2">
+                                            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t('Przykładowa treść żądania (JSON POST)')">Przykładowa treść żądania (JSON POST)</label>
+                                            <pre class="p-3 bg-gray-900 text-gray-100 rounded-xl text-xs font-mono overflow-x-auto select-all">{
+  "title": "Nowe zapytanie z formularza",
+  "name": "Jan Kowalski",
+  "email": "jan@example.com",
+  "phone": "+48 600 700 800",
+  "company": "Kowalski Sp. z o.o.",
+  "source": "Strona WWW",
+  "value": 5000,
+  "notes": "Zainteresowany ofertą wdrożenia CRM"
+}</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <span x-show="leadSettingsSaved" class="text-xs text-green-600 dark:text-green-400 font-medium" x-text="window.ZenI18n.t('Ustawienia leadów zostały zapisane')"></span>
+                                </div>
+                                <button type="button" @click="saveLeadSettings()" :disabled="savingLeadSettings" class="ux-button">
+                                    <span x-show="!savingLeadSettings" x-text="window.ZenI18n.t('Zapisz ustawienia leadów')">Zapisz ustawienia leadów</span>
+                                    <span x-show="savingLeadSettings" x-text="window.ZenI18n.t('Zapisywanie...')">Zapisywanie...</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- ZAPISZ -->
-                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
+                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;, &#x27;menu&#x27;, &#x27;leads&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
                             <button @click="loadSettings()" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium">
                                 <span x-text="window.ZenI18n.t(&quot;Cofnij zmiany&quot;)">Cofnij zmiany</span>
                             </button>

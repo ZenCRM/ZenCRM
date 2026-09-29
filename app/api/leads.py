@@ -152,3 +152,81 @@ def board_settings():
         return jsonify({'stages': stages})
     except ValueError as error:
         return jsonify({'error': str(error)}), 400
+
+
+@leads_bp.route('/webhook', methods=['POST'])
+def webhook_submit_lead():
+    """Zewnętrzny webhook do dodawania leadów z formularzy kontaktowych / landing page."""
+    from ..models.setting import Setting
+    enabled = Setting.get_value('lead_webhook_enabled', 'true')
+    if enabled.lower() not in ('true', '1', 'yes'):
+        return jsonify({'error': 'Webhook zgłoszeń leadów jest wyłączony'}), 403
+
+    expected_token = Setting.get_value('lead_webhook_token', '')
+    req_token = request.headers.get('X-Webhook-Token') or request.args.get('token')
+    if not req_token and request.is_json:
+        req_token = (request.get_json(silent=True) or {}).get('token')
+
+    if not expected_token or req_token != expected_token:
+        return jsonify({'error': 'Nieprawidłowy token autoryzacyjny webhooka'}), 401
+
+    data = request.get_json(silent=True) or request.form.to_dict() or {}
+    title = (data.get('title') or '').strip()
+    client_name = (data.get('client_name') or data.get('company') or data.get('name') or '').strip()
+    email = (data.get('email') or '').strip()
+    phone = (data.get('phone') or '').strip()
+    source = (data.get('source') or 'Formularz WWW').strip()
+    notes = (data.get('notes') or data.get('message') or data.get('description') or '').strip()
+
+    value = None
+    if data.get('value') is not None and str(data.get('value')).strip():
+        try:
+            value = float(str(data.get('value')).replace(',', '.'))
+        except (ValueError, TypeError):
+            value = None
+
+    if not title:
+        if client_name:
+            title = f'Lead: {client_name}'
+        elif email:
+            title = f'Lead: {email}'
+        elif phone:
+            title = f'Lead: {phone}'
+        else:
+            title = 'Nowy lead z webhooka'
+
+    client_id = data.get('client_id')
+    if not client_id and (client_name or email or phone):
+        cl = None
+        if email:
+            cl = Client.query.filter_by(email=email).first()
+        if not cl and phone:
+            cl = Client.query.filter_by(phone=phone).first()
+        if not cl and client_name:
+            cl = Client.query.filter_by(name=client_name).first()
+        if not cl:
+            cl = Client(
+                name=client_name or email or phone or 'Nowy Klient',
+                email=email or None,
+                phone=phone or None,
+                company=data.get('company') or None,
+                status='prospect'
+            )
+            db.session.add(cl)
+            db.session.flush()
+        client_id = cl.id
+
+    lead = Lead(
+        title=title,
+        client_id=client_id,
+        value=value,
+        stage='new',
+        source=source,
+        notes=notes or None
+    )
+    db.session.add(lead)
+    db.session.flush()
+    log_activity('lead', lead.id, 'created', f'Nowy lead z webhooka ({source}): {title}')
+    db.session.commit()
+
+    return jsonify({'success': True, 'lead_id': lead.id, 'lead': lead.to_dict()}), 201

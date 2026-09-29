@@ -19,6 +19,28 @@ from ..utils.activity import log_activity
 
 archive_bp = Blueprint('archive', __name__)
 
+
+@archive_bp.before_request
+def check_archive_access():
+    from ..models.setting import Setting
+    import json
+    val = Setting.get_value('menu_permissions', '{}')
+    try:
+        perms = json.loads(val) if val else {}
+    except Exception:
+        perms = {}
+    cfg = perms.get('archive', {})
+    if cfg.get('enabled') is False:
+        return jsonify({'error': 'Moduł archiwum jest wyłączony'}), 403
+    req_role = cfg.get('role', 'all')
+    from ..utils.deletion import current_user
+    u = current_user()
+    if req_role == 'admin' and (not u or u.role != 'admin'):
+        return jsonify({'error': 'Brak uprawnień do modułu archiwum'}), 403
+    if req_role == 'manager' and (not u or u.role not in ('admin', 'manager')):
+        return jsonify({'error': 'Brak uprawnień do modułu archiwum'}), 403
+
+
 MODELS = {
     'clients':         Client,
     'leads':           Lead,

@@ -24,6 +24,7 @@ UI_KEYS = PUBLIC_KEYS | frozenset({
     'ui_detail_client', 'ui_detail_lead', 'ui_detail_task', 'ui_detail_service',
     'ui_show_footer', 'ui_footer_text', 'ui_dark_default',
     'lead_stages', 'task_stages', 'required_standard_fields', 'standard_field_labels',
+    'menu_permissions', 'lead_sources', 'lead_webhook_enabled', 'lead_webhook_token',
 })
 
 
@@ -36,7 +37,22 @@ def prevent_settings_cache(response):
 def selected_settings(keys):
     seed_defaults()
     items = Setting.query.filter(Setting.key.in_(keys)).all()
-    return jsonify({s.key: s.value for s in items}), 200
+    res = {s.key: s.value for s in items}
+    if not is_admin() and 'lead_webhook_token' in res:
+        del res['lead_webhook_token']
+    return jsonify(res), 200
+
+
+@settings_bp.route('/lead-webhook/generate-token', methods=['POST'])
+@jwt_required()
+def generate_lead_webhook_token():
+    if not is_admin():
+        return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
+    import secrets
+    new_token = f'zen_lead_{secrets.token_hex(16)}'
+    Setting.set_value('lead_webhook_token', new_token, 'leads')
+    db.session.commit()
+    return jsonify({'token': new_token}), 200
 
 
 @settings_bp.route('/public', methods=['GET'])

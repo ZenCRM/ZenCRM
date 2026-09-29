@@ -24,7 +24,7 @@ PUBLIC = {
 TOKEN_HANDLERS = {
     'public.view_offer', 'public.view_document',
     'tickets.public_track_ticket', 'tickets.public_reply_ticket',
-    'tickets.webhook_submit_ticket',
+    'tickets.webhook_submit_ticket', 'leads.webhook_submit_lead',
     'sms.get_next_task', 'sms.report_sms_status', 'sms.receive_stats',
     'sms.receive_call_history', 'sms.receive_sms_history',
 }
