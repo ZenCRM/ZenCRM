@@ -245,7 +245,8 @@ window.ZenModules.records = function () { return {
                 ? { ...item, is_primary: Boolean(item.is_primary) }
                 : (defaultStage ? { stage: defaultStage, is_primary: false } : { is_primary: false });
             if (['documents', 'offers'].includes(actionView)) {
-                this.modal.form.data = { ...(this.modal.form.data || {}), custom: { ...(this.modal.form.data?.custom || {}) } };
+                this.modal.form.data = { ...(this.modal.form.data || {}), custom: { ...(this.modal.form.data?.custom || {}) }, type_fields: { ...(this.modal.form.data?.type_fields || {}) } };
+                if (actionView === 'documents' && !this.modal.form.type) this.modal.form.type = 'other';
             }
             if (actionView === 'leads' && this.modal.form.probability == null) {
                 this.modal.form.probability = 0;
@@ -315,9 +316,10 @@ window.ZenModules.records = function () { return {
             const needUsers = this.users.length === 0;
             const needClients = this.clients.length === 0;
             const needTemplates = this.templates.length === 0;
+            const needDocumentTypes = this.documentTypes.length === 0;
             const needProjects = !this.projects || this.projects.length === 0;
             const needTeams = !this.teams || this.teams.length === 0;
-            if (!needUsers && !needClients && !needTemplates && !needProjects && !needTeams) return;
+            if (!needUsers && !needClients && !needTemplates && !needDocumentTypes && !needProjects && !needTeams) return;
             try {
                 if (needUsers) {
                     const u = await this.api('/users');
@@ -341,6 +343,9 @@ window.ZenModules.records = function () { return {
                     const t = await this.api('/templates');
                     this.templates = Array.isArray(t) ? t : [];
                 }
+            } catch (_) {}
+            try {
+                if (needDocumentTypes) this.documentTypes = await this.api('/document-types');
             } catch (_) {}
             try {
                 if (needProjects) {

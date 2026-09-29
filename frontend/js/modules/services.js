@@ -66,6 +66,7 @@ window.ZenModules.services = function () { return {
         apiPath(view) {
             const map = {
                 serviceCatalog: 'service-catalog',
+                documentTypes: 'document-types',
                 sms: 'sms',
             };
             return map[view] || view;

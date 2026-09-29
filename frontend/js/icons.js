@@ -4,6 +4,7 @@ window.zenIcon = function(name) {
         trash: 'M3 6h18 M9 6V3h6v3 M5 6l1 15h12l1-15 M10 10v7 M14 10v7',
         download: 'M12 3v12 M7 10l5 5 5-5 M4 16v5h16v-5',
         document: 'M5 3h9l5 5v13H5z M14 3v6h5 M8 13h8 M8 17h6',
+        paperclip: 'M21 11.5l-8.5 8.5a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8.5-8.5',
         folder: 'M4 4h5l2 3h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
         restore: 'M3 10a9 9 0 1 1 1 8 M3 4v6h6',
         eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7 M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6',

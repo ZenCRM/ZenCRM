@@ -32,7 +32,7 @@
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
                                     </button>
                                     <div class="w-px h-6 bg-white/25 mx-1"></div>
-                                    <button @click="openAttachments('service', detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki">📎</button>
+                                    <button @click="openAttachments('service', detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki"><span x-html="zenIcon('paperclip')"></span></button>
                                     <button @click="openServiceEdit()" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" data-tooltip="Edytuj" class="quick-icon-btn quick-icon-edit">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
@@ -131,6 +131,7 @@
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
                         </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('service', detailView.data.id)"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;comments&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;comments&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Komentarze&quot;)">Komentarze</span> <span class="detail-tab-count" x-text="(detailView.comments || []).length"></span>
                         </button>
@@ -141,6 +142,7 @@
                         <div class="detail-more-menu" x-show="moreOpen" x-cloak>
                             <button class="detail-more-mobile" @click="detailView.tab = 'tasks'; moreOpen = false" x-text="window.ZenI18n.t('Zadania')"></button>
                             <button class="detail-more-mobile" @click="detailView.tab = 'documents'; moreOpen = false" x-text="window.ZenI18n.t('Dokumenty')"></button>
+                            <button @click="openAttachments('service', detailView.data.id); moreOpen = false" x-text="window.ZenI18n.t('Pliki')"></button>
                             <button @click="detailView.tab = 'comments'; moreOpen = false" x-text="window.ZenI18n.t('Komentarze')"></button>
                             <button @click="detailView.tab = 'activity'; moreOpen = false" x-text="window.ZenI18n.t('Aktywność')"></button>
                         </div>
@@ -285,6 +287,7 @@
                             </div>
                         </div>
 
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === 'files'" x-cloak><% include "views/attachments-panel.html" %></div>
                         <!-- DOKUMENTY -->
                         <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;documents&#x27;" x-cloak>
                             <div class="flex items-center justify-between mb-5 flex-wrap gap-3">

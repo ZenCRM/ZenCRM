@@ -243,7 +243,6 @@
 
                 <!-- Przyciski akcji projektu -->
                 <div class="flex items-center gap-2 flex-wrap">
-                    <button type="button" class="ux-text-button" @click="openAttachments('project', activeProject.id)" x-text="window.ZenI18n.t('Pliki')">Pliki</button>
                     <button type="button" @click="quickAddProjectTask()"
                             class="px-4 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-sm font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                         <svg class="w-4 h-4 !text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -291,8 +290,10 @@
                 <span x-html="zenIcon('activity')"></span>
                 <span x-text="window.ZenI18n.t('Szczegóły projektu')">Szczegóły</span>
             </button>
+            <button type="button" @click="openAttachments('project', activeProject.id)" class="px-4 py-2.5 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap" :class="projectTab === 'files' ? 'border-brand-600 text-brand-600' : 'border-transparent text-gray-500'"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button>
         </div>
 
+        <div x-show="projectTab === 'files'" x-cloak class="p-5"><% include "views/attachments-panel.html" %></div>
         <!-- ─────────────────────────────────────────────────────────── -->
         <!-- ZAKŁADKA 1: KANBAN ZADAŃ DLA PROJEKTU (z własnymi statusami) -->
         <!-- ─────────────────────────────────────────────────────────── -->

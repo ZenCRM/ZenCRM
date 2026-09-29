@@ -3,6 +3,7 @@ import re
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.template import Template
+from ..models.document_type import DocumentType
 from ..schemas.template import TemplateSchema
 from ..services.render_service import render_preview
 from ..utils.sanitize import apply_payload, build_model
@@ -33,6 +34,15 @@ def validate_variables(data):
     return data
 
 
+def validate_document_type(data):
+    if 'document_type_key' not in data:
+        return
+    key = data.get('document_type_key') or None
+    if key and (data.get('type') == 'offer' or db.session.get(DocumentType, key) is None):
+        raise ValueError('Wybierz istniejący typ dokumentu')
+    data['document_type_key'] = key
+
+
 @templates_bp.route('', methods=['GET'])
 @jwt_required()
 def list_items():
@@ -52,6 +62,7 @@ def create_item():
     data = request.get_json(silent=True) or {}
     try:
         validate_variables(data)
+        validate_document_type(data)
         tpl = build_model(Template, data)
         db.session.add(tpl)
         db.session.commit()
@@ -67,6 +78,12 @@ def update_item(item_id):
     tpl = Template.query.get_or_404(item_id)
     try:
         data = validate_variables(request.get_json(silent=True) or {})
+        type_check = {**data, 'type': data.get('type', tpl.type)}
+        validate_document_type(type_check)
+        if 'document_type_key' in data:
+            data['document_type_key'] = type_check['document_type_key']
+        if (data.get('type', tpl.type) == 'offer' and data.get('document_type_key', tpl.document_type_key)):
+            raise ValueError('Szablon oferty nie może być przypisany do typu dokumentu')
         apply_payload(tpl, data)
         db.session.commit()
         return jsonify(schema.dump(tpl)), 200
@@ -92,7 +109,8 @@ def preview_inline():
     tpl_type = data.get('type', 'offer')
     try:
         variables = validate_variables({'variables': data.get('variables', [])})['variables']
-        return Response(render_preview(content, tpl_type, variables), mimetype='text/html')
+        kind = db.session.get(DocumentType, data.get('document_type_key')) if data.get('document_type_key') else None
+        return Response(render_preview(content, tpl_type, variables, kind.fields if kind else []), mimetype='text/html')
     except Exception as e:
         return Response(
             f'<pre style="color:red;padding:20px;font-family:monospace">'
@@ -106,7 +124,8 @@ def preview_inline():
 def preview_saved(item_id):
     tpl = Template.query.get_or_404(item_id)
     try:
-        return Response(render_preview(tpl.content, tpl.type or 'offer', tpl.variables or []),
+        kind = db.session.get(DocumentType, tpl.document_type_key) if tpl.document_type_key else None
+        return Response(render_preview(tpl.content, tpl.type or 'offer', tpl.variables or [], kind.fields if kind else []),
                         mimetype='text/html')
     except Exception as e:
         return Response(

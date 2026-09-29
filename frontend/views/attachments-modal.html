@@ -1,9 +1,0 @@
-<div x-show="attachmentModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" @keydown.escape.window="attachmentModal.open = false">
-    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 space-y-4" role="dialog" aria-modal="true" aria-label="Załączniki">
-        <div class="flex justify-between items-center"><h3 class="text-lg font-bold" x-text="window.ZenI18n.t('Załączniki')">Załączniki</h3><button type="button" @click="attachmentModal.open = false" class="text-2xl" aria-label="Zamknij">×</button></div>
-        <label class="block text-sm"><span x-text="window.ZenI18n.t('Dodaj pliki (maks. 20 MB każdy)')">Dodaj pliki (maks. 20 MB każdy)</span><input type="file" multiple class="ux-input w-full mt-1" :disabled="attachmentModal.busy" @change="uploadAttachment($event)"></label>
-        <p x-show="attachmentModal.error" x-text="attachmentModal.error" class="text-red-600" role="alert"></p>
-        <p x-show="!attachmentModal.files.length" class="text-sm text-gray-500" x-text="window.ZenI18n.t('Brak plików')">Brak plików</p>
-        <ul class="divide-y dark:divide-gray-700"><template x-for="file in attachmentModal.files" :key="file.id"><li class="flex items-center gap-2 py-2"><button type="button" class="ux-text-button flex-1 text-left truncate" @click="downloadAttachment(file)" x-text="file.filename"></button><small x-text="Math.ceil(file.size / 1024) + ' KB'"></small><button type="button" class="ux-text-button text-red-600" @click="removeAttachment(file)" :aria-label="window.ZenI18n.t('Usuń')">×</button></li></template></ul>
-    </section>
-</div>

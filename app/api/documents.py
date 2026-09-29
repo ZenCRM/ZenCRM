@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.document import Document
 from ..models.template import Template
+from ..models.document_type import DocumentType
 from ..services.render_service import render_document
 from ..services.pdf_service import html_to_pdf
 from ..utils.sanitize import apply_payload, build_model
@@ -39,12 +40,47 @@ def _ensure_token(doc):
 
 def _ensure_template(doc):
     if doc.template_id:
+        tpl = db.session.get(Template, doc.template_id)
+        if not tpl or tpl.type != 'document' or (tpl.document_type_key and tpl.document_type_key != doc.type):
+            raise ValueError('Szablon nie pasuje do typu dokumentu')
         return True
-    tpl = Template.query.filter_by(type='document', is_active=True).first()
+    tpl = Template.query.filter_by(type='document', document_type_key=doc.type, is_active=True).first()
+    if not tpl:
+        tpl = Template.query.filter_by(type='document', document_type_key=None, is_active=True).first()
     if not tpl:
         return False
     doc.template_id = tpl.id
     return True
+
+
+def _validate_type_fields(doc):
+    kind = db.session.get(DocumentType, doc.type or 'other')
+    if not kind:
+        raise ValueError('Typ dokumentu nie istnieje')
+    values = (doc.data or {}).get('type_fields', {})
+    if not isinstance(values, dict):
+        raise ValueError('Nieprawidłowe pola typu dokumentu')
+    from datetime import date
+    from decimal import Decimal, InvalidOperation
+    for field in kind.fields or []:
+        value = values.get(field['key'], '')
+        if field.get('required') and (value == '' or value is None):
+            raise ValueError('Wymagane pole: ' + field['label'])
+        if value in ('', None):
+            continue
+        try:
+            if field['kind'] == 'number' and not Decimal(str(value).replace(',', '.')).is_finite():
+                raise ValueError()
+            if field['kind'] == 'date':
+                date.fromisoformat(str(value))
+            if field['kind'] == 'boolean' and not isinstance(value, bool):
+                raise ValueError()
+            if field['kind'] == 'select' and value not in field['options']:
+                raise ValueError()
+            if len(str(value)) > 10000:
+                raise ValueError()
+        except (ValueError, InvalidOperation, TypeError):
+            raise ValueError('Nieprawidłowa wartość pola: ' + field['label'])
 
 
 @documents_bp.route('', methods=['GET'])
@@ -76,12 +112,11 @@ def create_item():
     data = request.get_json(silent=True) or {}
     try:
         doc = build_model(Document, data)
+        _validate_type_fields(doc)
         _validate_relations(doc)
         _ensure_token(doc)
-        if not doc.template_id:
-            tpl = Template.query.filter_by(type='document', is_active=True).first()
-            if tpl:
-                doc.template_id = tpl.id
+        if doc.template_id:
+            _ensure_template(doc)
         db.session.add(doc)
         db.session.flush()
         log_activity('document', doc.id, 'created', 'Utworzono dokument: ' + doc.title)
@@ -100,7 +135,10 @@ def update_item(item_id):
         return jsonify({'error': 'Dokument nie istnieje'}), 404
     try:
         apply_payload(d, request.get_json(silent=True) or {})
+        _validate_type_fields(d)
         _validate_relations(d)
+        if d.template_id:
+            _ensure_template(d)
         db.session.commit()
         return jsonify(d.to_dict()), 200
     except Exception as e:
@@ -135,6 +173,7 @@ def generate_document(item_id):
         if not _ensure_template(doc):
             return jsonify({'error': 'Brak szablonow dokumentow. Dodaj szablon w menu Szablony.'}), 400
         _ensure_token(doc)
+        _validate_type_fields(doc)
         html = render_document(doc)
         db.session.commit()
         return jsonify({

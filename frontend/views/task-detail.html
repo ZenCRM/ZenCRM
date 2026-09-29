@@ -19,7 +19,7 @@
                             </div>
                             <div class="flex items-center gap-2 flex-wrap">
                                 <div class="detail-quick-actions">
-                                    <button @click="openAttachments('task', detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki">📎</button>
+                                    <button @click="openAttachments('task', detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki"><span x-html="zenIcon('paperclip')"></span></button>
                                     <button @click="openModal(detailView.data, null, true, &#x27;tasks&#x27;)" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" data-tooltip="Edytuj" class="quick-icon-btn quick-icon-edit">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
@@ -53,7 +53,8 @@
                         </div>
                     </div>
 
-                    <div class="detail-body">
+                    <div class="detail-tabs-v2"><button class="detail-tab-v2" :class="detailView.tab !== 'files' ? 'active' : ''" @click="detailView.tab = 'overview'" x-text="window.ZenI18n.t('Szczegóły')">Szczegóły</button><button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments('task', detailView.data.id)"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button></div>
+                    <div class="detail-body" x-show="detailView.tab !== 'files'">
                         <div x-show="detailView.loading" class="text-center py-12 text-gray-500">
                             <div class="inline-block w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
                         </div>
@@ -228,6 +229,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="detail-body" x-show="detailView.tab === 'files'" x-cloak><% include "views/attachments-panel.html" %></div>
                 </div>
             </div>
 

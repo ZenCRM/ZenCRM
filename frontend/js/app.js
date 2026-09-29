@@ -138,7 +138,7 @@ function crmApp() {
         stats: { cards: {}, funnel: {}, overdue_tasks: [], today_tasks: [], upcoming_tasks: [], upcoming_meetings: [] },
         dashboardTaskTab: 'today',
         clients: [], leads: [], tasks: [], meetings: [], projects: [], teams: [],
-        services: [], serviceCatalog: [], offers: [], documents: [], templates: [], users: [], contacts: [],
+        services: [], serviceCatalog: [], offers: [], documents: [], templates: [], documentTypes: [], users: [], contacts: [],
         archiveItems: [], isAdmin: false,
         archiveSearch: '',
         archiveTypeFilter: '',
@@ -184,10 +184,11 @@ function crmApp() {
             open: false,
             editingId: null,
             form: { name: '', type: 'offer', content: '', variables: [] },
-            error: '',
+            error: '', previewError: '', previewLoading: false,
         },
-        generateModal: { open: false, type: 'document', item: null, templateId: '', custom: {}, error: '' },
-        attachmentModal: { open: false, entity: '', recordId: null, files: [], busy: false, error: '' },
+        documentTypeModal: { open: false, editingKey: null, form: { key: '', name: '', fields: [], is_active: true }, error: '' },
+        generateModal: { open: false, type: 'document', item: null, templateId: '', custom: {}, typeFields: {}, error: '' },
+        attachmentView: { entity: '', recordId: null, files: [], busy: false, error: '', editingId: null, editingName: '' },
 
         // ═══════════════════════════════════════════════════════════
         // KALENDARZ
@@ -392,6 +393,7 @@ function crmApp() {
         canAccessView(viewId) {
             if (!viewId) return true;
             if (viewId === 'settings') return this.user?.role === 'admin' || this.isAdmin;
+            if (viewId === 'documentTypes') return this.user?.role === 'admin' || this.isAdmin;
 
             let perms = {};
             try {
@@ -411,7 +413,7 @@ function crmApp() {
                 if (role === 'all') return true;
             }
 
-            if (['users', 'portal_group', 'portalSettings', 'portalUsers', 'portalSpaces', 'portalTickets'].includes(viewId)) {
+            if (['users', 'documentTypes', 'portal_group', 'portalSettings', 'portalUsers', 'portalSpaces', 'portalTickets'].includes(viewId)) {
                 return this.user?.role === 'admin' || this.isAdmin;
             }
             return true;
@@ -590,6 +592,10 @@ function crmApp() {
                 } catch (_) {}
             }
 
+            if (this.documentTypes.length === 0) {
+                try { this.documentTypes = await this.api('/document-types'); } catch (_) {}
+            }
+
             // Załaduj listę użytkowników (dla assignee_id)
             if (this.users.length === 0) {
                 try {
@@ -655,7 +661,7 @@ function crmApp() {
         priorityLabel(p)    { return window.ZenHelpers.priorityLabel(p); },
         billingLabel(c)     { return window.ZenHelpers.billingLabel(c); },
         offerStatusLabel(s) { return window.ZenHelpers.offerStatusLabel(s); },
-        docTypeLabel(t)     { return window.ZenHelpers.docTypeLabel(t); },
+        docTypeLabel(t)     { return this.documentTypes.find(x => x.key === t)?.name || window.ZenHelpers.docTypeLabel(t); },
         roleLabel(r)        { return this.managedRoles?.find(role => role.key === r)?.name || window.ZenHelpers.roleLabel(r); },
 
         // ═══════ KANBAN HELPERS ═══════

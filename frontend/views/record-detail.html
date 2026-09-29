@@ -104,7 +104,7 @@
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                     </button>
                                     <div class="w-px h-6 bg-white/25 mx-1"></div>
-                                    <button x-show="detailView.type === 'client'" @click="openAttachments('client', detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki">📎</button>
+                                    <button @click="openAttachments(detailView.type, detailView.data.id)" class="quick-icon-btn" :aria-label="window.ZenI18n.t('Pliki')" data-tooltip="Pliki"><span x-html="zenIcon('paperclip')"></span></button>
                                     <button @click="openModal(detailView.data, null, true)" :aria-label="window.ZenI18n.t(&quot;Edytuj&quot;)" data-tooltip="Edytuj" class="quick-icon-btn quick-icon-edit">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
@@ -150,6 +150,7 @@
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
                         </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === 'files' ? 'active' : ''" @click="openAttachments(detailView.type, detailView.data.id)"><span x-html="zenIcon('paperclip')"></span><span x-text="window.ZenI18n.t('Pliki')">Pliki</span></button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;comments&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;comments&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Notatki i kontakt&quot;)">Notatki i kontakt</span> <span class="detail-tab-count" x-text="(detailView.comments || []).length"></span>
                         </button>
@@ -164,6 +165,7 @@
                                 <button class="detail-more-wide-hidden" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'leads'; moreOpen = false" x-text="window.ZenI18n.t('Leady')"></button>
                                 <button @click="detailView.tab = 'tasks'; moreOpen = false" x-text="window.ZenI18n.t('Zadania')"></button>
                                 <button @click="detailView.tab = 'documents'; moreOpen = false" x-text="window.ZenI18n.t('Dokumenty')"></button>
+                                <button @click="openAttachments(detailView.type, detailView.data.id); moreOpen = false" x-text="window.ZenI18n.t('Pliki')"></button>
                                 <button @click="detailView.tab = 'comments'; moreOpen = false" x-text="window.ZenI18n.t('Notatki i kontakt')"></button>
                                 <button @click="detailView.tab = 'activity'; moreOpen = false" x-text="window.ZenI18n.t('Aktywność')"></button>
                             </div>
@@ -510,6 +512,7 @@
                             </div>
                         </div>
 
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === 'files'" x-cloak><% include "views/attachments-panel.html" %></div>
                         <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;documents&#x27;" x-cloak>
                             <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
                                 <h3 class="font-semibold text-lg"><span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span></h3>

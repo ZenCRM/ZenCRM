@@ -1,0 +1,23 @@
+<section class="space-y-5" aria-label="Pliki">
+    <div class="flex flex-wrap justify-between items-center gap-3">
+        <div><h3 class="text-lg font-semibold" x-text="window.ZenI18n.t('Pliki')">Pliki</h3><p class="ux-muted text-sm" x-text="window.ZenI18n.t('Załączniki tego rekordu')">Załączniki tego rekordu</p></div>
+        <label class="ux-button cursor-pointer inline-flex items-center gap-2"><span x-html="zenIcon('plus')"></span><span x-text="attachmentView.busy ? window.ZenI18n.t('Przesyłanie…') : window.ZenI18n.t('Dodaj pliki')">Dodaj pliki</span><input type="file" multiple class="sr-only" :disabled="attachmentView.busy" @change="uploadAttachment($event)"></label>
+    </div>
+    <p class="ux-muted text-xs" x-text="window.ZenI18n.t('Maksymalnie 20 MB na plik. Kliknij nazwę, aby pobrać.')">Maksymalnie 20 MB na plik. Kliknij nazwę, aby pobrać.</p>
+    <p x-show="attachmentView.error" x-text="attachmentView.error" class="ux-error" role="alert"></p>
+    <div x-show="!attachmentView.files.length" class="detail-empty"><span x-html="zenIcon('document')"></span><p x-text="window.ZenI18n.t('Nie dodano jeszcze plików')">Nie dodano jeszcze plików</p></div>
+    <ul class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+        <template x-for="file in attachmentView.files" :key="file.id">
+            <li class="flex flex-wrap items-center gap-3 p-4">
+                <span class="zen-icon-wrap text-brand-600" x-html="zenIcon('document')" aria-hidden="true"></span>
+                <div class="min-w-0 flex-1" x-show="attachmentView.editingId !== file.id">
+                    <button type="button" class="font-semibold text-sm text-brand-700 dark:text-brand-300 hover:underline truncate max-w-full" @click="downloadAttachment(file)" x-text="file.filename"></button>
+                    <p class="ux-muted text-xs"><span x-text="file.created_by?.name || window.ZenI18n.t('Nieznany użytkownik')"></span><span> · </span><time x-text="new Date(file.created_at + (file.created_at.endsWith('Z') ? '' : 'Z')).toLocaleString(locale)"></time><span> · </span><span x-text="Math.max(1, Math.ceil(file.size / 1024)) + ' KB'"></span></p>
+                </div>
+                <form x-show="attachmentView.editingId === file.id" @submit.prevent="renameAttachment(file)" class="flex-1 min-w-48 flex gap-2"><input class="ux-input flex-1" x-model="attachmentView.editingName" maxlength="255" required :aria-label="window.ZenI18n.t('Nowa nazwa pliku')"><button class="ux-button" type="submit" x-text="window.ZenI18n.t('Zapisz')">Zapisz</button><button type="button" class="ux-text-button" @click="attachmentView.editingId = null" x-text="window.ZenI18n.t('Anuluj')">Anuluj</button></form>
+                <button type="button" x-show="attachmentView.editingId !== file.id" class="zen-list-action zen-action-edit" @click="editAttachmentName(file)" :aria-label="window.ZenI18n.t('Zmień nazwę')" :title="window.ZenI18n.t('Zmień nazwę')"><span x-html="zenIcon('edit')"></span></button>
+                <button type="button" class="zen-list-action zen-action-trash" @click="removeAttachment(file)" :aria-label="window.ZenI18n.t('Usuń')" :title="window.ZenI18n.t('Usuń')"><span x-html="zenIcon('trash')"></span></button>
+            </li>
+        </template>
+    </ul>
+</section>

@@ -1,0 +1,26 @@
+<div x-show="currentView === 'documentTypes'" x-cloak class="space-y-5">
+    <div class="flex flex-wrap justify-between items-center gap-3"><div><h1 class="text-2xl font-bold">Typy dokumentów</h1><p class="ux-muted text-sm mt-1">Zdefiniuj pola widoczne w formularzu dokumentu i dostępne w szablonie.</p></div><button class="ux-button" @click="openDocumentTypeModal()">+ Dodaj typ</button></div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <template x-for="kind in documentTypes" :key="kind.key"><div class="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 p-5 space-y-3">
+            <div class="flex justify-between gap-3"><div><h2 class="font-semibold" x-text="kind.name"></h2><code class="text-xs ux-muted" x-text="kind.key"></code></div><span class="text-xs" x-text="kind.is_active ? 'Aktywny' : 'Nieaktywny'"></span></div>
+            <div class="flex flex-wrap gap-1"><template x-for="field in kind.fields" :key="field.key"><span class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-700" x-text="field.label + ' · ' + field.kind"></span></template><span x-show="!kind.fields?.length" class="text-xs ux-muted">Brak dodatkowych pól</span></div>
+            <div class="flex gap-2"><button class="ux-text-button" @click="openDocumentTypeModal(kind)">Edytuj</button><button class="ux-text-button text-red-600" @click="removeDocumentType(kind)">Usuń</button></div>
+        </div></template>
+    </div>
+</div>
+
+<div x-show="documentTypeModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3" @keydown.escape.window="documentTypeModal.open = false">
+    <form @submit.prevent="saveDocumentType()" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-y-auto p-6 space-y-5">
+        <div class="flex justify-between items-center"><h2 class="text-xl font-bold" x-text="documentTypeModal.editingKey ? 'Edytuj typ dokumentu' : 'Nowy typ dokumentu'"></h2><button type="button" @click="documentTypeModal.open = false" aria-label="Zamknij">×</button></div>
+        <div class="grid sm:grid-cols-2 gap-3"><label class="text-sm">Nazwa<input class="ux-input w-full mt-1" x-model="documentTypeModal.form.name" maxlength="120" required></label><label class="text-sm">Identyfikator<input class="ux-input w-full mt-1 font-mono" x-model="documentTypeModal.form.key" pattern="[a-z][a-z0-9_]*" maxlength="50" :disabled="!!documentTypeModal.editingKey" required><span class="text-xs ux-muted">Małe litery, cyfry i podkreślnik.</span></label></div>
+        <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" x-model="documentTypeModal.form.is_active"> Aktywny</label>
+        <div class="flex justify-between items-center border-t pt-4"><div><h3 class="font-semibold">Pola typu</h3><p class="text-xs ux-muted">Pola pojawią się przy tworzeniu i generowaniu dokumentu.</p></div><button type="button" class="ux-text-button" @click="addDocumentTypeField()">+ Dodaj pole</button></div>
+        <div class="space-y-3"><template x-for="(field, index) in documentTypeModal.form.fields" :key="index"><div class="p-3 rounded-xl border dark:border-gray-700 bg-gray-50 dark:bg-gray-900 space-y-3">
+            <div class="grid sm:grid-cols-2 gap-3"><label class="text-xs">Etykieta<input class="ux-input w-full mt-1" x-model="field.label" maxlength="120" required></label><label class="text-xs">Identyfikator pola<input class="ux-input w-full mt-1 font-mono" x-model="field.key" pattern="[a-z][a-z0-9_]*" maxlength="50" required></label></div>
+            <div class="flex flex-wrap items-end gap-3"><label class="text-xs flex-1">Rodzaj<select class="ux-input w-full mt-1" x-model="field.kind"><option value="text">Tekst</option><option value="textarea">Długi tekst</option><option value="number">Liczba</option><option value="date">Data</option><option value="boolean">Tak / nie</option><option value="select">Lista wyboru</option></select></label><label class="text-xs inline-flex items-center gap-2 pb-2"><input type="checkbox" x-model="field.required"> Wymagane</label><button type="button" class="ux-text-button text-red-600 pb-2" @click="documentTypeModal.form.fields.splice(index, 1)">Usuń pole</button></div>
+            <label x-show="field.kind === 'select'" class="block text-xs">Opcje (jedna w wierszu)<textarea class="ux-input w-full mt-1" x-model="field.optionsText" rows="3" :required="field.kind === 'select'"></textarea></label>
+        </div></template></div>
+        <p x-show="documentTypeModal.error" class="text-red-600 text-sm" x-text="documentTypeModal.error" role="alert"></p>
+        <div class="flex justify-end gap-2"><button type="button" class="ux-text-button" @click="documentTypeModal.open = false">Anuluj</button><button type="submit" class="ux-button">Zapisz typ</button></div>
+    </form>
+</div>

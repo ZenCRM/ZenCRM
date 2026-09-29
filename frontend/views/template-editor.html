@@ -18,16 +18,23 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Typ&quot;)">Typ</span></label>
-                    <select x-model="templateModal.form.type"
+                    <select x-model="templateModal.form.type" @change="templateModal.form.document_type_key = ''; refreshTemplatePreview()"
                             class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
                         <option value="offer" x-text="window.ZenI18n.t(&quot;Oferta&quot;)">Oferta</option>
                         <option value="document" x-text="window.ZenI18n.t(&quot;Dokument&quot;)">Dokument</option>
                     </select>
                 </div>
+                <div x-show="templateModal.form.type === 'document'">
+                    <label class="block text-sm font-medium mb-1">Typ dokumentu</label>
+                    <select x-model="templateModal.form.document_type_key" @change="refreshTemplatePreview()" class="ux-input w-full"><option value="">Każdy typ dokumentu</option><template x-for="kind in documentTypes" :key="kind.key"><option :value="kind.key" x-text="kind.name"></option></template></select>
+                    <p class="text-xs ux-muted mt-1">Szablon przypisany do typu będzie proponowany przy generowaniu tego dokumentu.</p>
+                </div>
                 <div>
                     <label class="block text-sm font-medium mb-1"><span x-text="window.ZenI18n.t(&quot;Treść HTML (Jinja2)&quot;)">Treść HTML (Jinja2)</span></label>
-                    <textarea x-model="templateModal.form.content" rows="20"
+                    <div class="flex flex-wrap gap-2 mb-2"><button type="button" class="ux-text-button text-xs" @click="insertTemplateText('<h2>Nowa sekcja</h2>\n')">+ Nagłówek</button><button type="button" class="ux-text-button text-xs" @click="insertTemplateText('<p>Treść akapitu</p>\n')">+ Akapit</button><button type="button" class="ux-text-button text-xs" @click="insertTemplateText('<table><tr><th>Opis</th><th>Wartość</th></tr><tr><td>Pozycja</td><td>0</td></tr></table>')">+ Tabela</button><button type="button" class="ux-text-button text-xs" @click="insertTemplateText('{% if client %}\n  {{ client.name }}\n{% endif %}')">+ Warunek</button><button type="button" class="ux-text-button text-xs" @click="insertTemplateText('{% for item in items %}\n  <p>{{ item.name }} — {{ item.total }}</p>\n{% endfor %}')">+ Lista pozycji</button></div>
+                    <textarea x-ref="templateContent" x-model="templateModal.form.content" @input.debounce.700ms="refreshTemplatePreview()" rows="20" spellcheck="false"
                               class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none font-mono text-xs"></textarea>
+                    <p class="text-xs ux-muted" x-text="(templateModal.form.content || '').length + ' znaków · kliknij zmienną poniżej, aby wstawić ją w miejscu kursora'"></p>
                 </div>
                 <div class="text-xs text-gray-500 bg-gray-50 dark:bg-gray-700 p-3 rounded">
                     <strong><span x-text="window.ZenI18n.t(&quot;Dostępne zmienne:&quot;)">Dostępne zmienne:</span></strong><br>
@@ -44,12 +51,15 @@
                     <strong><span x-text="window.ZenI18n.t(&quot;Pętla:&quot;)">Pętla:</span></strong> <code class="text-[10px]">{% for item in items %}{{ item.name }} – {{ item.total }} zł{% endfor %}</code>
                 </div>
                 <div class="space-y-2">
+                    <h4 class="text-sm font-semibold">Zmienne do wstawienia</h4>
+                    <div class="flex flex-wrap gap-1"><template x-for="name in ['number','title','date','valid_until','total_amount','description','client.name','client.email','client.company','client.address','client.phone','company.name','company.nip','company.address','company.email','company.phone','company.www']" :key="name"><button type="button" class="px-2 py-1 rounded border text-xs font-mono hover:bg-brand-50 dark:hover:bg-gray-700" @click="insertTemplateText('{{ ' + name + ' }}')" x-text="name"></button></template></div>
+                    <div x-show="templateTypeFields().length"><h4 class="text-sm font-semibold mt-3">Pola typu dokumentu</h4><div class="flex flex-wrap gap-1 mt-1"><template x-for="field in templateTypeFields()" :key="field.key"><button type="button" class="px-2 py-1 rounded border text-xs font-mono hover:bg-brand-50 dark:hover:bg-gray-700" @click="insertTemplateText('{{ type_fields.' + field.key + ' }}')" x-text="field.label + ' · type_fields.' + field.key"></button></template></div></div>
                     <div class="flex justify-between items-center"><strong x-text="window.ZenI18n.t('Własne pola szablonu')">Własne pola szablonu</strong><button type="button" class="ux-text-button" @click="addTemplateField()" x-text="window.ZenI18n.t('+ Dodaj pole')">+ Dodaj pole</button></div>
                     <template x-for="(field, index) in templateModal.form.variables" :key="index">
                         <div class="flex gap-2"><input class="ux-input flex-1" x-model="field.label" :placeholder="window.ZenI18n.t('Etykieta')" maxlength="120"><input class="ux-input flex-1 font-mono" x-model="field.name" placeholder="nazwa_pola" maxlength="50"><button type="button" class="ux-text-button" @click="templateModal.form.variables.splice(index, 1)" :aria-label="window.ZenI18n.t('Usuń')">×</button></div>
                     </template>
                     <p class="text-xs text-gray-500" x-text="window.ZenI18n.t('W treści użyj:') + ' {{ custom.nazwa_pola }}'"></p>
-                    <div class="flex flex-wrap gap-2"><template x-for="field in templateModal.form.variables" :key="field.name"><code class="text-xs" x-text="'{{ custom.' + field.name + ' }}'"></code></template></div>
+                    <div class="flex flex-wrap gap-2"><template x-for="field in templateModal.form.variables" :key="field.name"><button type="button" class="px-2 py-1 rounded border text-xs font-mono" @click="insertTemplateText('{{ custom.' + field.name + ' }}')" x-text="'{{ custom.' + field.name + ' }}'"></button></template></div>
                 </div>
                 <p x-show="templateModal.error" x-text="templateModal.error" class="text-red-500 text-sm"></p>
             </div>
@@ -58,11 +68,12 @@
             <div class="flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden">
                 <div class="px-4 py-2 bg-white dark:bg-gray-800 border-b flex justify-between items-center flex-shrink-0">
                     <span class="text-sm font-medium"><span x-text="window.ZenI18n.t(&quot;Podgląd (dane przykładowe)&quot;)">Podgląd (dane przykładowe)</span></span>
-                    <button @click="refreshTemplatePreview()"
+                    <button @click="refreshTemplatePreview()" :disabled="templateModal.previewLoading"
                             class="text-xs px-3 py-1 rounded bg-brand-600 text-white hover:bg-brand-700">
                          <span x-text="window.ZenI18n.t(&quot;Odśwież&quot;)">Odśwież</span>
                     </button>
                 </div>
+                <p x-show="templateModal.previewError" x-text="templateModal.previewError" class="text-red-600 text-xs p-2"></p>
                 <iframe x-ref="templatePreviewFrame"
                         class="flex-1 w-full bg-white"
                         sandbox="allow-same-origin"></iframe>

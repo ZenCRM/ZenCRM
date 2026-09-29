@@ -5,9 +5,15 @@ window.ZenModules.documents = function () { return {
                 try { this.templates = await this.api('/templates'); }
                 catch (e) { this.notify(e.message); return; }
             }
-            const template = this.templates.find(t => t.id === Number(offer.template_id) && t.type === type && t.is_active)
-                || this.templates.find(t => t.type === type && t.is_active);
-            this.generateModal = { open: true, type, item: offer, templateId: template?.id || '', custom: { ...(offer.data?.custom || {}) }, error: '' };
+            if (type === 'document' && !this.documentTypes.length) {
+                try { this.documentTypes = await this.api('/document-types'); }
+                catch (e) { this.notify(e.message); return; }
+            }
+            const eligible = t => t.type === type && t.is_active && (type !== 'document' || !t.document_type_key || t.document_type_key === offer.type);
+            const template = this.templates.find(t => t.id === Number(offer.template_id) && eligible(t))
+                || this.templates.find(t => eligible(t) && t.document_type_key === offer.type)
+                || this.templates.find(eligible);
+            this.generateModal = { open: true, type, item: offer, templateId: template?.id || '', custom: { ...(offer.data?.custom || {}) }, typeFields: { ...(offer.data?.type_fields || {}) }, error: '' };
         },
 
         generationFields() {
@@ -20,7 +26,7 @@ window.ZenModules.documents = function () { return {
             const endpoint = g.type === 'offer' ? 'offers' : 'documents';
             try {
                 const r = await this.api(`/${endpoint}/${g.item.id}/generate`, { method: 'POST', body: JSON.stringify({
-                    template_id: Number(g.templateId), data: { ...(g.item.data || {}), custom: g.custom },
+                    template_id: Number(g.templateId), data: { ...(g.item.data || {}), custom: g.custom, type_fields: g.typeFields },
                 }) });
                 g.open = false;
                 await this.reload();
@@ -37,19 +43,72 @@ window.ZenModules.documents = function () { return {
             return Array.isArray(tpl?.variables) ? tpl.variables : [];
         },
 
+        documentTypeLabel(key) {
+            return this.documentTypes.find(t => t.key === key)?.name || key || 'Inne';
+        },
+
+        selectedDocumentTypeFields() {
+            const key = this.modal.form.type || 'other';
+            return this.documentTypes.find(t => t.key === key)?.fields || [];
+        },
+
+        generationTypeFields() {
+            if (this.generateModal.type !== 'document') return [];
+            return this.documentTypes.find(t => t.key === (this.generateModal.item?.type || 'other'))?.fields || [];
+        },
+
+        openDocumentTypeModal(row = null) {
+            this.documentTypeModal = { open: true, editingKey: row?.key || null, error: '', form: row
+                ? { key: row.key, name: row.name, is_active: row.is_active, fields: (row.fields || []).map(f => ({ ...f, optionsText: (f.options || []).join('\n') })) }
+                : { key: '', name: '', is_active: true, fields: [] } };
+        },
+
+        addDocumentTypeField() {
+            this.documentTypeModal.form.fields.push({ key: '', label: '', kind: 'text', required: false, optionsText: '' });
+        },
+
+        async saveDocumentType() {
+            const m = this.documentTypeModal;
+            m.error = '';
+            const data = { ...m.form, fields: m.form.fields.map(f => ({
+                key: f.key.trim(), label: f.label.trim(), kind: f.kind, required: f.required,
+                options: f.kind === 'select' ? f.optionsText.split(/\r?\n|,/).map(v => v.trim()).filter(Boolean) : [],
+            })) };
+            try {
+                await this.api(m.editingKey ? `/document-types/${m.editingKey}` : '/document-types', {
+                    method: m.editingKey ? 'PUT' : 'POST', body: JSON.stringify(data),
+                });
+                m.open = false;
+                this.documentTypes = await this.api('/document-types');
+            } catch (e) { m.error = e.message; }
+        },
+
+        async removeDocumentType(row) {
+            if (!confirm(`Usunąć typ „${row.name}”?`)) return;
+            try {
+                await this.api(`/document-types/${row.key}`, { method: 'DELETE' });
+                this.documentTypes = await this.api('/document-types');
+            } catch (e) { this.notify(e.message); }
+        },
+
         async openAttachments(entity, recordId) {
-            this.attachmentModal = { open: true, entity, recordId, files: [], busy: false, error: '' };
+            if (!recordId) return;
+            if (entity === 'project') this.projectTab = 'files';
+            else this.detailView.tab = 'files';
+            this.attachmentView = { entity, recordId, files: [], busy: false, error: '', editingId: null, editingName: '' };
             await this.loadAttachments();
         },
 
         async loadAttachments() {
-            const a = this.attachmentModal;
-            try { a.files = await this.api(`/attachments/${a.entity}/${a.recordId}`); }
-            catch (e) { a.error = e.message; }
+            const a = this.attachmentView;
+            try {
+                const files = await this.api(`/attachments/${a.entity}/${a.recordId}`);
+                if (this.attachmentView === a) a.files = files;
+            } catch (e) { if (this.attachmentView === a) a.error = e.message; }
         },
 
         async uploadAttachment(event) {
-            const a = this.attachmentModal;
+            const a = this.attachmentView;
             const files = Array.from(event.target.files || []);
             if (!files.length) return;
             a.busy = true;
@@ -79,7 +138,23 @@ window.ZenModules.documents = function () { return {
                 link.href = url; link.download = file.filename;
                 link.click();
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
-            } catch (e) { this.attachmentModal.error = e.message; }
+            } catch (e) { this.attachmentView.error = e.message; }
+        },
+
+        editAttachmentName(file) {
+            this.attachmentView.editingId = file.id;
+            this.attachmentView.editingName = file.filename;
+        },
+
+        async renameAttachment(file) {
+            const a = this.attachmentView;
+            try {
+                await this.api(`/attachments/${file.id}`, { method: 'PUT',
+                    body: JSON.stringify({ filename: a.editingName.trim() }) });
+                a.editingId = null;
+                a.error = '';
+                await this.loadAttachments();
+            } catch (e) { a.error = e.message; }
         },
 
         async removeAttachment(file) {
@@ -87,7 +162,7 @@ window.ZenModules.documents = function () { return {
             try {
                 await this.api(`/attachments/${file.id}`, { method: 'DELETE' });
                 await this.loadAttachments();
-            } catch (e) { this.attachmentModal.error = e.message; }
+            } catch (e) { this.attachmentView.error = e.message; }
         },
 
         async viewOffer(offer) {
@@ -143,20 +218,37 @@ window.ZenModules.documents = function () { return {
         openTemplateModal(tpl = null) {
             this.templateModal.editingId = tpl ? tpl.id : null;
             this.templateModal.form = tpl
-                ? { name: tpl.name, type: tpl.type, content: tpl.content, variables: (Array.isArray(tpl.variables) ? tpl.variables : []).map(v => ({ ...v })) }
+                ? { name: tpl.name, type: tpl.type, document_type_key: tpl.document_type_key || '', content: tpl.content, variables: (Array.isArray(tpl.variables) ? tpl.variables : []).map(v => ({ ...v })) }
                 : {
                     name: '',
                     type: 'offer',
+                    document_type_key: '',
                     content: window.DEFAULT_TEMPLATE || '<h1>{{ title }}</h1>',
                     variables: [],
                 };
             this.templateModal.error = '';
+            this.templateModal.previewError = '';
             this.templateModal.open = true;
+            if (!this.documentTypes.length) this.api('/document-types').then(r => { this.documentTypes = r; }).catch(() => {});
             this.$nextTick(() => this.refreshTemplatePreview());
         },
 
         addTemplateField() {
             this.templateModal.form.variables.push({ name: '', label: '' });
+        },
+
+        insertTemplateText(value) {
+            const area = this.$refs.templateContent;
+            const current = this.templateModal.form.content || '';
+            const start = area?.selectionStart ?? current.length;
+            const end = area?.selectionEnd ?? current.length;
+            this.templateModal.form.content = current.slice(0, start) + value + current.slice(end);
+            this.$nextTick(() => { area?.focus(); area?.setSelectionRange(start + value.length, start + value.length); });
+            this.$nextTick(() => this.refreshTemplatePreview());
+        },
+
+        templateTypeFields() {
+            return this.documentTypes.find(t => t.key === this.templateModal.form.document_type_key)?.fields || [];
         },
 
         async saveTemplate() {
@@ -191,6 +283,8 @@ window.ZenModules.documents = function () { return {
         async refreshTemplatePreview() {
             const frame = this.$refs.templatePreviewFrame;
             if (!frame) return;
+            this.templateModal.previewLoading = true;
+            this.templateModal.previewError = '';
             try {
                 const r = await fetch('/api/templates/preview', {
                     method: 'POST',
@@ -203,12 +297,17 @@ window.ZenModules.documents = function () { return {
                         content: this.templateModal.form.content,
                         type: this.templateModal.form.type,
                         variables: this.templateModal.form.variables,
+                        document_type_key: this.templateModal.form.document_type_key,
                     }),
                 });
                 const html = await r.text();
                 frame.srcdoc = html;
+                if (!r.ok) this.templateModal.previewError = 'Sprawdź składnię szablonu. Szczegóły są w podglądzie.';
             } catch (e) {
+                this.templateModal.previewError = e.message;
                 frame.srcdoc = '<pre style="color:red;padding:20px">' + e.message + '</pre>';
+            } finally {
+                this.templateModal.previewLoading = false;
             }
         },
 

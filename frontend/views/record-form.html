@@ -215,12 +215,18 @@
                         </template>
 
                         <!-- TEMPLATE SELECT -->
+                        <template x-if="field.type === 'document-type-select'">
+                            <select x-model="modal.form.type" @change="modal.form.template_id = ''; modal.form.data.type_fields = {}" class="ux-input w-full" required>
+                                <template x-for="kind in documentTypes.filter(t => t.is_active || t.key === modal.form.type)" :key="kind.key"><option :value="kind.key" x-text="kind.name"></option></template>
+                            </select>
+                        </template>
+
                         <template x-if="field.type === 'template-select'">
                             <div>
                                 <select x-model="modal.form[field.key]"
                                         class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
                                     <option value="" x-text="window.ZenI18n.t('— brak / wybierz szablon —')">— brak / wybierz szablon —</option>
-                                    <template x-for="t in templates.filter(x => x.type === ((modal.view || currentView) === 'offers' ? 'offer' : 'document'))" :key="t.id">
+                                    <template x-for="t in templates.filter(x => x.type === ((modal.view || currentView) === 'offers' ? 'offer' : 'document') && ((modal.view || currentView) === 'offers' || !x.document_type_key || x.document_type_key === modal.form.type))" :key="t.id">
                                         <option :value="t.id" x-text="t.name"></option>
                                     </template>
                                 </select>
@@ -281,7 +287,7 @@
                         </template>
 
                         <!-- STANDARD INPUT (EXCLUDES ALL SPECIAL TYPES INCLUDING project-select & teams-select!) -->
-                        <template x-if="!['textarea','select','client-select','project-select','teams-select','user-select','template-select','catalog-select','task-assignees','multi-user-select','document-relation','lead-select','checkbox','range'].includes(field.type)">
+                        <template x-if="!['textarea','select','client-select','project-select','teams-select','user-select','template-select','document-type-select','catalog-select','task-assignees','multi-user-select','document-relation','lead-select','checkbox','range'].includes(field.type)">
                             <input :type="field.type" x-model="modal.form[field.key]"
                                    :required="(field.key === 'password' && modal.editingId) ? false : Boolean(field.required)"
                                    :autocomplete="field.type === 'password' ? 'new-password' : null"
@@ -290,6 +296,20 @@
 
                     </div>
                 </template>
+            </div>
+
+            <div x-show="(modal.view || currentView) === 'documents' && selectedDocumentTypeFields().length" class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                <h4 class="text-sm font-bold" x-text="'Pola typu: ' + documentTypeLabel(modal.form.type)"></h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <template x-for="field in selectedDocumentTypeFields()" :key="field.key">
+                        <label class="block text-sm" :class="field.kind === 'textarea' ? 'sm:col-span-2' : ''"><span x-text="field.label + (field.required ? ' *' : '')"></span><code class="ml-2 text-xs" x-text="'{{ type_fields.' + field.key + ' }}'"></code>
+                            <template x-if="field.kind === 'textarea'"><textarea class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></textarea></template>
+                            <template x-if="field.kind === 'select'"><select class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"><option value="">— wybierz —</option><template x-for="option in field.options" :key="option"><option :value="option" x-text="option"></option></template></select></template>
+                            <input x-show="field.kind === 'boolean'" type="checkbox" class="mt-2" x-model="modal.form.data.type_fields[field.key]">
+                            <template x-if="!['textarea','select','boolean'].includes(field.kind)"><input :type="field.kind" class="ux-input w-full mt-1" x-model="modal.form.data.type_fields[field.key]" :required="field.required"></template>
+                        </label>
+                    </template>
+                </div>
             </div>
 
             <div x-show="['documents', 'offers'].includes(modal.view || currentView) && selectedTemplateFields().length" class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">

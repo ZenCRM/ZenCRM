@@ -5,3 +5,4 @@ class TemplateSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Template
         load_instance = True
+        include_fk = True

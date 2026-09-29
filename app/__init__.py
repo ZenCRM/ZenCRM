@@ -49,7 +49,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type)
 
     from .api.push import push_bp
     app.register_blueprint(push_bp, url_prefix="/api/push")
@@ -71,6 +71,7 @@ def create_app(config_class=Config):
     from .api.offers     import offers_bp
     from .api.documents  import documents_bp
     from .api.attachments import attachments_bp
+    from .api.document_types import document_types_bp
     from .api.templates  import templates_bp
     from .api.users      import users_bp
     from .api.stats      import stats_bp
@@ -106,6 +107,7 @@ def create_app(config_class=Config):
     app.register_blueprint(offers_bp,     url_prefix='/api/offers')
     app.register_blueprint(documents_bp,  url_prefix='/api/documents')
     app.register_blueprint(attachments_bp, url_prefix='/api/attachments')
+    app.register_blueprint(document_types_bp, url_prefix='/api/document-types')
     app.register_blueprint(templates_bp,  url_prefix='/api/templates')
     app.register_blueprint(users_bp,      url_prefix='/api/users')
     app.register_blueprint(stats_bp,      url_prefix='/api/stats')
@@ -167,10 +169,18 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type)
 
     with app.app_context():
         db.create_all()
+        # create_all does not add columns to installations created before these features.
+        with db.engine.begin() as conn:
+            inspector = db.inspect(conn)
+            if 'created_by_id' not in {c['name'] for c in inspector.get_columns('attachments')}:
+                conn.execute(db.text('ALTER TABLE attachments ADD COLUMN created_by_id INTEGER'))
+            if 'document_type_key' not in {c['name'] for c in inspector.get_columns('templates')}:
+                conn.execute(db.text('ALTER TABLE templates ADD COLUMN document_type_key VARCHAR(50)'))
+        document_type.DocumentType.seed_defaults()
         try:
             with db.engine.connect() as conn:
                 # tasks migrations
