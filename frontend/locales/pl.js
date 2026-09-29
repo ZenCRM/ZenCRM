@@ -1909,5 +1909,5 @@ window.ZenLocales.pl = {
   "Czy na pewno chcesz usunąć to źródło?": "Czy na pewno chcesz usunąć to źródło?",
   "Wygenerować nowy token dla webhooka? Stary token przestanie działać!": "Wygenerować nowy token dla webhooka? Stary token przestanie działać!",
   "Wygenerowano nowy token webhooka": "Wygenerowano nowy token webhooka",
-  "Skopiowano URL webhooka": "Skopiowano URL webhooka",
+  "Skopiowano URL webhooka": "Skopiowano URL webhooka"
 };

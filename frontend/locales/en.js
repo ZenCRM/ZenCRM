@@ -1909,5 +1909,5 @@ window.ZenLocales.en = {
   "Czy na pewno chcesz usunąć to źródło?": "Are you sure you want to delete this source?",
   "Wygenerować nowy token dla webhooka? Stary token przestanie działać!": "Generate a new webhook token? The old token will stop working!",
   "Wygenerowano nowy token webhooka": "Generated new webhook token",
-  "Skopiowano URL webhooka": "Copied webhook URL",
+  "Skopiowano URL webhooka": "Copied webhook URL"
 };

@@ -11,9 +11,18 @@ from flask import has_request_context, request
 
 @lru_cache(maxsize=2)
 def catalog(locale):
-    source = (Path(__file__).resolve().parents[2] / 'frontend' / 'locales' / f'{locale}.js').read_text(encoding='utf-8')
-    start = source.index('{', source.index('window.ZenLocales.'))
-    return json.loads(source[start:source.rfind('}') + 1])
+    try:
+        source = (Path(__file__).resolve().parents[2] / 'frontend' / 'locales' / f'{locale}.js').read_text(encoding='utf-8')
+        start = source.index('{', source.index('window.ZenLocales.'))
+        raw_json = source[start:source.rfind('}') + 1]
+        # Remove trailing commas before closing braces/brackets to allow flexible JS objects
+        cleaned = re.sub(r',\s*([}\]])', r'\1', raw_json)
+        return json.loads(cleaned)
+    except Exception:
+        try:
+            return json.loads(raw_json)
+        except Exception:
+            return {}
 
 
 def language():
@@ -25,7 +34,11 @@ def language():
 def t(key, params=None, locale=None):
     if not isinstance(key, str):
         return key
-    result = catalog(locale or language()).get(key, key)
+    try:
+        cat = catalog(locale or language())
+        result = cat.get(key, key) if isinstance(cat, dict) else key
+    except Exception:
+        result = key
     return re.sub(r'\{([^{}]+)\}', lambda match: str(params[match[1]]) if params and match[1] in params else match[0], result)
 
 

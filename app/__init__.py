@@ -49,7 +49,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, auth_security)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security)
 
     from .api.push import push_bp
     app.register_blueprint(push_bp, url_prefix="/api/push")
@@ -165,7 +165,7 @@ def create_app(config_class=Config):
 
     from .models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
-                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, email_template, auth_security)
+                         service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security)
 
     with app.app_context():
         db.create_all()
