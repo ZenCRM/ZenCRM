@@ -2,8 +2,6 @@
 
 <img src="frontend/logo.png" alt="ZenCRM" width="240">
 
-# ZenCRM
-
 **Mniej chaosu. Więcej relacji. Wszystko w jednym CRM.**  
 **Less chaos. Stronger relationships. Everything in one CRM.**
 
@@ -63,37 +61,63 @@ Szablon wybierzesz w **Ustawienia → Szablony wyglądu**. Oba współpracują z
 | **Pulpit** | Liczniki klientów, leadów, projektów, zadań i usług, wykresy lejka oraz skróty do codziennych działań. |
 | **Klienci i kontakty** | Dane firm i osób, opiekunowie, powiązane kontakty, pliki, notatki i historia aktywności w jednej karcie. |
 | **Leady** | Etapy sprzedaży, wartość i prawdopodobieństwo, widok tabeli i Kanban, konwersja leada na klienta oraz źródła i webhook leadów. |
-| **Projekty** | Statusy, etapy, członkowie, powiązania z klientami, zadania i pliki projektu. |
+| **Projekty** | Statusy, etapy, członkowie zespołu, powiązania z klientami, zadania, terminy i pliki w jednym miejscu. |
 | **Zadania** | Lista i Kanban, priorytety, terminy, postęp oraz przypisanie wielu wykonawców. |
 | **Kalendarz i spotkania** | Widok miesiąca i plan dnia, spotkania oraz terminy powiązane z pracą zespołu. |
-| **Usługi** | Katalog usług i obsługa konkretnych realizacji przypisanych do klientów i pracowników. |
-| **Oferty i dokumenty** | Szablony, podgląd, generowanie PDF, typy dokumentów z własnymi polami i publiczne linki oparte na tokenie. |
+| **Usługi** | Katalog usług i obsługa konkretnych realizacji przypisanych do klientów i pracowników, wraz z postępem oraz powiązanymi zadaniami. |
+| **Oferty i dokumenty** | Formularze typów dokumentów, własne szablony, podgląd, generowanie PDF i publiczne linki oparte na tokenie. |
 | **Telefonia i SMS** | Telefony przypisane do użytkowników, synchronizacja połączeń i wiadomości, wątki SMS, statystyki oraz zlecanie akcji na telefonie. |
-| **E-mail** | Konfiguracja SMTP i szablony wiadomości używanych przez CRM. |
-| **Tickety i helpdesk** | Zgłoszenia, kategorie, reguły przydziału, publiczna strona pomocy oraz komunikacja w ramach ticketu. |
-| **Portal klienta** | Oddzielne logowanie, członkowie portalu, udostępniane moduły i wygląd przestrzeni klienta. |
-| **Powiadomienia** | Aktywność przy rekordach, przypomnienia oraz opcjonalne powiadomienia push w przeglądarce. |
-| **Administracja** | Role, zespoły, uprawnienia, pola własne, wymagane pola, konfiguracja menu, branding, archiwum i przywracanie rekordów. |
-| **Języki** | Polski i angielski w zestawie; administrator może utworzyć nowy język i edytować tłumaczenia. |
+| **E-mail** | Powiadomienia wysyłane przez SMTP; edytowalne tematy i treści szablonów w panelu administratora. |
+| **Tickety i helpdesk** | Zgłoszenia, kategorie, reguły przydziału, samodzielna publiczna aplikacja do zgłoszeń oraz komunikacja w ramach ticketu. |
+| **Portal klienta** | Oddzielne logowanie, członkowie portalu, udostępniane dane i moduły oraz wygląd przestrzeni klienta. |
+| **Przypomnienia i powiadomienia** | Przypomnienia z dowolnego widoku CRM, dźwięk w aplikacji oraz opcjonalne powiadomienia push w przeglądarce. |
+| **Administracja** | Role, zespoły, uprawnienia, własne i wymagane pola, wyłączanie modułów, branding, archiwum i przywracanie rekordów. |
+| **Języki** | Polski i angielski w zestawie; administrator może edytować tłumaczenia i tworzyć kolejne języki w panelu. |
 | **Aktualizacje** | Porównanie zainstalowanej wersji z najnowszym stabilnym wydaniem GitHub i dostęp do opisów wydań. |
 
 ### Generowanie ofert i dokumentów
 
 | 📄 **SZABLON → PODGLĄD → PDF → LINK DO UDOSTĘPNIENIA** |
 | :--- |
-| Przygotuj ofertę lub dokument na własnym szablonie, uzupełnij dane z CRM i wygeneruj PDF bez przepisywania informacji. Gotowy materiał można pobrać albo udostępnić przez link z indywidualnym tokenem. |
+| Zbuduj formularz dla wybranego typu dokumentu, połącz go z własnym szablonem i wygeneruj PDF z danych wpisanych w formularzu oraz danych CRM. Gotowy plik można pobrać albo udostępnić przez link z indywidualnym tokenem. |
 
-1. Przygotuj szablon w edytorze i sprawdź jego podgląd. Dokumenty mogą korzystać z konfigurowalnych typów i dodatkowych pól.
-2. Utwórz ofertę lub dokument i powiąż go z właściwym klientem, a w razie potrzeby także z leadem lub usługą.
-3. Wygeneruj podgląd i plik PDF. Gotowy materiał możesz pobrać albo udostępnić przez indywidualny link z tokenem.
+1. W panelu administratora utwórz typ dokumentu i określ pola jego formularza: tekst, długi tekst, liczbę, datę, pole tak/nie lub listę wyboru.
+2. Przygotuj szablon w edytorze. Wstaw do niego dane z CRM i pola typu dokumentu, a następnie sprawdź podgląd.
+3. Utwórz dokument lub ofertę, wypełnij formularz i powiąż wpis z klientem, a w razie potrzeby także z leadem lub usługą.
+4. Wygeneruj PDF. Gotowy materiał pobierz albo udostępnij przez indywidualny link z tokenem.
 
 Szablony i dane biznesowe pozostają w Twojej instalacji. Generowanie PDF wykorzystuje Jinja2 oraz biblioteki PDF zainstalowane po stronie serwera.
+
+### Projekty i usługi
+
+**Projekty** porządkują pracę wokół klienta: możesz śledzić status i etapy, dodać członków zespołu, zadania, terminy i pliki. Szczegóły projektu gromadzą powiązane informacje, więc zespół widzi postęp bez szukania go w wielu miejscach.
+
+**Usługi** mają własny katalog, z którego tworzysz realizacje dla klientów. Do realizacji przypisujesz pracowników, kontrolujesz postęp i łączysz z nią zadania. Dzięki temu można prowadzić zarówno jednorazowe zlecenia, jak i dłuższą obsługę klienta.
+
+### Portal klienta i aplikacja ticketowa
+
+**Portal klienta** daje klientowi osobne logowanie do jego przestrzeni. Administrator zarządza członkami portalu, wybiera udostępniane moduły i dostosowuje wygląd. Klient może korzystać z udostępnionych mu dokumentów, ofert, usług i zgłoszeń bez dostępu do wewnętrznego panelu CRM.
+
+**Aplikacja ticketowa / helpdesk** działa także jako osobna, publiczna strona pomocy. Klient zgłasza problem przez formularz i otrzymuje unikalny link do śledzenia sprawy. W panelu można ustawić wygląd strony, kategorie i automatyczne przypisywanie zgłoszeń do pracownika lub zespołu. Odpowiedzi i historia rozmowy pozostają przy tickecie.
+
+### Przypomnienia i powiadomienia e-mail
+
+Przypomnienie dodasz z dowolnego widoku CRM; może zawierać link do aktualnie otwartego elementu. O wybranej godzinie aplikacja pokazuje przypomnienie i może odtworzyć dźwięk. Dźwięk trzeba włączyć w przeglądarce; opcjonalne powiadomienia push pozwalają otrzymywać alerty także w tle, po udzieleniu zgody przeglądarce. Przypomnienie można odłożyć na później albo oznaczyć jako wykonane.
+
+Po skonfigurowaniu **SMTP** system wysyła powiadomienia e-mail o zdarzeniach takich jak przypisanie zadania czy nowy ticket. W **Ustawienia → Szablony e-mail & SMTP** administrator edytuje temat i treść szablonów, może przywrócić wersję domyślną oraz sprawdzić połączenie z serwerem pocztowym. Użytkownik może ustawić swoje preferencje powiadomień e-mail.
+
+### Dostosowanie systemu w panelu administratora
+
+- **Własne pola:** dodawaj pola do wybranych modułów i zbieraj dane specyficzne dla swojej firmy; możesz też zarządzać wymaganymi polami standardowymi.
+- **Moduły:** w ustawieniach menu włączaj lub wyłączaj dowolny moduł z listy oraz określaj jego widoczność dla ról. Wyłączona pozycja znika z nawigacji, a dostęp do niej jest blokowany.
+- **Role i uprawnienia:** przypisuj użytkowników do ról i zespołów oraz określaj dostęp do operacji w poszczególnych modułach. Możesz także tworzyć własne role.
+- **Tłumaczenia:** w **Ustawienia → Tłumaczenia** edytuj istniejące teksty polskie i angielskie albo utwórz kolejny język na podstawie jednego z nich. Własne tłumaczenia są zachowywane w bazie danych.
 
 ### Telefonia i SMS w praktyce
 
 W **Telefonia & SMS** dodajesz urządzenie i łączysz je z aplikacją Android współpracującą z bramką CRM (SMS Manager / GoFlow) za pomocą indywidualnego tokenu. Aplikacja działa w tle telefonu i synchronizuje historię połączeń oraz wiadomości. ZenCRM wiąże ją z klientami, leadami i kontaktami po numerze telefonu. Z ich kart możesz przejrzeć wcześniejszy kontakt oraz zlecić wykonanie połączenia lub wysłanie SMS-a przez podłączony telefon. Dostęp do urządzeń i wysyłania jest powiązany z zalogowanym użytkownikiem.
 
-### Aktualizacje i tłumaczenia
+### Aktualizacje
 
 | 🔄 **AUTOMATYCZNE SPRAWDZANIE NOWYCH WYDAŃ** |
 | :--- |
@@ -101,7 +125,7 @@ W **Telefonia & SMS** dodajesz urządzenie i łączysz je z aplikacją Android w
 
 Zakładka **Ustawienia → Aktualizacja** automatycznie pobiera informacje o wydaniach z [GitHub Releases](https://github.com/ZenCRM/ZenCRM/releases) po jej otwarciu. Pokazuje wersję instalacji, najnowsze stabilne wydanie i opis zmian. **Instalacja aktualizacji nie odbywa się samoczynnie**: administrator wdraża wybrane wydanie zgodnie ze sposobem instalacji, po wykonaniu kopii danych.
 
-W **Ustawienia → Tłumaczenia** można poprawiać polskie i angielskie teksty oraz utworzyć język na podstawie polskiego lub angielskiego. Własne wpisy są przechowywane w bazie i mają pierwszeństwo przed tekstami dostarczonymi z aplikacją. Brakujące frazy korzystają z języka bazowego, więc nowe teksty dodane wraz z wydaniem pojawiają się bez ręcznego kopiowania całego katalogu.
+Własne tłumaczenia mają pierwszeństwo przed tekstami dostarczonymi z aplikacją, a brakujące frazy korzystają z języka bazowego. Dzięki temu nowe teksty dodane wraz z wydaniem pojawiają się bez ręcznego kopiowania całego katalogu.
 
 ### Szybki start: Docker Compose
 
@@ -201,37 +225,63 @@ Select a template under **Settings → Appearance templates**. Both work with li
 | **Dashboard** | Counts for clients, leads, projects, tasks, and services, pipeline charts, and shortcuts to frequent actions. |
 | **Clients and contacts** | Company and person details, account owners, linked contacts, files, notes, and activity history in one record. |
 | **Leads** | Sales stages, value and probability, table and Kanban views, lead conversion, lead sources, and a lead webhook. |
-| **Projects** | Statuses, stages, members, client links, tasks, and project files. |
+| **Projects** | Statuses, stages, team members, client links, tasks, deadlines, and files in one place. |
 | **Tasks** | List and Kanban, priorities, due dates, progress, and multiple assignees. |
 | **Calendar and meetings** | Month view and daily agenda for meetings and team deadlines. |
-| **Services** | A service catalog and individual client deliveries assigned to team members. |
-| **Offers and documents** | Templates, preview, PDF generation, document types with custom fields, and token-based public links. |
+| **Services** | A service catalog and individual client deliveries assigned to team members, with progress and linked tasks. |
+| **Offers and documents** | Document type forms, custom templates, preview, PDF generation, and token-based public links. |
 | **Telephony and SMS** | User-owned phones, synchronized calls and messages, SMS threads, statistics, and actions queued to a phone. |
-| **Email** | SMTP configuration and email templates used by the CRM. |
-| **Tickets and helpdesk** | Requests, categories, assignment rules, a public help page, and conversations within tickets. |
-| **Customer portal** | Separate login, portal members, shared modules, and workspace appearance. |
-| **Notifications** | Record activity, reminders, and optional browser push notifications. |
-| **Administration** | Roles, teams, permissions, custom and required fields, menu configuration, branding, archive, and restore. |
-| **Languages** | Polish and English included; administrators can create languages and edit translations. |
+| **Email** | SMTP notifications with editable message subjects and templates in the admin panel. |
+| **Tickets and helpdesk** | Requests, categories, assignment rules, a standalone public ticket app, and conversations within tickets. |
+| **Customer portal** | Separate login, portal members, shared data and modules, and workspace appearance. |
+| **Reminders and notifications** | Reminders from any CRM view, sound in the app, and optional browser push notifications. |
+| **Administration** | Roles, teams, permissions, custom and required fields, module switches, branding, archive, and restore. |
+| **Languages** | Polish and English included; administrators can edit translations and create more languages in the panel. |
 | **Updates** | Compare the installed version with the latest stable GitHub release and read release notes. |
 
 ### Generate offers and documents
 
 | 📄 **TEMPLATE → PREVIEW → PDF → SHAREABLE LINK** |
 | :--- |
-| Prepare an offer or document from your template, fill it with CRM data, and generate a PDF without copying information by hand. Download the result or share it using a link with an individual token. |
+| Build a form for a document type, connect it to your template, and generate a PDF from the completed form and CRM data. Download the result or share it using a link with an individual token. |
 
-1. Create a template in the editor and review its preview. Documents can use configurable types and extra fields.
-2. Create an offer or document and link it to a client, and where relevant to a lead or service.
-3. Generate a preview and PDF. Download the result or share it using an individual token-based link.
+1. In the admin panel, create a document type and define its form fields: text, long text, number, date, yes/no, or a selection list.
+2. Create a template in the editor. Add CRM data and document type fields, then review the preview.
+3. Create a document or offer, complete the form, and link the record to a client and, where relevant, a lead or service.
+4. Generate a PDF. Download it or share it through an individual token-based link.
 
 Templates and business data stay in your installation. PDF generation uses Jinja2 and server-side PDF libraries.
+
+### Projects and services
+
+**Projects** organize work around a client. Track status and stages, add team members, tasks, deadlines, and files. Project details bring related information together so the team can see progress in one place.
+
+**Services** have a separate catalog from which you create individual client deliveries. Assign team members, track progress, and link tasks to a delivery. This supports both one-time work and ongoing client service.
+
+### Customer portal and ticket app
+
+The **customer portal** gives clients a separate login to their own workspace. Administrators manage portal members, choose which modules to share, and adjust its appearance. Clients can access shared documents, offers, services, and tickets without entering the internal CRM panel.
+
+The **ticket app / helpdesk** can also run as a standalone public help page. Clients submit a request through a form and receive a unique link to follow its status. In the admin panel, set the page appearance, categories, and automatic assignment to a person or team. Replies and conversation history stay with the ticket.
+
+### Reminders and email notifications
+
+Create a reminder from any CRM view and include a link to the item you are viewing. At the selected time, the app shows the reminder and can play a sound. Browser interaction is required to enable sound; optional push notifications can deliver alerts in the background after browser permission is granted. You can snooze or dismiss a reminder.
+
+Once **SMTP** is configured, the system sends email notifications for events such as a task assignment or a new ticket. Under **Settings → Email templates & SMTP**, administrators edit template subjects and bodies, restore defaults, and check the mail server connection. Users can set their own email notification preferences.
+
+### Customize the CRM in the admin panel
+
+- **Custom fields:** add fields to selected modules to collect information specific to your business; you can also manage required standard fields.
+- **Modules:** enable or disable any module listed in menu settings and choose which roles can see it. A disabled entry disappears from navigation and access to it is blocked.
+- **Roles and permissions:** assign users to roles and teams, and control access to actions in each module. You can also create custom roles.
+- **Translations:** under **Settings → Translations**, edit existing Polish and English text or create another language based on either one. Custom translations are retained in the database.
 
 ### Telephony and SMS in practice
 
 In **Telephony & SMS**, add a device and pair a compatible Android app (SMS Manager / GoFlow) with the CRM gateway using an individual token. The app runs in the background on your phone and synchronizes call and message history. ZenCRM links it to clients, leads, and contacts by phone number. From their records, you can review earlier conversations and request a call or send a text through the connected phone. Device access and sending permissions are tied to the signed-in user.
 
-### Updates and translations
+### Updates
 
 | 🔄 **AUTOMATIC RELEASE CHECKS** |
 | :--- |
@@ -239,7 +289,7 @@ In **Telephony & SMS**, add a device and pair a compatible Android app (SMS Mana
 
 Opening **Settings → Updates** automatically fetches releases from [GitHub Releases](https://github.com/ZenCRM/ZenCRM/releases). It shows the installed version, the latest stable release, and its notes. **The application does not install updates unattended**: an administrator deploys the chosen release using the installation method after backing up data.
 
-Under **Settings → Translations**, you can edit Polish and English text or create a language based on either one. Custom entries are stored in the database and take precedence over bundled translations. Missing phrases fall back to the base language, so new text from later releases appears without copying the entire catalog by hand.
+Custom translations take precedence over bundled translations, while missing phrases fall back to the base language. New text from later releases therefore appears without copying the entire catalog by hand.
 
 ### Quick start: Docker Compose
 
