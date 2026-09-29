@@ -379,15 +379,18 @@
         for (const c of clients) clientChoices[c.id] = c.name;
         function editor(parent, member = null) {
             const f = form(parent, member ? window.ZenI18n.t('Zapisz użytkownika') : window.ZenI18n.t('Utwórz użytkownika'), async () => {
-                await api('/portal/members' + (member ? '/' + member.id : ''), member ? 'PUT' : 'POST',
-                    {client_id:Number(client.value), email:email.value, password:password.value, active:active.checked});
+                const payload = {client_id:Number(client.value), email:email.value, active:active.checked};
+                const pwd = password.value.trim();
+                if (pwd) payload.password = pwd;
+                await api('/portal/members' + (member ? '/' + member.id : ''), member ? 'PUT' : 'POST', payload);
                 await usersPanel(); message.textContent = member ? window.ZenI18n.t('Użytkownik zapisany.') : window.ZenI18n.t('Użytkownik utworzony.');
             });
             f.className = 'form-grid';
             const client = select(f, window.ZenI18n.t('Klient'), clientChoices, member?.client_id || ''); client.required = true;
             const email = input(f, window.ZenI18n.t('Email / login'), 'email', member?.email || '', true);
             const password = input(f, member ? window.ZenI18n.t('Nowe hasło (puste = bez zmiany)') : window.ZenI18n.t('Hasło (min. 10 znaków)'), 'password', '', !member);
-            password.minLength = 10; password.autocomplete = 'new-password';
+            password.autocomplete = 'new-password';
+            if (!member) password.minLength = 10;
             const active = checkbox(f, window.ZenI18n.t('Konto aktywne'), member ? member.active : true);
         }
         const create = el('details', null, section); create.className = 'create-user-card'; create.open = !members.length; el('summary', window.ZenI18n.t('Dodaj użytkownika portalu'), create); editor(create);

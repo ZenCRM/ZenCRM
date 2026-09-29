@@ -90,6 +90,12 @@ window.ZenModules.records = function () { return {
                 if (mod === 'users' && f.key === 'role' && this.managedRoles?.length) {
                     field.options = this.managedRoles.map(role => ({ value: role.key, label: role.name }));
                 }
+                if (mod === 'users' && f.key === 'password') {
+                    field.required = false;
+                    if (this.modal.editingId) {
+                        field.label = window.ZenI18n.t('Nowe hasło (puste = bez zmiany)');
+                    }
+                }
                 if (customLabels && customLabels[mod] && customLabels[mod][f.key]) {
                     field.label = customLabels[mod][f.key];
                 }
@@ -101,6 +107,9 @@ window.ZenModules.records = function () { return {
                     } else {
                         field.required = false;
                     }
+                }
+                if (f.key === 'password' && this.modal.editingId) {
+                    field.required = false;
                 }
                 return field;
             });
@@ -232,6 +241,9 @@ window.ZenModules.records = function () { return {
             if (this.modal.form && !Array.isArray(this.modal.form.team_ids)) {
                 this.modal.form.team_ids = item?.teams ? item.teams.map(t => t.id) : (item?.team_ids || []);
             }
+            if (actionView === 'users') {
+                this.modal.form.password = '';
+            }
             this.modal.error = '';
             this.modal.open = true;
             this.ensureLookups();
@@ -331,7 +343,11 @@ window.ZenModules.records = function () { return {
                 customValues[f.id] = payload['custom_' + f.id] ?? '';
                 delete payload['custom_' + f.id];
             }
-            if (!payload.password) delete payload.password;
+            if (payload.password != null && typeof payload.password === 'string' && !payload.password.trim()) {
+                delete payload.password;
+            } else if (!payload.password) {
+                delete payload.password;
+            }
             const targetView = this.modal.view || this.currentView;
             const wasQuickAdd = !!this.modal.view;
             this.savingRecord = true;

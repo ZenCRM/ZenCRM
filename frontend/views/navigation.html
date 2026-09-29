@@ -164,7 +164,8 @@
                                   x-text="roleLabel(user?.role)"></span>
                         </div>
 
-                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t(&#x27;Język&#x27;)"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t(&#x27;Język&#x27;)"><option value="pl" x-text="window.ZenI18n.t(&quot;Polski&quot;)">Polski</option><option value="en" x-text="window.ZenI18n.t(&quot;English&quot;)">English</option></select></label></div><div class="py-1"><button x-show="![&#x27;dashboard&#x27;,&#x27;meetings&#x27;,&#x27;portalSettings&#x27;,&#x27;portalUsers&#x27;,&#x27;portalTickets&#x27;,&#x27;portalSpaces&#x27;].includes(currentView)" @click="open = false; openModal()" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;plus&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t(&quot;Dodaj nowy rekord&quot;)">Dodaj nowy rekord</span></button>
+                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t(&#x27;Język&#x27;)"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t(&#x27;Język&#x27;)"><option value="pl" x-text="window.ZenI18n.t(&quot;Polski&quot;)">Polski</option><option value="en" x-text="window.ZenI18n.t(&quot;English&quot;)">English</option></select></label></div>
+                        <div class="py-1">
                             <button @click="open = false; openProfile()"
                                     class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
