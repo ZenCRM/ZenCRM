@@ -172,40 +172,42 @@
                             </div>
 
                             <!-- Panel edycji pola własnego -->
-                            <div x-show="editingCustomField" class="mb-6 p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20" x-cloak>
-                                <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
-                                    <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
-                                    <span x-text="window.ZenI18n.t('Edytuj pole') + ': ' + (editingCustomField?.label || '')"></span>
-                                </h4>
-                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Nazwa pola')">Nazwa pola</label>
-                                        <input type="text" x-model="editingCustomField.label" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Typ')">Typ</label>
-                                        <select x-model="editingCustomField.kind" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
-                                            <template x-for="(label, key) in customKindLabels" :key="'edit-kind-' + key">
-                                                <option :value="key" x-text="label"></option>
-                                            </template>
-                                        </select>
-                                    </div>
-                                    <div class="flex items-center h-full pt-4">
-                                        <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                            <input type="checkbox" x-model="editingCustomField.required" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
-                                            <span x-text="window.ZenI18n.t('Wymagane')">Wymagane</span>
-                                        </label>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <button type="button" @click="saveEditCustomField()" class="flex-1 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm">
-                                            <span x-text="window.ZenI18n.t('Zapisz')">Zapisz</span>
-                                        </button>
-                                        <button type="button" @click="cancelEditCustomField()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg">
-                                            <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
-                                        </button>
+                            <template x-if="editingCustomField">
+                                <div class="mb-6 p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20" x-cloak>
+                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+                                        <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
+                                        <span x-text="window.ZenI18n.t('Edytuj pole') + ': ' + (editingCustomField?.label || '')"></span>
+                                    </h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Nazwa pola')">Nazwa pola</label>
+                                            <input type="text" x-model="editingCustomField.label" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Typ')">Typ</label>
+                                            <select x-model="editingCustomField.kind" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                                <template x-for="(label, key) in customKindLabels" :key="'edit-kind-' + key">
+                                                    <option :value="key" x-text="label"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="flex items-center h-full pt-4">
+                                            <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                                <input type="checkbox" x-model="editingCustomField.required" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                                                <span x-text="window.ZenI18n.t('Wymagane')">Wymagane</span>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" @click="saveEditCustomField()" class="flex-1 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm">
+                                                <span x-text="window.ZenI18n.t('Zapisz')">Zapisz</span>
+                                            </button>
+                                            <button type="button" @click="cancelEditCustomField()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg">
+                                                <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
 
                             <!-- Lista zdefiniowanych pól -->
                             <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
@@ -286,51 +288,53 @@
                             </div>
 
                             <!-- Panel edycji pola standardowego -->
-                            <div x-show="editingStandardField" class="p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20" x-cloak>
-                                <div class="flex items-center justify-between mb-3">
-                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                        <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
-                                        <span x-text="window.ZenI18n.t('Edytuj pole standardowe') + ': ' + (editingStandardField?.label || '')"></span>
-                                    </h4>
-                                    <span class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200"
-                                          x-text="editingStandardField?.entityLabel"></span>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
-                                    <div class="sm:col-span-5">
-                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Wyświetlana etykieta w formularzu')">Wyświetlana etykieta w formularzu</label>
-                                        <input type="text" x-model="editingStandardField.label"
-                                               class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
-                                        <p class="text-[11px] text-gray-400 mt-1" x-text="window.ZenI18n.t('Oryginalna nazwa systemowa: ') + (editingStandardField?.defaultLabel || '')"></p>
+                            <template x-if="editingStandardField">
+                                <div class="p-5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20 mb-6" x-cloak>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                            <span class="text-blue-600 dark:text-blue-400" x-html="zenIcon('pencil')"></span>
+                                            <span x-text="window.ZenI18n.t('Edytuj pole standardowe') + ': ' + (editingStandardField?.label || '')"></span>
+                                        </h4>
+                                        <span class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200"
+                                              x-text="editingStandardField?.entityLabel"></span>
                                     </div>
-                                    <div class="sm:col-span-3">
-                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Klucz systemowy')">Klucz systemowy</label>
-                                        <input type="text" readonly :value="editingStandardField?.key"
-                                               class="w-full px-3 py-2 text-sm border rounded-lg bg-gray-100 dark:bg-gray-800 dark:border-gray-600 text-gray-500 font-mono">
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
+                                        <div class="sm:col-span-5">
+                                            <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Wyświetlana etykieta w formularzu')">Wyświetlana etykieta w formularzu</label>
+                                            <input type="text" x-model="editingStandardField.label"
+                                                   class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                                            <p class="text-[11px] text-gray-400 mt-1" x-text="window.ZenI18n.t('Oryginalna nazwa systemowa: ') + (editingStandardField?.defaultLabel || '')"></p>
+                                        </div>
+                                        <div class="sm:col-span-3">
+                                            <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1" x-text="window.ZenI18n.t('Klucz systemowy')">Klucz systemowy</label>
+                                            <input type="text" readonly :value="editingStandardField?.key"
+                                                   class="w-full px-3 py-2 text-sm border rounded-lg bg-gray-100 dark:bg-gray-800 dark:border-gray-600 text-gray-500 font-mono">
+                                        </div>
+                                        <div class="sm:col-span-4 flex items-center h-full pt-4">
+                                            <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                                <input type="checkbox" x-model="editingStandardField.required" :disabled="editingStandardField.systemRequired"
+                                                       class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4 disabled:opacity-50">
+                                                <span x-text="window.ZenI18n.t('Pole wymagane')">Pole wymagane</span>
+                                                <span x-show="editingStandardField.systemRequired" class="text-[10px] text-amber-600 dark:text-amber-400 font-normal italic" x-text="window.ZenI18n.t('(wymóg systemowy)')">(wymóg systemowy)</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="sm:col-span-4 flex items-center h-full pt-4">
-                                        <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                            <input type="checkbox" x-model="editingStandardField.required" :disabled="editingStandardField.systemRequired"
-                                                   class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4 disabled:opacity-50">
-                                            <span x-text="window.ZenI18n.t('Pole wymagane')">Pole wymagane</span>
-                                            <span x-show="editingStandardField.systemRequired" class="text-[10px] text-amber-600 dark:text-amber-400 font-normal italic" x-text="window.ZenI18n.t('(wymóg systemowy)')">(wymóg systemowy)</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between flex-wrap gap-2 pt-4 mt-3 border-t border-blue-100 dark:border-blue-800/60">
-                                    <button type="button" @click="resetStandardFieldLabel()" x-show="editingStandardField?.customLabel"
-                                            class="px-3 py-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline">
-                                        <span x-text="window.ZenI18n.t('Przywróć domyślną etykietę')">Przywróć domyślną etykietę</span>
-                                    </button>
-                                    <div class="flex items-center gap-2 ml-auto">
-                                        <button type="button" @click="cancelEditStandardField()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-medium rounded-lg">
-                                            <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                                    <div class="flex items-center justify-between flex-wrap gap-2 pt-4 mt-3 border-t border-blue-100 dark:border-blue-800/60">
+                                        <button type="button" @click="resetStandardFieldLabel()" x-show="editingStandardField?.customLabel"
+                                                class="px-3 py-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                                            <span x-text="window.ZenI18n.t('Przywróć domyślną etykietę')">Przywróć domyślną etykietę</span>
                                         </button>
-                                        <button type="button" @click="saveEditStandardField()" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow-sm">
-                                            <span x-text="window.ZenI18n.t('Zapisz zmiany')">Zapisz zmiany</span>
-                                        </button>
+                                        <div class="flex items-center gap-2 ml-auto">
+                                            <button type="button" @click="cancelEditStandardField()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs font-medium rounded-lg">
+                                                <span x-text="window.ZenI18n.t('Anuluj')">Anuluj</span>
+                                            </button>
+                                            <button type="button" @click="saveEditStandardField()" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow-sm">
+                                                <span x-text="window.ZenI18n.t('Zapisz zmiany')">Zapisz zmiany</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
 
                             <!-- Filtry listy pól standardowych -->
                             <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
