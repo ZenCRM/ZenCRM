@@ -220,6 +220,23 @@ window.ZenModules.sms = function () {
             return Array.isArray(this.smsDevices) && this.smsDevices.length > 0;
         },
 
+        getUserDefaultDevice() {
+            if (!this.smsDevices || this.smsDevices.length === 0) return null;
+            const currentUserId = this.user?.id;
+            if (currentUserId) {
+                const userOnline = this.smsDevices.find(d => d.user_id === currentUserId && d.is_online);
+                if (userOnline) return userOnline;
+                const userDev = this.smsDevices.find(d => d.user_id === currentUserId);
+                if (userDev) return userDev;
+            }
+            const unassignedOnline = this.smsDevices.find(d => !d.user_id && d.is_online);
+            if (unassignedOnline) return unassignedOnline;
+            const unassigned = this.smsDevices.find(d => !d.user_id);
+            if (unassigned) return unassigned;
+            const onlineDev = this.smsDevices.find(d => d.is_online);
+            return onlineDev || this.smsDevices[0];
+        },
+
         async makePhoneCall(targetPhone = null, targetName = null) {
             if (!this.smsDevices || this.smsDevices.length === 0) {
                 this.notify(window.ZenI18n.t('Musisz najpierw dodać telefon w zakładce Telefonia & SMS'), 'warning');
@@ -249,8 +266,11 @@ window.ZenModules.sms = function () {
                 return;
             }
 
-            const onlineDev = this.smsDevices.find(d => d.is_online);
-            const dev = onlineDev || this.smsDevices[0];
+            const dev = this.getUserDefaultDevice();
+            if (!dev) {
+                this.notify(window.ZenI18n.t('Brak dostępnego telefonu do połączenia'), 'warning');
+                return;
+            }
 
             const confirmMsg = targetName
                 ? window.ZenI18n.t('Czy chcesz zlecić telefonowi „{device}” natychmiastowe połączenie z {name} ({phone})?', {device: dev.name, name: targetName, phone})
@@ -309,9 +329,8 @@ window.ZenModules.sms = function () {
                 this.notify(window.ZenI18n.t('Musisz najpierw dodać telefon w zakładce Telefonia & SMS'), 'warning');
                 return;
             }
-            let initialDevId = '';
-            const onlineDev = this.smsDevices.find(d => d.is_online);
-            initialDevId = onlineDev ? onlineDev.id : this.smsDevices[0].id;
+            const defDev = this.getUserDefaultDevice();
+            let initialDevId = opts.deviceId || (defDev ? defDev.id : (this.smsDevices[0]?.id || ''));
 
             let phone = opts.phone || '';
             let clientId = opts.clientId || '';
@@ -385,6 +404,11 @@ window.ZenModules.sms = function () {
 
         // ═══════ URZĄDZENIA (TELEFONY) ═══════
         openDeviceModal(dev = null) {
+            if (!this.users || this.users.length === 0) {
+                try {
+                    this.api('/users').then(uList => { if (Array.isArray(uList)) this.users = uList; });
+                } catch (e) {}
+            }
             if (dev) {
                 this.deviceModal = {
                     open: true,
@@ -393,6 +417,7 @@ window.ZenModules.sms = function () {
                         name: dev.name || '',
                         phone_number: dev.phone_number || '',
                         token: dev.token || '',
+                        user_id: dev.user_id != null ? dev.user_id : '',
                         sync_from: dev.sync_from || '',
                         is_active: dev.is_active !== false,
                     },
@@ -406,6 +431,7 @@ window.ZenModules.sms = function () {
                         name: '',
                         phone_number: '',
                         token: '',
+                        user_id: this.user?.id || '',
                         sync_from: '',
                         is_active: true,
                     },
@@ -430,17 +456,22 @@ window.ZenModules.sms = function () {
             }
 
             this.deviceModal.error = '';
+            const payload = {
+                ...this.deviceModal.form,
+                user_id: this.deviceModal.form.user_id ? Number(this.deviceModal.form.user_id) : null
+            };
+
             try {
                 if (this.deviceModal.editingId) {
                     await this.api(`/sms/devices/${this.deviceModal.editingId}`, {
                         method: 'PUT',
-                        body: JSON.stringify(this.deviceModal.form),
+                        body: JSON.stringify(payload),
                     });
                     this.notify(window.ZenI18n.t('Zaktualizowano telefon'));
                 } else {
                     await this.api('/sms/devices', {
                         method: 'POST',
-                        body: JSON.stringify(this.deviceModal.form),
+                        body: JSON.stringify(payload),
                     });
                     this.notify(window.ZenI18n.t('Dodano telefon komórkowy'));
                 }

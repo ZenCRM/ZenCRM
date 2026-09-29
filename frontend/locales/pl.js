@@ -1862,5 +1862,21 @@ window.ZenLocales.pl = {
   "Hasło musi mieć co najmniej 8 znaków": "Hasło musi mieć co najmniej 8 znaków",
   "Podaj poprawny adres e-mail": "Podaj poprawny adres e-mail",
   "Konto administratora zostało pomyślnie utworzone": "Konto administratora zostało pomyślnie utworzone",
-  "Konfiguracja początkowa została już zakończona": "Konfiguracja początkowa została już zakończona"
+  "Konfiguracja początkowa została już zakończona": "Konfiguracja początkowa została już zakończona",
+  "Przypisany użytkownik / pracownik:": "Przypisany użytkownik / pracownik:",
+  "— Ogólny telefon firmowy (wspólny) —": "— Ogólny telefon firmowy (wspólny) —",
+  "Twój telefon": "Twój telefon",
+  "Właściciel:": "Właściciel:",
+  "Telefon wspólny / ogólny": "Telefon wspólny / ogólny",
+  "Brak dostępnego telefonu do połączenia": "Brak dostępnego telefonu do połączenia",
+  "Ty": "Ty",
+  "Brak uprawnień do edycji tego telefonu": "Brak uprawnień do edycji tego telefonu",
+  "Brak uprawnień do usunięcia tego telefonu": "Brak uprawnień do usunięcia tego telefonu",
+  "Nie masz uprawnień do wysyłania z tego telefonu": "Nie masz uprawnień do wysyłania z tego telefonu",
+  "Brak podłączonego aktywnego telefonu": "Brak podłączonego aktywnego telefonu",
+  "Nie masz uprawnień do dzwonienia z tego telefonu": "Nie masz uprawnień do dzwonienia z tego telefonu",
+  "Brak uprawnień do tego telefonu": "Brak uprawnień do tego telefonu",
+  "Brak uprawnień do anulowania tego zadania": "Brak uprawnień do anulowania tego zadania",
+  "Wybrany użytkownik nie istnieje": "Wybrany użytkownik nie istnieje",
+  "Nieprawidłowy identyfikator użytkownika": "Nieprawidłowy identyfikator użytkownika"
 };

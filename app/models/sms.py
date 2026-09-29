@@ -10,6 +10,7 @@ class SmsDevice(db.Model):
     name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(50))
     token = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     last_seen = db.Column(db.DateTime)
     today_stats = db.Column(db.Text)   # JSON string
@@ -21,6 +22,7 @@ class SmsDevice(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
+    user = db.relationship('User', backref=db.backref('sms_devices', lazy='dynamic'))
     queue_items = db.relationship('SmsQueue', backref='device', lazy='dynamic', cascade='all, delete-orphan')
     calls = db.relationship('PhoneCall', backref='device', lazy='dynamic', cascade='all, delete-orphan')
     messages = db.relationship('SmsMessage', backref='device', lazy='dynamic', cascade='all, delete-orphan')
@@ -46,11 +48,23 @@ class SmsDevice(db.Model):
         except Exception:
             pass
 
+        user_data = None
+        if self.user:
+            user_data = {
+                'id': self.user.id,
+                'name': f"{self.user.first_name} {self.user.last_name}".strip(),
+                'email': self.user.email,
+                'role': self.user.role
+            }
+
         return {
             'id': self.id,
             'name': self.name,
             'phone_number': self.phone_number,
             'token': self.token,
+            'user_id': self.user_id,
+            'user_name': f"{self.user.first_name} {self.user.last_name}".strip() if self.user else None,
+            'user': user_data,
             'is_active': bool(self.is_active),
             'is_online': self.is_online,
             'last_seen': self.last_seen.isoformat() if self.last_seen else None,
@@ -133,6 +147,8 @@ class PhoneCall(db.Model):
 
     def to_dict(self):
         device_name = self.device.name if self.device else None
+        user_name = f"{self.device.user.first_name} {self.device.user.last_name}".strip() if (self.device and self.device.user) else None
+        user_id = self.device.user_id if self.device else None
         client_data = None
         if self.client_id:
             from .client import Client
@@ -144,6 +160,8 @@ class PhoneCall(db.Model):
             'id': self.id,
             'device_id': self.device_id,
             'device_name': device_name,
+            'user_id': user_id,
+            'user_name': user_name,
             'number': self.number,
             'name': self.name,
             'type': self.type,
@@ -175,6 +193,8 @@ class SmsMessage(db.Model):
 
     def to_dict(self):
         device_name = self.device.name if self.device else None
+        user_name = f"{self.device.user.first_name} {self.device.user.last_name}".strip() if (self.device and self.device.user) else None
+        user_id = self.device.user_id if self.device else None
         client_data = None
         if self.client_id:
             from .client import Client
@@ -186,6 +206,8 @@ class SmsMessage(db.Model):
             'id': self.id,
             'device_id': self.device_id,
             'device_name': device_name,
+            'user_id': user_id,
+            'user_name': user_name,
             'address': self.address,
             'body': self.body,
             'type': self.type,

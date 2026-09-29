@@ -194,6 +194,9 @@ def create_app(config_class=Config):
                 # sms_devices migrations
                 res = conn.execute(db.text("PRAGMA table_info(sms_devices)")).fetchall()
                 cols = [r[1] for r in res] if res else []
+                if cols and 'user_id' not in cols:
+                    conn.execute(db.text("ALTER TABLE sms_devices ADD COLUMN user_id INTEGER REFERENCES users(id)"))
+                    conn.commit()
                 if cols and 'last_sync_at' not in cols:
                     conn.execute(db.text("ALTER TABLE sms_devices ADD COLUMN last_sync_at DATETIME"))
                     conn.commit()

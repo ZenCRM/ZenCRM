@@ -48,6 +48,15 @@ class User(db.Model):
                 user_teams = [{'id': t.id, 'name': t.name, 'color': t.color or '#018bfc'} for t in (t_list or [])]
         except Exception:
             pass
+
+        devices_list = []
+        try:
+            if hasattr(self, 'sms_devices'):
+                devs = self.sms_devices.all() if hasattr(self.sms_devices, 'all') else self.sms_devices
+                devices_list = [{'id': d.id, 'name': d.name, 'phone_number': d.phone_number, 'is_online': d.is_online} for d in (devs or [])]
+        except Exception:
+            pass
+
         return {
             'id': self.id,
             'email': self.email,
@@ -57,6 +66,8 @@ class User(db.Model):
             'is_active': self.is_active,
             'avatar_url': self.avatar_url,
             'default_call_method': self.default_call_method or 'link',
+            'devices': devices_list,
+            'phone': devices_list[0]['phone_number'] if devices_list and devices_list[0].get('phone_number') else None,
             'email_notifications': self.get_email_notifications(),
             'teams': user_teams,
             'team_ids': [t['id'] for t in user_teams],

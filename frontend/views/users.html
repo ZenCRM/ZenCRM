@@ -82,6 +82,16 @@
                             </template>
                             <span x-show="!(u.teams || []).length" class="text-xs text-gray-400 italic" x-text="window.ZenI18n.t('Brak zespołu')">Brak zespołu</span>
                         </div>
+
+                        <!-- Telefony pracownika (Android) -->
+                        <div x-show="(u.devices || []).length > 0" class="mb-3 flex items-center justify-center gap-1 flex-wrap text-xs">
+                            <template x-for="d in (u.devices || [])" :key="'u-' + u.id + '-d-' + d.id">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+                                    <span class="w-1.5 h-1.5 rounded-full" :class="d.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'"></span>
+                                    <span x-text="d.name + (d.phone_number ? ' (' + d.phone_number + ')' : '')"></span>
+                                </span>
+                            </template>
+                        </div>
                     </div>
 
                     <div class="flex justify-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700/60">

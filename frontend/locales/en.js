@@ -1862,5 +1862,21 @@ window.ZenLocales.en = {
   "Hasło musi mieć co najmniej 8 znaków": "Password must be at least 8 characters",
   "Podaj poprawny adres e-mail": "Enter a valid email address",
   "Konto administratora zostało pomyślnie utworzone": "Administrator account created successfully",
-  "Konfiguracja początkowa została już zakończona": "Initial setup has already been completed"
+  "Konfiguracja początkowa została już zakończona": "Initial setup has already been completed",
+  "Przypisany użytkownik / pracownik:": "Assigned user / employee:",
+  "— Ogólny telefon firmowy (wspólny) —": "— General company phone (shared) —",
+  "Twój telefon": "Your phone",
+  "Właściciel:": "Owner:",
+  "Telefon wspólny / ogólny": "Shared / general phone",
+  "Brak dostępnego telefonu do połączenia": "No phone available to place the call",
+  "Ty": "You",
+  "Brak uprawnień do edycji tego telefonu": "No permission to edit this phone",
+  "Brak uprawnień do usunięcia tego telefonu": "No permission to delete this phone",
+  "Nie masz uprawnień do wysyłania z tego telefonu": "You do not have permission to send from this phone",
+  "Brak podłączonego aktywnego telefonu": "No connected active phone",
+  "Nie masz uprawnień do dzwonienia z tego telefonu": "You do not have permission to call from this phone",
+  "Brak uprawnień do tego telefonu": "No permission for this phone",
+  "Brak uprawnień do anulowania tego zadania": "No permission to cancel this task",
+  "Wybrany użytkownik nie istnieje": "Selected user does not exist",
+  "Nieprawidłowy identyfikator użytkownika": "Invalid user ID"
 };
