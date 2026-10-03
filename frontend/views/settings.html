@@ -3,85 +3,149 @@
                 <div class="settings-shell">
 
                     <!-- NAWIGACJA -->
-                    <nav class="settings-nav">
-                        <button class="settings-nav-item" :class="settingsTab === 'recordViews' ? 'active' : ''" @click="settingsTab = 'recordViews'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Domyślne widoki&quot;)">Domyślne widoki</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'customFields' ? 'active' : ''" @click="settingsTab = 'customFields'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
-                            <span x-text="window.ZenI18n.t('Pola własne')">Pola własne</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'standardFields' ? 'active' : ''" @click="settingsTab = 'standardFields'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                            <span x-text="window.ZenI18n.t('Pola standardowe')">Pola standardowe</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'permissions' ? 'active' : ''" @click="settingsTab = 'permissions'; loadPermissions()">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V7l8-4zM9 12l2 2 4-4"/></svg>
-                            <span><span x-text="window.ZenI18n.t(&quot;Role i uprawnienia&quot;)">Role i uprawnienia</span></span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'customValues' ? 'active' : ''" @click="settingsTab = 'customValues'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M5 4h14v16H5z"/></svg>
-                            <span x-text="window.ZenI18n.t('Wartości pól')">Wartości pól</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'menu' ? 'active' : ''" @click="settingsTab = 'menu'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
-                            <span x-text="window.ZenI18n.t('Ustawienia menu')">Ustawienia menu</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'leads' ? 'active' : ''" @click="settingsTab = 'leads'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                            <span x-text="window.ZenI18n.t('Ustawienia leadów')">Ustawienia leadów</span>
-                        </button>
-
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;branding&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;branding&#x27;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Branding&quot;)">Branding</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;colors&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;colors&#x27;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Kolory&quot;)">Kolory</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'appearance' ? 'active' : ''" @click="settingsTab = 'appearance'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h18v14H3zM7 9h4m-4 4h10m-10 3h7"/></svg>
-                            <span x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'translations' ? 'active' : ''" @click="settingsTab = 'translations'; loadTranslations()">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h12M10 3v2m4 0c-.6 5-3.2 9-8 12m1-8c1.2 2.4 3.2 4.5 6 6m2 4 3.5-9 3.5 9m-5.9-2h3.8"/></svg>
-                            <span x-text="window.ZenI18n.t('Tłumaczenia')">Tłumaczenia</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === 'updates' ? 'active' : ''" @click="settingsTab = 'updates'; loadReleases()">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"/></svg>
-                            <span x-text="window.ZenI18n.t('Aktualizacja')">Aktualizacja</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;login&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;login&#x27;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Ekran logowania&quot;)">Ekran logowania</span>
-                        </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;company&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;company&#x27;">
+                    <nav class="settings-nav" :aria-label="window.ZenI18n.t('Ustawienia CRM')">
+                        <section class="settings-nav-group" aria-labelledby="settings-group-0">
+                            <h2 id="settings-group-0" class="settings-nav-heading" x-text="window.ZenI18n.t('CRM i sprzedaż')">CRM i sprzedaż</h2>
+                            <button class="settings-nav-item" :class="settingsTab === &#x27;company&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;company&#x27;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             <span x-text="window.ZenI18n.t(&quot;Dane firmy&quot;)">Dane firmy</span>
                         </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;ui&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;ui&#x27;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Interfejs&quot;)">Interfejs</span>
+                            <button type="button" class="settings-nav-item" :class="settingsTab === 'clients' ? 'active' : ''" @click="settingsTab = 'clients'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m16-14a4 4 0 010 8m6 6v-2a4 4 0 00-3-3.87M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <span x-text="window.ZenI18n.t('Ustawienia klientów')">Ustawienia klientów</span>
                         </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;helpdesk&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;helpdesk&#x27;; loadHelpdeskSettings()">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                            <span x-text="window.ZenI18n.t(&quot;Helpdesk &amp; Tickety&quot;)">Helpdesk &amp; Tickety</span>
+                            <button class="settings-nav-item" :class="settingsTab === 'leads' ? 'active' : ''" @click="settingsTab = 'leads'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            <span x-text="window.ZenI18n.t('Ustawienia leadów')">Ustawienia leadów</span>
                         </button>
-                        <button class="settings-nav-item" :class="settingsTab === &#x27;emails&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;emails&#x27;; loadEmailTemplates(); loadSmtpSettings()">
+                        </section>
+                        <section class="settings-nav-group" aria-labelledby="settings-group-1">
+                            <h2 id="settings-group-1" class="settings-nav-heading" x-text="window.ZenI18n.t('Pola i dane')">Pola i dane</h2>
+                            <button class="settings-nav-item" :class="settingsTab === 'standardFields' ? 'active' : ''" @click="settingsTab = 'standardFields'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                            <span x-text="window.ZenI18n.t('Pola standardowe')">Pola standardowe</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === 'customFields' ? 'active' : ''" @click="settingsTab = 'customFields'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
+                            <span x-text="window.ZenI18n.t('Pola własne')">Pola własne</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === 'customValues' ? 'active' : ''" @click="settingsTab = 'customValues'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M5 4h14v16H5z"/></svg>
+                            <span x-text="window.ZenI18n.t('Wartości pól')">Wartości pól</span>
+                        </button>
+                        </section>
+                        <section class="settings-nav-group" aria-labelledby="settings-group-2">
+                            <h2 id="settings-group-2" class="settings-nav-heading" x-text="window.ZenI18n.t('Wygląd i nawigacja')">Wygląd i nawigacja</h2>
+                            <button class="settings-nav-item" :class="settingsTab === 'appearance' ? 'active' : ''" @click="settingsTab = 'appearance'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h18v14H3zM7 9h4m-4 4h10m-10 3h7"/></svg>
+                            <span x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === &#x27;branding&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;branding&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Branding&quot;)">Branding</span>
+                        </button>
+
+
+                            <button class="settings-nav-item" :class="settingsTab === 'recordViews' ? 'active' : ''" @click="settingsTab = 'recordViews'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Domyślne widoki&quot;)">Domyślne widoki</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === 'menu' ? 'active' : ''" @click="settingsTab = 'menu'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                            <span x-text="window.ZenI18n.t('Ustawienia menu')">Ustawienia menu</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === &#x27;login&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;login&#x27;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Ekran logowania&quot;)">Ekran logowania</span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === 'translations' ? 'active' : ''" @click="settingsTab = 'translations'; loadTranslations()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h12M10 3v2m4 0c-.6 5-3.2 9-8 12m1-8c1.2 2.4 3.2 4.5 6 6m2 4 3.5-9 3.5 9m-5.9-2h3.8"/></svg>
+                            <span x-text="window.ZenI18n.t('Tłumaczenia')">Tłumaczenia</span>
+                        </button>
+                        </section>
+                        <section class="settings-nav-group" aria-labelledby="settings-group-3">
+                            <h2 id="settings-group-3" class="settings-nav-heading" x-text="window.ZenI18n.t('Komunikacja')">Komunikacja</h2>
+                            <button class="settings-nav-item" :class="settingsTab === &#x27;emails&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;emails&#x27;; loadEmailTemplates(); loadSmtpSettings()">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             <span x-text="window.ZenI18n.t(&quot;Szablony e-mail &amp; SMTP&quot;)">Szablony e-mail &amp; SMTP</span>
                         </button>
-                        <hr class="my-2 border-gray-100 dark:border-gray-700">
-                        <button class="settings-nav-item" @click="resetSettings()" style="color: #ef4444;">
+                            <button class="settings-nav-item" :class="settingsTab === &#x27;helpdesk&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="settingsTab = &#x27;helpdesk&#x27;; loadHelpdeskSettings()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <span x-text="window.ZenI18n.t(&quot;Helpdesk &amp; Tickety&quot;)">Helpdesk &amp; Tickety</span>
+                        </button>
+                        </section>
+                        <section class="settings-nav-group" aria-labelledby="settings-group-4">
+                            <h2 id="settings-group-4" class="settings-nav-heading" x-text="window.ZenI18n.t('Administracja')">Administracja</h2>
+                            <button class="settings-nav-item" :class="settingsTab === 'permissions' ? 'active' : ''" @click="settingsTab = 'permissions'; loadPermissions()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V7l8-4zM9 12l2 2 4-4"/></svg>
+                            <span><span x-text="window.ZenI18n.t(&quot;Role i uprawnienia&quot;)">Role i uprawnienia</span></span>
+                        </button>
+                            <button class="settings-nav-item" :class="settingsTab === 'updates' ? 'active' : ''" @click="settingsTab = 'updates'; loadReleases()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"/></svg>
+                            <span x-text="window.ZenI18n.t('Aktualizacja')">Aktualizacja</span>
+                        </button>
+                            <button class="settings-nav-item" @click="resetSettings()" style="color: #ef4444;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                             <span x-text="window.ZenI18n.t(&quot;Przywróć domyślne&quot;)">Przywróć domyślne</span>
                         </button>
+                        </section>
                     </nav>
 
                     <!-- PANEL -->
                     <div class="settings-panel">
+                        <div x-show="settingsTab === 'clients'" x-cloak class="space-y-5">
+                            <h2 class="settings-section-title" x-text="window.ZenI18n.t('Ustawienia klientów')"></h2>
+                            <p class="settings-section-desc" x-text="window.ZenI18n.t('Wyszukiwanie firmy po NIP uzupełnia dane klienta. Funkcja jest domyślnie wyłączona.')"></p>
+                            <label class="block text-sm"><span class="block mb-2" x-text="window.ZenI18n.t('Wyszukiwarka firm')"></span>
+                                <select x-model="settingsForm.client_company_provider" class="ux-input w-full">
+                                    <option value="off" x-text="window.ZenI18n.t('Wyłączona')"></option>
+                                    <option value="gus" x-text="window.ZenI18n.t('GUS – klucz API')"></option>
+                                    <option value="mf" x-text="window.ZenI18n.t('Ministerstwo Finansów – bezpłatne API')"></option>
+                                </select>
+                            </label>
+                            <p x-show="settingsForm.client_company_provider === 'mf'" class="text-sm text-gray-500" x-text="window.ZenI18n.t('API MF nie wymaga klucza i wyszukuje podmioty w wykazie podatników VAT.')"></p>
+                            <label x-show="settingsForm.client_company_provider === 'gus'" class="block text-sm"><span class="block mb-2" x-text="window.ZenI18n.t('Klucz API GUS')"></span>
+                                <input type="password" x-model="settingsForm.gus_api_key" autocomplete="new-password" class="ux-input w-full" :placeholder="settingsForm.gus_api_key_set ? window.ZenI18n.t('Klucz zapisany – pozostaw puste, aby go zachować') : window.ZenI18n.t('Wpisz klucz API GUS')">
+                            </label>
+                            <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Zapisz ustawienia, aby zastosować zmiany. Zapisany klucz nie jest wyświetlany.')"></p>
+                            <div class="space-y-3 pt-5 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="font-semibold" x-text="window.ZenI18n.t('Metryki klientów')"></h3>
+                                <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Wybierz do 6 metryk i ich kolory. Kafelki są wyświetlane w jednym wierszu; na małych ekranach można je przewijać.')"></p>
+                                <p class="text-xs text-gray-500" x-text="selectedClientMetricCount + ' / 6'"></p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <template x-for="choice in clientMetricChoices" :key="choice.id">
+                                        <div class="flex items-center gap-3 rounded-xl border border-gray-200 dark:border-gray-700 p-3">
+                                            <label class="flex items-center gap-3 flex-1 cursor-pointer"><input type="checkbox" :checked="clientMetricDraft.some(m => m.id === choice.id)" :disabled="selectedClientMetricCount >= 6 && !clientMetricDraft.some(m => m.id === choice.id)" @change="toggleClientMetric(choice, $event.target.checked)" class="rounded text-brand-600"><span x-text="choice.label"></span></label>
+                                            <input type="color" :value="clientMetricColor(choice)" :disabled="!clientMetricDraft.some(m => m.id === choice.id)" @input="setClientMetricColor(choice, $event.target.value)" :aria-label="window.ZenI18n.t('Kolor metryki') + ': ' + choice.label" class="h-9 w-12 rounded border border-gray-300 dark:border-gray-600 cursor-pointer disabled:opacity-40">
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="space-y-3 pt-5 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="font-semibold" x-text="window.ZenI18n.t('Statusy klientów')"></h3>
+                                <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Status używany przez klientów można usunąć po przeniesieniu ich do innego statusu, również w archiwum.')"></p>
+                                <div class="space-y-3">
+                                    <template x-for="(status, index) in clientStatusDraft" :key="status.id">
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                                            <label class="block text-sm sm:col-span-2"><span class="block mb-1.5" x-text="window.ZenI18n.t('Nazwa statusu')"></span><input type="text" x-model="status.label" maxlength="60" class="ux-input w-full"></label>
+                                            <div class="flex items-end justify-between gap-3">
+                                                <label class="block text-sm"><span class="block mb-1.5" x-text="window.ZenI18n.t('Kolor statusu')"></span><input type="color" x-model="status.accent" class="h-10 w-14 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"></label>
+                                                <button type="button" class="ux-text-button text-red-600 mb-2" @click="clientStatusDraft.splice(index, 1)" :aria-label="window.ZenI18n.t('Usuń status') + ': ' + status.label" x-text="window.ZenI18n.t('Usuń')"></button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="rounded-xl bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 p-4 space-y-3">
+                                    <h4 class="text-sm font-semibold" x-text="window.ZenI18n.t('Nowy status')"></h4>
+                                    <div class="flex flex-wrap gap-3 items-end">
+                                        <label class="block text-sm flex-1 min-w-40"><span class="block mb-1.5" x-text="window.ZenI18n.t('Nazwa statusu')"></span><input type="text" x-model="newClientStatusName" @keydown.enter.prevent="addClientStatus()" maxlength="60" class="ux-input w-full" :placeholder="window.ZenI18n.t('np. Stały klient')"></label>
+                                        <label class="block text-sm"><span class="block mb-1.5" x-text="window.ZenI18n.t('Kolor statusu')"></span><input type="color" x-model="newClientStatusColor" class="h-10 w-14 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"></label>
+                                        <button type="button" class="ux-button" @click="addClientStatus()" :disabled="!newClientStatusName.trim() || clientStatusDraft.length >= 20" x-text="window.ZenI18n.t('Dodaj status')"></button>
+                                    </div>
+                                    <p class="text-xs text-gray-500" x-text="window.ZenI18n.t('Po dodaniu lub edycji statusów zapisz ustawienia poniżej.')"></p>
+                                </div>
+                            </div>
+                        </div>
                         <div x-show="settingsTab === 'updates'" x-cloak class="space-y-5">
                             <div>
                                 <h2 class="settings-section-title" x-text="window.ZenI18n.t('Aktualizacja')">Aktualizacja</h2>
@@ -621,6 +685,20 @@
                                            class="text-xs w-full">
                                 </div>
                             </div>
+                            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="font-semibold mb-4" x-text="window.ZenI18n.t('Stopka aplikacji')"></h3>
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Pokaż stopkę w aplikacji&quot;)">Pokaż stopkę w aplikacji</span></label>
+                                <select x-model="settingsForm.ui_show_footer">
+                                    <option value="false" x-text="window.ZenI18n.t(&quot;Nie&quot;)">Nie</option>
+                                    <option value="true" x-text="window.ZenI18n.t(&quot;Tak&quot;)">Tak</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label><span x-text="window.ZenI18n.t(&quot;Treść stopki&quot;)">Treść stopki</span></label>
+                                <input type="text" x-model="settingsForm.ui_footer_text">
+                            </div>
+                            </div>
                         </div>
 
                         <!-- ═══ SZABLONY WYGLĄDU ═══ -->
@@ -649,11 +727,20 @@
                                 </select>
                                 <p class="text-xs text-gray-500 mt-2" x-text="window.ZenI18n.t('Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.')">Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.</p>
                             </div>
-                        </div>
-
-                        <!-- ═══ KOLORY ═══ -->
-                        <div x-show="settingsTab === &#x27;colors&#x27;" x-cloak>
-                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Kolory motywu&quot;)">Kolory motywu</span></h2>
+                            <div x-show="(settingsForm.ui_template || 'classic') === 'classic'" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="font-semibold mb-2" x-text="window.ZenI18n.t('Wariant kolorystyczny')"></h3>
+                                <p class="text-sm text-gray-500 mb-4" x-text="window.ZenI18n.t('Wybierz gotową paletę lub dopasuj kolory poniżej.')"></p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" role="group" :aria-label="window.ZenI18n.t('Wariant kolorystyczny')">
+                                    <template x-for="palette in classicPalettes" :key="palette.id">
+                                        <button type="button" @click="selectClassicPalette(palette)" :aria-pressed="isClassicPaletteSelected(palette)" class="flex items-center gap-3 p-3 rounded-xl border text-left text-sm transition" :class="isClassicPaletteSelected(palette) ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-gray-200 dark:border-gray-700'">
+                                            <span class="flex gap-1" aria-hidden="true"><span class="w-6 h-6 rounded-full" :style="{backgroundColor: palette.primary}"></span><span class="w-6 h-6 rounded-full" :style="{backgroundColor: palette.secondary}"></span></span>
+                                            <span x-text="window.ZenI18n.t(palette.label)"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <h3 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Kolory motywu&quot;)">Kolory motywu</span></h3>
                             <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Główny kolor aplikacji i akcenty.&quot;)">Główny kolor aplikacji i akcenty.</span></p>
 
                             <div class="settings-row">
@@ -680,6 +767,7 @@
                                     <div class="px-4 py-2 rounded-lg text-white font-medium text-sm" :style="&#x27;background:&#x27; + (settingsForm.brand_color_secondary || &#x27;#6366f1&#x27;)"><span x-text="window.ZenI18n.t(&quot;Przycisk poboczny&quot;)">Przycisk poboczny</span></div>
                                     <div class="px-4 py-2 rounded-lg border font-medium text-sm" :style="&#x27;color:&#x27; + (settingsForm.brand_color_primary || &#x27;#7e3af2&#x27;) + &#x27;; border-color:&#x27; + (settingsForm.brand_color_primary || &#x27;#7e3af2&#x27;)"><span x-text="window.ZenI18n.t(&quot;Outline&quot;)">Outline</span></div>
                                 </div>
+                            </div>
                             </div>
                         </div>
 
@@ -726,24 +814,6 @@
                                     <label><span x-text="window.ZenI18n.t(&quot;Strona WWW&quot;)">Strona WWW</span></label>
                                     <input type="text" x-model="settingsForm.company_www">
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- ═══ INTERFEJS ═══ -->
-                        <div x-show="settingsTab === &#x27;ui&#x27;" x-cloak>
-                            <h2 class="settings-section-title"><span x-text="window.ZenI18n.t(&quot;Interfejs&quot;)">Interfejs</span></h2>
-                            <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Dodatkowe opcje widoku.&quot;)">Dodatkowe opcje widoku.</span></p>
-
-                            <div class="settings-field">
-                                <label><span x-text="window.ZenI18n.t(&quot;Pokaż stopkę w aplikacji&quot;)">Pokaż stopkę w aplikacji</span></label>
-                                <select x-model="settingsForm.ui_show_footer">
-                                    <option value="false" x-text="window.ZenI18n.t(&quot;Nie&quot;)">Nie</option>
-                                    <option value="true" x-text="window.ZenI18n.t(&quot;Tak&quot;)">Tak</option>
-                                </select>
-                            </div>
-                            <div class="settings-field">
-                                <label><span x-text="window.ZenI18n.t(&quot;Treść stopki&quot;)">Treść stopki</span></label>
-                                <input type="text" x-model="settingsForm.ui_footer_text">
                             </div>
                         </div>
 
@@ -1159,7 +1229,7 @@
                                                     <div class="p-3.5 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/40">
                                                         <div class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2" x-text="window.ZenI18n.t(&#x27;Dostępne zmienne (kliknij, aby wstawić do treści)&#x27;)">Dostępne zmienne</div>
                                                         <div class="flex flex-wrap gap-1.5">
-                                                            <template x-for="varName in (selectedEmailTemplate.variables || &#x27;&#x27;).split(&#x27;, &#x27;)" :key="varName">
+                                                            <template x-for="varName in emailTemplateVariables()" :key="varName">
                                                                 <button type="button" @click="emailTemplateForm.body_html += &#x27; &#x27; + varName"
                                                                         class="px-2 py-1 text-xs font-mono bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 rounded-md transition-colors"
                                                                         x-text="varName"></button>

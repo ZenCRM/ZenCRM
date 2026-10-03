@@ -237,14 +237,14 @@ window.ZenModules.sms = function () {
             return onlineDev || this.smsDevices[0];
         },
 
-        async makePhoneCall(targetPhone = null, targetName = null) {
+        async makePhoneCall(targetPhone = null, targetName = null, context = null) {
             if (!this.smsDevices || this.smsDevices.length === 0) {
                 this.notify(window.ZenI18n.t('Musisz najpierw dodać telefon w zakładce Telefonia & SMS'), 'warning');
                 return;
             }
             let phone = targetPhone;
-            let clientId = null;
-            if (this.detailView && this.detailView.type === 'client') {
+            let clientId = context?.clientId || null;
+            if (!context && this.detailView && this.detailView.type === 'client') {
                 clientId = this.detailView.data?.id || null;
                 if (!phone) {
                     const firstWithPhone = (this.detailView.contacts || []).find(c => c.phone);
@@ -254,7 +254,7 @@ window.ZenModules.sms = function () {
                         phone = this.detailView.data.phone;
                     }
                 }
-            } else if (this.detailView) {
+            } else if (!context && this.detailView) {
                 clientId = this.detailView.data?.client_id || null;
                 if (!phone) {
                     phone = this.detailView.data?.phone || '';

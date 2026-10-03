@@ -69,3 +69,30 @@ class SettingsAccessTest(unittest.TestCase):
         db.session.commit()
         for path in ('/api/settings', '/api/settings/full', '/api/settings/ui'):
             self.assertEqual(self.client.get(path, headers=self.headers['admin']).status_code, 403)
+
+    def test_gus_default_secret_storage_and_preservation(self):
+        from unittest.mock import patch
+        with patch('app.services.gus_service.requests.Session') as network:
+            response = self.client.get('/api/clients/gus?nip=5261040828', headers=self.headers['admin'])
+            self.assertEqual(response.status_code, 403)
+            network.assert_not_called()
+        initial = self.client.get('/api/settings', headers=self.headers['admin']).json
+        self.assertEqual(initial['gus_enabled'], 'false')
+        response = self.client.put('/api/settings', headers=self.headers['admin'], json={'gus_enabled': True, 'gus_api_key': 'private-gus-key'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['gus_enabled'], 'true')
+        self.assertTrue(response.json['gus_api_key_set'])
+        self.assertEqual(response.json['gus_api_key'], '')
+        for path in ('/api/settings', '/api/settings/full', '/api/settings/ui', '/api/settings/public'):
+            response = self.client.get(path, headers=self.headers['admin'])
+            self.assertNotIn('private-gus-key', response.get_data(as_text=True))
+        full = self.client.get('/api/settings/full', headers=self.headers['admin']).json
+        self.assertTrue(next(item for item in full if item['key'] == 'gus_api_key')['configured'])
+        ui = self.client.get('/api/settings/ui', headers=self.headers['employee']).json
+        self.assertEqual(ui['gus_enabled'], 'true')
+        self.assertNotIn('gus_api_key', ui)
+        self.assertEqual(self.client.put('/api/settings', headers=self.headers['employee'], json={'gus_enabled': False}).status_code, 403)
+        saved = self.client.put('/api/settings', headers=self.headers['admin'], json={'gus_enabled': False, 'gus_api_key': ''})
+        self.assertEqual(saved.json['gus_enabled'], 'false')
+        self.assertEqual(Setting.get_value('gus_api_key'), 'private-gus-key')
+        self.assertEqual(self.client.get('/api/clients/gus?nip=5261040828', headers=self.headers['admin']).status_code, 403)

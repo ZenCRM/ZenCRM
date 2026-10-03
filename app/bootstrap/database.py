@@ -12,6 +12,10 @@ def initialize_database(app):
         # create_all does not add columns to installations created before these features.
         with db.engine.begin() as conn:
             inspector = db.inspect(conn)
+            client_columns = {c["name"] for c in inspector.get_columns("clients")}
+            for name, length in {'nip': 20, 'regon': 14, 'krs': 10, 'street': 200, 'building_number': 20, 'apartment_number': 20, 'postal_code': 20, 'city': 120, 'country': 120}.items():
+                if name not in client_columns:
+                    conn.execute(db.text(f"ALTER TABLE clients ADD COLUMN {name} VARCHAR({length})"))
             if 'translation_languages' in inspector.get_table_names() and 'base_locale' not in {c['name'] for c in inspector.get_columns('translation_languages')}:
                 conn.execute(db.text("ALTER TABLE translation_languages ADD COLUMN base_locale VARCHAR(16) NOT NULL DEFAULT 'pl'"))
             if 'created_by_id' not in {c['name'] for c in inspector.get_columns('attachments')}:

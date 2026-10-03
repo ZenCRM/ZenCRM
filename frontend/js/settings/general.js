@@ -13,9 +13,15 @@ window.ZenSettings.general = function () { return {
                 } else {
                     const items = await this.api('/settings/full');
                     const obj = {};
-                    for (const it of items) obj[it.key] = it.value;
+                    for (const it of items) {
+                        obj[it.key] = it.value;
+                        if (it.key === 'gus_api_key') obj.gus_api_key_set = Boolean(it.configured);
+                    }
                     this.settingsForm = obj;
                 }
+                if (!this.settingsForm.client_company_provider) this.settingsForm.client_company_provider = this.settingsForm.gus_enabled === 'true' ? 'gus' : 'off';
+                this.clientStatusDraft = this.clientStatuses.map(s => ({...s}));
+                this.clientMetricDraft = this.clientMetrics.map(m => ({id: m.id, color: m.color}));
                 try { this.customLeadStages = JSON.parse(this.settingsForm.lead_stages || 'null'); } catch (_) { this.customLeadStages = null; }
                 try { const stages = JSON.parse(this.settingsForm.task_stages || 'null'); if (Array.isArray(stages) && stages.length >= 2) this.taskStatusStages = stages; } catch (_) {}
                 try {

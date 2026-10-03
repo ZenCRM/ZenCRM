@@ -40,19 +40,25 @@
         </div>
 
         <!-- FORM BODY (RESPONSIVE GRID) -->
-        <form @submit.prevent="save()" class="flex-1 overflow-y-auto p-6 space-y-5">
+        <form @submit.prevent="save()" :class="{'zen-lead-edit-form': (modal.view || currentView) === 'leads', 'zen-task-edit-form': (modal.view || currentView) === 'tasks'}" class="flex-1 overflow-y-auto p-6 space-y-5">
+            <p x-show="(modal.view || currentView) === 'clients' && modal.form.address" class="text-sm text-gray-500"><span x-text="window.ZenI18n.t('Zapisany adres:')"></span> <span x-text="modal.form.address"></span></p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <template x-for="field in fieldsFor(modal.view || currentView)" :key="field.key">
-                    <div :class="(['textarea', 'document-relation', 'multi-user-select', 'range', 'teams-select', 'template-select'].includes(field.type) || ['name', 'title', 'address', 'notes', 'content', 'description'].includes(field.key)) ? 'md:col-span-2' : 'md:col-span-1'">
+                    <div :class="(((modal.view || currentView) === 'tasks' && (field.key === 'due_date' || taskFormSection(field.key))) || ((modal.view || currentView) === 'leads' && field.key === 'assignee_id') || ['lead-stage', 'textarea', 'document-relation', 'multi-user-select', 'range', 'teams-select', 'template-select'].includes(field.type) || ['name', 'title', 'address', 'notes', 'content', 'description'].includes(field.key)) ? 'md:col-span-2' : 'md:col-span-1'">
+
+                        <template x-if="(modal.view || currentView) === 'leads' && ['title', 'stage', 'assignee_id'].includes(field.key)"><div class="zen-lead-form-section"><h4 x-text="window.ZenI18n.t(field.key === 'title' ? 'Szansa sprzedaży' : field.key === 'stage' ? 'Etap i prognoza' : 'Opiekun i notatki')"></h4></div></template>
+                        <template x-if="field.type === 'lead-stage'"><div class="zen-lead-stage-track zen-lead-form-stages" role="group" :aria-label="field.label"><template x-for="stage in leadStages" :key="stage.id"><button type="button" :style="leadStageStyle(stage.id)" :aria-pressed="modal.form.stage === stage.id" @click="modal.form.stage = stage.id"><span class="zen-lead-stage-dot"></span><span x-text="stage.label"></span></button></template></div></template>
+                        <template x-if="(modal.view || currentView) === 'tasks' && taskFormSection(field.key)"><div class="zen-task-form-section"><h4 x-text="taskFormSection(field.key)"></h4></div></template>
 
                         <!-- Etykieta pola (z wyjątkiem checkbox) -->
-                        <template x-if="field.type !== 'checkbox'">
+                        <template x-if="!['checkbox', 'lead-stage'].includes(field.type)">
                             <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1.5">
                                 <span x-text="field.label"></span>
                                 <span x-show="field.required && (!modal.editingId || field.key !== 'password')" class="text-red-500 ml-1 font-bold">*</span>
                             </label>
                         </template>
 
+                        <template x-if="(modal.view || currentView) === 'tasks' && field.key === 'priority'"><div class="zen-task-priorities" role="group" :aria-label="field.label"><template x-for="option in field.options" :key="option.value"><button type="button" :class="option.value" :aria-pressed="modal.form.priority === option.value" @click="modal.form.priority=option.value"><span class="zen-task-priority-dot"></span><span x-text="option.label"></span></button></template></div></template>
                         <!-- CHECKBOX -->
                         <template x-if="field.type === 'checkbox'">
                             <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-800/40 hover:bg-gray-100/60 dark:hover:bg-gray-750 cursor-pointer transition select-none">
@@ -72,7 +78,7 @@
                         </template>
 
                         <!-- STANDARD SELECT -->
-                        <template x-if="field.type === 'select'">
+                        <template x-if="field.type === 'select' && !((modal.view || currentView) === 'tasks' && field.key === 'priority')">
                             <select x-model="modal.form[field.key]" :required="field.required"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
                                 <option value="" x-text="window.ZenI18n.t('— wybierz —')">— wybierz —</option>
@@ -288,12 +294,23 @@
                         </template>
 
                         <!-- STANDARD INPUT (EXCLUDES ALL SPECIAL TYPES INCLUDING project-select & teams-select!) -->
-                        <template x-if="!['textarea','select','client-select','project-select','teams-select','user-select','template-select','document-type-select','catalog-select','task-assignees','multi-user-select','document-relation','lead-select','checkbox','range'].includes(field.type)">
+                        <template x-if="!['lead-stage','textarea','select','client-select','project-select','teams-select','user-select','template-select','document-type-select','catalog-select','task-assignees','multi-user-select','document-relation','lead-select','checkbox','range'].includes(field.type)">
                             <input :type="field.type" x-model="modal.form[field.key]"
                                    :required="(field.key === 'password' && modal.editingId) ? false : Boolean(field.required)"
+                                   :min="(modal.view || currentView) === 'leads' && field.key === 'value' ? 0 : null" :step="field.key === 'value' ? '0.01' : null"
                                    :minlength="field.type === 'password' ? 10 : null"
+                                   :placeholder="(modal.view || currentView) === 'tasks' && field.key === 'title' ? window.ZenI18n.t('Np. przygotować ofertę dla klienta') : null"
                                    :autocomplete="field.type === 'password' ? 'new-password' : null"
                                    class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 placeholder-gray-400 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
+                        </template>
+
+                        <template x-if="(modal.view || currentView) === 'tasks' && field.key === 'due_date'"><div class="zen-task-date-shortcuts"><button type="button" @click="modal.form.due_date=taskFormDate(0,modal.form.due_date)" x-text="window.ZenI18n.t('Dzisiaj')"></button><button type="button" @click="modal.form.due_date=taskFormDate(1,modal.form.due_date)" x-text="window.ZenI18n.t('Jutro')"></button><button type="button" x-show="!field.required" @click="modal.form.due_date=''" x-text="window.ZenI18n.t('Bez terminu')"></button></div></template>
+                        <template x-if="(modal.view || currentView) === 'clients' && field.key === 'nip' && gusSearchEnabled">
+                            <div class="mt-2">
+                                <button type="button" @click="lookupClientGus()" :disabled="gusLookup.loading || !modal.form.nip" class="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm disabled:opacity-50" x-text="gusLookup.loading ? window.ZenI18n.t('Wyszukiwanie…') : (companyProvider === 'mf' ? window.ZenI18n.t('Wyszukaj firmę w MF') : window.ZenI18n.t('Wyszukaj firmę w GUS'))"></button>
+                                <p role="alert" class="text-sm text-red-600 mt-2" x-show="gusLookup.error" x-text="gusLookup.error"></p>
+                                <p role="status" class="text-sm text-green-600 mt-2" x-show="gusLookup.message" x-text="gusLookup.message"></p>
+                            </div>
                         </template>
 
                     </div>
@@ -438,7 +455,7 @@
                             class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold inline-flex items-center gap-2 shadow-xs transition disabled:opacity-50">
                         <svg x-show="savingRecord" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         <svg x-show="!savingRecord" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span x-text="window.ZenI18n.t('Zapisz')">Zapisz</span>
+                        <span x-text="window.ZenI18n.t((modal.view || currentView) === 'tasks' ? (modal.editingId ? 'Zapisz zmiany' : 'Dodaj zadanie') : (modal.view || currentView) === 'leads' ? (modal.editingId ? 'Zapisz zmiany' : 'Dodaj lead') : 'Zapisz')">Zapisz</span>
                     </button>
                 </div>
             </div>

@@ -14,6 +14,35 @@ class BoardAndAvatarTest(unittest.TestCase):
     setUp = task_tests.TaskPermissionsTest.setUp
     tearDown = task_tests.TaskPermissionsTest.tearDown
     call = task_tests.TaskPermissionsTest.call
+    def test_lead_last_action_and_probability(self):
+        from app.models.comment import Comment
+        from app.models.activity import Activity
+        lead = Lead(title='Historia', stage='new')
+        db.session.add(lead); db.session.flush()
+        now = datetime.utcnow()
+        db.session.add_all([
+            Activity(entity_type='lead', entity_id=lead.id, action='created', description='Utworzono', created_at=now-timedelta(minutes=2)),
+            Comment(entity_type='lead', entity_id=lead.id, kind='call', content='Ustalono termin rozmowy', created_at=now),
+            Activity(entity_type='lead', entity_id=lead.id, action='call', description='Rozmowa', created_at=now+timedelta(seconds=1)),
+        ])
+        db.session.commit()
+        response = self.client.get(f'/api/leads/{lead.id}', headers=self.headers())
+        self.assertEqual(response.get_json()['last_action']['content'], 'Ustalono termin rozmowy')
+        listing = self.client.get('/api/leads', headers=self.headers()).get_json()
+        self.assertEqual(next(x for x in listing if x['id']==lead.id)['last_action']['kind'], 'call')
+        db.session.add(Activity(entity_type='lead', entity_id=lead.id, action='updated', description='Zaktualizowano lead', created_at=now+timedelta(minutes=2)))
+        empty = Lead(title='Tylko aktualizacja', stage='new')
+        db.session.add(empty); db.session.flush()
+        db.session.add(Activity(entity_type='lead', entity_id=empty.id, action='updated', description='Zaktualizowano lead'))
+        db.session.commit()
+        self.assertEqual(self.client.get(f'/api/leads/{lead.id}', headers=self.headers()).get_json()['last_action']['kind'], 'call')
+        self.assertEqual(self.client.get(f'/api/leads/{empty.id}', headers=self.headers()).get_json()['last_action']['kind'], 'updated')
+        response = self.client.put(f'/api/leads/{lead.id}', headers=self.headers(), json={'probability':101})
+        self.assertEqual(response.status_code,400)
+        response = self.client.put(f'/api/leads/{lead.id}', headers=self.headers(), json={'probability':65,'stage':'contacted'})
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.get_json()['probability'],65)
+
     def test_custom_stages_persist_and_stats(self):
         stages = copy.deepcopy(DEFAULT_STAGES)
         stages.append({'id':'review','label':'Weryfikacja','accent':'#007fce'})

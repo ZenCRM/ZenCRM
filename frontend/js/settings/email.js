@@ -1,6 +1,11 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.email = function () { return {
+        emailTemplateVariables() {
+            const value = this.selectedEmailTemplate?.variables;
+            const items = Array.isArray(value) ? value : (typeof value === 'string' ? value.split(',') : []);
+            return [...new Set(items.filter(v => typeof v === 'string').map(v => v.trim()).filter(Boolean))];
+        },
         async loadEmailTemplates() {
             try {
                 const list = await this.api('/emails/templates');
@@ -147,7 +152,7 @@ window.ZenSettings.email = function () { return {
             const compEmail = this.settingsForm?.company_email || 'kontakt@twojadomena.pl';
             const rawLogo = this.settingsForm?.brand_logo_light || this.settingsForm?.helpdesk_logo || '/logo.png';
             const fullLogoUrl = rawLogo.startsWith('http') ? rawLogo : (window.location.origin + rawLogo);
-            const logoTag = `<img src="${fullLogoUrl}" alt="${compName}" style="max-height: 46px; max-width: 220px; object-fit: contain; display: inline-block;" onerror="this.style.display='none'" />`;
+            const logoTag = `<img src="${fullLogoUrl}" alt="${compName}" style="max-height: 46px; max-width: 220px; object-fit: contain; display: inline-block;" />`;
             const logoHeader = `<div style="text-align: left; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb;">${logoTag}</div>`;
 
             const sampleContext = {

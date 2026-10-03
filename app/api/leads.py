@@ -1,3 +1,4 @@
+from ..utils.client_statuses import default_status
 import hmac
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
@@ -13,6 +14,39 @@ from ..utils.activity import log_activity
 
 leads_bp = Blueprint('leads', __name__)
 
+def validate_probability(data):
+    value = data.get('probability')
+    if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float)) or value != int(value) or not 0 <= value <= 100):
+        raise ValueError('Szansa musi wynosić od 0 do 100%.')
+
+
+def serialize_leads(items):
+    from sqlalchemy import func
+    from ..models.comment import Comment
+    from ..models.activity import Activity
+    ids = [item.id for item in items]
+    latest = {}
+    updates = {}
+    if ids:
+        for model, update_only in ((Comment, False), (Activity, False), (Activity, True)):
+            query = db.session.query(model.entity_id, func.max(model.id).label('latest_id')).filter(model.entity_type == 'lead', model.entity_id.in_(ids))
+            if model is Activity:
+                query = query.filter(Activity.action == 'updated') if update_only else query.filter(~Activity.action.in_(['comment', 'call', 'email', 'updated']))
+            grouped = query.group_by(model.entity_id).subquery()
+            for entry in model.query.join(grouped, model.id == grouped.c.latest_id).all():
+                target = updates if update_only else latest
+                previous = target.get(entry.entity_id)
+                if previous is None or entry.created_at > previous.created_at:
+                    target[entry.entity_id] = entry
+    result = []
+    for item in items:
+        data = item.to_dict()
+        entry = latest.get(item.id) or updates.get(item.id)
+        data['last_action'] = {'kind': entry.kind if isinstance(entry, Comment) else entry.action, 'content': entry.content if isinstance(entry, Comment) else entry.description, 'created_at': entry.created_at.isoformat()} if entry else None
+        result.append(data)
+    return result
+
+
 
 @leads_bp.route('', methods=['GET'])
 @jwt_required()
@@ -23,7 +57,7 @@ def list_items():
     if cid is not None:
         q = q.filter(Lead.client_id == cid)
     items = q.order_by(Lead.id.desc()).all()
-    return jsonify([x.to_dict() for x in items]), 200
+    return jsonify(serialize_leads(items)), 200
 
 
 @leads_bp.route('/<int:item_id>', methods=['GET'])
@@ -32,7 +66,7 @@ def get_item(item_id):
     lead = db.session.get(Lead, item_id)
     if not lead:
         return jsonify({'error': 'Lead nie istnieje'}), 404
-    return jsonify(lead.to_dict()), 200
+    return jsonify(serialize_leads([lead])[0]), 200
 
 
 @leads_bp.route('', methods=['POST'])
@@ -40,12 +74,13 @@ def get_item(item_id):
 def create_item():
     data = request.get_json(silent=True) or {}
     try:
+        validate_probability(data)
         lead = build_model(Lead, data)
         db.session.add(lead)
         db.session.flush()
         log_activity('lead', lead.id, 'created', f'Utworzono lead: {lead.title}')
         db.session.commit()
-        return jsonify(lead.to_dict()), 201
+        return jsonify(serialize_leads([lead])[0]), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
@@ -58,10 +93,12 @@ def update_item(item_id):
     if not lead:
         return jsonify({'error': 'Lead nie istnieje'}), 404
     try:
-        apply_payload(lead, request.get_json(silent=True) or {})
+        data = request.get_json(silent=True) or {}
+        validate_probability(data)
+        apply_payload(lead, data)
         log_activity('lead', lead.id, 'updated', 'Zaktualizowano lead')
         db.session.commit()
-        return jsonify(lead.to_dict()), 200
+        return jsonify(serialize_leads([lead])[0]), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
@@ -115,7 +152,7 @@ def convert_lead(item_id):
             phone=data.get('phone'),
             company=data.get('company'),
             address=data.get('address'),
-            status='active',
+            status=default_status('active'),
             notes=data.get('notes') or f'Utworzony z leada #{lead.id}: {lead.title}',
             assignee_id=lead.assignee_id,
         )
@@ -209,7 +246,7 @@ def webhook_submit_lead():
                 email=email or None,
                 phone=phone or None,
                 company=data.get('company') or None,
-                status='prospect'
+                status=default_status('prospect')
             )
             db.session.add(cl)
             db.session.flush()

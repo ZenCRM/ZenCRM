@@ -1552,6 +1552,11 @@ main .w-full {
     top: 20px;
 }
 .dark .settings-nav { background: #1f2937; border-color: #374151; }
+.settings-nav-group + .settings-nav-group { margin-top: 12px; padding-top: 12px; border-top: 1px solid #eef0f5; }
+.settings-nav-heading { margin: 0; padding: 6px 12px 8px; font-size: 10px; font-weight: 700; line-height: 1.5; letter-spacing: .08em; text-transform: uppercase; color: #64748b; }
+.dark .settings-nav-group + .settings-nav-group { border-color: #374151; }
+.dark .settings-nav-heading { color: #94a3b8; }
+
 
 .settings-nav-item {
     display: flex;

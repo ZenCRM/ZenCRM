@@ -1,5 +1,72 @@
 window.ZenModules = window.ZenModules || {};
 window.ZenModules.records = function () { return {
+        gusLookup: { loading: false, error: '', message: '' },
+        get companyProvider() {
+            return this.settingsForm?.client_company_provider || (this.settingsForm?.gus_enabled === 'true' ? 'gus' : 'off');
+        },
+        get gusSearchEnabled() { return ['gus', 'mf'].includes(this.companyProvider); },
+        get clientStatuses() {
+            let statuses;
+            try { statuses = JSON.parse(this.settingsForm?.client_statuses || 'null'); } catch (_) {}
+            return Array.isArray(statuses) && statuses.length ? statuses : [
+                {id: 'active', label: window.ZenI18n.t('Aktywny'), accent: '#16a34a'},
+                {id: 'inactive', label: window.ZenI18n.t('Nieaktywny'), accent: '#64748b'},
+                {id: 'prospect', label: window.ZenI18n.t('Potencjalny'), accent: '#ca8a04'},
+            ];
+        },
+        get availableClientMetrics() {
+            return [
+                {id: 'all', label: window.ZenI18n.t('Wszyscy klienci'), color: '#007fce', icon: 'user'},
+                ...this.clientStatuses.map(s => ({id: 'status:' + s.id, label: s.label, color: s.accent, icon: 'flag'})),
+                {id: 'assigned', label: window.ZenI18n.t('Z opiekunem'), color: '#16886e', icon: 'user'},
+                {id: 'unassigned', label: window.ZenI18n.t('Bez opiekuna'), color: '#64748b', icon: 'user'},
+            ];
+        },
+        get clientMetrics() {
+            let selected;
+            try { selected = JSON.parse(this.settingsForm?.client_metrics || 'null'); } catch (_) {}
+            if (!Array.isArray(selected)) selected = ['all', 'status:active', 'status:prospect', 'assigned'].map(id => ({id}));
+            return selected.slice(0, 6).map(metric => {
+                const option = this.availableClientMetrics.find(m => m.id === metric.id);
+                return option ? {...option, color: /^#[0-9a-fA-F]{6}$/.test(metric.color || '') ? metric.color : option.color} : null;
+            }).filter(Boolean);
+        },
+        clientMetricCount(id) {
+            if (id === 'all') return this.clients.length;
+            if (id === 'assigned') return this.clients.filter(c => c.assignee_id || c.assignee).length;
+            if (id === 'unassigned') return this.clients.filter(c => !c.assignee_id && !c.assignee).length;
+            return this.clients.filter(c => c.status === id.slice(7)).length;
+        },
+        clientMetricStyle(metric) {
+            const color = /^#[0-9a-fA-F]{6}$/.test(metric.color || '') ? metric.color : '#007fce';
+            const rgb = [1, 3, 5].map(offset => parseInt(color.slice(offset, offset + 2), 16));
+            const text = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000 > 155 ? '#14283d' : '#ffffff';
+            return {'--client-metric-color': color, '--client-metric-text': text};
+        },
+        clientStatusLabel(status) { return this.clientStatuses.find(s => s.id === status)?.label || status; },
+        clientStatusStyle(status) {
+            const color = this.clientStatuses.find(s => s.id === status)?.accent;
+            return /^#[0-9a-fA-F]{6}$/.test(color || '') ? {color, backgroundColor: color + '18'} : {};
+        },
+        async lookupClientGus() {
+            if (!this.gusSearchEnabled || this.gusLookup.loading) return;
+            const form = this.modal.form;
+            const nip = String(form.nip || '').replace(/[\s-]/g, '');
+            const state = this.gusLookup = { loading: true, error: '', message: '' };
+            try {
+                if (!/^\d{10}$/.test(nip)) throw new Error(window.ZenI18n.t('Podaj poprawny NIP (10 cyfr).'));
+                const company = await this.api('/clients/company-lookup?nip=' + encodeURIComponent(nip));
+                if (!this.modal.open || this.modal.form !== form || String(form.nip || '').replace(/[\s-]/g, '') !== nip) return;
+                for (const key of ['company', 'nip', 'regon', 'street', 'building_number', 'apartment_number', 'postal_code', 'city', 'country']) {
+                    form[key] = company[key] || '';
+                }
+                if (company.krs) form.krs = company.krs;
+                if (company.address !== undefined) form.address = company.address;
+                if (!form.name) form.name = company.company;
+                state.message = window.ZenI18n.t('Pobrano dane firmy. Sprawdź dane przed zapisaniem.');
+            } catch (error) { state.error = error.message; }
+            finally { state.loading = false; }
+        },
         leadPicker(field) {
             const app = this;
             const form = this.modal.form;
@@ -84,6 +151,8 @@ window.ZenModules.records = function () { return {
                 let field = mod === 'leads' && f.key === 'stage'
                     ? { ...f, options: this.leadStages.map(s => ({ value: s.id, label: s.label })) }
                     : { ...f };
+                if (mod === 'leads' && f.key === 'stage') field.type = 'lead-stage';
+                if (mod === 'clients' && f.key === 'status') field.options = this.clientStatuses.map(s => ({value: s.id, label: s.label}));
                 if (mod === 'leads' && f.key === 'source') {
                     let sources = [];
                     try {
@@ -132,6 +201,10 @@ window.ZenModules.records = function () { return {
                     field.required = true;
                 }
                 return field;
+            }).sort((a, b) => {
+                if (!['leads','tasks'].includes(mod)) return 0;
+                const order = mod === 'tasks' ? ['title','description','due_date','priority','status','reminder_offset','client_id','project_id','lead_id','service_id'] : ['title', 'client_id', 'source', 'stage', 'value', 'expected_close_date', 'probability', 'assignee_id', 'notes'];
+                return order.indexOf(a.key) - order.indexOf(b.key);
             });
         },
 
@@ -250,9 +323,12 @@ window.ZenModules.records = function () { return {
             if (['documents', 'offers'].includes(actionView)) {
                 this.modal.form.data = { ...(this.modal.form.data || {}), custom: { ...(this.modal.form.data?.custom || {}) }, type_fields: { ...(this.modal.form.data?.type_fields || {}) } };
             }
+            if (actionView === 'leads' && !this.modal.form.stage) this.modal.form.stage = defaultStage || this.leadStages[0]?.id;
             if (actionView === 'leads' && this.modal.form.probability == null) {
                 this.modal.form.probability = 0;
             }
+            if (actionView === 'tasks' && !item) Object.assign(this.modal.form, {status:'todo',priority:'medium',due_date:this.taskFormDate(1),reminder_offset:''});
+            if (actionView === 'clients' && !item) this.modal.form.status = this.clientStatuses.some(s => s.id === 'active') ? 'active' : this.clientStatuses[0].id;
             this.modal.lockedRelations = context?.lockedRelations || [];
             if (!item && context?.prefill) Object.assign(this.modal.form, context.prefill);
             if (actionView === 'documents') this.syncDocumentTypeSelection();
@@ -268,6 +344,7 @@ window.ZenModules.records = function () { return {
             if (actionView === 'users') {
                 this.modal.form.password = '';
             }
+            this.gusLookup = { loading: false, error: '', message: '' };
             this.modal.error = '';
             this.modal.open = true;
             this.ensureLookups();
@@ -277,10 +354,22 @@ window.ZenModules.records = function () { return {
                 if (item && item.id) {
                     this.loadTaskAssignees(item.id);
                 } else {
-                    this.taskAssigneesUI = [];
+                    this.taskAssigneesUI = this.user?.id ? [{user_id:Number(this.user.id),user:{...this.user},status:'pending',comment:''}] : [];
                 }
             }
             return true;
+        },
+
+        taskFormDate(days, existing = null) {
+            const date=new Date();date.setDate(date.getDate()+days);
+            const time=typeof existing==='string' && /T\d{2}:\d{2}/.test(existing) ? existing.split('T')[1].slice(0,5) : '09:00';
+            return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}T${time}`;
+        },
+        taskFormSection(key) {
+            if(key==='title') return window.ZenI18n.t('Co trzeba zrobić?');
+            if(key==='due_date') return window.ZenI18n.t('Termin i organizacja');
+            const relations=this.fieldsFor('tasks').filter(field=>['client_id','project_id','lead_id','service_id'].includes(field.key));
+            return key===relations[0]?.key ? window.ZenI18n.t('Powiązania zadania') : '';
         },
 
         syncDocumentTypeSelection() {

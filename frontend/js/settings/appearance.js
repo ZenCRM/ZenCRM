@@ -1,7 +1,23 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.appearance = function () { return {
+        classicPalettes: [
+            {id: 'blue', label: 'Niebieski', primary: '#007fce', secondary: '#009fb9'},
+            {id: 'green', label: 'Zielony', primary: '#16886e', secondary: '#0891b2'},
+            {id: 'violet', label: 'Fioletowy', primary: '#7e3af2', secondary: '#6366f1'},
+            {id: 'amber', label: 'Bursztynowy', primary: '#b45309', secondary: '#c2410c'},
+            {id: 'graphite', label: 'Grafitowy', primary: '#475569', secondary: '#64748b'},
+        ],
+        isClassicPaletteSelected(palette) {
+            return this.settingsForm.brand_color_primary?.toLowerCase() === palette.primary && this.settingsForm.brand_color_secondary?.toLowerCase() === palette.secondary;
+        },
+        selectClassicPalette(palette) {
+            this.settingsForm.brand_color_primary = palette.primary;
+            this.settingsForm.brand_color_secondary = palette.secondary;
+            this.applyTheme();
+        },
         async saveSettings() {
+            if (this.settingsTab === 'clients') { await this.saveClientSettings(); return; }
             if (this.settingsTab === 'helpdesk') {
                 await this.saveHelpdeskSettings();
                 return;
@@ -80,6 +96,20 @@ window.ZenSettings.appearance = function () { return {
                 document.head.appendChild(styleTag);
             }
             styleTag.textContent = `
+                html:not(.theme-modern) .windmill-app {
+                    --wm-accent: ${primary}; --wm-accent-hover: ${this._darken(primary, 15)};
+                    --wm-tint: ${this._lighten(primary, 92)}; --wm-accent-text: ${this._darken(primary, 15)};
+                }
+                html.dark:not(.theme-modern) .windmill-app { --wm-tint: ${this._darken(primary, 65)}; --wm-accent-text: ${this._lighten(primary, 65)}; }
+                html:not(.theme-modern) .windmill-app .zen-client-card { --client-blue: ${primary}; --client-cyan: ${secondary}; }
+                html:not(.theme-modern) .windmill-app .zen-contacts { --metric: ${primary}; --metric-tint: ${this._lighten(primary, 92)}; }
+                html:not(.theme-modern) .windmill-app .zen-tasks { --metric: ${secondary}; --metric-tint: ${this._lighten(secondary, 92)}; }
+                html:not(.theme-modern) .windmill-app .zen-client-card .detail-hero { border-top-color: ${primary}; }
+                html:not(.theme-modern) .windmill-app .zen-section-icon { color: ${primary}; background: ${this._lighten(primary, 92)}; }
+                html:not(.theme-modern) .windmill-app .zen-client-card .ux-button,
+                html:not(.theme-modern) .windmill-app .detail-shell.zen-client-card .ux-next-step .ux-button,
+                html:not(.theme-modern) .windmill-app .detail-shell .detail-hero .zen-convert-button { background: ${primary}!important; }
+
                 .bg-brand-600 { background-color: ${primary} !important; }
                 .bg-brand-700 { background-color: ${this._darken(primary, 15)} !important; }
                 .hover\\:bg-brand-700:hover { background-color: ${this._darken(primary, 15)} !important; }

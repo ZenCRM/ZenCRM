@@ -9,6 +9,16 @@ class Client(db.Model):
     phone = db.Column(db.String(20))
     company = db.Column(db.String(200))
     address = db.Column(db.Text)
+    nip = db.Column(db.String(20))
+    regon = db.Column(db.String(14))
+    krs = db.Column(db.String(10))
+    street = db.Column(db.String(200))
+    building_number = db.Column(db.String(20))
+    apartment_number = db.Column(db.String(20))
+    postal_code = db.Column(db.String(20))
+    city = db.Column(db.String(120))
+    country = db.Column(db.String(120))
+
     status = db.Column(db.String(20), default='active')
     notes = db.Column(db.Text)
     assignee_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -33,6 +43,16 @@ class Client(db.Model):
             'phone': self.phone,
             'company': self.company,
             'address': self.address,
+            'nip': self.nip,
+            'regon': self.regon,
+            'krs': self.krs,
+            'street': self.street,
+            'building_number': self.building_number,
+            'apartment_number': self.apartment_number,
+            'postal_code': self.postal_code,
+            'city': self.city,
+            'country': self.country,
+
             'status': self.status,
             'notes': self.notes,
             'assignee_id': self.assignee_id,

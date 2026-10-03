@@ -280,7 +280,7 @@ function crmApp() {
         },
 
         formatNumber(v)     { return window.ZenHelpers.formatNumber(v); },
-        statusLabel(s)      { return window.ZenHelpers.statusLabel(s); },
+        statusLabel(s)      { return this.clientStatusLabel(s) || window.ZenHelpers.statusLabel(s); },
         priorityLabel(p)    { return window.ZenHelpers.priorityLabel(p); },
         billingLabel(c)     { return window.ZenHelpers.billingLabel(c); },
         offerStatusLabel(s) { return window.ZenHelpers.offerStatusLabel(s); },

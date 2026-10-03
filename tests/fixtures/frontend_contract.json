@@ -74,6 +74,14 @@
       "function": "9d642e3241b54d9931ef0b7be7938a208cbe8ae08d16effd5554a167d60a42b8"
     }
   },
+  "addClientStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "83abdef9b3cf6e6e7cc444e5411319ad4a39a45c3115998845fdc2ff083b1a82"
+    }
+  },
   "addComment": {
     "enumerable": true,
     "configurable": true,
@@ -273,7 +281,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "3e20447ee8182b44d5c78690e58a27cb37ce0788f5b8bb57b496d4e079ae114d"
+      "function": "cd6fb61523d4dc88c5e237187c6ba8bfe274959423bf4c66984c992163d07a2b"
     }
   },
   "archiveFromModal": {
@@ -367,6 +375,12 @@
       "function": "a50fc1896f00e668d84620a95f4b794ccf3ec9572efa074e050667018fae835e"
     }
   },
+  "availableClientMetrics": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "ea1b331d390ec23937c5fc38c77739b82374672b68550ffd22d220893161df7a",
+    "value": null
+  },
   "availableColumns": {
     "enumerable": true,
     "configurable": true,
@@ -438,7 +452,7 @@
   "boardLeads": {
     "enumerable": true,
     "configurable": true,
-    "get": "baa81eadefe1f537ead70aea6eac9ef398d97546ae129435134dc5d0bf5dce1e",
+    "get": "d03a8ecafce96aaba981b2d98bbcddb7629eb1036bb5298a2367b8278785e95f",
     "value": null
   },
   "boardTasks": {
@@ -618,7 +632,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "903d5eaef03a626c0b1b08528b4fb56dea57098ecbae9f0ec14f846022179f39"
+      "function": "78ed4a64af3be82e6643a8f00d2c54a13917fae956aa9e5f70611a928d23a912"
     }
   },
   "changeProjectTaskStage": {
@@ -683,6 +697,85 @@
       "function": "ad481de598c9096a6bb5b9c112bad5cadf6b901ad17e058ece7d576083c703ff"
     }
   },
+  "classicPalettes": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      {
+        "id": "blue",
+        "label": "Niebieski",
+        "primary": "#007fce",
+        "secondary": "#009fb9"
+      },
+      {
+        "id": "green",
+        "label": "Zielony",
+        "primary": "#16886e",
+        "secondary": "#0891b2"
+      },
+      {
+        "id": "violet",
+        "label": "Fioletowy",
+        "primary": "#7e3af2",
+        "secondary": "#6366f1"
+      },
+      {
+        "id": "amber",
+        "label": "Bursztynowy",
+        "primary": "#b45309",
+        "secondary": "#c2410c"
+      },
+      {
+        "id": "graphite",
+        "label": "Grafitowy",
+        "primary": "#475569",
+        "secondary": "#64748b"
+      }
+    ]
+  },
+  "clientMetricChoices": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "f83d8a3f59da201304f595e70a96fa9b7a02b1c43c2bada454e34fa97f034bbc",
+    "value": null
+  },
+  "clientMetricColor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a42b70e3db6bae53c039097b1032fc83898f20c07c50e098f3b48d2ae4018fcb"
+    }
+  },
+  "clientMetricCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2ffa0293b9f51cdde919cb0533bdc164428ba5eef0cf8101c10e7b69272bab01"
+    }
+  },
+  "clientMetricDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "clientMetrics": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "969c5b84adc3aceb86de485abccc36af51cef99d69c252bfa2cd22b775340fc1",
+    "value": null
+  },
+  "clientMetricStyle": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "556f40bfc7c961f7de32bbb4ca9a9a34c3365ab6fca9064172d3152900e35c2e"
+    }
+  },
   "clientName": {
     "enumerable": true,
     "configurable": true,
@@ -696,6 +789,34 @@
     "configurable": true,
     "writable": true,
     "value": []
+  },
+  "clientStatusDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "clientStatuses": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "fbafb43d81289a98c88b0ada1d0976eb58e54058cbf90291da9f0d2ebf2a5c4c",
+    "value": null
+  },
+  "clientStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fe32dde3431d48ed9049e4fedb9a25474b855ec833481d1db4e11610a4c2fc08"
+    }
+  },
+  "clientStatusStyle": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d844aee7b3b306e990df5b8d6be7a036dcdef0cabe72560318987f8cde656ae7"
+    }
   },
   "closeArchivePreview": {
     "enumerable": true,
@@ -828,6 +949,12 @@
     "enumerable": true,
     "configurable": true,
     "writable": true,
+    "value": null
+  },
+  "companyProvider": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "c49f1dc592e575d892a81bcb634d4456056ed6148580313ecea84f6ebb9e6ff3",
     "value": null
   },
   "confirmPasswordReset": {
@@ -1541,6 +1668,14 @@
     "writable": true,
     "value": ""
   },
+  "emailTemplateVariables": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "93fedc7e3f4df68553164e58a41b3855f9ca419264bcedd1a8c33f833b433d19"
+    }
+  },
   "emptyArchive": {
     "enumerable": true,
     "configurable": true,
@@ -1653,7 +1788,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "3d5c0ee90a168f5debf73e55a23f04e01577859afd435bb661c87079c44d0274"
+      "function": "8e159e934ee13781c9e89b7981c1305685996cb2a7527e2ffd18abb50725208e"
     }
   },
   "filteredArchiveItems": {
@@ -1884,7 +2019,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "4979af9b15cf900199630dc475f79d4cd86e66235d4b16468ba3434b8dd37cc4"
+      "function": "8e27b2c5ee61818a31a45e28ace36fd1cf80163c73726474b532f85dd914130c"
     }
   },
   "getTicketTrackingUrl": {
@@ -1915,6 +2050,22 @@
     "enumerable": true,
     "configurable": true,
     "get": "ccd914ddc801c80938fa1694f8a72566af3003f06809286fd4921227aecc427e",
+    "value": null
+  },
+  "gusLookup": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "loading": false,
+      "error": "",
+      "message": ""
+    }
+  },
+  "gusSearchEnabled": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "ad198786c272012884b9a07cb095b8a968bce0d6f24c784fe07f39a5d25b8535",
     "value": null
   },
   "handleHashChange": {
@@ -1996,6 +2147,14 @@
     "configurable": true,
     "writable": true,
     "value": false
+  },
+  "isClassicPaletteSelected": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2da5cd6759c77bf5c8460e4231839174f2a714da064c51a805fd96a780d03b28"
+    }
   },
   "isColumnVisible": {
     "enumerable": true,
@@ -2089,6 +2248,26 @@
     "writable": true,
     "value": 0
   },
+  "leadCardEditor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "id": null,
+      "stage": "",
+      "probability": 0,
+      "saving": false,
+      "error": ""
+    }
+  },
+  "leadClosingOverdue": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d021449e14a1137eb1ac144dd5dfc473411e7d66e0ceeb7f5f502966fe2ae028"
+    }
+  },
   "leadFilter": {
     "enumerable": true,
     "configurable": true,
@@ -2137,6 +2316,12 @@
     "writable": true,
     "value": false
   },
+  "leadSort": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "newest"
+  },
   "leadSources": {
     "enumerable": true,
     "configurable": true,
@@ -2150,11 +2335,25 @@
       "Inne"
     ]
   },
+  "leadStageFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
   "leadStages": {
     "enumerable": true,
     "configurable": true,
     "get": "d81515928448daa5ed0fb924398dc53205a4139aa222708efb938fdde5cbb492",
     "value": null
+  },
+  "leadStageStyle": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ca48528156572e5cdd482205ee736e6858d7c37b5b8eef2f1b1f36b5dd6d464c"
+    }
   },
   "leadWebhookEnabled": {
     "enumerable": true,
@@ -2391,7 +2590,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "6c5c05922f14071b80642770c9f6f5e38667c19fb3321f76f9e09e7b2625dcc6"
+      "function": "3a16f14bc914f5beecaf38f98667c4fe82cd9c0749e3dee85f5bca44899a16c4"
     }
   },
   "loadSmsData": {
@@ -2517,12 +2716,20 @@
       "function": "f3ca4f3acbe5adb55437bb85a1ddf2bc913f2a6c788f6f61151b074ee98ff26c"
     }
   },
+  "lookupClientGus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "392da7329a681cc989b58d9eafff2068c0a4f3a7881fe1e791d10dfaf20a08f7"
+    }
+  },
   "makePhoneCall": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "2887fde9776e280e54b15fb7b630671a5236940378a82469dd1b86d465c3ac25"
+      "function": "6ffb0ff1798c7ae6744f3e0dc6ef887ba0b4dac762009c46922f231bfdc2ba17"
     }
   },
   "managedRoles": {
@@ -2896,6 +3103,18 @@
     "writable": true,
     "value": false
   },
+  "newClientStatusColor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "#007fce"
+  },
+  "newClientStatusName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
   "newCustomField": {
     "enumerable": true,
     "configurable": true,
@@ -3222,6 +3441,22 @@
       "function": "00290c8e9d1b3e0a1384ffeacbef1453585fc7d86fa253c7b183d0770caa067f"
     }
   },
+  "openLeadCardEditor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2efc1c3e28bb9b907ff0241de0fefe05d940ca917e59690a6a90d17804a26e1c"
+    }
+  },
+  "openLeadPhone": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bb7b9e1d0b9b34ae9e029b24196c4b2e7f3fefe9d2388e6079d36eaeba311960"
+    }
+  },
   "openLink": {
     "enumerable": true,
     "configurable": true,
@@ -3247,7 +3482,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "f9ed61938ede06fceacb06b135347002b79f774ce583ed5d04f2e74992b281bc"
+      "function": "81b0f644f66cdaddf93fd5cb37447d3fae027b141ebadd1524852e6256675f26"
     }
   },
   "openNewTicketModal": {
@@ -4118,6 +4353,14 @@
       "function": "d506f2bfb1e22a0d31e41c3530e1c087b428a4406f30050d699b6ec5027b2def"
     }
   },
+  "saveClientSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8bd0a700adf7570fd1885a89765432bf7a113146886ee70569a74a6bc4fe6e00"
+    }
+  },
   "saveCustomValues": {
     "enumerable": true,
     "configurable": true,
@@ -4187,7 +4430,15 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "c5fd94346f7ffdb104108445a5df0094866366913c4e8566339d639b906caed6"
+      "function": "200c6e4d726585ac4d7e90f791f699cb68335b113da3dbabf4c804abe18e0e2a"
+    }
+  },
+  "saveLeadCardEditor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a8c3a1d0c02a266ea2b50e92c380e4d6846e7768253a34e9d40b328a0506cfd9"
     }
   },
   "saveLeadSettings": {
@@ -4259,7 +4510,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "f91f318c7e12dcaf746a0700236f703ac515b584178cb8bdeecf6b6597eb830f"
+      "function": "cc082174e8ca9616292cbb58580db95771104c96e78d77f35ca629f2f312140c"
     }
   },
   "saveSmtpSettings": {
@@ -4393,6 +4644,20 @@
     "value": {
       "function": "ac5796ca338ae1da3f2320cae6009eefd3d86a44fdb2d8a6f5079b2dc697d9f7"
     }
+  },
+  "selectClassicPalette": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "48d31cf70c993acaba69e25c433494b7132d442bfb32caaebef9971fa247c2e2"
+    }
+  },
+  "selectedClientMetricCount": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "52b0991f18dba60a6760aafa7b5c116291f03a3718763c31c8bcb7b07024e7e3",
+    "value": null
   },
   "selectedDocumentTypeFields": {
     "enumerable": true,
@@ -4554,6 +4819,14 @@
     "writable": true,
     "value": {
       "function": "da0cfe58be8055a0e096a8e61ba7b322cca4431b9da236bd4c326702fd14f39b"
+    }
+  },
+  "setClientMetricColor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "52eec23e0bc0b50089d0bc2ca669eafe95a33c6ed7e921e97c8d0d99a1923167"
     }
   },
   "setJournalKind": {
@@ -4869,9 +5142,49 @@
           "type": "text"
         },
         {
-          "key": "address",
-          "label": "Adres siedziby",
-          "type": "textarea"
+          "key": "nip",
+          "label": "NIP",
+          "type": "text"
+        },
+        {
+          "key": "regon",
+          "label": "REGON",
+          "type": "text"
+        },
+        {
+          "key": "krs",
+          "label": "KRS (opcjonalnie)",
+          "type": "text"
+        },
+        {
+          "key": "street",
+          "label": "Ulica",
+          "type": "text"
+        },
+        {
+          "key": "building_number",
+          "label": "Numer budynku",
+          "type": "text"
+        },
+        {
+          "key": "apartment_number",
+          "label": "Numer lokalu",
+          "type": "text"
+        },
+        {
+          "key": "postal_code",
+          "label": "Kod pocztowy",
+          "type": "text"
+        },
+        {
+          "key": "city",
+          "label": "Miejscowość",
+          "type": "text"
+        },
+        {
+          "key": "country",
+          "label": "Kraj",
+          "type": "text"
         },
         {
           "key": "status",
@@ -5136,7 +5449,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "7ab716a2f39ca3ba5cb2ee52c322ddd37ab0bc6544029fbfbc44b9793ff45177"
+      "function": "180dbcdda6821c0ec21d74b3bac394e96f54698890795f10c0cb4f07e711618b"
     }
   },
   "stopBoardDrag": {
@@ -5258,6 +5571,22 @@
     "configurable": true,
     "writable": true,
     "value": ""
+  },
+  "taskFormDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b756e8c3d37231fc3d3b4293794e0f6873c4e7791f27ea9d01ed8d0c312148ed"
+    }
+  },
+  "taskFormSection": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "09fdf461655aec28a1ccae9f8b0244876b3803a62d766d5d6d6d1b9b1c0d3504"
+    }
   },
   "taskProgress": {
     "enumerable": true,
@@ -5566,6 +5895,14 @@
     "configurable": true,
     "get": "a2a1f28ce4ed975c8c368af5d8c1a4f46daa72edb030e6dfe3a91ed6ff890e36",
     "value": null
+  },
+  "toggleClientMetric": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9e83d089d573ad5caaef867f74ee6447def02c009a7371979059bdc735f02813"
+    }
   },
   "toggleColumn": {
     "enumerable": true,

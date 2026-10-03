@@ -1,6 +1,68 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.navigation = function () { return {
+        clientMetricDraft: [],
+        get clientMetricChoices() {
+            return [
+                {id: 'all', label: window.ZenI18n.t('Wszyscy klienci'), color: '#007fce'},
+                ...this.clientStatusDraft.map(s => ({id: 'status:' + s.id, label: s.label, color: s.accent})),
+                {id: 'assigned', label: window.ZenI18n.t('Z opiekunem'), color: '#16886e'},
+                {id: 'unassigned', label: window.ZenI18n.t('Bez opiekuna'), color: '#64748b'},
+            ];
+        },
+        get selectedClientMetricCount() {
+            return this.clientMetricDraft.filter(m => this.clientMetricChoices.some(c => c.id === m.id)).length;
+        },
+        toggleClientMetric(choice, enabled) {
+            if (!enabled) { this.clientMetricDraft = this.clientMetricDraft.filter(m => m.id !== choice.id); return; }
+            if (this.selectedClientMetricCount >= 6 || this.clientMetricDraft.some(m => m.id === choice.id)) return;
+            this.clientMetricDraft.push({id: choice.id, color: choice.color});
+        },
+        clientMetricColor(choice) { return this.clientMetricDraft.find(m => m.id === choice.id)?.color || choice.color; },
+        setClientMetricColor(choice, color) {
+            const metric = this.clientMetricDraft.find(m => m.id === choice.id);
+            if (metric) metric.color = color;
+        },
+        clientStatusDraft: [],
+        newClientStatusName: '',
+        newClientStatusColor: '#007fce',
+        addClientStatus() {
+            const label = this.newClientStatusName.trim();
+            if (!label || label.length > 60) {
+                this.settingsError = window.ZenI18n.t('Wpisz nazwę statusu (do 60 znaków).');
+                return;
+            }
+            if (this.clientStatusDraft.length >= 20) {
+                this.settingsError = window.ZenI18n.t('Możesz dodać maksymalnie 20 statusów.');
+                return;
+            }
+            let base = label.toLowerCase().replace(/ł/g, 'l').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            if (!/^[a-z]/.test(base)) base = 'status_' + base;
+            base = base.slice(0, 20).replace(/_+$/g, '') || 'status';
+            let id = base;
+            for (let suffix = 2; this.clientStatusDraft.some(s => s.id === id); suffix++) {
+                const tail = '_' + suffix;
+                id = base.slice(0, 20 - tail.length) + tail;
+            }
+            this.clientStatusDraft.push({id, label, accent: this.newClientStatusColor});
+            this.newClientStatusName = '';
+            this.settingsError = '';
+        },
+        async saveClientSettings() {
+            this.settingsError = ''; this.settingsSaved = '';
+            try {
+                const updated = await this.api('/settings', {method: 'PUT', body: JSON.stringify({
+                    client_company_provider: this.settingsForm.client_company_provider || 'off',
+                    gus_api_key: this.settingsForm.gus_api_key || '',
+                    client_statuses: JSON.stringify(this.clientStatusDraft),
+                    client_metrics: JSON.stringify(this.clientMetricDraft.filter(m => this.clientMetricChoices.some(c => c.id === m.id))),
+                })});
+                this.settingsForm = {...this.settingsForm, ...updated};
+                this.clientStatusDraft = this.clientStatuses.map(s => ({...s}));
+                this.clientMetricDraft = this.clientMetrics.map(m => ({id: m.id, color: m.color}));
+                this.settingsSaved = window.ZenI18n.t('Ustawienia zapisane');
+            } catch (e) { this.settingsError = e.message; }
+        },
         getMenuModuleConfig(id) {
             const current = this.menuPermissionsState[id];
             return {

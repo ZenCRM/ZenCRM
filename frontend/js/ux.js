@@ -71,7 +71,7 @@ window.ZenUX = {
         const j=this.journal; if(j.saving || j.loading) return;
         if(!j.selected || !j.content.trim()) { j.error=window.ZenI18n.t('Wybierz rekord i wpisz treść notatki.'); return; }
         j.saving=true; j.error='';
-        try { const entry=await this.api(j.editingId ? `/comments/${j.editingId}` : '/comments',{method:j.editingId?'PUT':'POST',body:JSON.stringify({entity_type:j.selected._type,entity_id:j.selected.id,kind:j.kind,communication_status:j.status || null,address:j.kind==='note'?null:j.address.trim(),content:j.content.trim()})}); if(j.editingId) j.history=j.history.map(item=>item.id===entry.id?entry:item); else j.history.unshift(entry); j.content=''; j.editingId=null; this.notify(window.ZenI18n.t('Zapisano wpis w historii')); if(this.detailView.open && this.detailView.type===j.selected._type && this.detailView.id===j.selected.id) await this.loadDetail(); }
+        try { const entry=await this.api(j.editingId ? `/comments/${j.editingId}` : '/comments',{method:j.editingId?'PUT':'POST',body:JSON.stringify({entity_type:j.selected._type,entity_id:j.selected.id,kind:j.kind,communication_status:j.status || null,address:j.kind==='note'?null:j.address.trim(),content:j.content.trim()})}); if(j.editingId) j.history=j.history.map(item=>item.id===entry.id?entry:item); else j.history.unshift(entry); if(j.selected._type==='lead') {const lead=this.leads.find(item=>item.id===j.selected.id);if(lead && (!lead.last_action || entry.created_at >= lead.last_action.created_at)) lead.last_action={kind:entry.kind,content:entry.content,created_at:entry.created_at};} j.content=''; j.editingId=null; this.notify(window.ZenI18n.t('Zapisano wpis w historii')); if(this.detailView.open && this.detailView.type===j.selected._type && this.detailView.id===j.selected.id) await this.loadDetail(); }
         catch(e) { j.error=e.message; } finally { j.saving=false; }
     },
 
@@ -144,7 +144,8 @@ window.ZenUX = {
         try { const result = await this.api('/leads/board-settings', {method:'PUT',body:JSON.stringify({stages:this.stageDraft})}); this.customLeadStages = result.stages; this.settingsForm.lead_stages = JSON.stringify(result.stages); this.stageEditorOpen = false; this.$nextTick(() => this.recomputeVisibleCols()); this.notify(window.ZenI18n.t('Zapisano statusy leadów')); }
         catch (e) { this.stageError = e.message; } finally { this.stageSaving = false; }
     },
-    leadSearch: '', leadFilter: '', taskScope: '', taskSearch: '',
+    leadCardEditor: {id:null,stage:'',probability:0,saving:false,error:''},
+    leadSearch: '', leadFilter: '', leadStageFilter: '', leadSort: 'newest', taskScope: '', taskSearch: '',
     notice: null, noticeTimer: null, undoAction: null, savingLead: null, savingTask: null,
     canScrollLeft: false, canScrollRight: false, kanbanLeft: 0,
     dragFrame: null, dragSpeed: 0, dragY: 0, lastDragEnd: 0, detailError: '',
@@ -256,7 +257,16 @@ window.ZenUX = {
         const q = this.leadSearch.trim().toLocaleLowerCase(window.ZenI18n.locale);
         return this.leads.filter(l => (!q || `${l.title} ${this.clientName(l.client_id)} ${l.source || ''}`.toLocaleLowerCase(window.ZenI18n.locale).includes(q))
             && (this.leadFilter !== 'mine' || Number(l.assignee_id) === Number(this.user?.id))
-            && (this.leadFilter !== 'unassigned' || !l.assignee_id));
+            && (this.leadFilter !== 'unassigned' || !l.assignee_id)
+            && (!this.leadStageFilter || l.stage === this.leadStageFilter)).sort((a, b) => {
+                if (this.leadSort === 'value') return Number(b.value || 0) - Number(a.value || 0);
+                if (this.leadSort === 'closing') {
+                    const date = value => value ? new Date(value).getTime() : Infinity;
+                    const aDate = date(a.expected_close_date), bDate = date(b.expected_close_date);
+                    return aDate === bDate ? 0 : aDate - bDate;
+                }
+                return Number(b.id) - Number(a.id);
+            });
     },
     isOverdue(task) {
         return task.status !== 'done' && task.due_date && new Date(task.due_date).getTime() < Date.now();
@@ -333,6 +343,44 @@ window.ZenUX = {
         return [...(this.detailView.tasks || [])].filter(t => t.status !== 'done')
             .sort((a, b) => (a.due_date ? new Date(a.due_date).getTime() : Infinity) - (b.due_date ? new Date(b.due_date).getTime() : Infinity))[0] || null;
     },
+    leadStageStyle(id) {
+        const color = this.leadStages.find(s => s.id === id)?.accent || '#64748b';
+        return {'--lead-stage-color': /^#[0-9a-fA-F]{6}$/.test(color) ? color : '#64748b'};
+    },
+    leadClosingOverdue(lead) {
+        if (!lead?.expected_close_date || ['won', 'lost'].includes(lead.stage)) return false;
+        return lead.expected_close_date.slice(0, 10) < this.localDateKey(new Date());
+    },
+    openLeadCardEditor(lead) {
+        if(this.leadCardEditor.saving) return;
+        this.leadCardEditor={id:this.leadCardEditor.id===lead.id?null:lead.id,stage:lead.stage,probability:lead.probability || 0,saving:false,error:''};
+    },
+    async saveLeadCardEditor(lead) {
+        const draft=this.leadCardEditor;
+        if(draft.saving || this.savingLead || draft.id!==lead.id) return;
+        const probability=Number(draft.probability);
+        if(!Number.isInteger(probability) || probability<0 || probability>100) {draft.error=window.ZenI18n.t('Szansa musi wynosić od 0 do 100%.');return;}
+        draft.saving=true;draft.error='';this.savingLead=lead.id;
+        try {
+            const saved=await this.api(`/leads/${lead.id}`,{method:'PUT',body:JSON.stringify({stage:draft.stage,probability})});
+            Object.assign(lead,saved);
+            const listed=this.leads.find(item=>item.id===lead.id);if(listed) Object.assign(listed,saved);
+            if(this.detailView.type==='lead' && this.detailView.id===lead.id) Object.assign(this.detailView.data,saved);
+            draft.id=null;this.notify(window.ZenI18n.t('Zapisano etap i szansę leada'));
+        } catch(e) {draft.error=e.message;} finally {draft.saving=false;this.savingLead=null;this.$nextTick(()=>this.updateKanbanScroll());}
+    },
+    async openLeadPhone(lead) {
+        const client=(this.clients || []).find(item=>item.id===lead.client_id);
+        this.openJournal('call','lead',{...lead,phone:client?.phone || ''});
+        const journal=this.journal;
+        try {
+            const devices=await this.api('/sms/devices');this.smsDevices=Array.isArray(devices)?devices:(devices.devices || []);
+        } catch(_) {this.smsDevices=[];}
+        try {
+            const history=await this.api(`/sms/entity-history?type=lead&id=${lead.id}`);
+            if(this.journal===journal && !journal.address) journal.address=history.phones?.[0] || '';
+        } catch(_) { /* Manual call notes remain available without telephony. */ }
+    },
     async changeLeadStage(lead, stage) {
         if (!lead || !this.leadStages.some(s => s.id === stage)) return;
         const current = this.leads.find(l => l.id === lead.id) || lead;
@@ -344,8 +392,9 @@ window.ZenUX = {
             // Keep the source DOM intact until the drop finishes and the server confirms.
             const committed = saved.stage || stage;
             lead.stage = committed;
+            if(saved.last_action) lead.last_action=saved.last_action;
             const listed = this.leads.find(l => l.id === lead.id);
-            if (listed) listed.stage = committed;
+            if (listed) {listed.stage = committed;if(saved.last_action) listed.last_action=saved.last_action;}
             if (this.detailView.type === 'lead' && this.detailView.id === lead.id && this.detailView.data) {
                 this.detailView.data.stage = committed;
             }
