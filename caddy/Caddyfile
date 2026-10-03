@@ -1,0 +1,8 @@
+# Caddy obtains and renews the HTTPS certificate for ZENCRM_DOMAIN automatically.
+{$ZENCRM_DOMAIN} {
+	encode zstd gzip
+	header -Server
+	reverse_proxy zencrm:8080 {
+		header_down -Server
+	}
+}

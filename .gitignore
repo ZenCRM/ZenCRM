@@ -23,3 +23,6 @@ __pycache__/
 docs/
 frontend/docs/
 frontend/README.md
+
+# Backup archives written by the backup service
+backups/
