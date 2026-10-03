@@ -181,11 +181,12 @@ Ustaw dwa losowe sekrety o długości co najmniej 32 znaków albo pozostaw je pu
 | <code>JWT_SECRET_KEY</code> | Oddzielny sekret tokenów logowania. |
 | <code>DATABASE_URL</code> | Adres bazy SQLAlchemy; domyślnie SQLite. |
 | <code>PUBLIC_BASE_URL</code> | Publiczny adres CRM używany w linkach powiadomień, np. <code>https://crm.example.com</code>. Ustaw go przed włączeniem maili z helpdesku. |
-| <code>TRUSTED_PROXY_HOPS</code> | Liczba zaufanych pośredników reverse proxy; ustaw tylko gdy aplikacja nie jest dostępna z pominięciem proxy. |
+| <code>TRUSTED_PROXY_HOPS</code> | Liczba zaufanych pośredników reverse proxy; ustaw tylko gdy aplikacja nie jest dostępna z pominięciem proxy. Za reverse proxy jest wymagana, inaczej wszyscy klienci dzielą jeden limit prób logowania. |
+| <code>PREPARE_DATABASE</code> | Domyślnie <code>true</code>: aplikacja migruje bazę przy starcie. Przy kilku procesach gunicorn uruchom najpierw <code>python seed.py</code>, a procesy startuj z <code>false</code> (tak robi obraz Docker). |
 | <code>PORT</code> | Port serwera; lokalnie w przykładach 5000, w kontenerze 8080 (Compose wystawia port 80). |
 | <code>ZENCRM_VERSION</code> | Opcjonalny identyfikator wersji; obraz Docker ustawia go podczas budowania. |
 
-Przed wdrożeniem nowej wersji wykonaj kopię bazy i katalogu przesłanych plików. Aplikacja tworzy brakujące tabele i uzupełnia część starszych schematów przy starcie. Instalację dostępną przez Internet uruchamiaj przez HTTPS i chroń sekrety.
+Przed wdrożeniem nowej wersji wykonaj kopię bazy i katalogu przesłanych plików. Schemat bazy jest wersjonowany migracjami Alembic (<code>migrations/</code>) i aktualizowany przy starcie; instalacje sprzed migracji są jednorazowo uzupełniane i oznaczane wersją bazową. Przed każdą migracją baza SQLite jest kopiowana obok oryginału (<code>*.before-&lt;wersja&gt;.bak</code>), a aplikacja odmawia startu na bazie z nowszej wersji niż własna. Instalację dostępną przez Internet uruchamiaj przez HTTPS i chroń sekrety.
 
 ### Dokumentacja i współpraca
 
@@ -346,11 +347,12 @@ Set two random secrets of at least 32 characters, or leave them blank so the app
 | <code>JWT_SECRET_KEY</code> | Separate secret for login tokens. |
 | <code>DATABASE_URL</code> | SQLAlchemy database URL; SQLite by default. |
 | <code>PUBLIC_BASE_URL</code> | Public CRM address used in notification links, for example <code>https://crm.example.com</code>. Set it before enabling helpdesk emails. |
-| <code>TRUSTED_PROXY_HOPS</code> | Number of trusted reverse proxy hops; set only when the application cannot be reached around the proxy. |
+| <code>TRUSTED_PROXY_HOPS</code> | Number of trusted reverse proxy hops; set only when the application cannot be reached around the proxy. Required behind a reverse proxy, otherwise all clients share one login rate limit. |
+| <code>PREPARE_DATABASE</code> | <code>true</code> by default: the application migrates the database at startup. With several gunicorn workers, run <code>python seed.py</code> first and start the workers with <code>false</code> (the Docker image does this). |
 | <code>PORT</code> | Server port; 5000 in the local examples and 8080 in the container (Compose exposes port 80). |
 | <code>ZENCRM_VERSION</code> | Optional version identifier; the Docker image sets it at build time. |
 
-Back up the database and uploaded files before deploying a new release. The application creates missing tables and updates some older schemas at startup. Use HTTPS for an Internet-facing installation and protect your secrets.
+Back up the database and uploaded files before deploying a new release. The schema is versioned with Alembic migrations (<code>migrations/</code>) and upgraded at startup; installations from before migrations are completed once and stamped with the baseline revision. Before every migration a SQLite database is copied next to the original (<code>*.before-&lt;revision&gt;.bak</code>), and the application refuses to start on a database from a newer release. Use HTTPS for an Internet-facing installation and protect your secrets.
 
 ### Documentation and contributions
 

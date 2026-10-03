@@ -2025,5 +2025,8 @@ window.ZenLocales.pl = {
   "user_ids must be a list of user IDs": "user_ids musi być listą identyfikatorów użytkowników",
   "Unknown or inactive user": "Nieznany lub nieaktywny użytkownik",
   "Unknown phone action": "Nieznana akcja telefonu",
-  "Invalid numeric field": "Nieprawidłowa wartość liczbowa"
+  "Invalid numeric field": "Nieprawidłowa wartość liczbowa",
+  "This record is still linked to other records. Remove or reassign them first.": "Ten rekord jest nadal powiązany z innymi rekordami. Najpierw je usuń lub przepnij.",
+  "This user has history in the CRM. Deactivate the account instead.": "Ten użytkownik ma historię w CRM. Zamiast usuwać, dezaktywuj konto.",
+  "Skipped, still linked: ": "Pominięto, nadal powiązane: "
 };

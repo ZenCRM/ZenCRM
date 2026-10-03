@@ -17,3 +17,5 @@ class Config:
     CORS_ORIGINS = [origin.strip() for origin in os.getenv('CORS_ORIGINS', '').split(',') if origin.strip()]
     PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', '').strip()
     TRUSTED_PROXY_HOPS = int(os.getenv('TRUSTED_PROXY_HOPS', '0'))
+    # Disable in application workers when a separate step (seed.py) migrates the database first.
+    PREPARE_DATABASE = os.getenv('PREPARE_DATABASE', 'true').lower() == 'true'

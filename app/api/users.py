@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.user import User
 from ..models.team import Team
-from ..utils.deletion import current_user, is_admin
+from ..utils.deletion import current_user, is_admin, delete_if_unlinked
 from ..models.permission import Role
 from ..utils.permissions import BUILTIN_ROLES
 from ..utils.passwords import valid_password
@@ -138,7 +138,10 @@ def delete_user(user_id):
         return jsonify({'error': 'Użytkownik nie istnieje'}), 404
     if u.role == 'admin' and u.is_active and User.query.filter_by(role='admin', is_active=True).count() <= 1:
         return jsonify({'error': 'Musi pozostać aktywny administrator'}), 409
-    db.session.delete(u)
+    # Users with CRM history or a phone stay as authors and owners; deactivation keeps that history.
+    if not delete_if_unlinked(u):
+        db.session.rollback()
+        return jsonify({'error': 'This user has history in the CRM. Deactivate the account instead.'}), 409
     db.session.commit()
     return jsonify({'message': 'Deleted'}), 200
 

@@ -14,7 +14,7 @@ from ..models.offer import Offer
 from ..models.document import Document
 from ..models.activity import Activity
 from ..models.user import User
-from ..utils.deletion import restore, hard_delete, is_admin
+from ..utils.deletion import restore, hard_delete, delete_if_unlinked, is_admin
 from ..utils.activity import log_activity
 
 archive_bp = Blueprint('archive', __name__)
@@ -184,10 +184,15 @@ def empty_archive():
     """Opróżnienie archiwum (admin)."""
     if not is_admin():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
+    pending = [(key, obj) for key, M in MODELS.items() for obj in _archived(M)]
     total = 0
-    for key, M in MODELS.items():
-        for obj in _archived(M):
-            db.session.delete(obj)
-            total += 1
+    # Archived records can depend on each other (a client and its archived tasks); retry until stable.
+    while pending:
+        remaining = [(key, obj) for key, obj in pending if not delete_if_unlinked(obj)]
+        total += len(pending) - len(remaining)
+        if len(remaining) == len(pending):
+            break
+        pending = remaining
+    skipped = [{'type': key, 'id': obj.id} for key, obj in pending]
     db.session.commit()
-    return jsonify({'ok': True, 'deleted': total}), 200
+    return jsonify({'ok': True, 'deleted': total, 'skipped': skipped}), 200

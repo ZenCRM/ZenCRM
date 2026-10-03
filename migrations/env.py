@@ -11,17 +11,12 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+fileConfig(config.config_file_name, disable_existing_loggers=False)
 logger = logging.getLogger('alembic.env')
 
 
 def get_engine():
-    try:
-        # this works with Flask-SQLAlchemy<3 and Alchemical
-        return current_app.extensions['migrate'].db.get_engine()
-    except (TypeError, AttributeError):
-        # this works with Flask-SQLAlchemy>=3
-        return current_app.extensions['migrate'].db.engine
+    return current_app.extensions['migrate'].db.engine
 
 
 def get_engine_url():
@@ -97,6 +92,11 @@ def run_migrations_online():
     connectable = get_engine()
 
     with connectable.connect() as connection:
+        # Batch migrations rebuild SQLite tables; enforced foreign keys would cascade on the drop.
+        sqlite = connection.dialect.name == 'sqlite'
+        if sqlite:
+            connection.exec_driver_sql('PRAGMA foreign_keys=OFF')
+            connection.commit()
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
@@ -105,6 +105,9 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+        if sqlite:
+            connection.exec_driver_sql('PRAGMA foreign_keys=ON')
+            connection.commit()
 
 
 if context.is_offline_mode():

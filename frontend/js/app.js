@@ -1044,7 +1044,8 @@ function crmApp() {
             if (!confirm(window.ZenI18n.t('Opróżnić CAŁE archiwum? Wszystkie elementy zostaną usunięte na zawsze.'))) return;
             try {
                 const r = await this.api('/archive/empty', { method: 'POST' });
-                this.notify(window.ZenI18n.t('Usunięto: ') + r.deleted);
+                const skipped = r.skipped?.length ? ' · ' + window.ZenI18n.t('Skipped, still linked: ') + r.skipped.length : '';
+                this.notify(window.ZenI18n.t('Usunięto: ') + r.deleted + skipped);
                 await this.loadArchive();
             } catch (e) { this.notify(e.message); }
         },

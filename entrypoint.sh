@@ -16,9 +16,11 @@ if [ "$#" -gt 0 ]; then
     exec "$@"
 fi
 
-# Initialize database tables on empty installation (without creating hardcoded admin).
+# Migrate the database once, before workers start (without creating a hardcoded admin).
 python seed.py
 
 PORT="${PORT:-8080}"
 echo "[ZenCRM] Uruchamianie serwera na porcie ${PORT}..."
+# Workers skip schema preparation; seed.py has just done it once.
+export PREPARE_DATABASE=false
 exec gunicorn --bind "0.0.0.0:${PORT}" --workers 2 --threads 4 --timeout 120 run:app

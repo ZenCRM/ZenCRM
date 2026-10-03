@@ -7,6 +7,7 @@ from ..models.document_type import DocumentType
 from ..schemas.template import TemplateSchema
 from ..services.render_service import render_preview
 from ..utils.sanitize import apply_payload, build_model
+from ..utils.deletion import hard_delete
 
 templates_bp = Blueprint('templates', __name__)
 schema = TemplateSchema()
@@ -96,8 +97,7 @@ def update_item(item_id):
 @jwt_required()
 def delete_item(item_id):
     tpl = Template.query.get_or_404(item_id)
-    db.session.delete(tpl)
-    db.session.commit()
+    hard_delete(tpl)
     return jsonify({'message': 'Deleted'}), 200
 
 

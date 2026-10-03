@@ -1,11 +1,12 @@
-"""Initialize database tables. Administrator is created via the web setup form on first launch."""
+"""Migrate the database (create_app runs prepare_database) and report whether setup is needed.
+
+The administrator is created via the web setup form on first launch.
+"""
 from app import create_app
-from app.extensions import db
 from app.models.user import User
 
 
 def seed_admin():
-    db.create_all()
     if User.query.first() is not None:
         print('[ZenCRM] Baza danych gotowa. Istniejący użytkownicy znalezieni.')
         return False

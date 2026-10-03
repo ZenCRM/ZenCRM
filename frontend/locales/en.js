@@ -2025,5 +2025,8 @@ window.ZenLocales.en = {
   "user_ids must be a list of user IDs": "user_ids must be a list of user IDs",
   "Unknown or inactive user": "Unknown or inactive user",
   "Unknown phone action": "Unknown phone action",
-  "Invalid numeric field": "Invalid numeric field"
+  "Invalid numeric field": "Invalid numeric field",
+  "This record is still linked to other records. Remove or reassign them first.": "This record is still linked to other records. Remove or reassign them first.",
+  "This user has history in the CRM. Deactivate the account instead.": "This user has history in the CRM. Deactivate the account instead.",
+  "Skipped, still linked: ": "Skipped, still linked: "
 };
