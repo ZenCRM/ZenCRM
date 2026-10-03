@@ -242,6 +242,24 @@
       ]
     },
     {
+      "path": "/api/clients/company-lookup",
+      "endpoint": "clients.gus_lookup",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/gus",
+      "endpoint": "clients.gus_lookup",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
       "path": "/api/comments",
       "endpoint": "comments.create_item",
       "methods": [
@@ -2399,6 +2417,69 @@
         {
           "name": "address",
           "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "nip",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "regon",
+          "type": "VARCHAR(14)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "krs",
+          "type": "VARCHAR(10)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "street",
+          "type": "VARCHAR(200)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "building_number",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "apartment_number",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR(120)",
           "nullable": true,
           "default": null,
           "primary_key": 0
