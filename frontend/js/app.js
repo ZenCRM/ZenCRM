@@ -6,9 +6,6 @@
 function crmApp() {
     const component = {
 
-        // ═══════════════════════════════════════════════════════════
-        // SERVICE HELPERS
-        // ═══════════════════════════════════════════════════════════
         serviceStatusLabel(s) {
             return { exemplary: window.ZenI18n.t('Wzorowa'), good: window.ZenI18n.t('Dobra'),
                      problematic: window.ZenI18n.t('Problematyczna'), critical: window.ZenI18n.t('Krytyczna') }[s] || s || '—';
@@ -36,9 +33,6 @@ function crmApp() {
             return 'bg-green-100 text-green-700';
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // AUTH
-        // ═══════════════════════════════════════════════════════════
         token: localStorage.getItem('token') || '',
         user: JSON.parse(localStorage.getItem('user') || 'null'),
         loginForm: { email: '', password: '' },
@@ -67,9 +61,6 @@ function crmApp() {
         setupError: '',
         showSetupPassword: false,
 
-        // ═══════════════════════════════════════════════════════════
-        // UI
-        // ═══════════════════════════════════════════════════════════
         darkMode: localStorage.getItem('darkMode') === 'true',
         sidebarOpen: false,
         currentView: (location.hash.replace('#', '') || localStorage.getItem('lastView') || 'dashboard'),
@@ -144,9 +135,6 @@ function crmApp() {
         visibleKanbanCols: 5,
         _kanbanResizeHandler: null,
 
-        // ═══════════════════════════════════════════════════════════
-        // DANE
-        // ═══════════════════════════════════════════════════════════
         stats: { cards: {}, funnel: {}, overdue_tasks: [], today_tasks: [], upcoming_tasks: [], upcoming_meetings: [] },
         dashboardTaskTab: 'today',
         clients: [], leads: [], tasks: [], meetings: [], projects: [], teams: [],
@@ -179,9 +167,6 @@ function crmApp() {
             this.listPages[view] = 1;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // MODALE
-        // ═══════════════════════════════════════════════════════════
         modal:    { open: false, editingId: null, form: {}, error: '', view: null, lockedRelations: [] },
         profile:  { open: false, form: { email_notifications: {} }, error: '', success: '' },
         password: { open: false, form: { current_password: '', new_password: '', confirm: '' }, error: '', success: '' },
@@ -202,14 +187,8 @@ function crmApp() {
         generateModal: { open: false, type: 'document', item: null, templateId: '', custom: {}, typeFields: {}, error: '' },
         attachmentView: { entity: '', recordId: null, files: [], busy: false, error: '', editingId: null, editingName: '' },
 
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ
-        // ═══════════════════════════════════════════════════════════
         calendarDate: new Date(),
 
-        // ═══════════════════════════════════════════════════════════
-        // KONFIGURACJA
-        // ═══════════════════════════════════════════════════════════
         menu: window.ZenConfig.MENU,
         openMenuGroups: {
             crm: true,
@@ -227,9 +206,6 @@ function crmApp() {
             this.openMenuGroups[groupId] = willOpen;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // GETTERS
-        // ═══════════════════════════════════════════════════════════
         get dashboardCards() { return window.ZenConfig.DASHBOARD_CARDS; },
         get usersById() {
             const map = {};
@@ -269,8 +245,6 @@ function crmApp() {
             return days;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // AUTH
         async loadStats() {
             try { this.stats = await this.api('/stats'); }
             catch (e) { this.listError = e.message; }
@@ -278,12 +252,6 @@ function crmApp() {
 
         async renderFunnel() { await window.renderZenDashboard(this); },
 
-        // ═══════════════════════════════════════════════════════════
-        // CRUD – GENERYCZNY
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // ZADANIA
-        // ═══════════════════════════════════════════════════════════
         async toggleTask(task) {
             // Jesli zadanie ma przypisanych - otworz modal do zmiany statusu
             const assignees = task.assignees || [];
@@ -300,15 +268,6 @@ function crmApp() {
             } catch (e) { this.notify(e.message); }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // KANBAN – DRAG & DROP
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // GENEROWANIE OFERT / DOKUMENTÓW (link + PDF)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // HELPERS
-        // ═══════════════════════════════════════════════════════════
         clientName(id) {
             if (!id) return '';
             const c = this.clients.find(x => x.id === id);
@@ -328,7 +287,6 @@ function crmApp() {
         docTypeLabel(t)     { return this.documentTypes.find(x => x.key === t)?.name || window.ZenHelpers.docTypeLabel(t); },
         roleLabel(r)        { return this.managedRoles?.find(role => role.key === r)?.name || window.ZenHelpers.roleLabel(r); },
 
-        // ═══════ KANBAN HELPERS ═══════
         avatarInitials(text) {
             if (!text) return '?';
             const words = String(text).trim().split(/\s+/).filter(Boolean);
@@ -337,9 +295,6 @@ function crmApp() {
             return (words[0][0] + words[1][0]).toUpperCase();
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ
-        // ═══════════════════════════════════════════════════════════
         prevMonth() {
             this.calendarDate = new Date(this.calendarDate.getFullYear(),
                                          this.calendarDate.getMonth() - 1, 1);
@@ -361,9 +316,6 @@ function crmApp() {
             }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // PROFIL
-        // ═══════════════════════════════════════════════════════════
         activityIcon(action) {
             const names = { created: 'plus', updated: 'edit', comment: 'comment', sms: 'comment', call: 'phone', email: 'mail', contact_added: 'user', converted: 'check', archived: 'activity', restored: 'activity' };
             return { icon: window.zenIcon(names[action] || 'activity'), cls: 'zen-activity-badge' };
@@ -395,7 +347,6 @@ function crmApp() {
             return (a + b).toUpperCase() || '?';
         },
 
-        // ═══════ DASHBOARD HELPERS ═══════
         get greeting() {
             const h = new Date().getHours();
             if (h < 5)  return window.ZenI18n.t('Dobranoc');
@@ -411,10 +362,6 @@ function crmApp() {
             return s.charAt(0).toUpperCase() + s.slice(1);
         },
 
-        // ═══════ AVATAR UPLOAD ═══════
-        // ═══════════════════════════════════════════════════════════
-        // ARCHIWUM / SOFT DELETE
-        // ═══════════════════════════════════════════════════════════
         archiveTypeLabel(t) {
             const m = {
                 clients: window.ZenI18n.t('Klient'),
@@ -579,10 +526,6 @@ function crmApp() {
             } catch (e) { this.notify(e.message); }
         },
 
-
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ – zadania + spotkania
-        // ═══════════════════════════════════════════════════════════
         calendarEventsFor(day) {
             const dateStr = this.localDateKey(day.date);
             const events = [];
@@ -618,15 +561,6 @@ function crmApp() {
             this.openDetail('task', task.id);
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // TASK ASSIGNEES (wielu wykonawców)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // USTAWIENIA
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // INIT
-        // ═══════════════════════════════════════════════════════════
     };
     // Preserve the original precedence: core, UX, then feature modules.
     for (const factory of [window.ZenCore.auth, window.ZenCore.navigation, window.ZenCore.lifecycle]) {

@@ -93,8 +93,3 @@ def notify_ticket_created(ticket):
             }, user=ticket.assignee)
     except Exception:
         pass
-
-
-# ─────────────────────────────────────────────────────────────
-# CRM AGENT ENDPOINTS (Wymagają JWT)
-# ─────────────────────────────────────────────────────────────

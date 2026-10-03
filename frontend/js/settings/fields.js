@@ -35,9 +35,6 @@ window.ZenSettings.fields = function () { return {
             boolean: window.ZenI18n.t('Tak / Nie')
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // POLA STANDARDOWE & WYMAGANIA
-        // ═══════════════════════════════════════════════════════════
         standardRequiredEntities: [
             { key: 'clients', label: window.ZenI18n.t('Klienci') },
             { key: 'leads', label: window.ZenI18n.t('Leady') },

@@ -215,9 +215,6 @@ window.ZenCore.navigation = function () { return {
             }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // STATS / DASHBOARD
-        // ═══════════════════════════════════════════════════════════
         async handleHashChange() {
             if (!this.token) return;
             const hashRaw = location.hash.replace('#', '');

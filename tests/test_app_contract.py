@@ -1,5 +1,6 @@
 """Compatibility baseline captured from release 0.9.0.4 before refactoring."""
 import json
+import re
 from pathlib import Path
 import unittest
 
@@ -59,3 +60,21 @@ class AppContractTests(unittest.TestCase):
 
     def test_repeated_factory_calls_preserve_registration(self):
         self.assertEqual(capture_contract(), capture_contract())
+
+    def test_rendered_page_serves_all_component_scripts(self):
+        app = create_app(ContractConfig)
+        try:
+            client = app.test_client()
+            response = client.get('/')
+            self.assertEqual(response.status_code, 200)
+            scripts = re.findall(r'<script[^>]+src="(/js/[^\"]+)"', response.get_data(as_text=True))
+            self.assertTrue(scripts)
+            for script in scripts:
+                with self.subTest(script=script):
+                    with client.get(script) as result:
+                        self.assertEqual(result.status_code, 200)
+                        self.assertIn(result.mimetype, ('text/javascript', 'application/javascript'))
+        finally:
+            with app.app_context():
+                db.session.remove()
+                db.engine.dispose()

@@ -123,16 +123,10 @@ window.ZenCore.auth = function () { return {
             // Nie czyścimy lastView – po ponownym zalogowaniu wróci tam, gdzie byłeś
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // API WRAPPER
-        // ═══════════════════════════════════════════════════════════
         api(path, options = {}) {
             return window.ZenApi.request(path, options, this.token, () => this.logout());
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // NAVIGACJA
-        // ═══════════════════════════════════════════════════════════
         openProfile() {
             const notifs = this.user?.email_notifications || {};
             this.profile.form = {
@@ -170,9 +164,6 @@ window.ZenCore.auth = function () { return {
             } catch (e) { this.profile.error = e.message; }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // ZMIANA HASŁA
-        // ═══════════════════════════════════════════════════════════
         openPassword() {
             this.password.form = { current_password: '', new_password: '', confirm: '' };
             this.password.error = '';
@@ -201,11 +192,4 @@ window.ZenCore.auth = function () { return {
             } catch (e) { this.password.error = e.message; }
         },
 
-
-        // ═══════════════════════════════════════════════════════════
-        // KANBAN – NAWIGACJA (bez brzydkiego scrolla)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // DETAIL VIEW – Klient / Lead
-        // ═══════════════════════════════════════════════════════════
 }; };

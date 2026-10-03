@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const {capture, createComponent} = require('./frontend_contract.cjs');
+const {capture, createComponent} = require('./helpers/frontend_contract.cjs');
 
 test('production script order preserves the released component state, methods and getters', () => {
     const expected = JSON.parse(fs.readFileSync('tests/fixtures/frontend_contract.json', 'utf8'));

@@ -11,7 +11,6 @@ window.ZenSettings.state = function () { return {
         newRoleName: '',
         roleNameDraft: '',
         effectivePermissions: {},
-        // Menu settings
         menuModulesList: [
             { id: 'dashboard', label: 'Dashboard', group: 'Główne' },
             { id: 'clients', label: 'CRM - Klienci', group: 'CRM' },
@@ -34,7 +33,6 @@ window.ZenSettings.state = function () { return {
         savingMenuSettings: false,
         menuSettingsSaved: false,
 
-        // Lead settings
         leadSources: ['Strona WWW', 'Polecenie', 'Telefon', 'Social Media', 'Kampania Google', 'Inne'],
         newLeadSourceName: '',
         editingLeadSourceIndex: null,
