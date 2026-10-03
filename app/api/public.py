@@ -5,6 +5,13 @@ from ..models.offer import Offer
 from ..models.document import Document
 
 public_bp = Blueprint('public', __name__)
+RENDERED_HTML_CSP = "sandbox; default-src 'none'; img-src data: https:; style-src 'unsafe-inline'; font-src data:"
+
+
+def rendered_html_response(html):
+    response = Response(html, mimetype='text/html')
+    response.headers['Content-Security-Policy'] = RENDERED_HTML_CSP
+    return response
 
 
 @public_bp.route('/offer/<token>', methods=['GET'])
@@ -16,7 +23,7 @@ def view_offer(token):
         abort(404, description='Oferta nie została jeszcze wygenerowana')
     html = _wrap_public_page(offer.rendered_html, offer.title,
                              f'Oferta {offer.number}')
-    return Response(html, mimetype='text/html')
+    return rendered_html_response(html)
 
 
 @public_bp.route('/document/<token>', methods=['GET'])
@@ -27,7 +34,7 @@ def view_document(token):
     if not doc.rendered_html:
         abort(404, description='Dokument nie został jeszcze wygenerowany')
     html = _wrap_public_page(doc.rendered_html, doc.title, doc.title)
-    return Response(html, mimetype='text/html')
+    return rendered_html_response(html)
 
 
 def _wrap_public_page(content, title, subtitle=''):
@@ -68,7 +75,7 @@ body {{ margin: 0; padding: 0; background: #f3f4f6; font-family: system-ui, sans
 </head><body>
 <div class="bar">
     <div class="meta">{subtitle}</div>
-    <button onclick="window.print()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px" aria-hidden="true"><path d="M6 9V3h12v6 M6 18H3V9h18v9h-3 M6 14h12v7H6z"/></svg>Drukuj / Zapisz PDF</button>
+    <span>Drukuj / Zapisz PDF: Ctrl+P</span>
 </div>
 <div class="page">{content}</div>
 </body></html>"""

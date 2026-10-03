@@ -39,25 +39,29 @@ def browser_catalogs():
 def language():
     if not has_request_context():
         return 'pl'
-    from ..models.translation import TranslationLanguage
-    codes = ['pl', 'en'] + [row.code for row in TranslationLanguage.query.all()]
+    codes = ['pl', 'en']
+    try:
+        from ..models.translation import TranslationLanguage
+        codes += [row.code for row in TranslationLanguage.query.all()]
+    except Exception:
+        pass
     return request.accept_languages.best_match(codes) or 'pl'
 
 
 def t(key, params=None, locale=None):
     if not isinstance(key, str):
         return key
+    selected = locale or language()
     try:
         from ..models.translation import TranslationLanguage, TranslationEntry
-        selected = locale or language()
         custom = TranslationEntry.query.filter_by(locale=selected, key=key).first()
         base = TranslationLanguage.query.filter_by(code=selected).first()
         fallback = base.base_locale if base else selected
         cat = catalog(fallback)
         inherited = TranslationEntry.query.filter_by(locale=fallback, key=key).first() if fallback != selected else None
-        result = custom.value if custom else inherited.value if inherited else cat.get(key, catalog('pl').get(key, key))
+        result = custom.value if custom else inherited.value if inherited else cat.get(key, catalog('en').get(key, key))
     except Exception:
-        result = key
+        result = catalog(selected).get(key, catalog('en').get(key, key))
     return re.sub(r'\{([^{}]+)\}', lambda match: str(params[match[1]]) if params and match[1] in params else match[0], result)
 
 

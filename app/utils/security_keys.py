@@ -7,10 +7,12 @@ from pathlib import Path
 
 def configure_secrets(app):
     insecure = {None, '', 'dev-secret', 'jwt-dev-secret',
+                'twoj-sekret', 'twoj-jwt-sekret',
                 'zmien-mnie-na-bezpieczny-losowy-ciag',
                 'zmien-mnie-na-bezpieczny-jwt-secret'}
     missing = [key for key in ('SECRET_KEY', 'JWT_SECRET_KEY')
-               if app.config.get(key) in insecure]
+               if not isinstance(app.config.get(key), str)
+               or len(app.config[key]) < 32 or app.config[key] in insecure]
     if not missing:
         return
     if app.testing:

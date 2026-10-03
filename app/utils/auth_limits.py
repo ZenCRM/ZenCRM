@@ -15,7 +15,12 @@ def auth_limit(limit, seconds=900):
             now = int(time.time())
             window = now // seconds
             # Do not trust client-supplied X-Forwarded-For.
-            key = hashlib.sha256(f'{request.endpoint}:{request.remote_addr}:{window}'.encode()).hexdigest()
+            identity = request.remote_addr or 'unknown'
+            if request.endpoint == 'auth.login':
+                data = request.get_json(silent=True) or {}
+                email = data.get('email', '') if isinstance(data, dict) else ''
+                identity = str(email).strip().lower()[:120] or identity
+            key = hashlib.sha256(f'{request.endpoint}:{identity}:{window}'.encode()).hexdigest()
             AuthRateLimit.query.filter(AuthRateLimit.expires_at <= now).delete()
             if not db.session.get(AuthRateLimit, key):
                 try:

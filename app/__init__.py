@@ -11,6 +11,7 @@ if _venv_lib.is_dir():
             sys.path.insert(0, str(_sp))
 
 from flask import Flask, jsonify, send_from_directory, render_template
+from werkzeug.middleware.proxy_fix import ProxyFix
 try:
     from flask_cors import CORS
 except ImportError:
@@ -26,6 +27,9 @@ def create_app(config_class=Config):
     frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend')
     app = Flask(__name__, static_folder=frontend_dir, static_url_path='', template_folder=frontend_dir)
     app.config.from_object(config_class)
+    proxy_hops = app.config.get('TRUSTED_PROXY_HOPS', 0)
+    if proxy_hops:
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=proxy_hops, x_proto=proxy_hops, x_host=proxy_hops)
     from .utils.security_keys import configure_secrets
     configure_secrets(app)
     from .utils.i18n import init_i18n

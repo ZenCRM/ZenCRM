@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   zencrm:
     image: kosiorekmateusz/zencrm:latest
@@ -7,13 +5,13 @@ services:
     container_name: zencrm
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "80:8080"
     environment:
       - FLASK_ENV=production
-      - SECRET_KEY=zmien-mnie-na-bezpieczny-losowy-ciag
-      - JWT_SECRET_KEY=zmien-mnie-na-bezpieczny-jwt-secret
+      - SECRET_KEY=${SECRET_KEY:-}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
       - DATABASE_URL=sqlite:////app/instance/zencrm.db
-      - PORT=80
+      - PORT=8080
     volumes:
       - zencrm_data:/app/instance
       - zencrm_uploads:/app/uploads

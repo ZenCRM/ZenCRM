@@ -4,6 +4,7 @@ from ..extensions import db
 from ..models.comment import Comment
 from ..schemas.comment import CommentSchema
 from ..utils.activity import log_activity
+from ..utils.deletion import is_admin
 
 comments_bp = Blueprint('comments', __name__)
 schema = CommentSchema()
@@ -91,6 +92,8 @@ def update_item(item_id):
     c = db.session.get(Comment, item_id)
     if not c:
         return jsonify({'error': 'Komentarz nie istnieje'}), 404
+    if c.user_id != int(get_jwt_identity()) and not is_admin():
+        return jsonify({'error': 'Brak uprawnień'}), 403
     data = request.get_json(silent=True) or {}
     if not isinstance(data, dict):
         return jsonify({'error': 'Nieprawidłowy wpis'}), 400
@@ -108,6 +111,8 @@ def delete_item(item_id):
     c = db.session.get(Comment, item_id)
     if not c:
         return jsonify({'error': 'Komentarz nie istnieje'}), 404
+    if c.user_id != int(get_jwt_identity()) and not is_admin():
+        return jsonify({'error': 'Brak uprawnień'}), 403
     db.session.delete(c)
     db.session.commit()
     return jsonify({'message': 'Deleted'}), 200

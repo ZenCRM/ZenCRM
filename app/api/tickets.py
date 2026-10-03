@@ -1,5 +1,7 @@
 from datetime import datetime
-from flask import Blueprint, request, jsonify, abort
+import hmac
+from urllib.parse import urlsplit
+from flask import Blueprint, request, jsonify, abort, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.ticket import Ticket, TicketMessage
@@ -9,8 +11,21 @@ from ..models.user import User
 from ..models.team import Team
 from ..utils.deletion import current_user, is_admin
 from ..utils.helpdesk import get_helpdesk_config, save_helpdesk_config
+from ..utils.auth_limits import auth_limit
 
 tickets_bp = Blueprint('tickets', __name__)
+
+
+def _public_base_url():
+    from ..models.setting import Setting
+    value = current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or ''
+    value = value.strip()
+    if value and '://' not in value:
+        value = 'https://' + value
+    parsed = urlsplit(value)
+    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
+        return ''
+    return f'{parsed.scheme}://{parsed.netloc}'
 
 
 # ─────────────────────────────────────────────────────────────
@@ -55,7 +70,10 @@ def _notify_ticket_created(ticket):
         from ..services.email_service import send_notification
         from ..utils.helpdesk import get_helpdesk_config
         config = get_helpdesk_config()
-        base_url = request.host_url.rstrip('/')
+        base_url = _public_base_url()
+        if not base_url:
+            current_app.logger.warning('Set PUBLIC_BASE_URL to enable ticket notification links')
+            return
         tracking_url = f"{base_url}{config.get('helpdesk_path', '/pomoc')}?ticket={ticket.token}"
 
         # 1. Do klienta (potwierdzenie rejestracji)
@@ -367,15 +385,26 @@ def public_helpdesk_config():
 
 
 @tickets_bp.route('/public/submit', methods=['POST'])
+@auth_limit(5, 3600)
 def public_submit_ticket():
     config = get_helpdesk_config()
     if not config.get('helpdesk_enabled', True):
         return jsonify({'error': 'Portal pomocy jest obecnie wyłączony'}), 403
 
     data = request.get_json(silent=True) or {}
-    email = str(data.get('email', '')).strip().lower()
-    title = str(data.get('title', '')).strip()
-    description = str(data.get('description', '')).strip()
+    if not isinstance(data, dict) or any(not isinstance(data.get(k, ''), str) for k in ('email', 'title', 'description', 'name', 'phone', 'category')):
+        return jsonify({'error': 'Nieprawidłowe dane zgłoszenia'}), 400
+    email = data.get('email', '').strip().lower()
+    title = data.get('title', '').strip()
+    description = data.get('description', '').strip()
+    name = data.get('name', '').strip() or None
+    phone = data.get('phone', '').strip() or None
+    category = data.get('category', 'general').strip()
+    if len(email) > 120 or len(title) > 200 or len(description) > 5000 or len(name or '') > 100 or len(phone or '') > 50 or len(category) > 50:
+        return jsonify({'error': 'Pole zgłoszenia jest za długie'}), 400
+    allowed_categories = {str(item.get('id')) for item in config.get('helpdesk_categories', []) if isinstance(item, dict)}
+    if category not in allowed_categories:
+        return jsonify({'error': 'Nieprawidłowa kategoria'}), 400
 
     if not email or '@' not in email:
         return jsonify({'error': 'Prawidłowy adres e-mail jest wymagany'}), 400
@@ -383,10 +412,6 @@ def public_submit_ticket():
         return jsonify({'error': 'Temat zgłoszenia jest wymagany'}), 400
     if not description:
         return jsonify({'error': 'Treść zgłoszenia jest wymagana'}), 400
-
-    name = str(data.get('name', '')).strip() or None
-    phone = str(data.get('phone', '')).strip() or None
-    category = str(data.get('category', 'general')).strip()
 
     client = _find_client_by_email(email)
 
@@ -398,14 +423,14 @@ def public_submit_ticket():
         title=title,
         description=description,
         client_id=client.id if client else None,
-        contact_name=name or (client.name if client else email.split('@')[0]),
+        contact_name=name or email.split('@')[0],
         contact_email=email,
-        contact_phone=phone or (client.phone if client else None),
+        contact_phone=phone,
         category=category,
-        priority=data.get('priority') or 'medium',
+        priority='medium',
         status='new',
         token=token,
-        source=data.get('source') or 'helpdesk'
+        source='helpdesk'
     )
 
     _apply_auto_assignment(ticket, client)
@@ -441,9 +466,12 @@ def public_track_ticket(token):
     if not ticket:
         return jsonify({'error': 'Nie znaleziono zgłoszenia o podanym identyfikatorze'}), 404
 
-    public_messages = [
-        m.to_dict() for m in ticket.messages if not m.is_internal
-    ]
+    public_messages = [{
+        'sender_type': m.sender_type,
+        'sender_name': m.sender_name or ('Zespół Wsparcia' if m.sender_type == 'agent' else 'Klient'),
+        'content': m.content,
+        'created_at': m.created_at.isoformat() if m.created_at else None,
+    } for m in ticket.messages if not m.is_internal]
 
     return jsonify({
         'ticket_number': ticket.ticket_number,
@@ -460,6 +488,7 @@ def public_track_ticket(token):
 
 
 @tickets_bp.route('/public/track/<string:token>/reply', methods=['POST'])
+@auth_limit(20, 3600)
 def public_reply_ticket(token):
     ticket = Ticket.query.filter_by(token=token).first()
     if not ticket:
@@ -469,9 +498,10 @@ def public_reply_ticket(token):
         return jsonify({'error': 'To zgłoszenie zostało już zamknięte'}), 400
 
     data = request.get_json(silent=True) or {}
-    content = str(data.get('content', '')).strip()
-    if not content:
+    content = data.get('content', '') if isinstance(data, dict) else ''
+    if not isinstance(content, str) or not content.strip() or len(content) > 5000:
         return jsonify({'error': 'Treść odpowiedzi jest wymagana'}), 400
+    content = content.strip()
 
     msg = TicketMessage(
         ticket_id=ticket.id,
@@ -493,7 +523,7 @@ def public_reply_ticket(token):
     if ticket.assignee:
         try:
             from ..services.email_service import send_notification
-            crm_ticket_url = f"{request.host_url.rstrip('/')}/#tickets"
+            crm_ticket_url = f"{_public_base_url()}/#tickets" if _public_base_url() else ''
             send_notification('employee_ticket_reply', ticket.assignee.email, {
                 'employee_name': ticket.assignee.first_name,
                 'client_name': ticket.contact_name or 'Klient',
@@ -518,9 +548,9 @@ def webhook_submit_ticket():
         return jsonify({'error': 'Webhook zgłoszeń jest wyłączony'}), 403
 
     expected_token = config.get('helpdesk_webhook_token', '')
-    req_token = request.headers.get('X-Webhook-Token') or request.args.get('token')
+    req_token = request.headers.get('X-Webhook-Token', '')
 
-    if not expected_token or req_token != expected_token:
+    if not expected_token or not hmac.compare_digest(req_token, expected_token):
         return jsonify({'error': 'Nieprawidłowy token autoryzacyjny webhooka'}), 401
 
     data = request.get_json(silent=True) or request.form.to_dict() or {}

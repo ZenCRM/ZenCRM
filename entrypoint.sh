@@ -19,6 +19,6 @@ fi
 # Initialize database tables on empty installation (without creating hardcoded admin).
 python seed.py
 
-PORT="${PORT:-80}"
+PORT="${PORT:-8080}"
 echo "[ZenCRM] Uruchamianie serwera na porcie ${PORT}..."
 exec gunicorn --bind "0.0.0.0:${PORT}" --workers 2 --threads 4 --timeout 120 run:app

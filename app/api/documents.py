@@ -1,7 +1,7 @@
 from ..utils.i18n import t
 import os
 import secrets
-from flask import Blueprint, request, jsonify, send_file, Response
+from flask import Blueprint, request, jsonify, send_file, Response, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.document import Document
@@ -12,6 +12,7 @@ from ..services.pdf_service import html_to_pdf
 from ..utils.sanitize import apply_payload, build_model
 from ..utils.activity import log_activity
 from ..utils.deletion import soft_delete
+from .public import rendered_html_response
 
 documents_bp = Blueprint('documents', __name__)
 PDF_DIR = 'generated/documents'
@@ -164,7 +165,6 @@ def generate_document(item_id):
     if not doc:
         return jsonify({'error': 'Dokument nie istnieje'}), 404
     data = request.get_json(silent=True) or {}
-    import traceback
     try:
         if 'data' in data:
             doc.data = data['data']
@@ -184,13 +184,8 @@ def generate_document(item_id):
         }), 200
     except Exception as e:
         db.session.rollback()
-        tb = traceback.format_exc()
-        print('BLAD generate_document:\n' + tb)
-        return jsonify({
-            'error': str(e),
-            'type': type(e).__name__,
-            'detail': tb.splitlines()[-3:],
-        }), 400
+        current_app.logger.exception('Document generation failed')
+        return jsonify({'error': 'Nie udało się wygenerować dokumentu'}), 500
 
 
 @documents_bp.route('/<int:item_id>/view', methods=['GET'])
@@ -208,7 +203,7 @@ def view_document(item_id):
             db.session.commit()
         except Exception as e:
             return jsonify({'error': str(e)}), 400
-    return Response(d.rendered_html, mimetype='text/html')
+    return rendered_html_response(d.rendered_html)
 
 
 @documents_bp.route('/<int:item_id>/pdf', methods=['GET'])

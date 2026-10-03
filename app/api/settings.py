@@ -83,7 +83,7 @@ def list_settings():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     seed_defaults()
     items = Setting.query.all()
-    return jsonify({s.key: s.value for s in items}), 200
+    return jsonify({s.key: ('' if s.key == 'smtp_password' else s.value) for s in items}), 200
 
 
 @settings_bp.route('/full', methods=['GET'])
@@ -93,7 +93,7 @@ def list_full():
     if not is_admin():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     items = Setting.query.order_by(Setting.category, Setting.key).all()
-    return jsonify([s.to_dict() for s in items]), 200
+    return jsonify([{**s.to_dict(), 'value': ''} if s.key == 'smtp_password' else s.to_dict() for s in items]), 200
 
 
 @settings_bp.route('', methods=['PUT'])
@@ -122,10 +122,12 @@ def update_settings():
             from ..utils.task_stages import validate_task_stages
             data['task_stages'] = json.dumps(validate_task_stages(json.loads(data['task_stages'])), ensure_ascii=False)
         for key, value in data.items():
+            if key == 'smtp_password' and not value:
+                continue
             Setting.set_value(key, str(value) if value is not None else '', _category(key))
         db.session.commit()
         items = Setting.query.all()
-        return jsonify({s.key: s.value for s in items}), 200
+        return jsonify({s.key: ('' if s.key == 'smtp_password' else s.value) for s in items}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400

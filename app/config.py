@@ -15,3 +15,5 @@ class Config:
     VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@example.com")
     MAX_CONTENT_LENGTH = 21 * 1024 * 1024
     CORS_ORIGINS = [origin.strip() for origin in os.getenv('CORS_ORIGINS', '').split(',') if origin.strip()]
+    PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', '').strip()
+    TRUSTED_PROXY_HOPS = int(os.getenv('TRUSTED_PROXY_HOPS', '0'))

@@ -1,6 +1,6 @@
 import os
 import secrets
-from flask import Blueprint, request, jsonify, send_file, Response
+from flask import Blueprint, request, jsonify, send_file, Response, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.offer import Offer
@@ -10,6 +10,7 @@ from ..services.pdf_service import html_to_pdf
 from ..utils.sanitize import apply_payload, build_model
 from ..utils.activity import log_activity
 from ..utils.deletion import soft_delete
+from .public import rendered_html_response
 
 offers_bp = Blueprint('offers', __name__)
 PDF_DIR = 'generated/offers'
@@ -100,7 +101,6 @@ def generate_offer(item_id):
     if not offer:
         return jsonify({'error': 'Oferta nie istnieje'}), 404
     data = request.get_json(silent=True) or {}
-    import traceback
     try:
         if 'data' in data:
             offer.data = data['data']
@@ -121,13 +121,8 @@ def generate_offer(item_id):
         }), 200
     except Exception as e:
         db.session.rollback()
-        tb = traceback.format_exc()
-        print('❌ BŁĄD generate_offer:\n' + tb)
-        return jsonify({
-            'error': str(e),
-            'type': type(e).__name__,
-            'detail': tb.splitlines()[-3:],
-        }), 400
+        current_app.logger.exception('Offer generation failed')
+        return jsonify({'error': 'Nie udało się wygenerować oferty'}), 500
 
 
 @offers_bp.route('/<int:item_id>/view', methods=['GET'])
@@ -145,7 +140,7 @@ def view_offer(item_id):
             db.session.commit()
         except Exception as e:
             return jsonify({'error': str(e)}), 400
-    return Response(offer.rendered_html, mimetype='text/html')
+    return rendered_html_response(offer.rendered_html)
 
 
 @offers_bp.route('/<int:item_id>/pdf', methods=['GET'])
@@ -161,7 +156,8 @@ def download_pdf(item_id):
             render_offer(offer)
         except Exception as e:
             return jsonify({'error': str(e)}), 400
-    pdf_path = os.path.join(PDF_DIR, f'{offer.number.replace("/", "_")}.pdf')
+    safe_number = offer.number.replace('/', '_').replace('\\', '_')
+    pdf_path = os.path.join(PDF_DIR, f'{safe_number}.pdf')
     result = html_to_pdf(offer.rendered_html, pdf_path)
     if not result:
         return jsonify({'error': 'Nie udało się wygenerować PDF.'}), 500
@@ -170,7 +166,7 @@ def download_pdf(item_id):
     return send_file(os.path.abspath(pdf_path),
                      mimetype='application/pdf',
                      as_attachment=True,
-                     download_name=f'{offer.number.replace("/", "_")}.pdf')
+                     download_name=f'{safe_number}.pdf')
 
 
 @offers_bp.route('/<int:item_id>/link', methods=['POST'])

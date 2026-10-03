@@ -15,13 +15,19 @@ def validate_subscription(data):
     if not isinstance(data, dict):
         raise ValueError('Nieprawidłowa subskrypcja.')
     endpoint = data.get('endpoint', '')
-    if not isinstance(endpoint, str) or len(endpoint) > 4096:
+    if not isinstance(endpoint, str) or len(endpoint) > 4096 or endpoint != endpoint.strip() or any(ord(c) < 33 or c == '\\' for c in endpoint):
         raise ValueError('Nieprawidłowy adres usługi push.')
-    url = urlsplit(endpoint)
-    host = url.hostname or ''
+    try:
+        url = urlsplit(endpoint)
+        host = url.hostname or ''
+        port = url.port
+    except ValueError as exc:
+        raise ValueError('Nieprawidłowy adres usługi push.') from exc
+    if '%' in url.netloc or '@' in url.netloc or not url.path.startswith('/'):
+        raise ValueError('Nieprawidłowy adres usługi push.')
     # Only browser push providers. Never allow arbitrary server-side HTTP requests.
     allowed = host == 'fcm.googleapis.com' or host == 'web.push.apple.com' or host.endswith('.push.apple.com') or host.endswith('.push.services.mozilla.com') or host.endswith('.notify.windows.com')
-    if url.scheme != 'https' or not allowed or url.username or url.password or url.port not in (None, 443) or url.fragment:
+    if url.scheme != 'https' or not allowed or url.username or url.password or port not in (None, 443) or url.fragment:
         raise ValueError('Nieobsługiwana usługa powiadomień przeglądarki.')
     keys = data.get('keys') or {}
     if not isinstance(keys, dict):

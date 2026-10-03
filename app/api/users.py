@@ -7,6 +7,7 @@ from ..models.team import Team
 from ..utils.deletion import current_user, is_admin
 from ..models.permission import Role
 from ..utils.permissions import BUILTIN_ROLES
+from ..utils.passwords import valid_password
 
 users_bp = Blueprint('users', __name__)
 
@@ -60,6 +61,8 @@ def create_user():
         return jsonify({'error': 'Email jest wymagany'}), 400
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'error': 'Email już istnieje'}), 400
+    if not valid_password(data.get('password')):
+        return jsonify({'error': 'Hasło musi mieć od 10 do 256 znaków'}), 400
     role = data.get('role', 'employee')
     if not isinstance(role, str) or (role not in BUILTIN_ROLES and not db.session.get(Role, role)):
         return jsonify({'error': 'Nieznana rola'}), 400
@@ -70,7 +73,7 @@ def create_user():
         role=role,
         is_active=data.get('is_active', True),
     )
-    u.set_password(data.get('password', 'changeme'))
+    u.set_password(data['password'])
     if data.get('avatar_url'):
         u.avatar_url = data['avatar_url']
     if 'team_ids' in data:
@@ -89,6 +92,13 @@ def update_user(user_id):
     if not u:
         return jsonify({'error': 'Użytkownik nie istnieje'}), 404
     data = request.get_json(silent=True) or {}
+    changing_email = 'email' in data and data['email'] != u.email
+    changing_password = 'password' in data and bool(data['password'])
+    if changing_password and not valid_password(data['password']):
+        return jsonify({'error': 'Hasło musi mieć od 10 do 256 znaków'}), 400
+    if current_user().id == user_id and (changing_email or changing_password):
+        if not isinstance(data.get('current_password'), str) or not u.check_password(data['current_password']):
+            return jsonify({'error': 'Podaj obecne hasło'}), 403
     if u.role == 'admin' and (data.get('role', 'admin') != 'admin' or data.get('is_active') is False):
         if User.query.filter_by(role='admin', is_active=True).count() <= 1:
             return jsonify({'error': 'Musi pozostać aktywny administrator'}), 409

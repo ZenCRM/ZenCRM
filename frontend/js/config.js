@@ -188,7 +188,7 @@ window.ZenConfig = {
 
         users: [
             { key: 'email', label: window.ZenI18n.t('Email'), type: 'email', required: true },
-            { key: 'password', label: window.ZenI18n.t('Haslo (puste = bez zmiany)'), type: 'password' },
+            { key: 'password', label: window.ZenI18n.t('Hasło (min. 10 znaków)'), type: 'password' },
             { key: 'first_name', label: window.ZenI18n.t('Imie'), type: 'text', required: true },
             { key: 'last_name', label: window.ZenI18n.t('Nazwisko'), type: 'text', required: true },
             { key: 'role', label: window.ZenI18n.t('Rola'), type: 'select', options: [

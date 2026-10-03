@@ -19,8 +19,7 @@ __pycache__/
 .mypy_cache/
 .vscode/
 
-# Keep documentation and tests out of the GitHub repository
+# Keep local documentation out of the GitHub repository
 docs/
 frontend/docs/
 frontend/README.md
-tests/

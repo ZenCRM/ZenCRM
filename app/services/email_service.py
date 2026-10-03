@@ -1,6 +1,10 @@
 from ..utils.i18n import t
 import logging
 import smtplib
+import ssl
+import re
+from markupsafe import escape
+from urllib.parse import urlsplit
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -36,6 +40,8 @@ def send_email(to_email, subject, body_html, to_name=None):
         return False, "Nieprawidłowy adres e-mail"
 
     cfg = get_smtp_config()
+    if cfg['encryption'] not in ('tls', 'ssl', 'none'):
+        return False, 'Invalid SMTP encryption mode'
 
     if not cfg['enabled'] or not cfg['host']:
         logger.info(f"[E-MAIL SYMULACJA / SMTP WYŁĄCZONE] Do: {to_email} | Temat: {subject}")
@@ -60,12 +66,12 @@ def send_email(to_email, subject, body_html, to_name=None):
         port = cfg['port']
         encryption = cfg['encryption']
 
-        if encryption == 'ssl' or port == 465:
-            server = smtplib.SMTP_SSL(cfg['host'], port, timeout=10)
+        if encryption == 'ssl':
+            server = smtplib.SMTP_SSL(cfg['host'], port, timeout=10, context=ssl.create_default_context())
         else:
             server = smtplib.SMTP(cfg['host'], port, timeout=10)
             if encryption == 'tls':
-                server.starttls()
+                server.starttls(context=ssl.create_default_context())
 
         if cfg['user'] and cfg['password']:
             server.login(cfg['user'], cfg['password'])
@@ -103,16 +109,12 @@ def render_template(template_key, context):
     company_email = Setting.get_value('company_email', 'kontakt@zencrm.pl')
     logo_path = Setting.get_value('brand_logo_light', '') or Setting.get_value('helpdesk_logo', '') or '/logo.png'
 
-    base_url = (Setting.get_value('company_www', '') or '').strip()
-    if base_url and not base_url.startswith('http'):
+    from flask import current_app
+    base_url = (current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or '').strip()
+    if base_url and '://' not in base_url:
         base_url = 'https://' + base_url
-    if not base_url:
-        try:
-            from flask import request
-            if request and hasattr(request, 'host_url'):
-                base_url = request.host_url.rstrip('/')
-        except Exception:
-            base_url = ''
+    parsed = urlsplit(base_url)
+    base_url = f'{parsed.scheme}://{parsed.netloc}' if parsed.scheme in ('https', 'http') and parsed.hostname and not parsed.username and not parsed.password else ''
 
     if logo_path.startswith('http'):
         company_logo_url = logo_path
@@ -121,7 +123,7 @@ def render_template(template_key, context):
     else:
         company_logo_url = logo_path
 
-    logo_img_tag = f'<img src="{company_logo_url}" alt="{company_name}" style="max-height: 48px; max-width: 220px; object-fit: contain; display: inline-block;" />'
+    logo_img_tag = f'<img src="{escape(company_logo_url)}" alt="{escape(company_name)}" style="max-height: 48px; max-width: 220px; object-fit: contain; display: inline-block;" />'
     logo_header = f'<div style="text-align: left; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb;">{logo_img_tag}</div>'
 
     ctx = {
@@ -140,11 +142,18 @@ def render_template(template_key, context):
         else:
             body_html = logo_header + body_html
 
-    for key, val in ctx.items():
-        placeholder = f"{{{{{key}}}}}"
-        str_val = str(val if val is not None else '')
-        subject = subject.replace(placeholder, str_val)
-        body_html = body_html.replace(placeholder, str_val)
+    def replace_subject(match):
+        value = ctx.get(match.group(1), '')
+        return str(value if value is not None else '')
+
+    def replace_html(match):
+        key = match.group(1)
+        value = ctx.get(key, '')
+        return logo_img_tag if key == 'company_logo' else str(escape(value if value is not None else ''))
+
+    pattern = re.compile(r'\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}')
+    subject = pattern.sub(replace_subject, subject)
+    body_html = pattern.sub(replace_html, body_html)
 
     return subject, body_html
 
@@ -202,12 +211,14 @@ def test_smtp_connection(cfg, test_recipient):
         port = int(cfg.get('port') or 587)
         encryption = (cfg.get('encryption') or 'tls').lower()
 
-        if encryption == 'ssl' or port == 465:
-            server = smtplib.SMTP_SSL(cfg['host'], port, timeout=10)
+        if encryption not in ('tls', 'ssl', 'none'):
+            return False, 'Invalid SMTP encryption mode'
+        if encryption == 'ssl':
+            server = smtplib.SMTP_SSL(cfg['host'], port, timeout=10, context=ssl.create_default_context())
         else:
             server = smtplib.SMTP(cfg['host'], port, timeout=10)
             if encryption == 'tls':
-                server.starttls()
+                server.starttls(context=ssl.create_default_context())
 
         if cfg.get('user') and cfg.get('password'):
             server.login(cfg['user'], cfg['password'])

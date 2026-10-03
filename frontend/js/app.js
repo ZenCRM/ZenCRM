@@ -184,7 +184,7 @@ function crmApp() {
         // ═══════════════════════════════════════════════════════════
         modal:    { open: false, editingId: null, form: {}, error: '', view: null, lockedRelations: [] },
         profile:  { open: false, form: { email_notifications: {} }, error: '', success: '' },
-        password: { open: false, form: { new_password: '', confirm: '' }, error: '', success: '' },
+        password: { open: false, form: { current_password: '', new_password: '', confirm: '' }, error: '', success: '' },
         teamModal: {
             open: false,
             editingId: null,
@@ -278,8 +278,8 @@ function crmApp() {
                 this.setupError = window.ZenI18n.t('Podaj poprawny adres e-mail');
                 return;
             }
-            if (!form.password || form.password.length < 8) {
-                this.setupError = window.ZenI18n.t('Hasło musi mieć co najmniej 8 znaków');
+            if (!form.password || form.password.length < 10) {
+                this.setupError = window.ZenI18n.t('Hasło musi mieć od 10 do 256 znaków');
                 return;
             }
             if (form.password !== form.password_confirm) {
@@ -719,6 +719,7 @@ function crmApp() {
                 first_name: this.user?.first_name || '',
                 last_name:  this.user?.last_name  || '',
                 email:      this.user?.email      || '',
+                current_password: '',
                 avatar_url: this.user?.avatar_url || '',
                 default_call_method: this.user?.default_call_method || 'link',
                 email_notifications: {
@@ -738,10 +739,11 @@ function crmApp() {
             this.profile.error = '';
             this.profile.success = '';
             try {
+                const { current_password, ...profileData } = this.profile.form;
                 await this.api(`/users/${this.user.id}`, {
-                    method: 'PUT', body: JSON.stringify(this.profile.form),
+                    method: 'PUT', body: JSON.stringify({ ...profileData, current_password }),
                 });
-                this.user = { ...this.user, ...this.profile.form };
+                this.user = { ...this.user, ...profileData };
                 localStorage.setItem('user', JSON.stringify(this.user));
                 this.profile.success = window.ZenI18n.t('Profil zapisany');
                 setTimeout(() => { this.profile.open = false; }, 800);
@@ -752,7 +754,7 @@ function crmApp() {
         // ZMIANA HASŁA
         // ═══════════════════════════════════════════════════════════
         openPassword() {
-            this.password.form = { new_password: '', confirm: '' };
+            this.password.form = { current_password: '', new_password: '', confirm: '' };
             this.password.error = '';
             this.password.success = '';
             this.password.open = true;
@@ -765,17 +767,17 @@ function crmApp() {
                 this.password.error = window.ZenI18n.t('Hasła nie są identyczne');
                 return;
             }
-            if (this.password.form.new_password.length < 6) {
-                this.password.error = window.ZenI18n.t('Hasło musi mieć min. 6 znaków');
+            if (this.password.form.new_password.length < 10) {
+                this.password.error = window.ZenI18n.t('Hasło musi mieć min. 10 znaków');
                 return;
             }
             try {
                 await this.api(`/users/${this.user.id}`, {
                     method: 'PUT',
-                    body: JSON.stringify({ password: this.password.form.new_password }),
+                    body: JSON.stringify({ password: this.password.form.new_password, current_password: this.password.form.current_password }),
                 });
                 this.password.success = window.ZenI18n.t('Hasło zmienione');
-                setTimeout(() => { this.password.open = false; }, 800);
+                setTimeout(() => { this.logout(); }, 800);
             } catch (e) { this.password.error = e.message; }
         },
 

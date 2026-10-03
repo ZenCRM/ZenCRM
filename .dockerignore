@@ -19,3 +19,10 @@ generated/
 *.sqlite3
 **/*.sqlite3
 .env
+.env.*
+.venv/
+*.sqlite
+**/*.sqlite
+.claude/
+.review/
+.codex/

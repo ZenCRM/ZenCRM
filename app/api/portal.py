@@ -10,6 +10,7 @@ from flask import Blueprint, request, jsonify, abort, current_app, send_from_dir
 from flask_jwt_extended import verify_jwt_in_request
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from markupsafe import escape
 from ..extensions import db
 from ..models.workspace import PortalSpace, PortalMember, PortalSession, PortalItem, PortalReply
 from ..utils.deletion import current_user, is_admin
@@ -384,6 +385,8 @@ def attachment(space_id, item_id):
 
     # 1. Obsługa dokumentu klienta
     if item_id.startswith('doc_'):
+        if client_id is None:
+            abort(404)
         try:
             doc_id = int(item_id.split('_')[1])
         except (ValueError, IndexError):
@@ -398,13 +401,15 @@ def attachment(space_id, item_id):
             pdf_dir = Path(current_app.instance_path) / 'generated_docs'
             pdf_dir.mkdir(parents=True, exist_ok=True)
             pdf_tmp = str(pdf_dir / f'doc_{doc.id}.pdf')
-            html_to_pdf(doc.rendered_html or f'<pre>{doc.content}</pre>', pdf_tmp)
+            html_to_pdf(doc.rendered_html or f'<pre>{escape(doc.content)}</pre>', pdf_tmp)
             if os.path.exists(pdf_tmp):
                 return send_file(pdf_tmp, as_attachment=True, download_name=f'{doc.title}.pdf')
         abort(404)
 
     # 2. Obsługa oferty klienta
     if item_id.startswith('offer_'):
+        if client_id is None:
+            abort(404)
         try:
             off_id = int(item_id.split('_')[1])
         except (ValueError, IndexError):
@@ -419,7 +424,7 @@ def attachment(space_id, item_id):
             pdf_dir = Path(current_app.instance_path) / 'generated_offers'
             pdf_dir.mkdir(parents=True, exist_ok=True)
             pdf_tmp = str(pdf_dir / f'offer_{off.id}.pdf')
-            html_to_pdf(off.rendered_html or f'<pre>{off.content}</pre>', pdf_tmp)
+            html_to_pdf(off.rendered_html or f'<pre>{escape(off.content)}</pre>', pdf_tmp)
             if os.path.exists(pdf_tmp):
                 return send_file(pdf_tmp, as_attachment=True, download_name=f'{off.number}.pdf')
         abort(404)

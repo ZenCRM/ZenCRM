@@ -55,11 +55,11 @@ def init_api_security(app):
         try:
             user = db.session.get(User, int(payload['sub']))
         except (KeyError, TypeError, ValueError):
-            return False
+            return True
         if not user:
-            return False
+            return True
         version = payload.get('password_version')
-        return bool(version and not hmac.compare_digest(version, password_version(user)))
+        return not isinstance(version, str) or not hmac.compare_digest(version, password_version(user))
 
     @app.before_request
     def authenticate_api():
@@ -81,6 +81,13 @@ def init_api_security(app):
     def security_headers(response):
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'no-referrer'
+        response.headers['X-Frame-Options'] = 'DENY'
+        if response.mimetype == 'image/svg+xml':
+            response.headers['Content-Security-Policy'] = "sandbox; default-src 'none'"
+        if request.path.startswith('/api/') and response.mimetype == 'text/html' and 'Content-Security-Policy' not in response.headers:
+            response.headers['Content-Security-Policy'] = "sandbox; default-src 'none'; img-src data: https:; style-src 'unsafe-inline'; font-src data:"
+        if request.is_secure:
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         if request.path.startswith('/api/'):
             response.headers['Cache-Control'] = 'no-store'
         return response

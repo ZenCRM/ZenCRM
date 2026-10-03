@@ -256,7 +256,7 @@ def authenticate_device(token):
 @sms_bp.route('/next', methods=['GET'])
 def get_next_task():
     """Aplikacja mobilna co ~5 sekund odpytuje o kolejne zlecenie."""
-    token = request.args.get('token', '').strip()
+    token = (request.headers.get('X-Device-Token') or request.args.get('token', '')).strip()
     device = authenticate_device(token)
     if not device:
         return jsonify({'error': 'Invalid token'}), 403
@@ -352,9 +352,11 @@ def report_sms_status():
 
     task_id = data.get('id')
     status = data.get('status', 'sent')
+    if status not in ('sent', 'failed', 'called'):
+        return jsonify({'error': 'Invalid status'}), 400
 
     task = db.session.get(SmsQueue, task_id) if task_id else None
-    if task and task.device_id != device.id:
+    if task and (task.device_id != device.id or task.status != 'processing'):
         return jsonify({'error': 'Brak dostępu'}), 403
     if task:
         task.status = status
@@ -415,7 +417,7 @@ def receive_stats():
     req_id = data.get('request_id')
     if req_id:
         task = db.session.get(SmsQueue, req_id)
-        if task:
+        if task and task.device_id == device.id and task.action == 'get_stats' and task.status == 'processing':
             task.status = 'completed'
             task.sent_at = datetime.utcnow()
 
@@ -489,7 +491,7 @@ def receive_call_history():
     req_id = data.get('request_id')
     if req_id:
         task = db.session.get(SmsQueue, req_id)
-        if task:
+        if task and task.device_id == device.id and task.action == 'get_full_history' and task.status == 'processing':
             task.status = 'completed'
             task.sent_at = datetime.utcnow()
 
@@ -565,7 +567,7 @@ def receive_sms_history():
     req_id = data.get('request_id')
     if req_id:
         task = db.session.get(SmsQueue, req_id)
-        if task:
+        if task and task.device_id == device.id and task.action in ('get_sms_history', 'get_sms_history_by_date') and task.status == 'processing':
             task.status = 'completed'
             task.sent_at = datetime.utcnow()
 
@@ -619,9 +621,7 @@ def add_device():
     if not name:
         return jsonify({'error': 'Nazwa urządzenia jest wymagana'}), 400
 
-    token = data.get('token', '').strip()
-    if not token:
-        token = f'zen_sms_{secrets.token_hex(16)}'
+    token = f'zen_sms_{secrets.token_hex(16)}'
 
     if SmsDevice.query.filter_by(token=token).first():
         return jsonify({'error': 'Urządzenie z tym tokenem już istnieje'}), 400
@@ -694,13 +694,7 @@ def update_device(device_id):
                 (SmsMessage.message_time < device.sync_from) | (SmsMessage.timestamp < sync_from_ms)
             ).delete(synchronize_session=False)
 
-    if 'token' in data and data['token'].strip():
-        new_token = data['token'].strip()
-        existing = SmsDevice.query.filter_by(token=new_token).first()
-        if existing and existing.id != device.id:
-            return jsonify({'error': 'Urządzenie z tym tokenem już istnieje'}), 400
-        device.token = new_token
-    elif data.get('regenerate_token'):
+    if data.get('regenerate_token'):
         device.token = f'zen_sms_{secrets.token_hex(16)}'
 
     db.session.commit()
@@ -866,7 +860,9 @@ def get_entity_history():
     if not target_variants:
         return jsonify({'calls': [], 'messages': [], 'phones': unique_phones, 'phone_numbers': unique_phones}), 200
 
+    accessible_devices = get_user_accessible_device_ids()
     all_calls = PhoneCall.query.outerjoin(SmsDevice, PhoneCall.device_id == SmsDevice.id).filter(
+        PhoneCall.device_id.in_(accessible_devices),
         db.or_(
             SmsDevice.sync_from == None,
             PhoneCall.call_time == None,
@@ -883,6 +879,7 @@ def get_entity_history():
             matched_calls.append(cd)
 
     all_messages = SmsMessage.query.outerjoin(SmsDevice, SmsMessage.device_id == SmsDevice.id).filter(
+        SmsMessage.device_id.in_(accessible_devices),
         db.or_(
             SmsDevice.sync_from == None,
             SmsMessage.message_time == None,
@@ -1191,7 +1188,7 @@ def list_calls():
 @jwt_required()
 def update_call_note(call_id):
     call = db.session.get(PhoneCall, call_id)
-    if not call:
+    if not call or call.device_id not in get_user_accessible_device_ids():
         return jsonify({'error': 'Połączenie nie istnieje'}), 404
     data = request.get_json(silent=True) or {}
     if not isinstance(data, dict):

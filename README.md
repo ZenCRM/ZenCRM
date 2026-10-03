@@ -129,11 +129,10 @@ Własne tłumaczenia mają pierwszeństwo przed tekstami dostarczonymi z aplikac
 
 ### Szybki start: Docker Compose
 
-Wymagane są Docker i Docker Compose. Plik [docker-compose.yml](docker-compose.yml) używa obrazu [kosiorekmateusz/zencrm](https://hub.docker.com/r/kosiorekmateusz/zencrm). Przed uruchomieniem ustaw własne, różne wartości <code>SECRET_KEY</code> i <code>JWT_SECRET_KEY</code>.
+Wymagane są Docker i Docker Compose. Polecenie poniżej buduje obraz z bieżącego kodu. Puste <code>SECRET_KEY</code> i <code>JWT_SECRET_KEY</code> powodują wygenerowanie oddzielnych, trwałych kluczy w wolumenie <code>zencrm_data</code>; można też ustawić własne, różne wartości w pliku <code>.env</code>.
 
 ~~~bash
-docker compose pull zencrm
-docker compose up -d --no-build zencrm
+docker compose up -d --build zencrm
 ~~~
 
 Otwórz **http://localhost/**. Przy pierwszym uruchomieniu w przeglądarce pojawi się formularz utworzenia administratora. Skrypt startowy przygotowuje bazę automatycznie; nie tworzy konta z domyślnym hasłem. Wolumen <code>zencrm_data</code> przechowuje bazę, a <code>zencrm_uploads</code> przesłane pliki.
@@ -145,7 +144,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.2</code>.
+Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.3</code>.
 
 ### Uruchomienie lokalne
 
@@ -172,7 +171,7 @@ cp .env.example .env
 PORT=5000 python run.py
 ~~~
 
-W pliku <code>.env</code> zastąp przykładowe sekrety własnymi. Otwórz **http://localhost:5000/** i utwórz administratora w formularzu pierwszego uruchomienia. <code>run.py</code> służy do pracy lokalnej i włącza tryb debugowania Flask; wdrożenie kontenerowe używa Gunicorn.
+Ustaw dwa losowe sekrety o długości co najmniej 32 znaków albo pozostaw je puste, aby aplikacja wygenerowała i zapisała je w katalogu instance. Otwórz **http://localhost:5000/** i utwórz administratora w formularzu pierwszego uruchomienia. Debugowanie lokalne wymaga jawnego <code>FLASK_DEBUG=1</code>.
 
 ### Konfiguracja, dane i bezpieczeństwo
 
@@ -181,7 +180,9 @@ W pliku <code>.env</code> zastąp przykładowe sekrety własnymi. Otwórz **http
 | <code>SECRET_KEY</code> | Sekret aplikacji Flask. |
 | <code>JWT_SECRET_KEY</code> | Oddzielny sekret tokenów logowania. |
 | <code>DATABASE_URL</code> | Adres bazy SQLAlchemy; domyślnie SQLite. |
-| <code>PORT</code> | Port serwera; lokalnie w przykładach 5000, w Compose 80. |
+| <code>PUBLIC_BASE_URL</code> | Publiczny adres CRM używany w linkach powiadomień, np. <code>https://crm.example.com</code>. Ustaw go przed włączeniem maili z helpdesku. |
+| <code>TRUSTED_PROXY_HOPS</code> | Liczba zaufanych pośredników reverse proxy; ustaw tylko gdy aplikacja nie jest dostępna z pominięciem proxy. |
+| <code>PORT</code> | Port serwera; lokalnie w przykładach 5000, w kontenerze 8080 (Compose wystawia port 80). |
 | <code>ZENCRM_VERSION</code> | Opcjonalny identyfikator wersji; obraz Docker ustawia go podczas budowania. |
 
 Przed wdrożeniem nowej wersji wykonaj kopię bazy i katalogu przesłanych plików. Aplikacja tworzy brakujące tabele i uzupełnia część starszych schematów przy starcie. Instalację dostępną przez Internet uruchamiaj przez HTTPS i chroń sekrety.
@@ -293,11 +294,10 @@ Custom translations take precedence over bundled translations, while missing phr
 
 ### Quick start: Docker Compose
 
-Docker and Docker Compose are required. [docker-compose.yml](docker-compose.yml) uses the published [kosiorekmateusz/zencrm](https://hub.docker.com/r/kosiorekmateusz/zencrm) image. Before starting, set your own, distinct <code>SECRET_KEY</code> and <code>JWT_SECRET_KEY</code> values.
+Docker and Docker Compose are required. The command below builds an image from the current source. Empty <code>SECRET_KEY</code> and <code>JWT_SECRET_KEY</code> values generate separate persistent keys in the <code>zencrm_data</code> volume; you can also set distinct custom values in <code>.env</code>.
 
 ~~~bash
-docker compose pull zencrm
-docker compose up -d --no-build zencrm
+docker compose up -d --build zencrm
 ~~~
 
 Open **http://localhost/**. On the first launch, the browser displays a form to create the administrator. The entrypoint prepares the database automatically; it does not create an account with a default password. The <code>zencrm_data</code> volume stores the database and <code>zencrm_uploads</code> stores uploaded files.
@@ -309,7 +309,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.2</code>.
+The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.3</code>.
 
 ### Run locally
 
@@ -336,7 +336,7 @@ cp .env.example .env
 PORT=5000 python run.py
 ~~~
 
-Replace the sample secrets in <code>.env</code> with your own. Open **http://localhost:5000/** and create the administrator through the first-run form. <code>run.py</code> is intended for local work and enables Flask debug mode; the container deployment uses Gunicorn.
+Set two random secrets of at least 32 characters, or leave them blank so the application generates and stores them in the instance directory. Open **http://localhost:5000/** and create the administrator through the first-run form. Local debugging requires an explicit <code>FLASK_DEBUG=1</code>.
 
 ### Configuration, data, and security
 
@@ -345,7 +345,9 @@ Replace the sample secrets in <code>.env</code> with your own. Open **http://loc
 | <code>SECRET_KEY</code> | Flask application secret. |
 | <code>JWT_SECRET_KEY</code> | Separate secret for login tokens. |
 | <code>DATABASE_URL</code> | SQLAlchemy database URL; SQLite by default. |
-| <code>PORT</code> | Server port; 5000 in the local examples and 80 in Compose. |
+| <code>PUBLIC_BASE_URL</code> | Public CRM address used in notification links, for example <code>https://crm.example.com</code>. Set it before enabling helpdesk emails. |
+| <code>TRUSTED_PROXY_HOPS</code> | Number of trusted reverse proxy hops; set only when the application cannot be reached around the proxy. |
+| <code>PORT</code> | Server port; 5000 in the local examples and 8080 in the container (Compose exposes port 80). |
 | <code>ZENCRM_VERSION</code> | Optional version identifier; the Docker image sets it at build time. |
 
 Back up the database and uploaded files before deploying a new release. The application creates missing tables and updates some older schemas at startup. Use HTTPS for an Internet-facing installation and protect your secrets.

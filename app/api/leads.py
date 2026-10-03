@@ -1,3 +1,4 @@
+import hmac
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from ..extensions import db
@@ -163,11 +164,9 @@ def webhook_submit_lead():
         return jsonify({'error': 'Webhook zgłoszeń leadów jest wyłączony'}), 403
 
     expected_token = Setting.get_value('lead_webhook_token', '')
-    req_token = request.headers.get('X-Webhook-Token') or request.args.get('token')
-    if not req_token and request.is_json:
-        req_token = (request.get_json(silent=True) or {}).get('token')
+    req_token = request.headers.get('X-Webhook-Token', '')
 
-    if not expected_token or req_token != expected_token:
+    if not expected_token or not hmac.compare_digest(req_token, expected_token):
         return jsonify({'error': 'Nieprawidłowy token autoryzacyjny webhooka'}), 401
 
     data = request.get_json(silent=True) or request.form.to_dict() or {}

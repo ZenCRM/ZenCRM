@@ -12,6 +12,7 @@ import hashlib
 import secrets
 from markupsafe import escape
 from ..utils.i18n import t
+from ..utils.passwords import valid_password
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -39,8 +40,8 @@ def setup_admin():
 
     if not email or '@' not in email or '.' not in email.split('@')[-1]:
         return jsonify({'error': t('Podaj poprawny adres e-mail')}), 400
-    if not isinstance(password, str) or len(password) < 8 or len(password) > 256:
-        return jsonify({'error': t('Hasło musi mieć co najmniej 8 znaków')}), 400
+    if not valid_password(password):
+        return jsonify({'error': t('Hasło musi mieć od 10 do 256 znaków')}), 400
 
     admin = User(
         email=email,
@@ -72,6 +73,8 @@ def register():
     data = request.get_json() or {}
     if not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email i hasło są wymagane'}), 400
+    if not valid_password(data['password']):
+        return jsonify({'error': 'Hasło musi mieć od 10 do 256 znaków'}), 400
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'error': 'Email już istnieje'}), 400
     user = User(
@@ -109,7 +112,7 @@ def forgot_password():
     email = (data.get('email') or '').strip().lower()
     if not email:
         return jsonify({'error': 'Podaj adres e-mail'}), 400
-    user = User.query.filter(User.email.ilike(email)).first()
+    user = User.query.filter(db.func.lower(User.email) == email).first()
     if user and user.is_active:
         token = secrets.token_urlsafe(24)
         PasswordReset.query.filter(PasswordReset.expires_at <= datetime.utcnow()).delete()
@@ -138,7 +141,7 @@ def reset_password():
     data = request.get_json(silent=True) or {}
     token = data.get('token', '')
     password = data.get('password', '')
-    if not isinstance(token, str) or not isinstance(password, str) or not 10 <= len(password) <= 256:
+    if not isinstance(token, str) or not valid_password(password):
         return jsonify(error=t('Podaj kod i hasło o długości od 10 do 256 znaków.')), 400
     reset = db.session.get(PasswordReset, hashlib.sha256(token.encode()).hexdigest())
     user = db.session.get(User, reset.user_id) if reset else None

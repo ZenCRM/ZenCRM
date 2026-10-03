@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.workspace import CustomField, CustomValue
 from ..utils.deletion import current_user, is_admin
+from ..utils.permissions import has_permission, MODULES
 
 custom_fields_bp = Blueprint('custom_fields', __name__)
 
@@ -88,6 +89,8 @@ def entity_values(entity):
     model = entities().get(entity)
     if model is None:
         abort(404)
+    if entity == 'users' and not is_admin():
+        abort(403)
     fields = CustomField.query.filter_by(entity=entity).all()
     if not fields:
         return jsonify({})
@@ -121,6 +124,8 @@ def values(entity, record_id):
     if getattr(record, 'deleted_at', None):
         abort(404)
     if entity == 'users' and not is_admin() and current_user().id != record_id:
+        abort(403)
+    if request.method == 'PUT' and not (is_admin() or (entity in MODULES and has_permission(current_user(), f'{entity}.edit')) or (entity == 'users' and current_user().id == record_id)):
         abort(403)
     fields = CustomField.query.filter_by(entity=entity).all()
     if request.method == 'PUT':

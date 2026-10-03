@@ -128,6 +128,9 @@ window.ZenModules.records = function () { return {
                 if (f.key === 'password' && this.modal.editingId) {
                     field.required = false;
                 }
+                if (mod === 'users' && f.key === 'password' && !this.modal.editingId) {
+                    field.required = true;
+                }
                 return field;
             });
         },

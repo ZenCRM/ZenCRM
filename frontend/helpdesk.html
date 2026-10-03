@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-i18n-title="Centrum Pomocy">Centrum Pomocy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/vendor/tailwind-3.4.17.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -316,21 +316,29 @@
                         const isAgent = (m.sender_type === 'agent');
                         const card = document.createElement('div');
                         card.className = `p-4 rounded-xl border ${isAgent ? 'bg-blue-50/60 border-blue-200' : 'bg-gray-50 border-gray-200'}`;
-                        card.innerHTML = `
-                            <div class="flex items-center justify-between gap-2 mb-2 text-xs">
-                                <span class="font-bold ${isAgent ? 'text-blue-900' : 'text-gray-900'}">
-                                    ${isAgent ? window.ZenI18n.t('💬 Zespół Wsparcia') : '👤 ' + (m.sender_name || window.ZenI18n.t('Klient'))}
-                                </span>
-                                <span class="text-gray-400">${new Date(m.created_at).toLocaleString(window.ZenI18n.locale)}</span>
-                            </div>
-                            <div class="text-sm text-gray-800 whitespace-pre-wrap">${m.content}</div>
-                        `;
+                        const header = document.createElement('div');
+                        header.className = 'flex items-center justify-between gap-2 mb-2 text-xs';
+                        const sender = document.createElement('span');
+                        sender.className = 'font-bold ' + (isAgent ? 'text-blue-900' : 'text-gray-900');
+                        sender.textContent = isAgent ? window.ZenI18n.t('💬 Zespół Wsparcia') : '👤 ' + (m.sender_name || window.ZenI18n.t('Klient'));
+                        const date = document.createElement('span');
+                        date.className = 'text-gray-400';
+                        date.textContent = new Date(m.created_at).toLocaleString(window.ZenI18n.locale);
+                        header.append(sender, date);
+                        const content = document.createElement('div');
+                        content.className = 'text-sm text-gray-800 whitespace-pre-wrap';
+                        content.textContent = m.content || '';
+                        card.append(header, content);
                         msgBox.appendChild(card);
                     });
                 } catch (e) {
                     const msgBox = document.getElementById('tr-messages');
                     if (msgBox) {
-                        msgBox.innerHTML = `<div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">${e.message}</div>`;
+                        msgBox.replaceChildren();
+                        const error = document.createElement('div');
+                        error.className = 'p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium';
+                        error.textContent = e.message;
+                        msgBox.appendChild(error);
                     }
                 }
             }

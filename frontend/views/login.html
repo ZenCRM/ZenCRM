@@ -104,12 +104,12 @@
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1"
-                           x-text="window.ZenI18n.t('Hasło (min. 8 znaków)')">Hasło (min. 8 znaków)</label>
+                           x-text="window.ZenI18n.t('Hasło (min. 10 znaków)')">Hasło (min. 10 znaków)</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </span>
-                        <input :type="showSetupPassword ? 'text' : 'password'" x-model="setupForm.password" required minlength="8" autocomplete="new-password"
+                        <input :type="showSetupPassword ? 'text' : 'password'" x-model="setupForm.password" required minlength="10" autocomplete="new-password"
                                placeholder="••••••••"
                                class="w-full pl-10 pr-11 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
                         <button type="button" @click="showSetupPassword = !showSetupPassword"
@@ -131,7 +131,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </span>
-                        <input :type="showSetupPassword ? 'text' : 'password'" x-model="setupForm.password_confirm" required minlength="8" autocomplete="new-password"
+                        <input :type="showSetupPassword ? 'text' : 'password'" x-model="setupForm.password_confirm" required minlength="10" autocomplete="new-password"
                                placeholder="••••••••"
                                class="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
                     </div>
@@ -261,7 +261,7 @@
 
         <!-- Stopka formularza -->
         <div class="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700/60 text-center">
-            <div x-show="settingsForm?.login_footer" x-html="settingsForm.login_footer" class="text-xs text-gray-400 dark:text-gray-500"></div>
+            <div x-show="settingsForm?.login_footer" x-text="settingsForm.login_footer" class="text-xs text-gray-400 dark:text-gray-500"></div>
             <div x-show="!settingsForm?.login_footer" class="text-[11px] text-gray-400 dark:text-gray-500">
                 <span x-text="window.ZenI18n.t(&quot;ZenCRM&quot;)">ZenCRM</span> &copy; <span x-text="new Date().getFullYear()"></span><span x-text="window.ZenI18n.t(&quot;. Wszystkie prawa zastrzeżone.&quot;)">. Wszystkie prawa zastrzeżone.</span>
             </div>

@@ -162,6 +162,9 @@ def test_smtp():
         'from_name': data.get('from_name') or data.get('smtp_from_name') or Setting.get_value('smtp_from_name', 'ZenCRM'),
         'encryption': data.get('encryption') or data.get('smtp_encryption') or Setting.get_value('smtp_encryption', 'tls'),
     }
+    if not (data.get('password') or data.get('smtp_password')):
+        # Saved credentials may only be tested against the saved server.
+        cfg = get_smtp_config()
 
     ok, message = test_smtp_connection(cfg, test_to)
     if not ok:
