@@ -59,7 +59,7 @@ Szablon wybierzesz w **Ustawienia → Szablony wyglądu**. Oba współpracują z
 | Obszar | Funkcje |
 | --- | --- |
 | **Pulpit** | Liczniki klientów, leadów, projektów, zadań i usług, wykresy lejka oraz skróty do codziennych działań. |
-| **Klienci i kontakty** | Dane firm i osób, opiekunowie, powiązane kontakty, pliki, notatki i historia aktywności w jednej karcie. |
+| **Klienci i kontakty** | Dane firm i osób, opiekunowie, powiązane kontakty, pliki, notatki i historia aktywności w jednej karcie; uzupełnianie danych firmy po NIP z GUS lub MF oraz własne statusy klientów. |
 | **Leady** | Etapy sprzedaży, wartość i prawdopodobieństwo, widok tabeli i Kanban, konwersja leada na klienta oraz źródła i webhook leadów. |
 | **Projekty** | Statusy, etapy, członkowie zespołu, powiązania z klientami, zadania, terminy i pliki w jednym miejscu. |
 | **Zadania** | Lista i Kanban, priorytety, terminy, postęp oraz przypisanie wielu wykonawców. |
@@ -116,6 +116,17 @@ Po skonfigurowaniu **SMTP** system wysyła powiadomienia e-mail o zdarzeniach ta
 ### Telefonia i SMS w praktyce
 
 W **Telefonia & SMS** dodajesz urządzenie i łączysz je z aplikacją Android współpracującą z bramką CRM (SMS Manager / GoFlow) za pomocą indywidualnego tokenu. Aplikacja działa w tle telefonu i synchronizuje historię połączeń oraz wiadomości. ZenCRM wiąże ją z klientami, leadami i kontaktami po numerze telefonu. Z ich kart możesz przejrzeć wcześniejszy kontakt oraz zlecić wykonanie połączenia lub wysłanie SMS-a przez podłączony telefon. Dostęp do urządzeń i wysyłania jest powiązany z zalogowanym użytkownikiem.
+
+### Wyszukiwanie firm w GUS lub MF i statusy klientów
+
+W **Ustawienia → Ustawienia klientów** wybierasz wyszukiwarkę firm: wyłączona (domyślnie), **GUS** lub **Ministerstwo Finansów**. Po jej włączeniu w formularzu klienta wpisz NIP i kliknij **Wyszukaj firmę w GUS** (lub **Wyszukaj firmę w MF**). Nazwa firmy, identyfikatory i adres zostaną uzupełnione; przed zapisaniem możesz je poprawić. NIP, REGON i KRS są opcjonalne.
+
+- **GUS (BIR):** wymaga klucza API, który wpisujesz w ustawieniach albo podajesz w zmiennej <code>GUS_API_KEY</code> po stronie serwera; przełącznik w CRM nadal musi być włączony. Puste pole klucza przy kolejnym zapisie zachowuje dotychczasowy klucz, a sam klucz nigdy nie trafia do przeglądarki. Klucz produkcyjny uzyskasz zgodnie z instrukcjami na [api.stat.gov.pl](https://api.stat.gov.pl/Home/RegonApi). <code>GUS_TEST_MODE=true</code> przełącza na środowisko testowe BIR, które zwraca dane testowe. GUS uzupełnia nazwę, REGON i adres; KRS wpisuje się ręcznie.
+- **Ministerstwo Finansów:** bezpłatne [API wykazu podatników VAT](https://wl-api.mf.gov.pl/) nie wymaga klucza. Wyszukuje po NIP według stanu na bieżący dzień (strefa Europe/Warsaw) i uzupełnia nazwę, NIP, REGON, KRS i adres, jeśli są dostępne. MF zwraca adres jako tekst: standardowy format jest rozdzielany na pola, a przy nietypowym pełny adres zostaje zachowany. API obejmuje tylko podmioty z wykazu VAT i podlega limitom MF.
+
+Migracja <code>20261003_client_address</code> dodaje pola adresu i identyfikatorów firmy bez usuwania zapisanych adresów. Dotychczasowe adresy są widoczne w formularzu; wpisanie adresu w nowych polach zastępuje jego tekstową wersję używaną w szczegółach i dokumentach.
+
+W tej samej sekcji dodajesz, zmieniasz nazwy i kolory oraz usuwasz statusy klientów (od 1 do 20). Status przypisany do klienta, także zarchiwizowanego, można usunąć dopiero po przeniesieniu wszystkich takich klientów do innego statusu. Nowi klienci i leady po konwersji korzystają z dostępnych statusów.
 
 ### Aktualizacje
 
@@ -219,6 +230,8 @@ Ustaw dwa losowe sekrety o długości co najmniej 32 znaków albo pozostaw je pu
 | <code>PUBLIC_BASE_URL</code> | Publiczny adres CRM używany w linkach powiadomień, np. <code>https://crm.example.com</code>. Ustaw go przed włączeniem maili z helpdesku. |
 | <code>TRUSTED_PROXY_HOPS</code> | Liczba zaufanych pośredników reverse proxy; ustaw tylko gdy aplikacja nie jest dostępna z pominięciem proxy. Za reverse proxy jest wymagana, inaczej wszyscy klienci dzielą jeden limit prób logowania. |
 | <code>PREPARE_DATABASE</code> | Domyślnie <code>true</code>: aplikacja migruje bazę przy starcie. Przy kilku procesach gunicorn uruchom najpierw <code>python seed.py</code>, a procesy startuj z <code>false</code> (tak robi obraz Docker). |
+| <code>GUS_API_KEY</code> | Opcjonalny klucz API BIR GUS dla wyszukiwarki firm; klucz zapisany w ustawieniach ma pierwszeństwo. |
+| <code>GUS_TEST_MODE</code> | <code>true</code> przełącza wyszukiwarkę GUS na środowisko testowe BIR; domyślnie <code>false</code>. |
 | <code>PORT</code> | Port serwera; lokalnie w przykładach 5000, w kontenerze 8080 (Compose wystawia port 80). |
 | <code>ZENCRM_VERSION</code> | Opcjonalny identyfikator wersji; obraz Docker ustawia go podczas budowania. |
 
@@ -261,7 +274,7 @@ Select a template under **Settings → Appearance templates**. Both work with li
 | Area | Features |
 | --- | --- |
 | **Dashboard** | Counts for clients, leads, projects, tasks, and services, pipeline charts, and shortcuts to frequent actions. |
-| **Clients and contacts** | Company and person details, account owners, linked contacts, files, notes, and activity history in one record. |
+| **Clients and contacts** | Company and person details, account owners, linked contacts, files, notes, and activity history in one record; company details filled in by NIP from GUS or MF, and custom client statuses. |
 | **Leads** | Sales stages, value and probability, table and Kanban views, lead conversion, lead sources, and a lead webhook. |
 | **Projects** | Statuses, stages, team members, client links, tasks, deadlines, and files in one place. |
 | **Tasks** | List and Kanban, priorities, due dates, progress, and multiple assignees. |
@@ -318,6 +331,17 @@ Once **SMTP** is configured, the system sends email notifications for events suc
 ### Telephony and SMS in practice
 
 In **Telephony & SMS**, add a device and pair a compatible Android app (SMS Manager / GoFlow) with the CRM gateway using an individual token. The app runs in the background on your phone and synchronizes call and message history. ZenCRM links it to clients, leads, and contacts by phone number. From their records, you can review earlier conversations and request a call or send a text through the connected phone. Device access and sending permissions are tied to the signed-in user.
+
+### Company lookup in GUS or MF, and client statuses
+
+Under **Settings → Client settings**, choose a company lookup provider: disabled (the default), **GUS**, or **Ministry of Finance**. Once it is enabled, enter a NIP (Polish tax ID) in the client form and click **Find company in GUS** (or **Find company in MF**). The company name, identifiers, and address are filled in, and you can correct them before saving. NIP, REGON, and KRS are optional.
+
+- **GUS (BIR, the Statistics Poland business register):** requires an API key, entered in the settings or provided through the server-side <code>GUS_API_KEY</code> variable; the switch in the CRM must still be enabled. Leaving the key field blank on a later save keeps the existing key, and the key is never sent to the browser. Get a production key by following the instructions at [api.stat.gov.pl](https://api.stat.gov.pl/Home/RegonApi). <code>GUS_TEST_MODE=true</code> switches to the BIR test environment, which returns test data. GUS fills in the name, REGON, and address; KRS is entered manually.
+- **Ministry of Finance (MF):** the free [VAT taxpayer register API](https://wl-api.mf.gov.pl/) needs no key. It searches by NIP as of the current day (Europe/Warsaw time zone) and fills in the name, NIP, REGON, KRS, and address when available. MF returns the address as text: the standard format is split into fields, and an unusual format keeps the full address. The API covers only entities in the VAT register and is subject to MF rate limits.
+
+The <code>20261003_client_address</code> migration adds the address and company identifier fields without removing stored addresses. Existing addresses remain visible in the form; entering an address in the new fields replaces the text version used in record details and documents.
+
+In the same section, you can add, rename, recolor, and delete client statuses (from 1 to 20). A status assigned to a client, including an archived one, can be deleted only after all such clients are moved to another status. New clients and converted leads use the available statuses.
 
 ### Updates
 
@@ -421,6 +445,8 @@ Set two random secrets of at least 32 characters, or leave them blank so the app
 | <code>PUBLIC_BASE_URL</code> | Public CRM address used in notification links, for example <code>https://crm.example.com</code>. Set it before enabling helpdesk emails. |
 | <code>TRUSTED_PROXY_HOPS</code> | Number of trusted reverse proxy hops; set only when the application cannot be reached around the proxy. Required behind a reverse proxy, otherwise all clients share one login rate limit. |
 | <code>PREPARE_DATABASE</code> | <code>true</code> by default: the application migrates the database at startup. With several gunicorn workers, run <code>python seed.py</code> first and start the workers with <code>false</code> (the Docker image does this). |
+| <code>GUS_API_KEY</code> | Optional GUS BIR API key for company lookup; a key saved in the settings takes precedence. |
+| <code>GUS_TEST_MODE</code> | <code>true</code> switches GUS lookup to the BIR test environment; <code>false</code> by default. |
 | <code>PORT</code> | Server port; 5000 in the local examples and 8080 in the container (Compose exposes port 80). |
 | <code>ZENCRM_VERSION</code> | Optional version identifier; the Docker image sets it at build time. |
 
@@ -436,15 +462,3 @@ Back up the database and uploaded files before deploying a new release. The sche
 | [Latest release](https://github.com/ZenCRM/ZenCRM/releases/latest) | Release notes and available tags. |
 
 Report bugs and ideas through [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Code changes can be proposed in a pull request.
-
-### Wyszukiwanie firmy w GUS
-
-W formularzu klienta wpisz NIP i kliknij „Wyszukaj firmę w GUS”. Dane firmy, REGON i adres zostaną uzupełnione i można je poprawić przed zapisaniem. NIP, REGON i KRS są opcjonalne; KRS uzupełnia się ręcznie.
-
-W ustawieniach CRM otwórz „Ustawienia klientów”, wybierz GUS, wpisz klucz API i zapisz ustawienia. Funkcja jest domyślnie wyłączona. Puste pole klucza przy kolejnym zapisie zachowuje istniejący klucz. Można również dostarczyć klucz przez `GUS_API_KEY` w środowisku serwera; przełącznik w CRM nadal jest wymagany. Klucz produkcyjny można uzyskać zgodnie z instrukcjami na https://api.stat.gov.pl/Home/RegonApi. `GUS_TEST_MODE=true` przełącza na środowisko testowe BIR; zwraca ono dane testowe. Klucz nigdy nie jest przesyłany do przeglądarki.
-
-Migracja `20261003_client_address` dodaje pola bez usuwania zapisanych adresów. Aplikacja dodaje również brakujące kolumny przy starcie, zgodnie z istniejącym mechanizmem aktualizacji schematu. Stare adresy są widoczne w formularzu; wpisanie adresu w nowych polach zastępuje jego tekstową wersję używaną w szczegółach i dokumentach.
-
-W „Ustawieniach klientów” wyszukiwarka ma trzy opcje: wyłączona (domyślnie), GUS lub Ministerstwo Finansów. Bezpłatne API MF nie wymaga klucza i przeszukuje wykaz podatników VAT po NIP na bieżący dzień w strefie Europe/Warsaw: https://wl-api.mf.gov.pl/. Uzupełnia nazwę firmy, NIP, REGON, KRS i adres, jeśli są dostępne. MF zwraca adres tekstowy; aplikacja rozdziela standardowy format, a pełny adres zachowuje także przy nietypowym formacie. API podlega limitom MF i obejmuje podmioty z wykazu VAT.
-
-W tej samej sekcji można dodawać, zmieniać nazwy i kolory oraz usuwać statusy klientów (1–20 statusów). Status używany przez klienta, również w archiwum, można usunąć dopiero po przeniesieniu wszystkich takich klientów do innego statusu. Nowi klienci i konwersje leadów korzystają z dostępnych statusów.
