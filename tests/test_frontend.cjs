@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const store = new Map();
 const sandbox = {window:{},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v))},location:{hash:''},Date,console,setTimeout,clearTimeout};
 vm.createContext(sandbox);
-for(const name of ['../locales/pl','../locales/en','i18n','config','ux',...fs.readdirSync('frontend/js/modules').filter(n=>n.endsWith('.js')).map(n=>'modules/'+n.slice(0,-3)),'app']) vm.runInContext(fs.readFileSync(`frontend/js/${name}.js`,'utf8'),sandbox);
+for(const name of ['../locales/pl','../locales/en','i18n','config','ux',...[...fs.readFileSync('frontend/views/head.html','utf8').matchAll(/src="\/js\/((?:modules|core|settings)\/[^?"]+)\?[^"]*"/g)].map(m=>m[1].slice(0,-3)),'app']) vm.runInContext(fs.readFileSync(`frontend/js/${name}.js`,'utf8'),sandbox);
 const app = sandbox.crmApp();
 const portalMenu = app.menu.find(item => item.id === 'portal_group');
 assert.ok(portalMenu.children.some(item => item.id === 'portalTickets'));
