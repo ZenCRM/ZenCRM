@@ -144,7 +144,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.3</code>.
+Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.4</code>.
 
 ### Uruchomienie lokalne
 
@@ -309,7 +309,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.3</code>.
+The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.4</code>.
 
 ### Run locally
 

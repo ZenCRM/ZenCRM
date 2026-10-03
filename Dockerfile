@@ -17,7 +17,7 @@ RUN groupadd -g 1000 zencrm && \
 
 WORKDIR /app
 
-ARG ZENCRM_VERSION=0.9.0.3
+ARG ZENCRM_VERSION=0.9.0.4
 LABEL org.opencontainers.image.version="${ZENCRM_VERSION}"
 ENV ZENCRM_VERSION=${ZENCRM_VERSION}
 
