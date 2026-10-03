@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
-# System dependencies for WeasyPrint & general utilities
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Pending Debian security fixes, then system dependencies for WeasyPrint & general utilities
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
     libharfbuzz0b \
@@ -17,13 +17,16 @@ RUN groupadd -g 1000 zencrm && \
 
 WORKDIR /app
 
+# Install Python requirements (pinned), then drop the installers: nothing installs packages at runtime,
+# and pip, setuptools and wheel only add vulnerabilities to the image.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip uninstall -y pip setuptools wheel
+
+# Declared after the dependency layer so a version bump does not reinstall requirements
 ARG ZENCRM_VERSION=0.9.0.4
 LABEL org.opencontainers.image.version="${ZENCRM_VERSION}"
 ENV ZENCRM_VERSION=${ZENCRM_VERSION}
-
-# Install Python requirements (pinned)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all application code
 COPY . /app

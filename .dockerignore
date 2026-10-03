@@ -29,3 +29,13 @@ generated/
 backups/
 backup/
 caddy/
+.github/
+.DS_Store
+**/.DS_Store
+screens/
+tools/
+README.md
+Dockerfile
+.dockerignore
+docker-compose*.yml
+.gitattributes

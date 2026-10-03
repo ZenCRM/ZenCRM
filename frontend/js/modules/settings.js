@@ -273,7 +273,7 @@ window.ZenModules.settings = function () { return {
                 next = backgrounds[(backgrounds.indexOf(next) + 1 + Math.floor(Math.random() * (backgrounds.length - 1))) % backgrounds.length];
             }
             this.modernHeroBackground = next;
-            document.documentElement.style.setProperty('--modern-hero-image', `url('/images/hero-${next}-photo.png')`);
+            document.documentElement.style.setProperty('--modern-hero-image', `url('/images/hero-${next}-photo.webp')`);
         },
 
         async uploadBrandFile(event, variant) {

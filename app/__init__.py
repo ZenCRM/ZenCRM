@@ -1,6 +1,11 @@
+import mimetypes
 import os
 import sys
 from pathlib import Path
+
+# Slim images ship no /etc/mime.types and Python 3.11 has no built-in WebP type;
+# without it the hero images would be served as application/octet-stream under nosniff.
+mimetypes.add_type('image/webp', '.webp')
 
 # Ensure project venv site-packages are accessible even if run from another Python interpreter
 _proj_root = Path(__file__).resolve().parent.parent
