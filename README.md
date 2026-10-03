@@ -132,10 +132,10 @@ Własne tłumaczenia mają pierwszeństwo przed tekstami dostarczonymi z aplikac
 Wymagane są Docker i Docker Compose. Polecenie poniżej buduje obraz z bieżącego kodu. Puste <code>SECRET_KEY</code> i <code>JWT_SECRET_KEY</code> powodują wygenerowanie oddzielnych, trwałych kluczy w wolumenie <code>zencrm_data</code>; można też ustawić własne, różne wartości w pliku <code>.env</code>.
 
 ~~~bash
-docker compose up -d --build zencrm
+docker compose up -d --build
 ~~~
 
-Otwórz **http://localhost/**. Przy pierwszym uruchomieniu w przeglądarce pojawi się formularz utworzenia administratora. Skrypt startowy przygotowuje bazę automatycznie; nie tworzy konta z domyślnym hasłem. Wolumen <code>zencrm_data</code> przechowuje bazę, a <code>zencrm_uploads</code> przesłane pliki.
+Otwórz **http://localhost/**. Przy pierwszym uruchomieniu w przeglądarce pojawi się formularz utworzenia administratora. Skrypt startowy przygotowuje bazę automatycznie; nie tworzy konta z domyślnym hasłem. Wolumen <code>zencrm_data</code> przechowuje bazę, a <code>zencrm_uploads</code> przesłane pliki. Serwis <code>backup</code> co noc archiwizuje oba wolumeny (zob. niżej).
 
 Aby wdrożyć nowszy obraz po wykonaniu kopii danych:
 
@@ -145,6 +145,42 @@ docker compose up -d --no-build zencrm
 ~~~
 
 Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.4</code>.
+
+### HTTPS z Caddy i Let's Encrypt
+
+Plik <code>docker-compose.caddy.yml</code> dodaje Caddy, który sam pobiera i odnawia certyfikat Let's Encrypt. Wymagana jest domena wskazująca na serwer oraz otwarte porty 80 i 443. Ustaw w <code>.env</code>:
+
+~~~bash
+ZENCRM_DOMAIN=crm.twojafirma.pl
+~~~
+
+i uruchom stos z obydwoma plikami:
+
+~~~bash
+docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d --build
+~~~
+
+Nakładka wymaga Docker Compose 2.24 lub nowszego. Zdejmuje publiczny port aplikacji (dostęp jest tylko przez Caddy), ustawia <code>PUBLIC_BASE_URL=https://ZENCRM_DOMAIN</code> i <code>TRUSTED_PROXY_HOPS=1</code>. Jeśli korzystasz z własnego reverse proxy, pomiń nakładkę i ustaw te dwie zmienne samodzielnie.
+
+### Kopie zapasowe i odtwarzanie
+
+Serwis <code>backup</code> według harmonogramu <code>BACKUP_SCHEDULE</code> (domyślnie codziennie o 2:00, strefa <code>TZ</code>) tworzy w katalogu <code>BACKUP_PATH</code> (domyślnie <code>./backups</code>) archiwum <code>zencrm-RRRRMMDD-GGMMSS.tar.gz</code> z całym katalogiem danych (baza, klucze aplikacji w <code>security.sqlite</code>, załączniki, pliki i branding portalu, wygenerowane PDF-y) oraz przesłanymi plikami. Bazy SQLite są kopiowane spójnie przez <code>VACUUM INTO</code> bez zatrzymywania aplikacji i sprawdzane <code>PRAGMA integrity_check</code>. Zachowywanych jest <code>BACKUP_RETENTION</code> najnowszych archiwów (domyślnie 14). Archiwa zawierają klucze, dlatego katalog i pliki są dostępne tylko dla właściciela; kopiuj je też poza serwer (np. <code>rclone</code> lub <code>restic</code>). Polecenia poniżej działają bez nakładki Caddy.
+
+Kopia na żądanie:
+
+~~~bash
+docker compose exec backup backup.sh
+~~~
+
+Odtwarzanie (zatrzymaj aplikację, odtwórz archiwum, uruchom ponownie):
+
+~~~bash
+docker compose stop zencrm
+docker compose run --rm backup restore /backups/zencrm-20261003-020000.tar.gz
+docker compose start zencrm
+~~~
+
+Skrypt najpierw sprawdza archiwum (spójność baz, brak dowiązań symbolicznych) i przygotowuje pliki obok docelowych, a dopiero potem je podmienia; przy błędzie przywraca poprzedni stan. Uruchamiaj aplikację dopiero po komunikacie <code>Restored</code>. Archiwum bez <code>security.sqlite</code> zachowuje bieżące klucze. Poprzednie pliki trafiają do <code>instance/replaced-…/</code> (podkatalogi <code>instance</code> i <code>uploads</code>); aby cofnąć odtworzenie, zatrzymaj aplikację i przenieś ich zawartość z powrotem, a po sprawdzeniu danych usuń ten katalog. Archiwum ze starszej wersji aplikacji zostanie zmigrowane przy starcie; archiwum z nowszej wersji wymaga wdrożenia tej wersji.
 
 ### Uruchomienie lokalne
 
@@ -298,10 +334,10 @@ Custom translations take precedence over bundled translations, while missing phr
 Docker and Docker Compose are required. The command below builds an image from the current source. Empty <code>SECRET_KEY</code> and <code>JWT_SECRET_KEY</code> values generate separate persistent keys in the <code>zencrm_data</code> volume; you can also set distinct custom values in <code>.env</code>.
 
 ~~~bash
-docker compose up -d --build zencrm
+docker compose up -d --build
 ~~~
 
-Open **http://localhost/**. On the first launch, the browser displays a form to create the administrator. The entrypoint prepares the database automatically; it does not create an account with a default password. The <code>zencrm_data</code> volume stores the database and <code>zencrm_uploads</code> stores uploaded files.
+Open **http://localhost/**. On the first launch, the browser displays a form to create the administrator. The entrypoint prepares the database automatically; it does not create an account with a default password. The <code>zencrm_data</code> volume stores the database and <code>zencrm_uploads</code> stores uploaded files. The <code>backup</code> service archives both every night (see below).
 
 To deploy a newer image after backing up your data:
 
@@ -311,6 +347,42 @@ docker compose up -d --no-build zencrm
 ~~~
 
 The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.4</code>.
+
+### HTTPS with Caddy and Let's Encrypt
+
+<code>docker-compose.caddy.yml</code> adds Caddy, which obtains and renews a Let's Encrypt certificate automatically. You need a domain pointing at the server and open ports 80 and 443. Set in <code>.env</code>:
+
+~~~bash
+ZENCRM_DOMAIN=crm.example.com
+~~~
+
+and start the stack with both files:
+
+~~~bash
+docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d --build
+~~~
+
+The overlay needs Docker Compose 2.24 or later. It removes the application's public port (it is reachable only through Caddy) and sets <code>PUBLIC_BASE_URL=https://ZENCRM_DOMAIN</code> and <code>TRUSTED_PROXY_HOPS=1</code>. With your own reverse proxy, skip the overlay and set those two variables yourself.
+
+### Backups and restore
+
+On the <code>BACKUP_SCHEDULE</code> (daily at 02:00 by default, in the <code>TZ</code> time zone) the <code>backup</code> service writes <code>zencrm-YYYYMMDD-HHMMSS.tar.gz</code> to <code>BACKUP_PATH</code> (<code>./backups</code> by default), containing the whole data directory (database, application keys in <code>security.sqlite</code>, attachments, portal files and branding, generated PDFs) and uploaded files. SQLite databases are copied consistently with <code>VACUUM INTO</code> while the application keeps running, and checked with <code>PRAGMA integrity_check</code>. The newest <code>BACKUP_RETENTION</code> archives are kept (14 by default). Archives contain the keys, so the directory and files are accessible to their owner only; also copy them off the server (for example with <code>rclone</code> or <code>restic</code>). The commands below work without the Caddy overlay.
+
+On-demand backup:
+
+~~~bash
+docker compose exec backup backup.sh
+~~~
+
+Restore (stop the application, restore the archive, start it again):
+
+~~~bash
+docker compose stop zencrm
+docker compose run --rm backup restore /backups/zencrm-20261003-020000.tar.gz
+docker compose start zencrm
+~~~
+
+The script verifies the archive first (database integrity, no symbolic links), stages the files next to their targets and only then swaps them in; on failure it puts the previous files back. Start the application only after it prints <code>Restored</code>. An archive without <code>security.sqlite</code> keeps the current keys. The previous files go to <code>instance/replaced-…/</code> (with <code>instance</code> and <code>uploads</code> subdirectories); to undo a restore, stop the application and move their contents back, and delete the directory once the data is verified. An archive from an older release is migrated on start; one from a newer release requires deploying that release.
 
 ### Run locally
 

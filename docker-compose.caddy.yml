@@ -1,0 +1,31 @@
+# HTTPS with automatic Let's Encrypt certificates:
+#   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+# Requires ZENCRM_DOMAIN in .env, DNS pointing at this host, and ports 80 and 443 open.
+services:
+  zencrm:
+    # Only Caddy may reach the application; a public port would let clients bypass the proxy.
+    ports: !reset []
+    environment:
+      - PUBLIC_BASE_URL=https://${ZENCRM_DOMAIN:?Set ZENCRM_DOMAIN in .env}
+      - TRUSTED_PROXY_HOPS=1
+
+  caddy:
+    image: caddy:2.11-alpine
+    container_name: zencrm-caddy
+    restart: unless-stopped
+    depends_on:
+      - zencrm
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      - ZENCRM_DOMAIN=${ZENCRM_DOMAIN:?Set ZENCRM_DOMAIN in .env}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

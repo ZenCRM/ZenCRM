@@ -26,3 +26,6 @@ generated/
 .claude/
 .review/
 .codex/
+backups/
+backup/
+caddy/

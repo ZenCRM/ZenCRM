@@ -11,10 +11,26 @@ services:
       - SECRET_KEY=${SECRET_KEY:-}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
       - DATABASE_URL=sqlite:////app/instance/zencrm.db
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
+      - TRUSTED_PROXY_HOPS=${TRUSTED_PROXY_HOPS:-0}
       - PORT=8080
     volumes:
       - zencrm_data:/app/instance
       - zencrm_uploads:/app/uploads
+
+  # Nightly archive of the database, application keys and uploads; see "Backups" in README.md.
+  backup:
+    build: ./backup
+    container_name: zencrm-backup
+    restart: unless-stopped
+    environment:
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+      - BACKUP_RETENTION=${BACKUP_RETENTION:-14}
+      - TZ=${TZ:-UTC}
+    volumes:
+      - zencrm_data:/data/instance
+      - zencrm_uploads:/data/uploads
+      - ${BACKUP_PATH:-./backups}:/backups
 
 volumes:
   zencrm_data:
