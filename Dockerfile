@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     pip uninstall -y pip setuptools wheel
 
 # Declared after the dependency layer so a version bump does not reinstall requirements
-ARG ZENCRM_VERSION=0.9.0.4
+ARG ZENCRM_VERSION=0.9.0.5
 LABEL org.opencontainers.image.version="${ZENCRM_VERSION}"
 ENV ZENCRM_VERSION=${ZENCRM_VERSION}
 

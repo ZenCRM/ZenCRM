@@ -5,7 +5,6 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.ticket import Ticket, TicketMessage
 from ..models.client import Client
-from ..models.contact import Contact
 from ..models.user import User
 from ..models.team import Team
 from ..utils.deletion import current_user, is_admin
@@ -17,85 +16,14 @@ from ..services.email_service import public_base_url, staff_link_base_url
 tickets_bp = Blueprint('tickets', __name__)
 
 
-# ─────────────────────────────────────────────────────────────
-# HELPERS
-# ─────────────────────────────────────────────────────────────
-def _find_client_by_email(email):
-    if not email:
-        return None
-    email_clean = str(email).strip().lower()
-    client = Client.query.filter(
-        db.func.lower(Client.email) == email_clean,
-        Client.deleted_at.is_(None)
-    ).first()
-    if client:
-        return client
-    contact = Contact.query.filter(
-        db.func.lower(Contact.email) == email_clean
-    ).first()
-    if contact and contact.client_id:
-        return db.session.get(Client, contact.client_id)
-    return None
+from ..services.ticket_service import (
+    public_base_url as _public_base_url,
+    find_client_by_email as _find_client_by_email,
+    apply_auto_assignment as _apply_auto_assignment,
+    notify_ticket_created as _notify_ticket_created,
+)
 
 
-def _apply_auto_assignment(ticket, client=None):
-    config = get_helpdesk_config()
-    # 1. Jeśli klient ma przypisanego opiekuna w CRM -> przypisz do opiekuna
-    if client and client.assignee_id:
-        ticket.assignee_id = client.assignee_id
-        return
-
-    # 2. W przeciwnym razie sprawdź regułę automatycznego przydzielania z ustawień
-    if config.get('helpdesk_auto_assign'):
-        target = config.get('helpdesk_auto_assign_target', 'team')
-        if target == 'team' and config.get('helpdesk_default_team_id'):
-            ticket.team_id = config['helpdesk_default_team_id']
-        elif target == 'user' and config.get('helpdesk_default_user_id'):
-            ticket.assignee_id = config['helpdesk_default_user_id']
-
-
-def _notify_ticket_created(ticket):
-    try:
-        from ..services.email_service import send_notification
-        from ..utils.helpdesk import get_helpdesk_config
-        config = get_helpdesk_config()
-        base_url = public_base_url()
-        if not base_url:
-            current_app.logger.warning('Set PUBLIC_BASE_URL to enable ticket notification links')
-            return
-        tracking_url = f"{base_url}{config.get('helpdesk_path', '/pomoc')}?ticket={ticket.token}"
-
-        # 1. Do klienta (potwierdzenie rejestracji)
-        if ticket.contact_email:
-            send_notification('client_ticket_created', ticket.contact_email, {
-                'client_name': ticket.contact_name or 'Kliencie',
-                'ticket_number': ticket.ticket_number,
-                'ticket_title': ticket.title,
-                'ticket_category': ticket.category or 'Ogólne',
-                'ticket_url': tracking_url,
-            }, recipient_name=ticket.contact_name)
-
-        # 2. Do przypisanego pracownika
-        if ticket.assignee:
-            crm_ticket_url = f"{base_url}/#tickets"
-            send_notification('employee_new_ticket', ticket.assignee.email, {
-                'employee_name': ticket.assignee.first_name,
-                'ticket_number': ticket.ticket_number,
-                'ticket_title': ticket.title,
-                'client_name': ticket.contact_name or '-',
-                'client_email': ticket.contact_email or '-',
-                'ticket_priority': ticket.priority or 'Normalny',
-                'ticket_category': ticket.category or 'Ogólne',
-                'ticket_description': ticket.description or '',
-                'crm_ticket_url': crm_ticket_url,
-            }, user=ticket.assignee)
-    except Exception:
-        pass
-
-
-# ─────────────────────────────────────────────────────────────
-# CRM AGENT ENDPOINTS (Wymagają JWT)
-# ─────────────────────────────────────────────────────────────
 @tickets_bp.route('', methods=['GET'])
 @jwt_required()
 def list_tickets():

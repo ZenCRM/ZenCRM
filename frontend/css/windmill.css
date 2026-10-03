@@ -606,3 +606,121 @@
 .zen-task-summary--dynamic .zen-task-summary-tile { min-width:0; }
 .zen-task-summary--dynamic .zen-task-summary-tile>span:not(.zen-icon-wrap) { overflow-wrap:anywhere; }
 .zen-stage-row .zen-list-action:disabled { opacity:.35;cursor:not-allowed; }
+
+/* Keep list metrics on one row; narrow screens scroll horizontally. */
+.zen-task-summary.zen-list-summary { display:flex;flex-wrap:nowrap;overflow-x:auto;gap:16px;padding-bottom:8px; }
+.zen-task-summary.zen-list-summary > .zen-task-summary-tile { flex:1 0 170px;min-width:170px; }
+.windmill-app .zen-client-metrics .zen-task-summary-tile { background:var(--client-metric-color)!important;color:var(--client-metric-text); }
+.theme-modern .windmill-app .zen-client-metrics .zen-task-summary-tile { background:var(--client-metric-color)!important;color:var(--client-metric-text)!important; }
+.windmill-app .zen-client-metrics .zen-task-summary-tile strong { color:var(--client-metric-text)!important; }
+.windmill-app .zen-client-metrics .zen-task-summary-tile .zen-icon-wrap { background:#ffffff26!important;color:var(--client-metric-text)!important; }
+
+/* Lead workspace: cards, stage changes, details and editing. */
+.zen-board-guidance { display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px;color:var(--wm-muted);font-size:12px; }
+.windmill-app .zen-lead-board .kanban-col-new { border-top-width:3px;border-radius:16px;background:var(--wm-subtle); }
+.windmill-app .zen-lead-board .kanban-col-header { padding:16px 14px;border-radius:14px 14px 0 0; }
+.windmill-app .zen-lead-board .kanban-col-body { padding:10px;gap:12px; }
+.windmill-app .zen-lead-board .kanban-empty { padding:28px 14px;background:var(--wm-surface);font-size:12px;line-height:1.7; }
+.windmill-app .zen-lead-card { padding:16px;border-radius:14px;box-shadow:0 3px 12px #14283d08;cursor:grab; }
+.windmill-app .zen-lead-card:hover { transform:translateY(-2px);box-shadow:0 8px 24px #14283d12; }
+.windmill-app .zen-lead-card:focus-within { border-color:var(--stage-accent);box-shadow:0 0 0 3px var(--stage-tint); }
+.zen-lead-card-top { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.windmill-app .zen-lead-card-top .company { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:600; }
+.zen-lead-card-edit { display:inline-flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;border:1px solid var(--wm-border);border-radius:9px;color:var(--wm-muted);background:var(--wm-surface);cursor:pointer; }
+.zen-lead-card-edit svg { width:15px;height:15px; }
+.zen-lead-card-edit:hover { color:var(--wm-accent);background:var(--wm-tint); }
+.zen-lead-card-title { display:block;width:100%;padding:0;margin:9px 0 12px;border:0;background:transparent;text-align:left;font-size:15px;line-height:1.5;font-weight:700;color:var(--wm-text);overflow-wrap:anywhere;cursor:pointer; }
+.zen-lead-card-value { display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px; }
+.zen-lead-card-value strong { font-size:18px;letter-spacing:-.025em;color:var(--wm-text); }
+.zen-lead-source { max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 7px;border-radius:6px;background:var(--wm-subtle);color:var(--wm-muted);font-size:10px; }
+.zen-lead-card-probability { display:grid;grid-template-columns:1fr auto;gap:6px;font-size:11px;color:var(--wm-muted); }
+.zen-lead-card-probability .wm-progress { grid-column:1/-1;height:4px; }
+.zen-lead-card-probability .wm-progress-fill { background:var(--stage-accent); }
+.zen-lead-card-owner { display:flex;align-items:center;gap:7px;margin:14px 0;font-size:11px;color:var(--wm-muted); }
+.zen-lead-owner-avatar { display:inline-flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;border-radius:50%;background:var(--wm-tint);color:var(--wm-accent-text);font-size:9px;font-weight:700;overflow:hidden; }
+.zen-lead-owner-avatar img { width:100%;height:100%;object-fit:cover; }
+.zen-lead-close-date { margin-left:auto;font-size:10px;white-space:nowrap; }
+.zen-lead-next-action { display:flex;align-items:flex-start;gap:7px;padding:10px;border-radius:9px;background:var(--wm-subtle);color:var(--wm-muted);font-size:11px;line-height:1.6; }
+.zen-lead-next-action svg { width:14px;height:14px; }
+.zen-lead-next-action .zen-icon-wrap { flex:none;padding-top:2px; }
+.zen-lead-card-footer { display:flex;align-items:end;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--wm-border); }
+.zen-lead-stage-label { flex:1;min-width:0;font-size:10px;color:var(--wm-muted); }
+.windmill-app .zen-lead-card .ux-stage-select { width:100%;margin:4px 0 0;border-radius:9px;color:var(--wm-text);font-size:11px;min-height:34px; }
+.zen-lead-stage-panel { padding:22px 28px;border:1px solid var(--wm-border);border-radius:16px;background:var(--wm-surface);margin:18px 0; }
+.zen-lead-stage-heading { display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px; }
+.zen-lead-stage-heading h2 { font-size:20px;font-weight:700;margin-top:4px;color:var(--wm-text); }
+.zen-lead-stage-heading [role=status] { font-size:12px;color:var(--wm-muted); }
+.zen-lead-stage-track { display:flex;gap:8px;overflow-x:auto;padding:3px 2px 8px; }
+.zen-lead-stage-track button { display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;min-height:42px;flex:0 0 auto;border:1px solid var(--wm-border);border-radius:10px;background:var(--wm-surface);color:var(--wm-text);font-size:12px;font-weight:600;cursor:pointer; }
+.zen-lead-stage-track button:hover { border-color:var(--lead-stage-color);background:var(--wm-subtle); }
+.zen-lead-stage-track button[aria-pressed=true] { border-color:var(--lead-stage-color);background:color-mix(in srgb,var(--lead-stage-color) 12%,var(--wm-surface));box-shadow:0 0 0 1px var(--lead-stage-color); }
+.zen-lead-stage-track button:disabled { opacity:.6;cursor:default; }
+.zen-lead-stage-dot { width:7px;height:7px;border-radius:50%;background:var(--lead-stage-color);flex:none; }
+.zen-lead-stage-panel > p { font-size:12px;line-height:1.6;margin-top:6px; }
+.windmill-app .zen-lead-detail .zen-detail-summary { display:flex;flex-wrap:nowrap;overflow-x:auto;gap:12px;margin-top:16px; }
+.windmill-app .zen-lead-detail .zen-detail-summary .zen-task-summary-tile { flex:1 0 160px;min-width:160px;padding:18px;border-radius:14px;background:var(--wm-surface)!important;color:var(--wm-text);border:1px solid var(--wm-border);box-shadow:none;gap:8px; }
+.windmill-app .zen-lead-detail .zen-detail-summary .zen-task-summary-tile strong { font-size:20px;color:var(--wm-text);overflow-wrap:anywhere; }
+.windmill-app .zen-lead-detail .zen-detail-summary .zen-icon-wrap { padding:7px;background:var(--wm-tint);color:var(--wm-accent-text);border-radius:9px; }
+.zen-lead-form-section { border-bottom:1px solid var(--wm-border);padding:4px 0 10px;margin:12px 0 16px; }
+.zen-lead-form-section h4 { font-size:14px;font-weight:700;color:var(--wm-text); }
+.zen-lead-edit-form .zen-lead-form-stages { flex-wrap:wrap;overflow:visible; }
+.zen-lead-edit-form .zen-lead-form-stages button { flex:1 0 auto; }
+.zen-lead-edit-form label { text-transform:none;letter-spacing:normal;font-weight:600; }
+.zen-lead-edit-form .zen-probability-field { padding:16px;border-radius:12px;border:1px solid var(--wm-border);background:var(--wm-subtle); }
+@media(prefers-reduced-motion:reduce) { .windmill-app .zen-lead-card:hover { transform:none; } }
+@media(max-width:640px) { .zen-lead-stage-panel { padding:16px; }.zen-board-guidance { align-items:flex-start; }.zen-lead-stage-track button { padding:9px 11px; }.windmill-app .zen-lead-board .kanban-col-new { min-width:260px; } }
+
+.zen-lead-card-action {padding:8px 0;border-top:1px solid var(--border-color,#e5e7eb)}
+.zen-lead-card-action>small,.zen-lead-card-action>time {display:block;font-size:11px;color:var(--text-secondary,#6b7280)}
+.zen-lead-card-action p {margin:4px 0;font-size:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.zen-lead-card-action .zen-lead-next-action {border:0;padding:4px 0;margin:0}
+.zen-lead-card-action .zen-lead-next-action svg {width:14px;height:14px}
+.zen-lead-card-buttons {display:flex;gap:6px;margin-left:auto}
+.zen-lead-card-amount {font-size:16px;overflow-wrap:anywhere}
+.zen-lead-inline-editor {padding:12px 0;border-top:1px solid var(--border-color,#e5e7eb)}
+.zen-lead-inline-editor fieldset {border:0;padding:0;min-width:0}
+.zen-lead-inline-editor label {display:block;font-size:12px;margin-bottom:10px}
+.zen-lead-inline-editor select,.zen-lead-inline-editor input {display:block;width:100%;margin-top:5px}
+.zen-lead-inline-editor fieldset>div,.zen-journal-phone-actions {display:flex;gap:8px;justify-content:flex-end}
+.zen-lead-inline-editor button,.zen-journal-phone-actions button {padding:7px 12px;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:12px}
+.zen-lead-inline-editor button[type=submit] {background:var(--brand-color,#2563eb);color:white}
+.zen-lead-inline-editor p {color:#dc2626;font-size:12px}
+.zen-journal-phone-actions {margin-bottom:12px;justify-content:flex-start}
+
+.zen-sms-composer {z-index:160}
+
+.zen-lead-actions {margin:10px 0 4px;padding:3px 10px;background:var(--zen-surface-muted,#f4f7fa);border:1px solid var(--zen-border,#e5ebf0);border-radius:12px}
+.zen-lead-action-row {display:flex;gap:9px;align-items:flex-start;padding:9px 0}
+.zen-lead-action-row+.zen-lead-action-row {border-top:1px solid var(--zen-border,#e5ebf0)}
+.zen-lead-action-icon {display:flex;align-items:center;justify-content:center;flex:0 0 28px;height:28px;border-radius:8px;background:#e6edf5;color:#4d6781}
+.zen-lead-action-icon svg {width:15px;height:15px}
+.zen-lead-action-planned .zen-lead-action-icon {background:#e1eefb;color:#2463a0}
+.zen-lead-action-copy {min-width:0;flex:1}
+.zen-lead-action-heading {display:flex;gap:8px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.zen-lead-action-copy small {font-size:10px;font-weight:600;color:var(--zen-muted,#728296)}
+.zen-lead-action-copy time {font-size:10px;color:var(--zen-muted,#728296)}
+.zen-lead-action-copy p {font-size:12px;line-height:1.45;margin:3px 0 0;color:var(--zen-text,#203b50);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.zen-lead-action-row.is-overdue .zen-lead-action-icon {background:#fee9e6;color:#c34835}
+.zen-lead-action-row.is-overdue p {color:#b43c2c}
+.zen-lead-inline-editor .zen-lead-full-edit {display:flex;align-items:center;gap:6px;border:0;padding:0;margin:0 0 12px;color:var(--zen-primary,#2563eb);font-weight:600;background:transparent;text-decoration:underline;text-underline-offset:3px}
+.zen-lead-full-edit svg {width:14px;height:14px}
+.dark .zen-lead-actions {background:#1b2938;border-color:#334155}
+.dark .zen-lead-action-row+.zen-lead-action-row {border-color:#334155}
+.dark .zen-lead-action-copy p {color:#e2e8f0}
+
+.zen-task-edit-form .zen-task-form-section {margin:4px 0 14px;padding-top:12px;border-top:1px solid var(--zen-border,#e5ebf0)}
+.zen-task-edit-form .zen-task-form-section h4 {font-size:14px;font-weight:700;color:var(--zen-text,#203b50)}
+.zen-task-edit-form .grid>div:first-child .zen-task-form-section {border:0;padding-top:0;margin-top:0}
+.zen-task-edit-form label {text-transform:none;letter-spacing:normal;font-size:12px}
+.zen-task-priorities {display:flex;gap:8px;flex-wrap:wrap}
+.zen-task-priorities button {display:flex;gap:7px;align-items:center;justify-content:center;flex:1;padding:11px 12px;border:1px solid var(--zen-border,#d9e2eb);border-radius:10px;font-size:12px;background:var(--zen-surface,#fff);color:var(--zen-text,#203b50)}
+.zen-task-priority-dot {width:7px;height:7px;border-radius:50%;background:#6b8897}
+.zen-task-priorities .medium .zen-task-priority-dot {background:#d49b21}
+.zen-task-priorities .high .zen-task-priority-dot {background:#da6654}
+.zen-task-priorities button[aria-pressed=true] {border-color:#2673b8;box-shadow:0 0 0 1px #2673b8;background:#eef6ff;font-weight:700;color:#1c5d95}
+.zen-task-date-shortcuts {display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.zen-task-date-shortcuts button {font-size:11px;padding:5px 10px;border-radius:7px;background:var(--zen-surface-muted,#edf3f8);color:var(--zen-text,#36546b)}
+.zen-task-date-shortcuts button:hover {background:#dceafb}
+.dark .zen-task-form-section h4 {color:#e2e8f0}
+.dark .zen-task-priorities button {background:#253446;color:#e2e8f0;border-color:#475569}
+.dark .zen-task-priorities button[aria-pressed=true] {background:#153b5d;border-color:#60a5fa}

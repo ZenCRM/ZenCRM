@@ -8,6 +8,80 @@ from ..utils.deletion import soft_delete, restore, hard_delete, is_admin
 from ..utils.activity import log_activity
 
 clients_bp = Blueprint('clients', __name__)
+ADDRESS_FIELDS = ('street', 'building_number', 'apartment_number', 'postal_code', 'city', 'country')
+
+
+def _prepare_client_data(data):
+    if not isinstance(data, dict):
+        raise ValueError('Niepoprawne dane klienta.')
+    data = dict(data)
+    if 'status' in data:
+        from ..utils.client_statuses import get_statuses
+        if data['status'] not in {s['id'] for s in get_statuses()}:
+            raise ValueError('Wybierz poprawny status klienta.')
+    for key in ('nip', 'regon', 'krs', *ADDRESS_FIELDS):
+        if key not in data:
+            continue
+        value = data[key]
+        if value is None or value == '':
+            data[key] = None
+            continue
+        if not isinstance(value, str):
+            raise ValueError(f'Pole {key} musi być tekstem.')
+        value = value.strip()
+        if key == 'nip' and value:
+            from ..services.gus_service import normalize_nip
+            value = normalize_nip(value)
+        elif key in ('regon', 'krs') and value:
+            import re
+            value = re.sub(r'[\s-]', '', value)
+            lengths = (9, 14) if key == 'regon' else (10,)
+            if not re.fullmatch(r'[0-9]+', value) or len(value) not in lengths:
+                raise ValueError('REGON musi mieć 9 lub 14 cyfr.' if key == 'regon' else 'KRS musi mieć 10 cyfr.')
+        if len(value) > Client.__table__.columns[key].type.length:
+            raise ValueError(f'Pole {key} jest za długie.')
+        data[key] = value or None
+    return data
+
+
+def _sync_address(client, data, previously_structured=False, previous_address=None):
+    if not any(key in data for key in ADDRESS_FIELDS):
+        return
+    structured = any(getattr(client, key) for key in ADDRESS_FIELDS)
+    if not structured and data.get('address') and data['address'] != previous_address:
+        return
+    if structured or previously_structured:
+        street = ' '.join(v for v in (client.street, client.building_number) if v)
+        if client.apartment_number:
+            street += '/' + client.apartment_number
+        locality = ' '.join(v for v in (client.postal_code, client.city) if v)
+        client.address = ', '.join(v for v in (street, locality, client.country) if v) or None
+
+
+@clients_bp.route('/company-lookup', methods=['GET'])
+@clients_bp.route('/gus', methods=['GET'])
+@jwt_required()
+def gus_lookup():
+    from ..utils.deletion import current_user
+    from ..utils.permissions import has_permission
+    from ..services.gus_service import lookup_company, GusError
+    user = current_user()
+    if not any(has_permission(user, f'clients.{action}') for action in ('create', 'edit')):
+        return jsonify({'error': 'Brak uprawnienia do tej operacji'}), 403
+    from ..services.company_lookup import provider, lookup_mf
+    selected = provider()
+    if selected == 'off':
+        return jsonify({'error': 'Wyszukiwarka firm jest wyłączona w ustawieniach CRM.'}), 403
+    try:
+        result = (lookup_mf if selected == 'mf' else lookup_company)(request.args.get('nip', ''))
+        if result is None:
+            return jsonify({'error': 'Nie znaleziono firmy w wybranym rejestrze dla podanego NIP.'}), 404
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({'error': str(exc)}), 400
+    except GusError as exc:
+        return jsonify({'error': str(exc)}), 503
+
 
 
 @clients_bp.route('', methods=['GET'])
@@ -71,7 +145,13 @@ def _notify_client_assigned(client, assignee_id):
 def create_item():
     data = request.get_json(silent=True) or {}
     try:
+        data = _prepare_client_data(data)
+        if 'status' not in data:
+            from ..utils.client_statuses import get_statuses
+            statuses = get_statuses()
+            data['status'] = 'active' if any(s['id'] == 'active' for s in statuses) else statuses[0]['id']
         c = build_model(Client, data)
+        _sync_address(c, data)
         db.session.add(c)
         db.session.flush()
         log_activity('client', c.id, 'created', f'Utworzono klienta: {c.name}')
@@ -92,7 +172,11 @@ def update_item(item_id):
         return jsonify({'error': 'Klient nie istnieje'}), 404
     try:
         old_assignee_id = c.assignee_id
-        apply_payload(c, request.get_json(silent=True) or {})
+        data = _prepare_client_data(request.get_json(silent=True) or {})
+        previous_address = c.address
+        previously_structured = any(getattr(c, key) for key in ADDRESS_FIELDS)
+        apply_payload(c, data)
+        _sync_address(c, data, previously_structured, previous_address)
         log_activity('client', c.id, 'updated', 'Zaktualizowano')
         db.session.commit()
         if c.assignee_id and c.assignee_id != old_assignee_id:

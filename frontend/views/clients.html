@@ -1,10 +1,12 @@
 <!-- ═══ KLIENCI ═══ -->
             <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'clients'" x-init="$watch('clients', list => { loadAllCustomFields(); loadCustomValuesForTable('clients', (list||[]).map(c => c.id)); }); loadAllCustomFields(); if (clients.length) loadCustomValuesForTable('clients', clients.map(c => c.id));" x-cloak>
-                <div class="zen-task-summary zen-list-summary">
-                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Wszyscy klienci')">Wszyscy klienci</span></span><strong x-text="clients.length"></strong></div>
-                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('check')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Aktywni')">Aktywni</span></span><strong x-text="clients.filter(c => c.status === 'active').length"></strong></div>
-                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('flag')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Potencjalni')">Potencjalni</span></span><strong x-text="clients.filter(c => c.status === 'prospect').length"></strong></div>
-                    <div class="zen-task-summary-tile"><span class="zen-icon-wrap" x-html="zenIcon('user')" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Z opiekunem')">Z opiekunem</span></span><strong x-text="clients.filter(c => c.assignee).length"></strong></div>
+                <div class="zen-task-summary zen-list-summary zen-client-metrics" x-show="clientMetrics.length" role="region" :aria-label="window.ZenI18n.t('Podsumowanie klientów')" tabindex="0">
+                    <template x-for="metric in clientMetrics" :key="metric.id">
+                        <div class="zen-task-summary-tile" :style="clientMetricStyle(metric)">
+                            <span class="zen-icon-wrap" x-html="zenIcon(metric.icon)" aria-hidden="true"></span>
+                            <span x-text="metric.label"></span><strong x-text="clientMetricCount(metric.id)"></strong>
+                        </div>
+                    </template>
                 </div>
 
                 <div class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -85,8 +87,8 @@
                                         </td>
                                         <td class="px-4 py-3" x-show="isColumnVisible('clients', 'status')">
                                             <span class="px-2 py-0.5 text-xs font-medium rounded-full"
-                                                  :class="{'bg-green-100 text-green-700': c.status === 'active', 'bg-gray-100 text-gray-700': c.status === 'inactive', 'bg-yellow-100 text-yellow-700': c.status === 'prospect'}"
-                                                  x-text="statusLabel(c.status)"></span>
+                                                  :style="clientStatusStyle(c.status)"
+                                                  x-text="clientStatusLabel(c.status)"></span>
                                         </td>
                                         <template x-for="col in (availableColumns('clients').filter(c => c.isCustom))" :key="'td-cf-clients-' + col.key">
                                             <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-300" x-show="isColumnVisible('clients', col.key)" x-text="getCustomFieldValue('clients', c.id, col.field.id)"></td>

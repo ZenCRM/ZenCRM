@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, request, jsonify, send_from_directory, abort
+from flask import Blueprint, request, jsonify, send_from_directory, abort, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.setting import Setting
@@ -21,6 +21,7 @@ PUBLIC_KEYS = frozenset({
     'login_welcome_text', 'login_footer', 'login_show_logo',
 })
 UI_KEYS = PUBLIC_KEYS | frozenset({
+    'gus_enabled', 'client_company_provider', 'client_statuses', 'client_metrics',
     'ui_template', 'ui_hero_background',
     'ui_detail_client', 'ui_detail_lead', 'ui_detail_task', 'ui_detail_service',
     'ui_show_footer', 'ui_footer_text', 'ui_dark_default',
@@ -35,10 +36,24 @@ def prevent_settings_cache(response):
     return response
 
 
+SECRET_KEYS = frozenset({'smtp_password', 'gus_api_key'})
+
+
+def settings_values(items):
+    values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items}
+    from ..services.company_lookup import provider
+    values['client_company_provider'] = provider()
+    values['gus_api_key_set'] = bool(Setting.get_value('gus_api_key', '') or current_app.config.get('GUS_API_KEY', ''))
+    return values
+
+
 def selected_settings(keys):
     seed_defaults()
     items = Setting.query.filter(Setting.key.in_(keys)).all()
     res = {s.key: s.value for s in items}
+    if 'client_company_provider' in keys:
+        from ..services.company_lookup import provider
+        res['client_company_provider'] = provider()
     if not is_admin() and 'lead_webhook_token' in res:
         del res['lead_webhook_token']
     return jsonify(res), 200
@@ -83,7 +98,7 @@ def list_settings():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     seed_defaults()
     items = Setting.query.all()
-    return jsonify({s.key: ('' if s.key == 'smtp_password' else s.value) for s in items}), 200
+    return jsonify(settings_values(items)), 200
 
 
 @settings_bp.route('/full', methods=['GET'])
@@ -93,7 +108,8 @@ def list_full():
     if not is_admin():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     items = Setting.query.order_by(Setting.category, Setting.key).all()
-    return jsonify([{**s.to_dict(), 'value': ''} if s.key == 'smtp_password' else s.to_dict() for s in items]), 200
+    values = settings_values(items)
+    return jsonify([{**s.to_dict(), 'value': '', 'configured': values['gus_api_key_set']} if s.key == 'gus_api_key' else ({**s.to_dict(), 'value': ''} if s.key in SECRET_KEYS else s.to_dict()) for s in items]), 200
 
 
 @settings_bp.route('', methods=['PUT'])
@@ -121,13 +137,40 @@ def update_settings():
             import json
             from ..utils.task_stages import validate_task_stages
             data['task_stages'] = json.dumps(validate_task_stages(json.loads(data['task_stages'])), ensure_ascii=False)
+        if 'client_statuses' in data:
+            import json
+            from ..utils.client_statuses import validate_statuses
+            data['client_statuses'] = json.dumps(validate_statuses(json.loads(data['client_statuses'])), ensure_ascii=False)
+        if 'client_metrics' in data:
+            import json
+            from ..utils.client_metrics import validate_metrics
+            from ..utils.client_statuses import get_statuses
+            statuses = json.loads(data['client_statuses']) if 'client_statuses' in data else get_statuses()
+            data['client_metrics'] = json.dumps(validate_metrics(json.loads(data['client_metrics']), statuses))
+        if 'client_company_provider' in data:
+            if data['client_company_provider'] not in ('off', 'gus', 'mf'):
+                raise ValueError('Wybierz poprawną wyszukiwarkę firm.')
+            data['gus_enabled'] = 'true' if data['client_company_provider'] == 'gus' else 'false'
+        elif 'gus_enabled' in data:
+            data['client_company_provider'] = 'gus' if data['gus_enabled'] in (True, 'true') else 'off'
+        if 'gus_enabled' in data:
+            value = data['gus_enabled']
+            if value not in (True, False, 'true', 'false'):
+                raise ValueError('Niepoprawny stan wyszukiwarki GUS.')
+            data['gus_enabled'] = 'true' if value is True or value == 'true' else 'false'
+        if 'gus_api_key' in data and not isinstance(data['gus_api_key'], str):
+            raise ValueError('Klucz API GUS musi być tekstem.')
+        if 'gus_api_key' in data:
+            data['gus_api_key'] = data['gus_api_key'].strip()
         for key, value in data.items():
-            if key == 'smtp_password' and not value:
+            if key == 'gus_api_key_set':
+                continue
+            if key in SECRET_KEYS and not value:
                 continue
             Setting.set_value(key, str(value) if value is not None else '', _category(key))
         db.session.commit()
         items = Setting.query.all()
-        return jsonify({s.key: ('' if s.key == 'smtp_password' else s.value) for s in items}), 200
+        return jsonify(settings_values(items)), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
@@ -141,6 +184,8 @@ def reset_settings():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     from ..utils.settings_defaults import DEFAULTS
     try:
+        from ..utils.client_statuses import validate_statuses, DEFAULT_STATUSES
+        validate_statuses(DEFAULT_STATUSES)
         for key, value in DEFAULTS.items():
             Setting.set_value(key, str(value), _category(key))
         db.session.commit()

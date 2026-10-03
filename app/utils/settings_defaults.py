@@ -1,6 +1,11 @@
 """Domyslne wartosci ustawien CRM."""
 
 DEFAULTS = {
+    'client_company_provider': '',
+    'client_statuses': 'null',
+    'client_metrics': 'null',
+    'gus_enabled': 'false',
+    'gus_api_key': '',
     # ── BRANDING ──
     'brand_name':            'ZenCRM',
     'brand_color_primary':   '#7e3af2',
@@ -72,6 +77,10 @@ def seed_defaults():
 
 
 def _category(key):
+    if key.startswith('client_'):
+        return 'clients'
+    if key.startswith('gus_'):
+        return 'gus'
     if key.startswith('brand_'):
         return 'branding'
     if key.startswith('login_'):

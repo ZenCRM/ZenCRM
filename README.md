@@ -144,7 +144,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.4</code>.
+Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.5</code>.
 
 ### HTTPS z Caddy i Let's Encrypt
 
@@ -346,7 +346,7 @@ docker compose pull zencrm
 docker compose up -d --no-build zencrm
 ~~~
 
-The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.4</code>.
+The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.5</code>.
 
 ### HTTPS with Caddy and Let's Encrypt
 
@@ -436,3 +436,15 @@ Back up the database and uploaded files before deploying a new release. The sche
 | [Latest release](https://github.com/ZenCRM/ZenCRM/releases/latest) | Release notes and available tags. |
 
 Report bugs and ideas through [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Code changes can be proposed in a pull request.
+
+### Wyszukiwanie firmy w GUS
+
+W formularzu klienta wpisz NIP i kliknij „Wyszukaj firmę w GUS”. Dane firmy, REGON i adres zostaną uzupełnione i można je poprawić przed zapisaniem. NIP, REGON i KRS są opcjonalne; KRS uzupełnia się ręcznie.
+
+W ustawieniach CRM otwórz „Ustawienia klientów”, wybierz GUS, wpisz klucz API i zapisz ustawienia. Funkcja jest domyślnie wyłączona. Puste pole klucza przy kolejnym zapisie zachowuje istniejący klucz. Można również dostarczyć klucz przez `GUS_API_KEY` w środowisku serwera; przełącznik w CRM nadal jest wymagany. Klucz produkcyjny można uzyskać zgodnie z instrukcjami na https://api.stat.gov.pl/Home/RegonApi. `GUS_TEST_MODE=true` przełącza na środowisko testowe BIR; zwraca ono dane testowe. Klucz nigdy nie jest przesyłany do przeglądarki.
+
+Migracja `20261003_client_address` dodaje pola bez usuwania zapisanych adresów. Aplikacja dodaje również brakujące kolumny przy starcie, zgodnie z istniejącym mechanizmem aktualizacji schematu. Stare adresy są widoczne w formularzu; wpisanie adresu w nowych polach zastępuje jego tekstową wersję używaną w szczegółach i dokumentach.
+
+W „Ustawieniach klientów” wyszukiwarka ma trzy opcje: wyłączona (domyślnie), GUS lub Ministerstwo Finansów. Bezpłatne API MF nie wymaga klucza i przeszukuje wykaz podatników VAT po NIP na bieżący dzień w strefie Europe/Warsaw: https://wl-api.mf.gov.pl/. Uzupełnia nazwę firmy, NIP, REGON, KRS i adres, jeśli są dostępne. MF zwraca adres tekstowy; aplikacja rozdziela standardowy format, a pełny adres zachowuje także przy nietypowym formacie. API podlega limitom MF i obejmuje podmioty z wykazu VAT.
+
+W tej samej sekcji można dodawać, zmieniać nazwy i kolory oraz usuwać statusy klientów (1–20 statusów). Status używany przez klienta, również w archiwum, można usunąć dopiero po przeniesieniu wszystkich takich klientów do innego statusu. Nowi klienci i konwersje leadów korzystają z dostępnych statusów.

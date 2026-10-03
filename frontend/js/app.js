@@ -4,11 +4,8 @@
    ═══════════════════════════════════════════════════════════════ */
 
 function crmApp() {
-    const component = Object.defineProperties({
+    const component = {
 
-        // ═══════════════════════════════════════════════════════════
-        // SERVICE HELPERS
-        // ═══════════════════════════════════════════════════════════
         serviceStatusLabel(s) {
             return { exemplary: window.ZenI18n.t('Wzorowa'), good: window.ZenI18n.t('Dobra'),
                      problematic: window.ZenI18n.t('Problematyczna'), critical: window.ZenI18n.t('Krytyczna') }[s] || s || '—';
@@ -36,9 +33,6 @@ function crmApp() {
             return 'bg-green-100 text-green-700';
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // AUTH
-        // ═══════════════════════════════════════════════════════════
         token: localStorage.getItem('token') || '',
         user: JSON.parse(localStorage.getItem('user') || 'null'),
         loginForm: { email: '', password: '' },
@@ -67,9 +61,6 @@ function crmApp() {
         setupError: '',
         showSetupPassword: false,
 
-        // ═══════════════════════════════════════════════════════════
-        // UI
-        // ═══════════════════════════════════════════════════════════
         darkMode: localStorage.getItem('darkMode') === 'true',
         sidebarOpen: false,
         currentView: (location.hash.replace('#', '') || localStorage.getItem('lastView') || 'dashboard'),
@@ -144,9 +135,6 @@ function crmApp() {
         visibleKanbanCols: 5,
         _kanbanResizeHandler: null,
 
-        // ═══════════════════════════════════════════════════════════
-        // DANE
-        // ═══════════════════════════════════════════════════════════
         stats: { cards: {}, funnel: {}, overdue_tasks: [], today_tasks: [], upcoming_tasks: [], upcoming_meetings: [] },
         dashboardTaskTab: 'today',
         clients: [], leads: [], tasks: [], meetings: [], projects: [], teams: [],
@@ -179,9 +167,6 @@ function crmApp() {
             this.listPages[view] = 1;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // MODALE
-        // ═══════════════════════════════════════════════════════════
         modal:    { open: false, editingId: null, form: {}, error: '', view: null, lockedRelations: [] },
         profile:  { open: false, form: { email_notifications: {} }, error: '', success: '' },
         password: { open: false, form: { current_password: '', new_password: '', confirm: '' }, error: '', success: '' },
@@ -202,14 +187,8 @@ function crmApp() {
         generateModal: { open: false, type: 'document', item: null, templateId: '', custom: {}, typeFields: {}, error: '' },
         attachmentView: { entity: '', recordId: null, files: [], busy: false, error: '', editingId: null, editingName: '' },
 
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ
-        // ═══════════════════════════════════════════════════════════
         calendarDate: new Date(),
 
-        // ═══════════════════════════════════════════════════════════
-        // KONFIGURACJA
-        // ═══════════════════════════════════════════════════════════
         menu: window.ZenConfig.MENU,
         openMenuGroups: {
             crm: true,
@@ -227,9 +206,6 @@ function crmApp() {
             this.openMenuGroups[groupId] = willOpen;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // GETTERS
-        // ═══════════════════════════════════════════════════════════
         get dashboardCards() { return window.ZenConfig.DASHBOARD_CARDS; },
         get usersById() {
             const map = {};
@@ -269,357 +245,6 @@ function crmApp() {
             return days;
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // AUTH
-        async submitSetup() {
-            this.setupError = '';
-            const form = this.setupForm;
-            if (!form.email || !form.email.includes('@')) {
-                this.setupError = window.ZenI18n.t('Podaj poprawny adres e-mail');
-                return;
-            }
-            if (!form.password || form.password.length < 10) {
-                this.setupError = window.ZenI18n.t('Hasło musi mieć od 10 do 256 znaków');
-                return;
-            }
-            if (form.password !== form.password_confirm) {
-                this.setupError = window.ZenI18n.t('Hasła nie są identyczne');
-                return;
-            }
-            this.setupLoading = true;
-            try {
-                const data = await window.ZenApi.setupAdmin({
-                    first_name: form.first_name,
-                    last_name: form.last_name,
-                    email: form.email,
-                    password: form.password
-                });
-                this.token = data.access_token;
-                this.user = data.user;
-                this.isAdmin = true;
-                this.needsSetup = false;
-                localStorage.setItem('token', this.token);
-                localStorage.setItem('user', JSON.stringify(this.user));
-                await this.init();
-            } catch (e) {
-                this.setupError = e.message;
-            } finally {
-                this.setupLoading = false;
-            }
-        },
-
-        async login() {
-            this.loginError = '';
-            this.loginLoading = true;
-            try {
-                const data = await window.ZenApi.login(
-                    this.loginForm.email, this.loginForm.password);
-                this.token = data.access_token;
-                this.user = data.user;
-                this.isAdmin = (this.user?.role === 'admin');
-                localStorage.setItem('token', this.token);
-                localStorage.setItem('user', JSON.stringify(this.user));
-                await this.init();
-            } catch (e) {
-                this.loginError = e.message;
-            } finally {
-                this.loginLoading = false;
-            }
-        },
-
-        openForgotPassword() {
-            this.forgotModal.code = '';
-            this.forgotModal.password = '';
-            this.forgotModal.awaitingCode = false;
-            this.forgotModal.open = true;
-            this.forgotModal.email = this.loginForm.email || '';
-            this.forgotModal.loading = false;
-            this.forgotModal.success = '';
-            this.forgotModal.error = '';
-        },
-
-        async submitForgotPassword() {
-            if (!this.forgotModal.email) {
-                this.forgotModal.error = window.ZenI18n.t('Wpisz swój adres e-mail');
-                return;
-            }
-            this.forgotModal.loading = true;
-            this.forgotModal.error = '';
-            this.forgotModal.success = '';
-            try {
-                const res = await window.ZenApi.forgotPassword(this.forgotModal.email);
-                this.forgotModal.awaitingCode = true;
-                this.forgotModal.success = window.ZenI18n.t(res.message || window.ZenI18n.t('Zgłoszenie zostało wysłane'));
-            } catch (e) {
-                this.forgotModal.error = e.message;
-            } finally {
-                this.forgotModal.loading = false;
-            }
-        },
-
-        async confirmPasswordReset() {
-            this.forgotModal.loading = true;
-            this.forgotModal.error = '';
-            try {
-                const res = await window.ZenApi.request('/auth/reset-password', {
-                    method: 'POST',
-                    body: JSON.stringify({ token: this.forgotModal.code.trim(), password: this.forgotModal.password }),
-                });
-                this.forgotModal.success = res.message;
-                this.forgotModal.awaitingCode = false;
-                this.forgotModal.code = '';
-                this.forgotModal.password = '';
-            } catch (e) {
-                this.forgotModal.error = e.message;
-            } finally {
-                this.forgotModal.loading = false;
-            }
-        },
-
-        async logout() {
-            await this.disablePush();
-            this.stopNotifications();
-            this.stopReminders();
-            this.endLeadDrag();
-            this.detailView.open = false;
-            this.detailPanel = false;
-            this.token = '';
-            this.user = null;
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            sessionStorage.removeItem('zen-i18n-catalog');
-            this.settingsForm = {};
-            await this.loadSettings(true);
-            // Nie czyścimy lastView – po ponownym zalogowaniu wróci tam, gdzie byłeś
-        },
-
-        // ═══════════════════════════════════════════════════════════
-        // API WRAPPER
-        // ═══════════════════════════════════════════════════════════
-        api(path, options = {}) {
-            return window.ZenApi.request(path, options, this.token, () => this.logout());
-        },
-
-        // ═══════════════════════════════════════════════════════════
-        // NAVIGACJA
-        // ═══════════════════════════════════════════════════════════
-        canAccessView(viewId) {
-            if (!viewId) return true;
-            if (viewId === 'settings') return this.user?.role === 'admin' || this.isAdmin;
-            if (viewId === 'documentTypes') return this.user?.role === 'admin' || this.isAdmin;
-
-            let perms = {};
-            try {
-                if (this.settingsForm?.menu_permissions) {
-                    perms = typeof this.settingsForm.menu_permissions === 'string'
-                        ? JSON.parse(this.settingsForm.menu_permissions)
-                        : this.settingsForm.menu_permissions;
-                }
-            } catch (_) {}
-
-            const cfg = perms[viewId];
-            if (cfg) {
-                if (cfg.enabled === false) return false;
-                const role = cfg.role || 'all';
-                if (role === 'admin') return this.user?.role === 'admin' || this.isAdmin;
-                if (role === 'manager') return this.user?.role === 'admin' || this.user?.role === 'manager' || this.isAdmin;
-                if (role === 'all') return true;
-            }
-
-            if (['users', 'documentTypes', 'portal_group', 'portalSettings', 'portalUsers', 'portalSpaces', 'portalTickets'].includes(viewId)) {
-                return this.user?.role === 'admin' || this.isAdmin;
-            }
-            return true;
-        },
-
-        get visibleMenu() {
-            return (this.menu || []).map(item => {
-                if (item.children) {
-                    const visibleChildren = item.children.filter(c => this.canAccessView(c.id));
-                    if (!visibleChildren.length) return null;
-                    if (!this.canAccessView(item.id)) return null;
-                    return { ...item, children: visibleChildren };
-                }
-                if (!this.canAccessView(item.id)) return null;
-                return item;
-            }).filter(Boolean);
-        },
-
-        isKnownView(id) {
-            if (!id) return false;
-            for (const item of this.menu) {
-                if (item.id === id) return true;
-                if (item.children && item.children.some(c => c.id === id)) return true;
-            }
-            return false;
-        },
-
-        async selectView(id, skipReload = false) {
-            if (!id) id = 'dashboard';
-            const ticketSettingsSelected = id === 'ticketSettings';
-            // Sprawdź, czy to znany widok
-            const valid = this.isKnownView(id);
-            if (!valid) id = 'dashboard';
-
-            // Sprawdź uprawnienia do widoku w menu
-            if (!this.canAccessView(id)) {
-                if (id !== 'dashboard') {
-                    this.notify(window.ZenI18n.t('Brak dostępu do tego modułu'));
-                }
-                id = 'dashboard';
-            }
-            // Zamknij detail view przy zmianie modułu
-            if (this.detailView && this.detailView.open) this.detailView.open = false;
-
-            if (id === 'ticketSettings') {
-                this.settingsTab = 'helpdesk';
-                this.openMenuGroups.tickets_group = true;
-                id = 'settings';
-                if (typeof this.loadHelpdeskSettings === 'function') {
-                    try { await this.loadHelpdeskSettings(); } catch (_) {}
-                }
-            }
-
-            // Po zmianie widoku pozostaw otwartą tylko jego grupę.
-            for (const key of Object.keys(this.openMenuGroups)) this.openMenuGroups[key] = false;
-            if (ticketSettingsSelected) this.openMenuGroups.tickets_group = true;
-            for (const item of this.menu) {
-                if (item.children && item.children.some(c => c.id === id && c.id !== 'ticketSettings')) {
-                    this.openMenuGroups[item.id] = true;
-                }
-            }
-
-            this.currentView = id;
-            if (window.innerWidth < 1024) this.sidebarOpen = false;
-
-            // Zapisz do URL hash i localStorage
-            if (location.hash !== '#' + id) {
-                history.replaceState(null, '', '#' + id);
-            }
-            localStorage.setItem('lastView', id);
-
-            if (!skipReload) await this.reload();
-            if (this.currentView !== id) return;
-
-            // Jeśli to widok leadów – policz widoczne kolumny po renderze
-            if (id === 'leads') {
-                this.$nextTick(() => {
-                    this.recomputeVisibleCols();
-                    this.$refs.kanbanCols?.scrollTo({ left: this.kanbanLeft, behavior: "instant" });
-                });
-            }
-        },
-
-        async reload() {
-            const view = this.currentView;
-            const requestId = this._reloadRequest = (this._reloadRequest || 0) + 1;
-            this.listError = '';
-            if (['portalSettings', 'portalUsers', 'portalTickets', 'portalSpaces'].includes(view)) return;
-            if (view === 'dashboard') {
-                await this.loadStats();
-                if (requestId === this._reloadRequest && this.currentView === view) this.renderFunnel();
-                return;
-            }
-            if (view === 'settings') {
-                await this.loadSettings();
-                return;
-            }
-            if (view === 'sms') {
-                await this.loadSmsData();
-                return;
-            }
-            if (view === 'archive') {
-                await this.loadArchive();
-                return;
-            }
-            if (view === 'notifications') {
-                await Promise.all([
-                    this.loadNotifications(),
-                    this.loadAllReminders(),
-                    this.loadReminders(),
-                    (async () => { if (!this.projects?.length) { try { this.projects = await this.api('/projects'); } catch(_) {} } })()
-                ]);
-                return;
-            }
-            try {
-                const data = view === 'clients' ? await this.loadClientOptions() : await this.api('/' + this.apiPath(view));
-                if (requestId !== this._reloadRequest || this.currentView !== view) return;
-                const list = Array.isArray(data)
-                    ? data
-                    : (data.clients || data.items || data.data || []);
-                this[view] = list;
-            } catch (e) {
-                if (requestId !== this._reloadRequest || this.currentView !== view) return;
-                console.error(e);
-                this.listError = e.message;
-            }
-
-            if (view === 'leads') {
-                try { this.boardTasks = await this.api('/tasks'); this.boardTasksLoaded = true; }
-                catch (e) { this.boardTasksLoaded = false; this.notify(window.ZenI18n.t('Nie pobrano następnych działań: ') + e.message); }
-                if (requestId !== this._reloadRequest || this.currentView !== view) return;
-                this.$nextTick(() => this.recomputeVisibleCols());
-            }
-
-            if (view === 'tasks') {
-                try { this.taskStatusStages = (await this.api('/tasks/board-settings')).stages; }
-                catch (e) { this.listError = e.message; }
-            }
-
-            if (requestId !== this._reloadRequest || this.currentView !== view) return;
-            if (view === 'meetings') {
-                try { this.tasks = await this.api('/tasks'); }
-                catch (e) { this.listError = window.ZenI18n.t('Nie pobrano zadań do kalendarza: ') + e.message; }
-            }
-
-            if (requestId !== this._reloadRequest || this.currentView !== view) return;
-            if (view === 'users') {
-                try { await this.loadTeams(); }
-                catch (e) { console.warn('Nie pobrano zespołów:', e.message); }
-                if (this.isAdmin) await this.loadPermissions();
-            }
-
-            if (requestId !== this._reloadRequest || this.currentView !== view) return;
-            if (view === 'tickets') {
-                if (this.teams.length === 0) {
-                    try { await this.loadTeams(); } catch (_) {}
-                }
-                if (typeof this.loadTicketConfig === 'function') {
-                    try { await this.loadTicketConfig(); } catch (_) {}
-                }
-            }
-
-            // Klienci potrzebni do selectów i nazw
-            if (requestId !== this._reloadRequest || this.currentView !== view) return;
-            if (this.clients.length === 0 && view !== 'clients') {
-                try {
-                    const c = await this.loadClientOptions();
-                    this.clients = Array.isArray(c) ? c : (c.clients || []);
-                } catch (_) {}
-            }
-
-            // Załaduj szablony (dla dropdownów w ofertach/dokumentach)
-            if (this.templates.length === 0) {
-                try {
-                    this.templates = await this.api('/templates');
-                } catch (_) {}
-            }
-
-            if (this.documentTypes.length === 0) {
-                try { this.documentTypes = await this.api('/document-types'); } catch (_) {}
-            }
-
-            // Załaduj listę użytkowników (dla assignee_id)
-            if (this.users.length === 0) {
-                try {
-                    this.users = await this.api('/users');
-                } catch (_) {}
-            }
-        },
-
-        // ═══════════════════════════════════════════════════════════
-        // STATS / DASHBOARD
-        // ═══════════════════════════════════════════════════════════
         async loadStats() {
             try { this.stats = await this.api('/stats'); }
             catch (e) { this.listError = e.message; }
@@ -627,12 +252,6 @@ function crmApp() {
 
         async renderFunnel() { await window.renderZenDashboard(this); },
 
-        // ═══════════════════════════════════════════════════════════
-        // CRUD – GENERYCZNY
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // ZADANIA
-        // ═══════════════════════════════════════════════════════════
         async toggleTask(task) {
             // Jesli zadanie ma przypisanych - otworz modal do zmiany statusu
             const assignees = task.assignees || [];
@@ -649,15 +268,6 @@ function crmApp() {
             } catch (e) { this.notify(e.message); }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // KANBAN – DRAG & DROP
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // GENEROWANIE OFERT / DOKUMENTÓW (link + PDF)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // HELPERS
-        // ═══════════════════════════════════════════════════════════
         clientName(id) {
             if (!id) return '';
             const c = this.clients.find(x => x.id === id);
@@ -670,14 +280,13 @@ function crmApp() {
         },
 
         formatNumber(v)     { return window.ZenHelpers.formatNumber(v); },
-        statusLabel(s)      { return window.ZenHelpers.statusLabel(s); },
+        statusLabel(s)      { return this.clientStatusLabel(s) || window.ZenHelpers.statusLabel(s); },
         priorityLabel(p)    { return window.ZenHelpers.priorityLabel(p); },
         billingLabel(c)     { return window.ZenHelpers.billingLabel(c); },
         offerStatusLabel(s) { return window.ZenHelpers.offerStatusLabel(s); },
         docTypeLabel(t)     { return this.documentTypes.find(x => x.key === t)?.name || window.ZenHelpers.docTypeLabel(t); },
         roleLabel(r)        { return this.managedRoles?.find(role => role.key === r)?.name || window.ZenHelpers.roleLabel(r); },
 
-        // ═══════ KANBAN HELPERS ═══════
         avatarInitials(text) {
             if (!text) return '?';
             const words = String(text).trim().split(/\s+/).filter(Boolean);
@@ -686,9 +295,6 @@ function crmApp() {
             return (words[0][0] + words[1][0]).toUpperCase();
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ
-        // ═══════════════════════════════════════════════════════════
         prevMonth() {
             this.calendarDate = new Date(this.calendarDate.getFullYear(),
                                          this.calendarDate.getMonth() - 1, 1);
@@ -710,84 +316,6 @@ function crmApp() {
             }
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // PROFIL
-        // ═══════════════════════════════════════════════════════════
-        openProfile() {
-            const notifs = this.user?.email_notifications || {};
-            this.profile.form = {
-                first_name: this.user?.first_name || '',
-                last_name:  this.user?.last_name  || '',
-                email:      this.user?.email      || '',
-                current_password: '',
-                avatar_url: this.user?.avatar_url || '',
-                default_call_method: this.user?.default_call_method || 'link',
-                email_notifications: {
-                    ticket_assigned: notifs.ticket_assigned !== false,
-                    ticket_reply: notifs.ticket_reply !== false,
-                    task_assigned: notifs.task_assigned !== false,
-                    client_assigned: notifs.client_assigned !== false,
-                },
-            };
-            this.profile.error = '';
-            this.profile.success = '';
-            this.avatarTs = Date.now();
-            this.profile.open = true;
-        },
-
-        async saveProfile() {
-            this.profile.error = '';
-            this.profile.success = '';
-            try {
-                const { current_password, ...profileData } = this.profile.form;
-                await this.api(`/users/${this.user.id}`, {
-                    method: 'PUT', body: JSON.stringify({ ...profileData, current_password }),
-                });
-                this.user = { ...this.user, ...profileData };
-                localStorage.setItem('user', JSON.stringify(this.user));
-                this.profile.success = window.ZenI18n.t('Profil zapisany');
-                setTimeout(() => { this.profile.open = false; }, 800);
-            } catch (e) { this.profile.error = e.message; }
-        },
-
-        // ═══════════════════════════════════════════════════════════
-        // ZMIANA HASŁA
-        // ═══════════════════════════════════════════════════════════
-        openPassword() {
-            this.password.form = { current_password: '', new_password: '', confirm: '' };
-            this.password.error = '';
-            this.password.success = '';
-            this.password.open = true;
-        },
-
-        async savePassword() {
-            this.password.error = '';
-            this.password.success = '';
-            if (this.password.form.new_password !== this.password.form.confirm) {
-                this.password.error = window.ZenI18n.t('Hasła nie są identyczne');
-                return;
-            }
-            if (this.password.form.new_password.length < 10) {
-                this.password.error = window.ZenI18n.t('Hasło musi mieć min. 10 znaków');
-                return;
-            }
-            try {
-                await this.api(`/users/${this.user.id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ password: this.password.form.new_password, current_password: this.password.form.current_password }),
-                });
-                this.password.success = window.ZenI18n.t('Hasło zmienione');
-                setTimeout(() => { this.logout(); }, 800);
-            } catch (e) { this.password.error = e.message; }
-        },
-
-
-        // ═══════════════════════════════════════════════════════════
-        // KANBAN – NAWIGACJA (bez brzydkiego scrolla)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // DETAIL VIEW – Klient / Lead
-        // ═══════════════════════════════════════════════════════════
         activityIcon(action) {
             const names = { created: 'plus', updated: 'edit', comment: 'comment', sms: 'comment', call: 'phone', email: 'mail', contact_added: 'user', converted: 'check', archived: 'activity', restored: 'activity' };
             return { icon: window.zenIcon(names[action] || 'activity'), cls: 'zen-activity-badge' };
@@ -819,7 +347,6 @@ function crmApp() {
             return (a + b).toUpperCase() || '?';
         },
 
-        // ═══════ DASHBOARD HELPERS ═══════
         get greeting() {
             const h = new Date().getHours();
             if (h < 5)  return window.ZenI18n.t('Dobranoc');
@@ -835,10 +362,6 @@ function crmApp() {
             return s.charAt(0).toUpperCase() + s.slice(1);
         },
 
-        // ═══════ AVATAR UPLOAD ═══════
-        // ═══════════════════════════════════════════════════════════
-        // ARCHIWUM / SOFT DELETE
-        // ═══════════════════════════════════════════════════════════
         archiveTypeLabel(t) {
             const m = {
                 clients: window.ZenI18n.t('Klient'),
@@ -909,52 +432,6 @@ function crmApp() {
 
         formatDateTime(d) {
             return window.formatDateTime ? window.formatDateTime(d) : (d || '—');
-        },
-
-        async handleHashChange() {
-            if (!this.token) return;
-            const hashRaw = location.hash.replace('#', '');
-            if (!hashRaw) return;
-
-            const detailMatch = hashRaw.match(/^(client|lead|service|task|project|ticket)\/(\d+)$/);
-            if (detailMatch) {
-                const type = detailMatch[1];
-                const id = parseInt(detailMatch[2], 10);
-                if (type === 'project') {
-                    if (this.currentView !== 'projects') this.currentView = 'projects';
-                    if (!this.activeProject || this.activeProject.id !== id) {
-                        await this.openProject(id, true);
-                    }
-                } else if (type === 'ticket') {
-                    if (this.currentView !== 'tickets') this.currentView = 'tickets';
-                    if (!this.ticketDrawer?.open || this.ticketDrawer?.ticket?.id !== id) {
-                        await this.openTicketDetails(id, true);
-                    }
-                } else {
-                    const viewMap = { client: 'clients', lead: 'leads', service: 'services', task: 'tasks' };
-                    if (viewMap[type] && this.currentView !== viewMap[type]) {
-                        this.currentView = viewMap[type];
-                    }
-                    if (!this.detailView?.open || this.detailView?.id !== id || this.detailView?.type !== type) {
-                        await this.openDetail(type, id, true);
-                    }
-                }
-                return;
-            }
-
-            if (this.detailView?.open && !hashRaw.includes('/')) {
-                this.detailView.open = false;
-            }
-            if (this.activeProject && hashRaw === 'projects') {
-                this.closeProject(true);
-            }
-            if (this.ticketDrawer?.open && hashRaw === 'tickets') {
-                this.closeTicketDrawer(true);
-            }
-
-            if (this.isKnownView(hashRaw) && this.currentView !== hashRaw) {
-                this.selectView(hashRaw);
-            }
         },
 
         async loadArchive() {
@@ -1050,10 +527,6 @@ function crmApp() {
             } catch (e) { this.notify(e.message); }
         },
 
-
-        // ═══════════════════════════════════════════════════════════
-        // KALENDARZ – zadania + spotkania
-        // ═══════════════════════════════════════════════════════════
         calendarEventsFor(day) {
             const dateStr = this.localDateKey(day.date);
             const events = [];
@@ -1089,134 +562,12 @@ function crmApp() {
             this.openDetail('task', task.id);
         },
 
-        // ═══════════════════════════════════════════════════════════
-        // TASK ASSIGNEES (wielu wykonawców)
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // USTAWIENIA
-        // ═══════════════════════════════════════════════════════════
-        // ═══════════════════════════════════════════════════════════
-        // INIT
-        // ═══════════════════════════════════════════════════════════
-        async init() {
-            if (this.token) {
-                try {
-                    const catalog = await this.api('/translations/catalog');
-                    const serialized = JSON.stringify(catalog);
-                    if (sessionStorage.getItem('zen-i18n-catalog') !== serialized) {
-                        sessionStorage.setItem('zen-i18n-catalog', serialized);
-                        location.reload();
-                        return;
-                    }
-                    window.ZenCustomI18n = catalog;
-                } catch (e) { console.warn('Nie pobrano tłumaczeń:', e.message); }
-            }
-            this.startNotifications();
-            this.startReminders();
-            this.initPush();
-            this.$watch('user', (v) => {
-                this.isAdmin = (v?.role === 'admin');
-            }, { deep: true });
-            this.$watch('darkMode', v => {
-                if (this.currentView === 'dashboard') this.$nextTick(() => this.renderFunnel());
-                localStorage.setItem('darkMode', v);
-                this.applyTheme();
-            });
-
-            // Załaduj ustawienia publiczne (motyw logowania, sidebar, favicon)
-            await this.loadSettings(true);
-            if (this.token) await this.loadMyPermissions();
-
-            const updateLayout = () => { this.sidebarOpen = window.innerWidth >= 1024; };
-            updateLayout();
-            window.addEventListener('resize', updateLayout);
-
-            // Oblicz widoczne kolumny po zmianie rozmiaru i po wejściu w widok
-            this._kanbanResizeHandler = () => {
-                if (this.currentView === 'leads') {
-                    this.$nextTick(() => this.recomputeVisibleCols());
-                }
-            };
-            window.addEventListener('resize', this._kanbanResizeHandler);
-
-            // Nasłuchuj zmian hash (dla back/forward)
-            window.addEventListener('hashchange', () => this.handleHashChange());
-
-            if (this.token) {
-                if (typeof this.loadSmsDevices === 'function') {
-                    this.loadSmsDevices();
-                }
-                try {
-                    const tList = await this.api('/tickets');
-                    if (Array.isArray(tList)) {
-                        this.tickets = tList;
-                    }
-                } catch (_) {}
-                try {
-                    // ── NAJPIERW: sprawdź, czy hash wskazuje na link do rekordu/obiektu ──
-                    const hashRaw = location.hash.replace('#', '');
-                    const detailMatch = hashRaw.match(/^(client|lead|service|task|project|ticket)\/(\d+)$/);
-
-                    if (detailMatch) {
-                        const type = detailMatch[1];
-                        const id = parseInt(detailMatch[2], 10);
-                        if (type === 'project') {
-                            this.currentView = 'projects';
-                            localStorage.setItem('lastView', 'projects');
-                            await this.openProject(id, true);
-                        } else if (type === 'ticket') {
-                            this.currentView = 'tickets';
-                            localStorage.setItem('lastView', 'tickets');
-                            await this.openTicketDetails(id, true);
-                        } else {
-                            const viewMap = { client: 'clients', lead: 'leads', service: 'services', task: 'tasks' };
-                            this.currentView = viewMap[type] || 'leads';
-                            localStorage.setItem('lastView', this.currentView);
-                            await this.openDetail(type, id, true); // skipHash = true
-                        }
-                    } else {
-                        // Zwykły widok z hash / localStorage
-                        const savedView = hashRaw
-                                         || localStorage.getItem('lastView')
-                                         || 'dashboard';
-                        let validView = this.isKnownView(savedView)
-                                         ? savedView : 'dashboard';
-
-                        if (validView === 'ticketSettings') {
-                            this.settingsTab = 'helpdesk';
-                            this.openMenuGroups.tickets_group = true;
-                            validView = 'settings';
-                            if (typeof this.loadHelpdeskSettings === 'function') {
-                                try { await this.loadHelpdeskSettings(); } catch (_) {}
-                            }
-                        }
-
-                        for (const item of this.menu) {
-                            if (item.children && item.children.some(c => c.id === validView || (c.id === 'ticketSettings' && this.settingsTab === 'helpdesk'))) {
-                                this.openMenuGroups[item.id] = true;
-                            }
-                        }
-
-                        this.currentView = validView;
-                        if (location.hash !== '#' + validView) {
-                            history.replaceState(null, '', '#' + validView);
-                        }
-                        localStorage.setItem('lastView', validView);
-
-                        // Załaduj dane dla aktywnego widoku
-                        if (validView === 'dashboard') {
-                            await this.loadStats();
-                            await this.renderFunnel();
-                        } else {
-                            await this.reload();
-                        }
-                    }
-                } catch (e) {
-                    console.warn(window.ZenI18n.t('Błąd inicjalizacji:'), e.message);
-                }
-            }
-        },
-    }, Object.getOwnPropertyDescriptors(window.ZenUX));
+    };
+    // Preserve the original precedence: core, UX, then feature modules.
+    for (const factory of [window.ZenCore.auth, window.ZenCore.navigation, window.ZenCore.lifecycle]) {
+        Object.defineProperties(component, Object.getOwnPropertyDescriptors(factory()));
+    }
+    Object.defineProperties(component, Object.getOwnPropertyDescriptors(window.ZenUX));
     for (const factory of Object.values(window.ZenModules || {})) Object.defineProperties(component, Object.getOwnPropertyDescriptors(factory()));
     return component;
 }

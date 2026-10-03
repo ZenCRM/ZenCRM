@@ -1,0 +1,6176 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "endpoint": "index",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/<path:filename>",
+      "endpoint": "static",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/<path:path>",
+      "endpoint": "static_files",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/activities",
+      "endpoint": "activities.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/archive",
+      "endpoint": "archive.list_archive",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/archive/<entity>/<int:item_id>",
+      "endpoint": "archive.get_archived_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/archive/<entity>/<int:item_id>/permanent",
+      "endpoint": "archive.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/archive/<entity>/<int:item_id>/restore",
+      "endpoint": "archive.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/archive/empty",
+      "endpoint": "archive.empty_archive",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/attachments/<entity>/<int:record_id>",
+      "endpoint": "attachments.collection",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/attachments/<int:attachment_id>",
+      "endpoint": "attachments.item",
+      "methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/auth/forgot-password",
+      "endpoint": "auth.forgot_password",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/login",
+      "endpoint": "auth.login",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/me",
+      "endpoint": "auth.me",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/auth/refresh",
+      "endpoint": "auth.refresh",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/register",
+      "endpoint": "auth.register",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/reset-password",
+      "endpoint": "auth.reset_password",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/setup",
+      "endpoint": "auth.setup_admin",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/auth/setup-status",
+      "endpoint": "auth.setup_status",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/avatars/<path:filename>",
+      "endpoint": "avatars.serve",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/branding/<path:filename>",
+      "endpoint": "branding.serve_branding_file",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients",
+      "endpoint": "clients.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/clients",
+      "endpoint": "clients.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/<int:item_id>",
+      "endpoint": "clients.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/<int:item_id>",
+      "endpoint": "clients.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/<int:item_id>",
+      "endpoint": "clients.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/clients/<int:item_id>/permanent",
+      "endpoint": "clients.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/<int:item_id>/restore",
+      "endpoint": "clients.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/clients/company-lookup",
+      "endpoint": "clients.gus_lookup",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/clients/gus",
+      "endpoint": "clients.gus_lookup",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/comments",
+      "endpoint": "comments.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/comments",
+      "endpoint": "comments.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/comments/<int:item_id>",
+      "endpoint": "comments.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/comments/<int:item_id>",
+      "endpoint": "comments.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/contacts",
+      "endpoint": "contacts.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/contacts",
+      "endpoint": "contacts.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/contacts/<int:item_id>",
+      "endpoint": "contacts.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/contacts/<int:item_id>",
+      "endpoint": "contacts.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/contacts/<int:item_id>",
+      "endpoint": "contacts.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/contacts/<int:item_id>/permanent",
+      "endpoint": "contacts.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/contacts/<int:item_id>/restore",
+      "endpoint": "contacts.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/custom-fields",
+      "endpoint": "custom_fields.definitions",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/custom-fields/<entity>/<int:record_id>",
+      "endpoint": "custom_fields.values",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/custom-fields/<entity>/values",
+      "endpoint": "custom_fields.entity_values",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/custom-fields/<int:field_id>",
+      "endpoint": "custom_fields.remove_definition",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/custom-fields/<int:field_id>",
+      "endpoint": "custom_fields.update_definition",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/document-types",
+      "endpoint": "document_types.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/document-types",
+      "endpoint": "document_types.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/document-types/<key>",
+      "endpoint": "document_types.item",
+      "methods": [
+        "DELETE",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/documents",
+      "endpoint": "documents.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/documents",
+      "endpoint": "documents.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>",
+      "endpoint": "documents.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>",
+      "endpoint": "documents.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>",
+      "endpoint": "documents.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>/generate",
+      "endpoint": "documents.generate_document",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>/link",
+      "endpoint": "documents.share_link",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>/pdf",
+      "endpoint": "documents.download_pdf",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/documents/<int:item_id>/view",
+      "endpoint": "documents.view_document",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/emails/smtp",
+      "endpoint": "emails.get_smtp_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/emails/smtp",
+      "endpoint": "emails.save_smtp_settings",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/emails/smtp-config",
+      "endpoint": "emails.get_smtp_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/emails/smtp-config",
+      "endpoint": "emails.save_smtp_settings",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/emails/smtp/test",
+      "endpoint": "emails.test_smtp",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/emails/templates",
+      "endpoint": "emails.list_templates",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/emails/templates/<string:key>",
+      "endpoint": "emails.get_template",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/emails/templates/<string:key>",
+      "endpoint": "emails.update_template",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/emails/templates/<string:key>/reset",
+      "endpoint": "emails.reset_template",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/emails/test-smtp",
+      "endpoint": "emails.test_smtp",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/leads",
+      "endpoint": "leads.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/leads",
+      "endpoint": "leads.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>",
+      "endpoint": "leads.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>",
+      "endpoint": "leads.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>",
+      "endpoint": "leads.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>/convert",
+      "endpoint": "leads.convert_lead",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>/permanent",
+      "endpoint": "leads.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/leads/<int:item_id>/restore",
+      "endpoint": "leads.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/leads/board-settings",
+      "endpoint": "leads.board_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/leads/webhook",
+      "endpoint": "leads.webhook_submit_lead",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/meetings",
+      "endpoint": "meetings.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/meetings",
+      "endpoint": "meetings.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/meetings/<int:item_id>",
+      "endpoint": "meetings.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/meetings/<int:item_id>",
+      "endpoint": "meetings.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/meetings/<int:item_id>",
+      "endpoint": "meetings.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/notifications",
+      "endpoint": "notifications.inbox",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/offers",
+      "endpoint": "offers.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/offers",
+      "endpoint": "offers.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>",
+      "endpoint": "offers.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>",
+      "endpoint": "offers.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>",
+      "endpoint": "offers.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>/generate",
+      "endpoint": "offers.generate_offer",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>/link",
+      "endpoint": "offers.share_link",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>/pdf",
+      "endpoint": "offers.download_pdf",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/offers/<int:item_id>/view",
+      "endpoint": "offers.view_offer",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/permissions",
+      "endpoint": "permissions.list_permissions",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/permissions/me",
+      "endpoint": "permissions.my_permissions",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/permissions/roles",
+      "endpoint": "permissions.create_role",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/permissions/roles/<string:key>",
+      "endpoint": "permissions.delete_role",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/permissions/roles/<string:key>",
+      "endpoint": "permissions.rename_role",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/permissions/roles/<string:key>/rules",
+      "endpoint": "permissions.save_role_rules",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/permissions/teams/<int:team_id>/rules",
+      "endpoint": "permissions.save_team_rules",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/branding",
+      "endpoint": "portal.upload_branding",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/branding/<filename>",
+      "endpoint": "portal.branding",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/portal/configuration",
+      "endpoint": "portal.configuration",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/login",
+      "endpoint": "portal.login",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/logout",
+      "endpoint": "portal.logout",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/members",
+      "endpoint": "portal.portal_members",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/members/<int:member_id>",
+      "endpoint": "portal.portal_member",
+      "methods": [
+        "DELETE",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces",
+      "endpoint": "portal.spaces",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>",
+      "endpoint": "portal.space_detail",
+      "methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/client",
+      "endpoint": "portal.assign_space_client",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/items",
+      "endpoint": "portal.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/items/<int:item_id>",
+      "endpoint": "portal.update_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/items/<int:item_id>/replies",
+      "endpoint": "portal.replies",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/items/<string:item_id>/file",
+      "endpoint": "portal.attachment",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/members",
+      "endpoint": "portal.members",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/portal/spaces/<int:space_id>/members/<int:member_id>",
+      "endpoint": "portal.change_member",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/portal/tickets",
+      "endpoint": "portal.all_tickets",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/projects",
+      "endpoint": "projects.create_project",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/projects",
+      "endpoint": "projects.list_projects",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>",
+      "endpoint": "projects.delete_project",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>",
+      "endpoint": "projects.get_project",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>",
+      "endpoint": "projects.update_project",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>/members",
+      "endpoint": "projects.add_member",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>/members/<int:user_id>",
+      "endpoint": "projects.remove_member",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/projects/<int:project_id>/stages",
+      "endpoint": "projects.update_project_stages",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/public/document/<token>",
+      "endpoint": "public.view_document",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/public/offer/<token>",
+      "endpoint": "public.view_offer",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/push/config",
+      "endpoint": "push.config",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/push/subscriptions",
+      "endpoint": "push.subscribe",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/push/subscriptions",
+      "endpoint": "push.unsubscribe",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/reminders",
+      "endpoint": "reminders.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/reminders",
+      "endpoint": "reminders.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/reminders/<int:item_id>",
+      "endpoint": "reminders.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/reminders/<int:item_id>",
+      "endpoint": "reminders.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/service-catalog",
+      "endpoint": "service_catalog.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/service-catalog",
+      "endpoint": "service_catalog.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service-catalog/<int:item_id>",
+      "endpoint": "service_catalog.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service-catalog/<int:item_id>",
+      "endpoint": "service_catalog.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service-catalog/<int:item_id>",
+      "endpoint": "service_catalog.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/service-catalog/<int:item_id>/permanent",
+      "endpoint": "service_catalog.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service-catalog/<int:item_id>/restore",
+      "endpoint": "service_catalog.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/service_catalog",
+      "endpoint": "service_catalog_alias.alias_create",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/service_catalog",
+      "endpoint": "service_catalog_alias.alias_list",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service_catalog/<int:item_id>",
+      "endpoint": "service_catalog_alias.alias_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service_catalog/<int:item_id>",
+      "endpoint": "service_catalog_alias.alias_get",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/service_catalog/<int:item_id>",
+      "endpoint": "service_catalog_alias.alias_update",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/services",
+      "endpoint": "services.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/services",
+      "endpoint": "services.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>",
+      "endpoint": "services.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>",
+      "endpoint": "services.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>",
+      "endpoint": "services.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>/detail",
+      "endpoint": "services.get_detail",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>/permanent",
+      "endpoint": "services.permanent_delete",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/services/<int:item_id>/restore",
+      "endpoint": "services.restore_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/settings",
+      "endpoint": "settings.list_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/settings",
+      "endpoint": "settings.update_settings",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/settings/branding/<path:filename>",
+      "endpoint": "settings.serve_branding",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/settings/full",
+      "endpoint": "settings.list_full",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/settings/lead-webhook/generate-token",
+      "endpoint": "settings.generate_lead_webhook_token",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/settings/public",
+      "endpoint": "settings.public_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/settings/reset",
+      "endpoint": "settings.reset_settings",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/settings/ui",
+      "endpoint": "settings.ui_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/settings/upload-logo",
+      "endpoint": "settings.upload_logo",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/actions/trigger",
+      "endpoint": "sms.trigger_action",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/call",
+      "endpoint": "sms.make_call",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/calls",
+      "endpoint": "sms.list_calls",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/calls/<int:call_id>/note",
+      "endpoint": "sms.update_call_note",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/sms/devices",
+      "endpoint": "sms.add_device",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/devices",
+      "endpoint": "sms.list_devices",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/devices/<int:device_id>",
+      "endpoint": "sms.delete_device",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/devices/<int:device_id>",
+      "endpoint": "sms.update_device",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/sms/entity-history",
+      "endpoint": "sms.get_entity_history",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/history",
+      "endpoint": "sms.receive_call_history",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/history.php",
+      "endpoint": "sms.receive_call_history",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/messages",
+      "endpoint": "sms.list_messages",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/next",
+      "endpoint": "sms.get_next_task",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/next.php",
+      "endpoint": "sms.get_next_task",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/queue",
+      "endpoint": "sms.list_queue",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/queue/<int:task_id>",
+      "endpoint": "sms.cancel_queue_task",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/report",
+      "endpoint": "sms.report_sms_status",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/report.php",
+      "endpoint": "sms.report_sms_status",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/send",
+      "endpoint": "sms.send_sms",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/sms_history",
+      "endpoint": "sms.receive_sms_history",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/sms_history.php",
+      "endpoint": "sms.receive_sms_history",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/stats",
+      "endpoint": "sms.receive_stats",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/stats-summary",
+      "endpoint": "sms.get_stats_summary",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/sms/stats.php",
+      "endpoint": "sms.receive_stats",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/sync",
+      "endpoint": "sms.trigger_sync",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/sms/threads",
+      "endpoint": "sms.list_threads",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/stats",
+      "endpoint": "stats.get_stats",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/task-assignees/<int:ta_id>",
+      "endpoint": "task_assignees.remove_assignee",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/task-assignees/<int:ta_id>",
+      "endpoint": "task_assignees.update_assignee",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/task-assignees/task/<int:task_id>",
+      "endpoint": "task_assignees.list_for_task",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/task-assignees/task/<int:task_id>/set",
+      "endpoint": "task_assignees.set_assignees",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tasks",
+      "endpoint": "tasks.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tasks",
+      "endpoint": "tasks.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tasks/<int:item_id>",
+      "endpoint": "tasks.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tasks/<int:item_id>",
+      "endpoint": "tasks.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tasks/<int:item_id>",
+      "endpoint": "tasks.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/tasks/<int:item_id>/detail",
+      "endpoint": "tasks.get_detail",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tasks/board-settings",
+      "endpoint": "tasks.board_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/teams",
+      "endpoint": "teams.create_team",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/teams",
+      "endpoint": "teams.list_teams",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/teams/<int:team_id>",
+      "endpoint": "teams.delete_team",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/teams/<int:team_id>",
+      "endpoint": "teams.get_team",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/teams/<int:team_id>",
+      "endpoint": "teams.update_team",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/teams/<int:team_id>/members",
+      "endpoint": "teams.add_member",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/teams/<int:team_id>/members/<int:user_id>",
+      "endpoint": "teams.remove_member",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/templates",
+      "endpoint": "templates.create_item",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/templates",
+      "endpoint": "templates.list_items",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/templates/<int:item_id>",
+      "endpoint": "templates.delete_item",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/templates/<int:item_id>",
+      "endpoint": "templates.get_item",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/templates/<int:item_id>",
+      "endpoint": "templates.update_item",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/templates/<int:item_id>/preview",
+      "endpoint": "templates.preview_saved",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/templates/preview",
+      "endpoint": "templates.preview_inline",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tickets",
+      "endpoint": "tickets.create_ticket",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tickets",
+      "endpoint": "tickets.list_tickets",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/<int:ticket_id>",
+      "endpoint": "tickets.delete_ticket",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/<int:ticket_id>",
+      "endpoint": "tickets.get_ticket",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/<int:ticket_id>",
+      "endpoint": "tickets.update_ticket",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/tickets/<int:ticket_id>/messages",
+      "endpoint": "tickets.add_agent_message",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tickets/public/config",
+      "endpoint": "tickets.public_helpdesk_config",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/public/submit",
+      "endpoint": "tickets.public_submit_ticket",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tickets/public/track/<string:token>",
+      "endpoint": "tickets.public_track_ticket",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/public/track/<string:token>/reply",
+      "endpoint": "tickets.public_reply_ticket",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/tickets/settings",
+      "endpoint": "tickets.get_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/tickets/settings",
+      "endpoint": "tickets.update_settings",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/tickets/webhook",
+      "endpoint": "tickets.webhook_submit_ticket",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/translations",
+      "endpoint": "translations.list_translations",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/translations/<locale>/entries",
+      "endpoint": "translations.save_entries",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/translations/catalog",
+      "endpoint": "translations.user_catalog",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/translations/languages",
+      "endpoint": "translations.create_language",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/updates/releases",
+      "endpoint": "updates.releases",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/users",
+      "endpoint": "users.create_user",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/users",
+      "endpoint": "users.list_users",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/users/<int:user_id>",
+      "endpoint": "users.delete_user",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/users/<int:user_id>",
+      "endpoint": "users.get_user",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/users/<int:user_id>",
+      "endpoint": "users.update_user",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/users/<int:user_id>/avatar",
+      "endpoint": "users.delete_avatar",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/users/<int:user_id>/avatar",
+      "endpoint": "users.upload_avatar",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/index.html",
+      "endpoint": "index",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    }
+  ],
+  "before_request": [
+    "authenticate_api",
+    "guard_action",
+    "serve_portal_address"
+  ],
+  "after_request": [
+    "translate_api_messages",
+    "security_headers",
+    "cors_after_request"
+  ],
+  "public": {
+    "auth.forgot_password": [
+      "POST"
+    ],
+    "auth.login": [
+      "POST"
+    ],
+    "auth.reset_password": [
+      "POST"
+    ],
+    "auth.setup_admin": [
+      "POST"
+    ],
+    "auth.setup_status": [
+      "GET",
+      "HEAD"
+    ],
+    "avatars.serve": [
+      "GET",
+      "HEAD"
+    ],
+    "branding.serve_branding_file": [
+      "GET",
+      "HEAD"
+    ],
+    "portal.branding": [
+      "GET",
+      "HEAD"
+    ],
+    "portal.configuration": [
+      "GET",
+      "HEAD"
+    ],
+    "portal.login": [
+      "POST"
+    ],
+    "portal.logout": [
+      "POST"
+    ],
+    "settings.public_settings": [
+      "GET",
+      "HEAD"
+    ],
+    "settings.serve_branding": [
+      "GET",
+      "HEAD"
+    ],
+    "tickets.public_helpdesk_config": [
+      "GET",
+      "HEAD"
+    ],
+    "tickets.public_submit_ticket": [
+      "POST"
+    ]
+  },
+  "token_handlers": [
+    "leads.webhook_submit_lead",
+    "public.view_document",
+    "public.view_offer",
+    "sms.get_next_task",
+    "sms.receive_call_history",
+    "sms.receive_sms_history",
+    "sms.receive_stats",
+    "sms.report_sms_status",
+    "tickets.public_reply_ticket",
+    "tickets.public_track_ticket",
+    "tickets.webhook_submit_ticket"
+  ],
+  "portal_handlers": [
+    "portal.attachment",
+    "portal.create_item",
+    "portal.replies",
+    "portal.space_detail",
+    "portal.update_item"
+  ],
+  "permissions": {
+    "archive.restore_item": "archive.restore",
+    "clients.create_item": "clients.create",
+    "clients.delete_item": "clients.delete",
+    "clients.restore_item": "archive.restore",
+    "clients.update_item": "clients.edit",
+    "contacts.create_item": "contacts.create",
+    "contacts.delete_item": "contacts.delete",
+    "contacts.restore_item": "archive.restore",
+    "contacts.update_item": "contacts.edit",
+    "documents.create_item": "documents.create",
+    "documents.delete_item": "documents.delete",
+    "documents.generate_document": "documents.edit",
+    "documents.share_link": "documents.edit",
+    "documents.update_item": "documents.edit",
+    "leads.convert_lead": "leads.edit",
+    "leads.create_item": "leads.create",
+    "leads.delete_item": "leads.delete",
+    "leads.restore_item": "archive.restore",
+    "leads.update_item": "leads.edit",
+    "meetings.create_item": "meetings.create",
+    "meetings.delete_item": "meetings.delete",
+    "meetings.update_item": "meetings.edit",
+    "offers.create_item": "offers.create",
+    "offers.delete_item": "offers.delete",
+    "offers.generate_offer": "offers.edit",
+    "offers.share_link": "offers.edit",
+    "offers.update_item": "offers.edit",
+    "projects.add_member": "projects.edit",
+    "projects.create_project": "projects.create",
+    "projects.delete_project": "projects.delete",
+    "projects.remove_member": "projects.edit",
+    "projects.update_project": "projects.edit",
+    "projects.update_project_stages": "projects.edit",
+    "service_catalog.create_item": "service_catalog.create",
+    "service_catalog.delete_item": "service_catalog.delete",
+    "service_catalog.restore_item": "archive.restore",
+    "service_catalog.update_item": "service_catalog.edit",
+    "service_catalog_alias.alias_create": "service_catalog.create",
+    "service_catalog_alias.alias_delete": "service_catalog.delete",
+    "service_catalog_alias.alias_update": "service_catalog.edit",
+    "services.create_item": "services.create",
+    "services.delete_item": "services.delete",
+    "services.restore_item": "archive.restore",
+    "services.update_item": "services.edit",
+    "task_assignees.remove_assignee": "tasks.edit",
+    "task_assignees.set_assignees": "tasks.edit",
+    "task_assignees.update_assignee": "tasks.edit",
+    "tasks.create_item": "tasks.create",
+    "tasks.delete_item": "tasks.delete",
+    "tasks.update_item": "tasks.edit",
+    "templates.create_item": "templates.create",
+    "templates.delete_item": "templates.delete",
+    "templates.update_item": "templates.edit",
+    "tickets.add_agent_message": "tickets.edit",
+    "tickets.create_ticket": "tickets.create",
+    "tickets.delete_ticket": "tickets.delete",
+    "tickets.update_ticket": "tickets.edit"
+  },
+  "schema": {
+    "activities": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "meta",
+          "type": "JSON",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "alembic_version": {
+      "columns": [
+        {
+          "name": "version_num",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "attachments": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "entity_type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "filename",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "storage_name",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "size",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_by_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "created_by_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "storage_name"
+          ]
+        }
+      ]
+    },
+    "auth_rate_limits": {
+      "columns": [
+        {
+          "name": "key",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "count",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "clients": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "company",
+          "type": "VARCHAR(200)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "address",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "assignee_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "nip",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "regon",
+          "type": "VARCHAR(14)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "krs",
+          "type": "VARCHAR(10)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "street",
+          "type": "VARCHAR(200)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "building_number",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "apartment_number",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "assignee_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "comments": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'note'",
+          "primary_key": 0
+        },
+        {
+          "name": "communication_status",
+          "type": "VARCHAR(16)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR(254)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "contacts": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR(30)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lead_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_primary",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "lead_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "leads",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "custom_fields": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "entity",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "label",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "required",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "custom_values": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "field_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "record_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "value",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "field_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "custom_fields",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "field_id",
+            "record_id"
+          ]
+        }
+      ]
+    },
+    "document_types": {
+      "columns": [
+        {
+          "name": "key",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "fields",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "documents": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lead_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "service_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "template_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "rendered_html",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "data",
+          "type": "JSON",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "file_path",
+          "type": "VARCHAR(500)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "pdf_path",
+          "type": "VARCHAR(500)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "public_token",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_by",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "created_by"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "lead_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "leads",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "service_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "services",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "template_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "templates",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "email_templates": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "key",
+          "type": "VARCHAR(60)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "category",
+          "type": "VARCHAR(40)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "subject",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "body_html",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "variables",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "leads": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "assignee_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "value",
+          "type": "NUMERIC(10, 2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "stage",
+          "type": "VARCHAR(30)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "source",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "probability",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expected_close_date",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "converted_to_client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "assignee_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "converted_to_client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "meetings": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "start_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "end_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "location",
+          "type": "VARCHAR(200)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lead_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "organizer_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "lead_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "leads",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "organizer_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "offers": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "number",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "template_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "rendered_html",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "data",
+          "type": "JSON",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "total_amount",
+          "type": "NUMERIC(10, 2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "valid_until",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "public_token",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "pdf_path",
+          "type": "VARCHAR(500)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_by",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "created_by"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "template_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "templates",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "number"
+          ]
+        }
+      ]
+    },
+    "password_resets": {
+      "columns": [
+        {
+          "name": "token_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_version",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "permission_rules": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "role_key",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "team_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "permission",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "allowed",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "role_key"
+          ],
+          "referred_schema": null,
+          "referred_table": "roles",
+          "referred_columns": [
+            "key"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "team_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "teams",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_permission_role",
+          "column_names": [
+            "role_key",
+            "permission"
+          ]
+        },
+        {
+          "name": "uq_permission_team",
+          "column_names": [
+            "team_id",
+            "permission"
+          ]
+        }
+      ]
+    },
+    "phone_calls": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "device_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "number",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "timestamp",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "call_time",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "date_formatted",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "duration_sec",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "duration_formatted",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "note",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "device_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "sms_devices",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "portal_client_spaces": {
+      "columns": [
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "space_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "space_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "portal_spaces",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "space_id"
+          ]
+        }
+      ]
+    },
+    "portal_configuration": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "data",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "portal_items": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "space_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "filename",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "storage_name",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "space_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "portal_spaces",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "portal_members": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "space_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "space_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "portal_spaces",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "space_id",
+            "email"
+          ]
+        }
+      ]
+    },
+    "portal_replies": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "item_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "author",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "item_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "portal_items",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "portal_sessions": {
+      "columns": [
+        {
+          "name": "token_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "member_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "member_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "portal_members",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "portal_spaces": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(160)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "project_members": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "project_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "role",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "project_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "projects",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "project_id",
+            "user_id"
+          ]
+        }
+      ]
+    },
+    "projects": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(30)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "manager_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "budget",
+          "type": "NUMERIC(12, 2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "start_date",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "end_date",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "task_stages",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "manager_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "push_deliveries": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "subscription_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "reminder_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "scheduled_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sent",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "next_attempt",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "attempts",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lease",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "reminder_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "reminders",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "subscription_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "push_subscriptions",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_push_delivery",
+          "column_names": [
+            "subscription_id",
+            "reminder_id",
+            "scheduled_at"
+          ]
+        }
+      ]
+    },
+    "push_identity": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "private_key",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "push_subscriptions": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "endpoint_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "subscription",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "endpoint_hash"
+          ]
+        }
+      ]
+    },
+    "reminders": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "remind_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "task_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "link",
+          "type": "VARCHAR(500)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "dismissed",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "task_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "tasks",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_reminder_user_task",
+          "column_names": [
+            "user_id",
+            "task_id"
+          ]
+        }
+      ]
+    },
+    "roles": {
+      "columns": [
+        {
+          "name": "key",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "built_in",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "service_catalog": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "billing_type",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "term_type",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "default_billing_cycle",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "default_price",
+          "type": "NUMERIC(10, 2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_price_fixed",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_active",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "services": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "catalog_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "billing_type",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "term_type",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "billing_cycle",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "price",
+          "type": "NUMERIC(10, 2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "start_date",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "end_date",
+          "type": "DATE",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "risk_level",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "assignee_ids",
+          "type": "JSON",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "catalog_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "service_catalog",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "settings": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "key",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "value",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "category",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "sms_devices": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "phone_number",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "token",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_active",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_seen",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "today_stats",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "week_stats",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "stats_updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_sync_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sync_from",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "sms_messages": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "device_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "body",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "timestamp",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message_time",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "date_formatted",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "device_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "sms_devices",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "sms_queue": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "device_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "phone_number",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "payload",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "error_message",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sent_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "claimed_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "device_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "sms_devices",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "task_assignees": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "task_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "comment",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "task_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "tasks",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "tasks": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "priority",
+          "type": "VARCHAR(10)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "due_date",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lead_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "service_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "project_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "assignee_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "assignee_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "lead_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "leads",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "project_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "projects",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "service_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "services",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "team_members": {
+      "columns": [
+        {
+          "name": "team_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 2
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "team_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "teams",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "teams": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "color",
+          "type": "VARCHAR(30)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "leader_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "leader_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "templates": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "document_type_key",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "variables",
+          "type": "JSON",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_active",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "document_type_key"
+          ],
+          "referred_schema": null,
+          "referred_table": "document_types",
+          "referred_columns": [
+            "key"
+          ],
+          "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "ticket_messages": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "ticket_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sender_type",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sender_name",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sender_email",
+          "type": "VARCHAR(120)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_internal",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "ticket_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "tickets",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "tickets": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "ticket_number",
+          "type": "VARCHAR(30)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "contact_name",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "contact_email",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "contact_phone",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "category",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "priority",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(30)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "assignee_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "team_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "token",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "source",
+          "type": "VARCHAR(30)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "resolved_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "closed_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "assignee_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "client_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "clients",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "team_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "teams",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "translation_entries": {
+      "columns": [
+        {
+          "name": "locale",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "key",
+          "type": "VARCHAR(500)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 2
+        },
+        {
+          "name": "value",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "translation_languages": {
+      "columns": [
+        {
+          "name": "code",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "base_locale",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "users": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "role",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_active",
+          "type": "BOOLEAN",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "avatar_url",
+          "type": "VARCHAR(500)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "default_call_method",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "email_notifications",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "email"
+          ]
+        }
+      ]
+    }
+  }
+}

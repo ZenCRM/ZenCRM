@@ -9,7 +9,15 @@ window.ZenConfig = {
             { key: 'email', label: window.ZenI18n.t('Email'), type: 'email' },
             { key: 'phone', label: window.ZenI18n.t('Telefon'), type: 'text' },
             { key: 'company', label: window.ZenI18n.t('Firma'), type: 'text' },
-            { key: 'address', label: window.ZenI18n.t('Adres'), type: 'textarea' },
+            { key: 'nip', label: window.ZenI18n.t('NIP'), type: 'text' },
+            { key: 'regon', label: window.ZenI18n.t('REGON'), type: 'text' },
+            { key: 'krs', label: window.ZenI18n.t('KRS (opcjonalnie)'), type: 'text' },
+            { key: 'street', label: window.ZenI18n.t('Ulica'), type: 'text' },
+            { key: 'building_number', label: window.ZenI18n.t('Numer budynku'), type: 'text' },
+            { key: 'apartment_number', label: window.ZenI18n.t('Numer lokalu'), type: 'text' },
+            { key: 'postal_code', label: window.ZenI18n.t('Kod pocztowy'), type: 'text' },
+            { key: 'city', label: window.ZenI18n.t('Miejscowość'), type: 'text' },
+            { key: 'country', label: window.ZenI18n.t('Kraj'), type: 'text' },
                         { key: 'status', label: window.ZenI18n.t('Status'), type: 'select', options: [
                 { value: 'active',   label: window.ZenI18n.t('Aktywny') },
                 { value: 'inactive', label: window.ZenI18n.t('Nieaktywny') },
@@ -19,9 +27,9 @@ window.ZenConfig = {
         ],
 
         leads: [
-            { key: 'title', label: window.ZenI18n.t('Tytul'), type: 'text', required: true },
+            { key: 'title', label: window.ZenI18n.t('Nazwa szansy sprzedaży'), type: 'text', required: true },
             { key: 'client_id', label: window.ZenI18n.t('Klient'), type: 'client-select' },
-                        { key: 'value', label: window.ZenI18n.t('Wartosc (zl)'), type: 'number' },
+                        { key: 'value', label: window.ZenI18n.t('Wartość (zł)'), type: 'number' },
             { key: 'stage', label: window.ZenI18n.t('Etap'), type: 'select', options: [
                 { value: 'new',         label: window.ZenI18n.t('Nowy') },
                 { value: 'contacted',   label: window.ZenI18n.t('Kontakt') },
@@ -31,9 +39,10 @@ window.ZenConfig = {
                 { value: 'won',         label: window.ZenI18n.t('Wygrany') },
                 { value: 'lost',        label: window.ZenI18n.t('Przegrany') },
             ]},
-            { key: 'source', label: window.ZenI18n.t('Zrodlo'), type: 'text' },
+            { key: 'source', label: window.ZenI18n.t('Źródło'), type: 'text' },
             { key: 'probability', label: window.ZenI18n.t('Prawdopodobieństwo'), type: 'range' },
-            { key: 'expected_close_date', label: window.ZenI18n.t('Przewidywane zamkniecie'), type: 'date' },
+            { key: 'expected_close_date', label: window.ZenI18n.t('Przewidywane zamknięcie'), type: 'date' },
+            { key: 'assignee_id', label: window.ZenI18n.t('Opiekun'), type: 'user-select' },
             { key: 'notes', label: window.ZenI18n.t('Notatki'), type: 'textarea' },
         ],
 

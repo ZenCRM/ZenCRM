@@ -1,0 +1,71 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const store = new Map();
+const sandbox = {window:{},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v))},location:{hash:''},Date,console,setTimeout,clearTimeout};
+vm.createContext(sandbox);
+for(const name of ['../locales/pl','../locales/en','i18n','config','ux',...[...fs.readFileSync('frontend/views/head.html','utf8').matchAll(/src="\/js\/((?:modules|core|settings)\/[^?"]+)\?[^"]*"/g)].map(m=>m[1].slice(0,-3)),'app']) vm.runInContext(fs.readFileSync(`frontend/js/${name}.js`,'utf8'),sandbox);
+const app = sandbox.crmApp();
+
+(async () => {
+    app.user = {id: 1, role: 'admin'};
+    app.clients = [{id: 7, name: 'Firma'}];
+    app.leads = [
+        {id: 1, title: 'Alpha', client_id: 7, value: 100, stage: 'new', assignee_id: 1, expected_close_date: '2026-11-02'},
+        {id: 2, title: 'Beta', value: 500, stage: 'contacted', expected_close_date: '2026-11-01'},
+        {id: 3, title: 'Gamma', value: 20, stage: 'new'},
+    ];
+    app.leadSort = 'value';
+    assert.equal(app.boardLeads[0].id, 2);
+    app.leadSort = 'closing';
+    assert.equal(app.boardLeads[0].id, 2);
+    assert.equal(app.boardLeads[2].id, 3);
+    app.leadStageFilter = 'new';
+    assert.equal(app.boardLeads.length, 2);
+    app.leadFilter = 'mine';
+    assert.equal(app.boardLeads[0].id, 1);
+    app.leadSearch = 'Firma';
+    assert.equal(app.boardLeads[0].id, 1);
+    app.leadStageFilter = ''; app.leadSearch = ''; app.leadFilter = '';
+    const lead = app.leads[0];
+    app.detailView = {type: 'lead', id: lead.id, data: {...lead}};
+    app.$nextTick = fn => fn(); app.updateKanbanScroll = () => {};
+    const notices = [];
+    app.notify = (message, undo) => notices.push({message, undo});
+    app.api = async (url, options) => ({stage: JSON.parse(options.body).stage});
+    await app.changeLeadStage(lead, 'contacted');
+    assert.equal(lead.stage, 'contacted');
+    assert.equal(app.detailView.data.stage, 'contacted');
+    await notices[0].undo();
+    assert.equal(lead.stage, 'new');
+    app.api = async () => {throw new Error('Brak połączenia');};
+    await app.changeLeadStage(lead, 'won');
+    assert.equal(lead.stage, 'new');
+    assert.equal(app.savingLead, null);
+    assert.ok(notices.at(-1).message.includes('Brak połączenia'));
+    app.openLeadCardEditor(lead);
+    app.leadCardEditor.stage='won';app.leadCardEditor.probability=75;
+    app.api=async (url,options)=>({...lead,...JSON.parse(options.body)});
+    await app.saveLeadCardEditor(lead);
+    assert.equal(lead.stage,'won');assert.equal(lead.probability,75);assert.equal(app.leadCardEditor.id,null);
+    app.openLeadCardEditor(lead);app.leadCardEditor.probability=101;
+    await app.saveLeadCardEditor(lead);assert.equal(lead.probability,75);assert.ok(app.leadCardEditor.error);
+    app.leadCardEditor.probability=50;app.api=async()=>{throw new Error('Offline');};
+    await app.saveLeadCardEditor(lead);assert.equal(lead.probability,75);assert.equal(app.leadCardEditor.error,'Offline');
+    let opened;
+    app.openJournal=(kind,type,record)=>{opened={kind,type,record};app.journal={address:'',selected:record};};
+    app.api=async url=>url==='/sms/devices'?[]:{phones:['123456789']};
+    await app.openLeadPhone(lead);assert.equal(opened.kind,'call');assert.equal(app.journal.address,'123456789');assert.equal(app.hasConnectedPhone(),false);
+    app.api=async url=>url==='/sms/devices'?[{id:9}]:{phones:['123456789']};
+    await app.openLeadPhone(lead);assert.equal(app.hasConnectedPhone(),true);
+    sandbox.confirm=()=>true;app.detailView={type:'client',data:{id:999}};
+    app.loadDetailActivities=async()=>{};let callPayload;
+    app.api=async (url,options)=>{callPayload=JSON.parse(options.body);return {};};
+    await app.makePhoneCall('123456789','Firma',{clientId:7});
+    assert.equal(callPayload.client_id,7);assert.equal(callPayload.phone_number,'123456789');
+    const fields = app.fieldsFor('leads');
+    assert.equal(fields.find(f => f.key === 'stage').type, 'lead-stage');
+    assert.equal(fields.find(f => f.key === 'assignee_id').type, 'user-select');
+    assert.ok(fields.findIndex(f => f.key === 'stage') < fields.findIndex(f => f.key === 'value'));
+    console.log('OK: lead filters, sorting, stage save/undo/failure and form fields');
+})().catch(error => {console.error(error); process.exitCode = 1;});

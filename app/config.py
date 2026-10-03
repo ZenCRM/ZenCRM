@@ -13,6 +13,8 @@ class Config:
 
     PUSH_ENABLED = os.getenv("PUSH_ENABLED", "true").lower() == "true"
     VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@example.com")
+    GUS_API_KEY = os.getenv('GUS_API_KEY', '').strip()
+    GUS_TEST_MODE = os.getenv('GUS_TEST_MODE', 'false').lower() == 'true'
     MAX_CONTENT_LENGTH = 21 * 1024 * 1024
     CORS_ORIGINS = [origin.strip() for origin in os.getenv('CORS_ORIGINS', '').split(',') if origin.strip()]
     PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', '').strip()
