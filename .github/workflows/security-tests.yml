@@ -17,7 +17,7 @@ jobs:
           node-version: '20'
       - run: |
           sudo apt-get update
-          sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libjpeg62-turbo libopenjp2-7 fontconfig
+          sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libopenjp2-7 fontconfig
           python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
       - run: node --test tests/*.cjs
