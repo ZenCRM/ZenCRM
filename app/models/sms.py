@@ -87,12 +87,13 @@ class SmsQueue(db.Model):
     message = db.Column(db.Text)
     action = db.Column(db.String(50), default='send_sms')  # send_sms, get_stats, get_stats_sms, get_full_history, get_sms_history, get_sms_history_by_date
     payload = db.Column(db.Text)  # JSON string for extra action parameters
-    status = db.Column(db.String(20), default='pending')   # pending, processing, sent, failed, completed
+    status = db.Column(db.String(20), default='pending', index=True)   # pending, processing, sent, failed, completed
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     error_message = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     sent_at = db.Column(db.DateTime)
+    claimed_at = db.Column(db.DateTime)
 
     def to_dict(self):
         payload_data = None

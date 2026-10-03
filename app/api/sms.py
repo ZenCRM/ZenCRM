@@ -261,8 +261,25 @@ def pending_task_ids(device, limit=20):
     return [task_id for (task_id,) in rows]
 
 
+PROCESSING_TIMEOUT = timedelta(minutes=10)
+
+
+def fail_unconfirmed_tasks():
+    """Fail tasks a phone claimed but never reported; retrying could send an SMS or call twice."""
+    cutoff = datetime.utcnow() - PROCESSING_TIMEOUT
+    SmsQueue.query.filter(
+        SmsQueue.status == 'processing',
+        (SmsQueue.claimed_at == None) | (SmsQueue.claimed_at < cutoff),
+    ).update({
+        SmsQueue.status: 'failed',
+        SmsQueue.error_message: 'No confirmation from the phone within 10 minutes',
+    }, synchronize_session=False)
+    db.session.commit()
+
+
 def claim_next_task(device):
     """Atomically move one pending task to processing so concurrent pollers never share it."""
+    fail_unconfirmed_tasks()
     for task_id in pending_task_ids(device):
         claimed = SmsQueue.query.filter(
             SmsQueue.id == task_id,
@@ -271,6 +288,7 @@ def claim_next_task(device):
         ).update({
             SmsQueue.status: 'processing',
             SmsQueue.device_id: db.func.coalesce(SmsQueue.device_id, device.id),
+            SmsQueue.claimed_at: datetime.utcnow(),
         }, synchronize_session=False)
         db.session.commit()
         if claimed:

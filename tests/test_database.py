@@ -45,8 +45,11 @@ class DatabasePreparationTest(unittest.TestCase):
         return {column['name'] for column in inspect(db.engine).get_columns(table)}
 
     def create_legacy_schema(self):
-        """Tables as create_all built them before migrations."""
+        """Tables as create_all built them before migrations: without what revision 0002 adds."""
         db.create_all()
+        with db.engine.begin() as conn:
+            conn.execute(text('DROP INDEX ix_sms_queue_status'))
+            conn.execute(text('ALTER TABLE sms_queue DROP COLUMN claimed_at'))
 
     def test_migrations_match_models(self):
         prepare_database()
@@ -63,7 +66,7 @@ class DatabasePreparationTest(unittest.TestCase):
         prepare_database()
         self.assertEqual(self.version(), self.head)
         self.assertIn('is_primary', self.columns('contacts'))
-        self.assertIn('sms_queue', inspect(db.engine).get_table_names())
+        self.assertIn('claimed_at', self.columns('sms_queue'))
         self.assertIn('ticket_messages', inspect(db.engine).get_table_names())
 
     def test_legacy_installation_missing_a_table_reaches_head(self):
@@ -73,7 +76,7 @@ class DatabasePreparationTest(unittest.TestCase):
         prepare_database()
         prepare_database()
         self.assertEqual(self.version(), self.head)
-        self.assertIn('sms_queue', inspect(db.engine).get_table_names())
+        self.assertIn('claimed_at', self.columns('sms_queue'))
 
     def test_unknown_newer_revision_is_left_untouched(self):
         prepare_database()
@@ -109,7 +112,7 @@ class DatabasePreparationTest(unittest.TestCase):
         errors = [worker.communicate(timeout=120)[1].decode() for worker in workers]
         self.assertEqual([worker.returncode for worker in workers], [0] * 4, errors)
         self.assertEqual(self.version(), self.head)
-        self.assertIn('sms_queue', inspect(db.engine).get_table_names())
+        self.assertIn('claimed_at', self.columns('sms_queue'))
 
     def test_revision_from_removed_migration_chain_is_replaced(self):
         self.create_legacy_schema()
@@ -118,7 +121,7 @@ class DatabasePreparationTest(unittest.TestCase):
             conn.execute(text("INSERT INTO alembic_version VALUES ('20260929_document_types')"))
         prepare_database()
         self.assertEqual(self.version(), self.head)
-        self.assertIn('sms_queue', inspect(db.engine).get_table_names())
+        self.assertIn('claimed_at', self.columns('sms_queue'))
 
     def test_preparation_is_idempotent_and_seeds_defaults(self):
         prepare_database()

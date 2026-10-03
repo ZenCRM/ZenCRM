@@ -1,5 +1,6 @@
 import unittest
 import json
+from datetime import datetime, timedelta
 from unittest.mock import patch
 from app import create_app
 from app.config import Config
@@ -68,6 +69,30 @@ class SmsApiTest(unittest.TestCase):
         self.assertEqual(db.session.get(SmsQueue, taken_id).device_id, other.id)
         claimed = db.session.get(SmsQueue, free_id)
         self.assertEqual((claimed.status, claimed.device_id), ('processing', self.device.id))
+
+    def test_unconfirmed_processing_tasks_time_out_as_failed(self):
+        now = datetime.utcnow()
+        stale = SmsQueue(phone_number='+48 600 000 003', message='lost', action='send_sms', status='processing',
+                         device_id=self.device.id, claimed_at=now - timedelta(minutes=11))
+        recent = SmsQueue(phone_number='+48 600 000 004', message='in flight', action='send_sms', status='processing',
+                          device_id=self.device.id, claimed_at=now - timedelta(minutes=1))
+        db.session.add_all([stale, recent])
+        db.session.commit()
+        stale_id, recent_id = stale.id, recent.id
+
+        res = self.client.get('/api/sms/next', headers={'X-Device-Token': 'TEST_SECRET_TOKEN'})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(db.session.get(SmsQueue, stale_id).status, 'failed')
+        self.assertTrue(db.session.get(SmsQueue, stale_id).error_message)
+        self.assertEqual(db.session.get(SmsQueue, recent_id).status, 'processing')
+
+    def test_claimed_task_records_claim_time(self):
+        task = SmsQueue(phone_number='+48 600 000 005', message='hello', action='send_sms', status='pending')
+        db.session.add(task)
+        db.session.commit()
+        res = self.client.get('/api/sms/next', headers={'X-Device-Token': 'TEST_SECRET_TOKEN'})
+        self.assertEqual(res.json['id'], task.id)
+        self.assertIsNotNone(db.session.get(SmsQueue, task.id).claimed_at)
 
     def test_call_note_is_saved_and_returned_with_history(self):
         call = PhoneCall(device_id=self.device.id, number=self.client_rec.phone,
