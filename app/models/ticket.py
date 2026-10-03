@@ -34,9 +34,11 @@ class Ticket(db.Model):
 
     @classmethod
     def generate_number(cls):
-        year = datetime.utcnow().strftime('%Y')
-        count = cls.query.filter(cls.ticket_number.like(f'TIC-{year}-%')).count() + 1
-        return f'TIC-{year}-{count:04d}'
+        # Continue from the highest number, not the row count: tickets can be hard-deleted.
+        prefix = f"TIC-{datetime.utcnow().strftime('%Y')}-"
+        numbers = db.session.query(cls.ticket_number).filter(cls.ticket_number.like(f'{prefix}%'))
+        suffixes = [int(number[len(prefix):]) for (number,) in numbers if number[len(prefix):].isdigit()]
+        return f'{prefix}{max(suffixes, default=0) + 1:04d}'
 
     @classmethod
     def generate_token(cls):

@@ -81,7 +81,8 @@ def init_api_security(app):
     def security_headers(response):
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'no-referrer'
-        response.headers['X-Frame-Options'] = 'DENY'
+        # Only the workspace view is embedded, by the same-origin portal admin page.
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN' if request.path == '/workspace.html' else 'DENY'
         if response.mimetype == 'image/svg+xml':
             response.headers['Content-Security-Policy'] = "sandbox; default-src 'none'"
         if request.path.startswith('/api/') and response.mimetype == 'text/html' and 'Content-Security-Policy' not in response.headers:

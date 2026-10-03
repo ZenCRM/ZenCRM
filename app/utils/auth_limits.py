@@ -14,12 +14,10 @@ def auth_limit(limit, seconds=900):
         def limited(*args, **kwargs):
             now = int(time.time())
             window = now // seconds
-            # Do not trust client-supplied X-Forwarded-For.
+            # Key by client address only: X-Forwarded-For is honoured solely through
+            # ProxyFix (TRUSTED_PROXY_HOPS), and a body-supplied key such as the login
+            # email would let anyone lock a known account out from another address.
             identity = request.remote_addr or 'unknown'
-            if request.endpoint == 'auth.login':
-                data = request.get_json(silent=True) or {}
-                email = data.get('email', '') if isinstance(data, dict) else ''
-                identity = str(email).strip().lower()[:120] or identity
             key = hashlib.sha256(f'{request.endpoint}:{identity}:{window}'.encode()).hexdigest()
             AuthRateLimit.query.filter(AuthRateLimit.expires_at <= now).delete()
             if not db.session.get(AuthRateLimit, key):

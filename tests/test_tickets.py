@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 from flask_jwt_extended import create_access_token
 
 from app import create_app
@@ -125,6 +126,25 @@ class TicketsTest(unittest.TestCase):
         self.assertEqual(full_ticket['status'], 'pending_client')
         self.assertEqual(len(full_ticket['messages']), 3)  # Initial description message + note + reply
 
+    def test_ticket_number_stays_unique_after_deletion(self):
+        def create():
+            res = self.client.post('/api/tickets', json={'title': 'Outage', 'description': 'Server is down'},
+                                   headers=self.admin_headers)
+            self.assertEqual(res.status_code, 201)
+            return res.get_json()
+        first, second, third = create(), create(), create()
+        self.assertEqual(self.client.delete(f"/api/tickets/{second['id']}", headers=self.admin_headers).status_code, 200)
+        fourth = create()
+        self.assertNotIn(fourth['ticket_number'], {first['ticket_number'], third['ticket_number']})
+        self.assertTrue(fourth['ticket_number'].endswith('-0004'))
+
+    def test_ticket_number_sequence_passes_9999(self):
+        year = datetime.utcnow().strftime('%Y')
+        db.session.add(Ticket(ticket_number=f'TIC-{year}-9999', title='Last', description='Last', contact_email='a@b.c', token=Ticket.generate_token()))
+        db.session.add(Ticket(ticket_number=f'TIC-{year}-10000', title='Next', description='Next', contact_email='a@b.c', token=Ticket.generate_token()))
+        db.session.commit()
+        self.assertEqual(Ticket.generate_number(), f'TIC-{year}-10001')
+
     def test_public_helpdesk_submit_and_tracking(self):
         # 1. Check public config
         res = self.client.get('/api/tickets/public/config')
@@ -249,6 +269,33 @@ class TicketsTest(unittest.TestCase):
         self.assertEqual(len(client_tickets), 1)
         self.assertEqual(client_tickets[0]['title'], 'Problem ze sprzętem')
         self.assertEqual(client_tickets[0]['source'], 'portal')
+
+    def test_portal_hides_draft_documents_and_offers(self):
+        draft_doc = Document(client_id=self.crm_client.id, title='Internal draft', type='contract', status='draft', content='Internal notes')
+        final_doc = Document(client_id=self.crm_client.id, title='Signed contract', type='contract', status='final', content='Contract body')
+        draft_offer = Offer(client_id=self.crm_client.id, title='Draft offer', number='OF/DRAFT', status=' Draft ', content='Margin notes')
+        unset_doc = Document(client_id=self.crm_client.id, title='No status', type='contract', content='Internal')
+        sent_offer = Offer(client_id=self.crm_client.id, title='Sent offer', number='OF/SENT', status='sent', total_amount=100.0)
+        space = PortalSpace(name='ACME space')
+        db.session.add_all([draft_doc, final_doc, draft_offer, sent_offer, unset_doc, space])
+        db.session.flush()
+        unset_doc.status = None
+        db.session.commit()
+        db.session.add(PortalClientSpace(client_id=self.crm_client.id, space_id=space.id))
+        db.session.commit()
+
+        res = self.client.get(f'/api/portal/spaces/{space.id}', headers=self.admin_headers)
+        self.assertEqual(res.status_code, 200)
+        item_ids = {item['id'] for item in res.get_json()['items']}
+        self.assertIn(f'doc_{final_doc.id}', item_ids)
+        self.assertIn(f'offer_{sent_offer.id}', item_ids)
+        self.assertNotIn(f'doc_{draft_doc.id}', item_ids)
+        self.assertNotIn(f'offer_{draft_offer.id}', item_ids)
+        self.assertNotIn(f'doc_{unset_doc.id}', item_ids)
+
+        for item_id in (f'doc_{draft_doc.id}', f'offer_{draft_offer.id}', f'doc_{unset_doc.id}'):
+            res = self.client.get(f'/api/portal/spaces/{space.id}/items/{item_id}/file', headers=self.admin_headers)
+            self.assertEqual(res.status_code, 404)
 
     def test_helpdesk_custom_content_and_logo_settings(self):
         # 1. Update settings with custom content and custom logo

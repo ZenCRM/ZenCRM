@@ -146,6 +146,15 @@ def all_tickets():
     return jsonify(result)
 
 
+def shared_with_client(record):
+    """Drafts are internal; a missing status is treated as a draft."""
+    return (record.status or 'draft').strip().lower() != 'draft'
+
+
+def shared_with_client_filter(model):
+    return db.func.lower(db.func.trim(db.func.coalesce(model.status, 'draft'))) != 'draft'
+
+
 @portal_bp.route('/spaces/<int:space_id>', methods=['GET', 'PUT', 'DELETE'])
 def space_detail(space_id):
     member = access(space_id)
@@ -186,7 +195,7 @@ def space_detail(space_id):
     if mapping and mapping.client_id:
         client_id = mapping.client_id
         # 1. Dokumenty klienta
-        docs = Document.query.filter_by(client_id=client_id, deleted_at=None).order_by(Document.id.desc()).all()
+        docs = Document.query.filter_by(client_id=client_id, deleted_at=None).filter(shared_with_client_filter(Document)).order_by(Document.id.desc()).all()
         for d in docs:
             items_list.append({
                 'id': f'doc_{d.id}',
@@ -200,7 +209,7 @@ def space_detail(space_id):
                 'is_client_record': True,
             })
         # 2. Oferty klienta
-        offers = Offer.query.filter_by(client_id=client_id, deleted_at=None).order_by(Offer.id.desc()).all()
+        offers = Offer.query.filter_by(client_id=client_id, deleted_at=None).filter(shared_with_client_filter(Offer)).order_by(Offer.id.desc()).all()
         for o in offers:
             items_list.append({
                 'id': f'offer_{o.id}',
@@ -392,7 +401,7 @@ def attachment(space_id, item_id):
         except (ValueError, IndexError):
             abort(404)
         doc = db.session.get(Document, doc_id)
-        if not doc or doc.deleted_at or doc.client_id != client_id:
+        if not doc or doc.deleted_at or doc.client_id != client_id or not shared_with_client(doc):
             abort(404)
         module_access(member, 'document')
         if doc.pdf_path and os.path.exists(doc.pdf_path):
@@ -415,7 +424,7 @@ def attachment(space_id, item_id):
         except (ValueError, IndexError):
             abort(404)
         off = db.session.get(Offer, off_id)
-        if not off or off.deleted_at or off.client_id != client_id:
+        if not off or off.deleted_at or off.client_id != client_id or not shared_with_client(off):
             abort(404)
         module_access(member, 'offer')
         if off.pdf_path and os.path.exists(off.pdf_path):

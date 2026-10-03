@@ -1,5 +1,6 @@
 import unittest
 import json
+from unittest.mock import patch
 from app import create_app
 from app.config import Config
 from app.extensions import db
@@ -45,6 +46,28 @@ class SmsApiTest(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.ctx.pop()
+
+    def test_next_task_skips_task_claimed_by_another_poller(self):
+        other = SmsDevice(id=2, name='Second phone', phone_number='+48 500 333 444',
+                          token='OTHER_SECRET_TOKEN', user_id=1, is_active=True)
+        taken = SmsQueue(phone_number='+48 600 000 001', message='first', action='send_sms', status='pending')
+        free = SmsQueue(phone_number='+48 600 000 002', message='second', action='send_sms', status='pending')
+        db.session.add_all([other, taken, free])
+        db.session.commit()
+        taken_id, free_id = taken.id, free.id
+        stale_candidates = [taken_id, free_id]
+        # Another poller claims the oldest task after this request has read the candidates.
+        SmsQueue.query.filter_by(id=taken_id).update({'status': 'processing', 'device_id': other.id})
+        db.session.commit()
+
+        with patch('app.api.sms.pending_task_ids', return_value=stale_candidates):
+            res = self.client.get('/api/sms/next', headers={'X-Device-Token': 'TEST_SECRET_TOKEN'})
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json['id'], free_id)
+        self.assertEqual(db.session.get(SmsQueue, taken_id).device_id, other.id)
+        claimed = db.session.get(SmsQueue, free_id)
+        self.assertEqual((claimed.status, claimed.device_id), ('processing', self.device.id))
 
     def test_call_note_is_saved_and_returned_with_history(self):
         call = PhoneCall(device_id=self.device.id, number=self.client_rec.phone,

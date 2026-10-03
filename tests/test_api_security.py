@@ -37,6 +37,14 @@ class ApiSecurityTest(unittest.TestCase):
         db.drop_all()
         self.ctx.pop()
 
+    def test_pages_may_only_be_framed_by_same_origin(self):
+        # The portal admin view embeds /workspace.html in a same-origin iframe.
+        response = self.client.get('/workspace.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['X-Frame-Options'], 'SAMEORIGIN')
+        for path in ('/', '/portal.html', '/api/security-regression-probe'):
+            self.assertEqual(self.client.get(path, headers=self.headers['admin']).headers['X-Frame-Options'], 'DENY')
+
     def test_registration_requires_admin(self):
         payload = {'email': 'new@example.com', 'password': 'new-password'}
         self.assertEqual(self.client.post('/api/auth/register', json=payload).status_code, 401)

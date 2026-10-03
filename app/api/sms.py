@@ -252,6 +252,32 @@ def authenticate_device(token):
 # 1. MOBILE APP GATEWAY ENDPOINTS (Polled by phone)
 # ═══════════════════════════════════════════════════════════════════════
 
+def pending_task_ids(device, limit=20):
+    """Oldest pending tasks addressed to this device or to any device."""
+    rows = db.session.query(SmsQueue.id).filter(
+        (SmsQueue.device_id == device.id) | (SmsQueue.device_id == None),
+        SmsQueue.status == 'pending'
+    ).order_by(SmsQueue.created_at.asc(), SmsQueue.id.asc()).limit(limit).all()
+    return [task_id for (task_id,) in rows]
+
+
+def claim_next_task(device):
+    """Atomically move one pending task to processing so concurrent pollers never share it."""
+    for task_id in pending_task_ids(device):
+        claimed = SmsQueue.query.filter(
+            SmsQueue.id == task_id,
+            SmsQueue.status == 'pending',
+            (SmsQueue.device_id == device.id) | (SmsQueue.device_id == None),
+        ).update({
+            SmsQueue.status: 'processing',
+            SmsQueue.device_id: db.func.coalesce(SmsQueue.device_id, device.id),
+        }, synchronize_session=False)
+        db.session.commit()
+        if claimed:
+            return db.session.get(SmsQueue, task_id)
+    return None
+
+
 @sms_bp.route('/next.php', methods=['GET'])
 @sms_bp.route('/next', methods=['GET'])
 def get_next_task():
@@ -261,20 +287,10 @@ def get_next_task():
     if not device:
         return jsonify({'error': 'Invalid token'}), 403
 
-    # Znajdź najstarsze oczekujące zadanie dla tego urządzenia lub ogólne (device_id is None)
-    task = SmsQueue.query.filter(
-        (SmsQueue.device_id == device.id) | (SmsQueue.device_id == None),
-        SmsQueue.status == 'pending'
-    ).order_by(SmsQueue.created_at.asc()).first()
-
+    task = claim_next_task(device)
     if not task:
         db.session.commit()
         return Response('null', mimetype='application/json', status=200)
-
-    task.status = 'processing'
-    if not task.device_id:
-        task.device_id = device.id
-    db.session.commit()
 
     if task.action == 'make_call':
         return jsonify({
