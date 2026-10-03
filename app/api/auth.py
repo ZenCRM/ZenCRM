@@ -10,6 +10,7 @@ from ..utils.auth_limits import auth_limit
 from datetime import datetime, timedelta
 import hashlib
 import secrets
+from werkzeug.security import check_password_hash, generate_password_hash
 from markupsafe import escape
 from ..utils.i18n import t
 from ..utils.passwords import valid_password
@@ -89,12 +90,18 @@ def register():
     return jsonify(user.to_dict()), 201
 
 
+# Checked for unknown emails so response time does not reveal which accounts exist.
+UNKNOWN_USER_PASSWORD_HASH = generate_password_hash(secrets.token_urlsafe(32))
+
+
 @auth_bp.route('/login', methods=['POST'])
 @auth_limit(30)
 def login():
     data = request.get_json() or {}
     user = User.query.filter_by(email=data.get('email')).first()
-    if not user or not user.is_active or not user.check_password(data.get('password', '')):
+    password = str(data.get('password', ''))
+    password_ok = user.check_password(password) if user else check_password_hash(UNKNOWN_USER_PASSWORD_HASH, password)
+    if not user or not user.is_active or not password_ok:
         return jsonify({'error': 'Nieprawidłowe dane logowania'}), 401
 
     identity = str(user.id)

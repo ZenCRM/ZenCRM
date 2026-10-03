@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..extensions import db
 from ..models.user import User
 from ..models.task import Task
+from ..models.client import Client
 from ..models.task_assignee import TaskAssignee
 from ..utils.activity import log_activity
 
@@ -30,9 +31,16 @@ def set_assignees(task_id):
         return jsonify({'error': 'Zadanie nie istnieje'}), 404
     data = request.get_json(silent=True) or {}
     user_ids = data.get('user_ids') or []
+    if not isinstance(user_ids, list) or not all(type(uid) is int for uid in user_ids):
+        return jsonify({'error': 'user_ids must be a list of user IDs'}), 400
+    user_ids = list(dict.fromkeys(user_ids))
+    existing = {r.user_id: r for r in TaskAssignee.query.filter_by(task_id=task_id).all()}
+    # Users already on the task may since have been deactivated; only newcomers must be active.
+    known = dict(db.session.query(User.id, User.is_active).filter(User.id.in_(user_ids)).all())
+    if any(uid not in known or (uid not in existing and not known[uid]) for uid in user_ids):
+        return jsonify({'error': 'Unknown or inactive user'}), 400
 
     # Usun tych, ktorych juz nie ma
-    existing = {r.user_id: r for r in TaskAssignee.query.filter_by(task_id=task_id).all()}
     if any(uid not in user_ids and not can_change(row) for uid, row in existing.items()):
         return jsonify({'error': 'Nie możesz usuwać innych wykonawców'}), 403
     for uid, row in existing.items():
@@ -54,9 +62,10 @@ def set_assignees(task_id):
         try:
             u = db.session.get(User, uid)
             if u:
-                from ..services.email_service import send_notification
-                crm_task_url = f"{request.host_url.rstrip('/')}/#tasks"
-                client_name = task.client.name if task.client else '-'
+                from ..services.email_service import send_notification, staff_link_base_url
+                crm_task_url = f"{staff_link_base_url()}/#tasks"
+                client = db.session.get(Client, task.client_id) if task.client_id else None
+                client_name = client.name if client else '-'
                 due_date_str = task.due_date.strftime('%Y-%m-%d %H:%M') if task.due_date else 'Brak terminu'
                 send_notification('employee_new_task', u.email, {
                     'employee_name': u.first_name,

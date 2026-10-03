@@ -1,6 +1,5 @@
 from datetime import datetime
 import hmac
-from urllib.parse import urlsplit
 from flask import Blueprint, request, jsonify, abort, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
@@ -10,22 +9,12 @@ from ..models.contact import Contact
 from ..models.user import User
 from ..models.team import Team
 from ..utils.deletion import current_user, is_admin
-from ..utils.helpdesk import get_helpdesk_config, save_helpdesk_config
+from ..utils.helpdesk import get_helpdesk_config, save_helpdesk_config, invalid_helpdesk_field
 from ..utils.auth_limits import auth_limit
+from ..utils.i18n import t
+from ..services.email_service import public_base_url, staff_link_base_url
 
 tickets_bp = Blueprint('tickets', __name__)
-
-
-def _public_base_url():
-    from ..models.setting import Setting
-    value = current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or ''
-    value = value.strip()
-    if value and '://' not in value:
-        value = 'https://' + value
-    parsed = urlsplit(value)
-    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
-        return ''
-    return f'{parsed.scheme}://{parsed.netloc}'
 
 
 # ─────────────────────────────────────────────────────────────
@@ -70,7 +59,7 @@ def _notify_ticket_created(ticket):
         from ..services.email_service import send_notification
         from ..utils.helpdesk import get_helpdesk_config
         config = get_helpdesk_config()
-        base_url = _public_base_url()
+        base_url = public_base_url()
         if not base_url:
             current_app.logger.warning('Set PUBLIC_BASE_URL to enable ticket notification links')
             return
@@ -305,7 +294,7 @@ def add_agent_message(ticket_id):
         try:
             from ..services.email_service import send_notification
             from ..utils.helpdesk import get_helpdesk_config
-            tracking_url = f"{request.host_url.rstrip('/')}{get_helpdesk_config().get('helpdesk_path', '/pomoc')}?ticket={ticket.token}"
+            tracking_url = f"{staff_link_base_url()}{get_helpdesk_config().get('helpdesk_path', '/pomoc')}?ticket={ticket.token}"
             send_notification('client_ticket_reply', ticket.contact_email, {
                 'client_name': ticket.contact_name or 'Kliencie',
                 'agent_name': f"{user.first_name} {user.last_name}".strip(),
@@ -338,7 +327,16 @@ def update_settings():
     user = current_user()
     if not user or user.role not in ('admin', 'manager'):
         abort(403)
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({'error': t('Nieprawidłowe pole: {field}', {'field': 'body'})}), 400
+    current = get_helpdesk_config()
+    invalid = invalid_helpdesk_field(data, current)
+    if invalid:
+        return jsonify({'error': t('Nieprawidłowe pole: {field}', {'field': invalid})}), 400
+    token = data.get('helpdesk_webhook_token')
+    if token is not None and token != current['helpdesk_webhook_token'] and not is_admin():
+        return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     updated = save_helpdesk_config(data)
     return jsonify(updated), 200
 
@@ -523,7 +521,7 @@ def public_reply_ticket(token):
     if ticket.assignee:
         try:
             from ..services.email_service import send_notification
-            crm_ticket_url = f"{_public_base_url()}/#tickets" if _public_base_url() else ''
+            crm_ticket_url = f"{public_base_url()}/#tickets" if public_base_url() else ''
             send_notification('employee_ticket_reply', ticket.assignee.email, {
                 'employee_name': ticket.assignee.first_name,
                 'client_name': ticket.contact_name or 'Klient',
@@ -550,7 +548,7 @@ def webhook_submit_ticket():
     expected_token = config.get('helpdesk_webhook_token', '')
     req_token = request.headers.get('X-Webhook-Token', '')
 
-    if not expected_token or not hmac.compare_digest(req_token, expected_token):
+    if not expected_token or not hmac.compare_digest(req_token.encode(), expected_token.encode()):
         return jsonify({'error': 'Nieprawidłowy token autoryzacyjny webhooka'}), 401
 
     data = request.get_json(silent=True) or request.form.to_dict() or {}

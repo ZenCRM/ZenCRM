@@ -74,8 +74,6 @@ def create_user():
         is_active=data.get('is_active', True),
     )
     u.set_password(data['password'])
-    if data.get('avatar_url'):
-        u.avatar_url = data['avatar_url']
     if 'team_ids' in data:
         t_ids = data.get('team_ids') or []
         teams = Team.query.filter(Team.id.in_(t_ids)).all() if t_ids else []
@@ -107,6 +105,9 @@ def update_user(user_id):
         return jsonify({'error': 'Nieznana rola'}), 400
     if 'default_call_method' in data and data['default_call_method'] not in ('link', 'android'):
         return jsonify({'error': 'Nieprawidłowa metoda połączeń'}), 400
+    # Avatars are set only by the upload endpoint; the profile form may keep or clear them.
+    if data.get('avatar_url') not in (None, '', u.avatar_url):
+        return jsonify({'error': 'Avatar can only be changed by uploading an image'}), 400
     try:
         for k in USER_FIELDS:
             if k in data:

@@ -13,6 +13,9 @@ SKIP_FIELDS = frozenset({
     'pdf_path',
     'rendered_html',
     'deleted_at',
+    'created_by',
+    'file_path',
+    'converted_to_client_id',
 })
 
 

@@ -10,10 +10,27 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import Header
 from email.utils import formataddr
+from flask import current_app, request
 from ..models.setting import Setting
 from ..models.email_template import EmailTemplate
 
 logger = logging.getLogger('zencrm.emails')
+
+
+def public_base_url():
+    """Configured public origin (PUBLIC_BASE_URL or company website), or '' when unset or unsafe."""
+    value = (current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or '').strip()
+    if value and '://' not in value:
+        value = 'https://' + value
+    parsed = urlsplit(value)
+    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
+        return ''
+    return f'{parsed.scheme}://{parsed.netloc}'
+
+
+def staff_link_base_url():
+    """Origin for links in emails triggered by signed-in staff; the request host is only a fallback."""
+    return public_base_url() or request.host_url.rstrip('/')
 
 
 def get_smtp_config():
@@ -109,12 +126,7 @@ def render_template(template_key, context):
     company_email = Setting.get_value('company_email', 'kontakt@zencrm.pl')
     logo_path = Setting.get_value('brand_logo_light', '') or Setting.get_value('helpdesk_logo', '') or '/logo.png'
 
-    from flask import current_app
-    base_url = (current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or '').strip()
-    if base_url and '://' not in base_url:
-        base_url = 'https://' + base_url
-    parsed = urlsplit(base_url)
-    base_url = f'{parsed.scheme}://{parsed.netloc}' if parsed.scheme in ('https', 'http') and parsed.hostname and not parsed.username and not parsed.password else ''
+    base_url = public_base_url()
 
     if logo_path.startswith('http'):
         company_logo_url = logo_path

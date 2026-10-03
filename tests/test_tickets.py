@@ -10,10 +10,11 @@ from app.models.team import Team
 from app.models.client import Client
 from app.models.contact import Contact
 from app.models.ticket import Ticket, TicketMessage
-from app.models.workspace import PortalSpace, PortalItem, PortalClientSpace
+from app.models.workspace import PortalSpace, PortalItem, PortalClientSpace, PortalConfiguration
 from app.models.document import Document
 from app.models.offer import Offer
 from app.models.service import Service
+from app.models.setting import Setting
 
 
 class TicketsTest(unittest.TestCase):
@@ -296,6 +297,38 @@ class TicketsTest(unittest.TestCase):
         for item_id in (f'doc_{draft_doc.id}', f'offer_{draft_offer.id}', f'doc_{unset_doc.id}'):
             res = self.client.get(f'/api/portal/spaces/{space.id}/items/{item_id}/file', headers=self.admin_headers)
             self.assertEqual(res.status_code, 404)
+
+    def test_helpdesk_settings_are_validated(self):
+        manager = User(email='manager@tickets.local', password_hash='unused', first_name='Mia', last_name='Manager', role='manager')
+        db.session.add(manager)
+        db.session.commit()
+        manager_headers = {'Authorization': 'Bearer ' + create_access_token(identity=str(manager.id))}
+        current = self.client.get('/api/tickets/settings', headers=self.admin_headers).get_json()
+
+        def save(payload, headers=None):
+            return self.client.put('/api/tickets/settings', json=payload, headers=headers or self.admin_headers).status_code
+
+        self.assertEqual(save({'helpdesk_webhook_token': current['helpdesk_webhook_token'], 'helpdesk_title': 'Help'}, manager_headers), 200)
+        self.assertEqual(save({'helpdesk_webhook_token': 'a' * 40}, manager_headers), 403)
+        self.assertEqual(save({'helpdesk_webhook_token': 'short'}), 400)
+        db.session.add(PortalConfiguration(id=1, data={'address': '/client-zone'}))
+        db.session.commit()
+        for path in ('/api/help', '/client-zone', 'https://evil.example/help', '/help?x=1', '/../help'):
+            self.assertEqual(save({'helpdesk_path': path}), 400, path)
+        self.assertEqual(save({'helpdesk_enabled': 'yes'}), 400)
+        self.assertEqual(save({'helpdesk_default_user_id': 'admin'}), 400)
+        self.assertEqual(save({'helpdesk_categories': 'technical'}), 400)
+        self.assertEqual(save({'helpdesk_accent_color': 'red;background:url(x)'}), 400)
+        self.assertEqual(save({'helpdesk_logo': 'javascript:alert(1)'}), 400)
+        self.assertEqual(save({'helpdesk_logo': '/\\evil.example/x.png'}), 400)
+        # Values stored before validation existed can be saved back unchanged.
+        Setting.set_value('helpdesk_path', '/help.html')
+        db.session.commit()
+        legacy = self.client.get('/api/tickets/settings', headers=self.admin_headers).get_json()
+        self.assertEqual(save(legacy), 200)
+        self.assertEqual(save({'helpdesk_path': '/support', 'helpdesk_enabled': False, 'helpdesk_default_user_id': None,
+                               'helpdesk_categories': [{'id': 'general', 'name': 'General'}]}), 200)
+        self.assertEqual(self.client.get('/api/tickets/settings', headers=self.admin_headers).get_json()['helpdesk_path'], '/support')
 
     def test_helpdesk_custom_content_and_logo_settings(self):
         # 1. Update settings with custom content and custom logo

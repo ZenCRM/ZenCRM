@@ -69,6 +69,10 @@ def text(data, key, limit, required=False):
     return value if key == 'password' else value.strip()
 
 
+# Checked for unknown emails so response time does not reveal which members exist.
+UNKNOWN_MEMBER_PASSWORD_HASH = generate_password_hash(secrets.token_urlsafe(32))
+
+
 @portal_bp.route('/login', methods=['POST'])
 @auth_limit(30)
 def login():
@@ -77,8 +81,10 @@ def login():
     data = request.get_json() or {}
     email = str(data.get('email', '')).strip().lower()
     password = str(data.get('password', ''))
-    matches = [member for member in PortalMember.query.filter_by(email=email, active=True).all()
-               if check_password_hash(member.password_hash, password)]
+    candidates = PortalMember.query.filter_by(email=email, active=True).all()
+    if not candidates:
+        check_password_hash(UNKNOWN_MEMBER_PASSWORD_HASH, password)
+    matches = [member for member in candidates if check_password_hash(member.password_hash, password)]
     if len(matches) != 1:
         return jsonify(error='Nieprawidłowe dane logowania'), 401
     member = matches[0]
@@ -261,9 +267,9 @@ def members(space_id):
         db.session.add(member)
         db.session.commit()
         try:
-            from ..services.email_service import send_notification
+            from ..services.email_service import send_notification, staff_link_base_url
             from ..utils.portal import portal_path
-            portal_url = f"{request.host_url.rstrip('/')}{portal_path()}"
+            portal_url = f"{staff_link_base_url()}{portal_path()}"
             client_name = email.split('@')[0]
             send_notification('client_portal_access', email, {
                 'client_name': client_name,
@@ -612,9 +618,9 @@ def save_portal_member(data, member=None):
 
     if is_new and password:
         try:
-            from ..services.email_service import send_notification
+            from ..services.email_service import send_notification, staff_link_base_url
             from ..utils.portal import portal_path
-            portal_url = f"{request.host_url.rstrip('/')}{portal_path()}"
+            portal_url = f"{staff_link_base_url()}{portal_path()}"
             client_name = email.split('@')[0]
             send_notification('client_portal_access', email, {
                 'client_name': client_name,

@@ -981,7 +981,7 @@
                                                     class="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 whitespace-nowrap">
                                                 <span x-text="window.ZenI18n.t(&#x27;Kopiuj token&#x27;)"></span>
                                             </button>
-                                            <button type="button" @click="regenerateWebhookToken()"
+                                            <button type="button" x-show="user?.role === 'admin'" @click="regenerateWebhookToken()"
                                                     class="px-3 py-2 text-xs font-semibold rounded-lg border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 whitespace-nowrap">
                                                 <span x-text="window.ZenI18n.t(&#x27;Nowy token&#x27;)"></span>
                                             </button>

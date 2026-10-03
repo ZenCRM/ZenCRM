@@ -51,10 +51,10 @@ def get_item(item_id):
 def _notify_client_assigned(client, assignee_id):
     try:
         from ..models.user import User
-        from ..services.email_service import send_notification
+        from ..services.email_service import send_notification, staff_link_base_url
         u = db.session.get(User, assignee_id)
         if u and u.email:
-            crm_client_url = f"{request.host_url.rstrip('/')}/#clients/{client.id}"
+            crm_client_url = f"{staff_link_base_url()}/#clients/{client.id}"
             send_notification('employee_client_assigned', u.email, {
                 'employee_name': u.first_name or u.email,
                 'client_name': client.name or 'Klient',

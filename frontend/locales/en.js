@@ -2020,5 +2020,10 @@ window.ZenLocales.en = {
   "Własne pola szablonu": "Custom template fields",
   "Włączone": "Enabled",
   "Załączniki tego rekordu": "Attachments for this record",
-  "szablonów ofert i dokumentów": "offer and document templates"
+  "szablonów ofert i dokumentów": "offer and document templates",
+  "Avatar can only be changed by uploading an image": "Avatar can only be changed by uploading an image",
+  "user_ids must be a list of user IDs": "user_ids must be a list of user IDs",
+  "Unknown or inactive user": "Unknown or inactive user",
+  "Unknown phone action": "Unknown phone action",
+  "Invalid numeric field": "Invalid numeric field"
 };

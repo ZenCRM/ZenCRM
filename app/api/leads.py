@@ -166,7 +166,7 @@ def webhook_submit_lead():
     expected_token = Setting.get_value('lead_webhook_token', '')
     req_token = request.headers.get('X-Webhook-Token', '')
 
-    if not expected_token or not hmac.compare_digest(req_token, expected_token):
+    if not expected_token or not hmac.compare_digest(req_token.encode(), expected_token.encode()):
         return jsonify({'error': 'Nieprawidłowy token autoryzacyjny webhooka'}), 401
 
     data = request.get_json(silent=True) or request.form.to_dict() or {}

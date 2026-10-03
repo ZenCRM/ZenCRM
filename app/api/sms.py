@@ -1070,6 +1070,16 @@ def make_call():
 
 # ─── TRIGGER AKCJI DLA TELEFONU ───
 
+TRIGGERABLE_ACTIONS = frozenset({'get_stats', 'get_full_history', 'get_sms_history', 'get_sms_history_by_date'})
+
+
+def _int_field(data, key, default=None):
+    value = data.get(key, default)
+    if type(value) is bool:
+        raise ValueError(key)
+    return int(value)
+
+
 @sms_bp.route('/actions/trigger', methods=['POST'])
 @jwt_required()
 def trigger_action():
@@ -1078,8 +1088,8 @@ def trigger_action():
     action = data.get('action')
     device_id = data.get('device_id')
 
-    if not action:
-        return jsonify({'error': 'Brak akcji'}), 400
+    if not isinstance(action, str) or action not in TRIGGERABLE_ACTIONS:
+        return jsonify({'error': 'Unknown phone action'}), 400
 
     from ..utils.deletion import current_user
     curr_u = current_user()
@@ -1111,20 +1121,21 @@ def trigger_action():
             limit = 500
         payload['limit'] = limit
 
-    if action == 'get_sms_history':
-        if not phone_number:
-            return jsonify({'error': 'Podaj numer telefonu do pobrania historii SMS'}), 400
-        payload['number'] = phone_number
-        payload['limit'] = int(data.get('limit', 100))
+    try:
+        if action == 'get_sms_history':
+            if not phone_number:
+                return jsonify({'error': 'Podaj numer telefonu do pobrania historii SMS'}), 400
+            payload['number'] = phone_number
+            payload['limit'] = _int_field(data, 'limit', 100)
 
-    if action == 'get_sms_history_by_date':
-        start_date = data.get('start_date')
-        end_date = data.get('end_date')
-        if not start_date or not end_date:
-            return jsonify({'error': 'Wymagane daty początkowa i końcowa'}), 400
-        payload['start_date'] = int(start_date)
-        payload['end_date'] = int(end_date)
-        payload['limit'] = int(data.get('limit', 100))
+        if action == 'get_sms_history_by_date':
+            if not data.get('start_date') or not data.get('end_date'):
+                return jsonify({'error': 'Wymagane daty początkowa i końcowa'}), 400
+            payload['start_date'] = _int_field(data, 'start_date')
+            payload['end_date'] = _int_field(data, 'end_date')
+            payload['limit'] = _int_field(data, 'limit', 100)
+    except (TypeError, ValueError, OverflowError):
+        return jsonify({'error': 'Invalid numeric field'}), 400
 
     task = SmsQueue(
         device_id=device_id,

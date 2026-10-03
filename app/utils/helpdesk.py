@@ -1,4 +1,5 @@
 import json
+import re
 import secrets
 from urllib.parse import urlsplit
 from ..extensions import db
@@ -32,6 +33,46 @@ DEFAULT_HELPDESK_CONFIG = {
     'helpdesk_webhook_enabled': True,
     'helpdesk_webhook_token': '',
 }
+
+
+BOOLEAN_KEYS = ('helpdesk_enabled', 'helpdesk_auto_assign', 'helpdesk_webhook_enabled')
+ID_KEYS = ('helpdesk_default_team_id', 'helpdesk_default_user_id')
+RESERVED_PATH_PREFIXES = ('api', 'js', 'css', 'views', 'locales', 'vendor', 'uploads', 'images', 'audio')
+
+
+def invalid_helpdesk_field(data, current):
+    """Return the first changed helpdesk setting with an unacceptable value, or None."""
+    from .portal import portal_path
+    for key, value in data.items():
+        # The settings form resends every value; keep accepting ones stored before validation existed.
+        if key not in DEFAULT_HELPDESK_CONFIG or value == current.get(key):
+            continue
+        if key in BOOLEAN_KEYS:
+            valid = isinstance(value, bool)
+        elif key in ID_KEYS:
+            valid = value is None or type(value) is int
+        elif key == 'helpdesk_categories':
+            valid = isinstance(value, list) and len(value) <= 50 and all(
+                isinstance(c, dict) and isinstance(c.get('id'), str) and isinstance(c.get('name'), str)
+                and 0 < len(c['id']) <= 50 and len(c['name']) <= 200 for c in value)
+        elif key == 'helpdesk_auto_assign_target':
+            valid = value in ('team', 'user')
+        elif key == 'helpdesk_path':
+            valid = (isinstance(value, str) and bool(re.fullmatch(r'/[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*/?', value))
+                     and value.split('/')[1] not in RESERVED_PATH_PREFIXES and value.rstrip('/') != portal_path())
+        elif key == 'helpdesk_accent_color':
+            valid = isinstance(value, str) and bool(re.fullmatch(r'#(?:[0-9A-Fa-f]{3}){1,2}', value))
+        elif key == 'helpdesk_logo':
+            valid = isinstance(value, str) and len(value) <= 1000 and not re.search(r'[\\\x00-\x1f\x7f]', value) and (
+                value == '' or (value.startswith('/') and not value.startswith('//'))
+                or bool(re.match(r'https?://[^/@\\]+(/|$)', value)))
+        elif key == 'helpdesk_webhook_token':
+            valid = isinstance(value, str) and bool(re.fullmatch(r'[A-Za-z0-9_-]{32,128}', value))
+        else:
+            valid = isinstance(value, str) and len(value) <= 2000
+        if not valid:
+            return key
+    return None
 
 
 def get_helpdesk_config():

@@ -2020,5 +2020,10 @@ window.ZenLocales.pl = {
   "Własne pola szablonu": "Własne pola szablonu",
   "Włączone": "Włączone",
   "Załączniki tego rekordu": "Załączniki tego rekordu",
-  "szablonów ofert i dokumentów": "szablonów ofert i dokumentów"
+  "szablonów ofert i dokumentów": "szablonów ofert i dokumentów",
+  "Avatar can only be changed by uploading an image": "Avatar można zmienić tylko przez przesłanie obrazu",
+  "user_ids must be a list of user IDs": "user_ids musi być listą identyfikatorów użytkowników",
+  "Unknown or inactive user": "Nieznany lub nieaktywny użytkownik",
+  "Unknown phone action": "Nieznana akcja telefonu",
+  "Invalid numeric field": "Nieprawidłowa wartość liczbowa"
 };
