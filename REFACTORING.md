@@ -1,6 +1,6 @@
 # Structural refactoring and rollback
 
-Branch: `codex/structure-refactor`.
+Branch: `refactor/structure`.
 Baseline: release `0.9.0.4`, commit `1e1de8d36ea638a595462064341ee4d21fb5e587`.
 
 This branch changes code organization. It does not introduce a database migration,
