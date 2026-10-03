@@ -1,0 +1,5955 @@
+{
+  "_darken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d91f6675a76679c1398ed912dff5acd1fccc1f2a0dc7a8cf528d373eaad221cf"
+    }
+  },
+  "_kanbanResizeHandler": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "_lighten": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "df8af82ac168c6d9f9a52cfb495e02fb7e289b7e64a8d50ac10222d79fd53d8a"
+    }
+  },
+  "_shift": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f618b689328fac648a36c71934ab499050cc71b65b787c7a5bdc0edf5c8564d9"
+    }
+  },
+  "actionLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "26ebd234ecd367d26cfebe8650e159461f192968c17cf31e4eebf9d355a0d696"
+    }
+  },
+  "actionModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "deviceId": null,
+      "action": "",
+      "actionTitle": "",
+      "phone": "",
+      "limit": 500,
+      "startDate": "",
+      "endDate": "",
+      "loading": false,
+      "error": ""
+    }
+  },
+  "activeProject": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "activeTicketsCount": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "becd398921189ff065d676ba6c585f02e45df0fb0daee46c731608e1028baa41",
+    "value": null
+  },
+  "activityIcon": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9d642e3241b54d9931ef0b7be7938a208cbe8ae08d16effd5554a167d60a42b8"
+    }
+  },
+  "addComment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "56d05777e8d76c6eb6bbcd8d25b47648fc9d195d57d8efa60dad8eba912f02e3"
+    }
+  },
+  "addContactToDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0975c5677eaa37a1accb1532872def1e13f33b84ac49c00cd2ad4338dbb566dd"
+    }
+  },
+  "addDocumentToDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "765054a0a2020f5147329267dd02b08ebca72c1ef4f7f6d96089687287bb6346"
+    }
+  },
+  "addDocumentTypeField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "45917cd68855972ce1faa8d5ab37d607827423c9badd1ea892a339fca681ed52"
+    }
+  },
+  "addHelpdeskCategory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0dbb3d951de86b895ebbaf13ef4186094532e7954813dee9d028eb9beaab829e"
+    }
+  },
+  "addLeadSource": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "65e3ea7bb4b9e92eccda6874f5e08d67becb252ad4aec716d0c46f7717039e4f"
+    }
+  },
+  "addMultiUser": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "188d0d1c3c957c9dcc7eb0b697fd13a1565821830751cb6ec872ea101113699f"
+    }
+  },
+  "addProjectMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "79395885e352a31dfad5b0ba76086655c4946ac369520dd05eaf92a7a1a73299"
+    }
+  },
+  "addProjectStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "41249b4c7518aeba59c2396174855b994d50cf01e84f97b31f7bc82e9204ab5c"
+    }
+  },
+  "addReminder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2ccdc8380234db340cd6b2bfce3522c9b8dec2bd6d8160e91baaa3925af0dfbf"
+    }
+  },
+  "addServiceAssignee": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "781fb615a02dfb5d4ece07d50f70e35790f935b9cca1dfcbd08c0b889b412260"
+    }
+  },
+  "addServiceComment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b3c15e76a1ce64c3612f9b4b37cae5d74d93183fcd54e132c14ae1ac2d366ba8"
+    }
+  },
+  "addStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "10135943d1aa8351336edbd7a7058806fa5944a010a3cd292fa19763f5bad75a"
+    }
+  },
+  "addTaskAssignee": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c2e8445c831cc51fda35aeffe74ffb23cdaebebfe3fec0369ccb6efd43645a81"
+    }
+  },
+  "addTaskComment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0dc537a7dda129581a00b2ce09b58c6ce4718c732e18d2ff02045067a37399b4"
+    }
+  },
+  "addTaskStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "06b531e13302426edaa781d267892f4fc9a4912469fc6768457dacd7a656279e"
+    }
+  },
+  "addTaskToDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a9e3d9f49c37169d1a1f9967a2cf8db5f4b9a9ea44f9a1dc94961b141d9c649b"
+    }
+  },
+  "addTeamMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e355df68bcd8dad375a58f1b09a4ada60eade3c9b3721625f65735e65637fb08"
+    }
+  },
+  "addTeamMemberToTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5912c78050fc56aaf5c892f419903154cc17e843e8ecd041ebd63ad8c65f4474"
+    }
+  },
+  "addTemplateField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c2bd0a71f0539e1e060703a1097bf570882c849258305d399d76475797a41be5"
+    }
+  },
+  "allCustomFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "allReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "allRemindersLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "api": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7ed9c63e900cac053ec6917f9063d1f238d9ea57f6793d4ccad7db115b7a2627"
+    }
+  },
+  "apiPath": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d62b0aa97d425138eb2fb989c30515dd1b92e92cf82101f80c08a0fb750397e1"
+    }
+  },
+  "applyTheme": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3e20447ee8182b44d5c78690e58a27cb37ce0788f5b8bb57b496d4e079ae114d"
+    }
+  },
+  "archiveFromModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9b0e2b1ffdac033b0019d558e308428b507dcbc1269c59393ef3084800a1fb5b"
+    }
+  },
+  "archiveItems": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "archiveLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "archivePreviewModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "item": null,
+      "loading": false
+    }
+  },
+  "archiveSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "archiveTypeBadgeClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a5d78e8211f05410d806779a8a57ad25fd618d2deddeb90b741a30489be122fb"
+    }
+  },
+  "archiveTypeFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "archiveTypeLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b8a55c52a12e1f879050c65cd4c4c05546ad24c6ebae4f34bbfa09f280ad6e54"
+    }
+  },
+  "assignPicker": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "lead": null,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "attachmentView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "entity": "",
+      "recordId": null,
+      "files": [],
+      "busy": false,
+      "error": "",
+      "editingId": null,
+      "editingName": ""
+    }
+  },
+  "availableAssignees": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a50fc1896f00e668d84620a95f4b794ccf3ec9572efa074e050667018fae835e"
+    }
+  },
+  "availableColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "74831e13fa1a15df8a259653e4b807fcd1b44e1a2bbbf84218f2e3305c4985f8"
+    }
+  },
+  "availableMultiUsers": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f965e09b0571436b732fb49760e8fa59557b98286ae562b26e68c823ff8f4ddc"
+    }
+  },
+  "availableProjectUsers": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "77222c60ffdefa0276efd3936365c06fdd6fe058b16ed7246e286248878746c2"
+    }
+  },
+  "avatarInitials": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "553ebee38b3dafbedd6dac5e2374a0cedcd83106975e25cc5991bf620a993889"
+    }
+  },
+  "avatarTs": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 1791028800000
+  },
+  "billingLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1a462a67b75e612d6247107e53b4ff854af513563d5c95ce5db89a85c6a227f1"
+    }
+  },
+  "bindPushUser": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8c1e48746bbe38c61f3a3a2cf2ea516f9fcf81956d95c4d65e91c9a74f62ec03"
+    }
+  },
+  "boardColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 4
+  },
+  "boardDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0149778cb7f228fa3074cc33b8fcea8b63bc9f39d16f55c9b9827e412983bf64"
+    }
+  },
+  "boardLeads": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "baa81eadefe1f537ead70aea6eac9ef398d97546ae129435134dc5d0bf5dce1e",
+    "value": null
+  },
+  "boardTasks": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "boardTasksLoaded": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "calendarDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "2026-10-03T12:00:00.000Z"
+  },
+  "calendarDays": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "af2aa6cb7847193917056c1e699721cbbfbba23d15ed2d62bb975bbaa19894d5",
+    "value": null
+  },
+  "calendarEventsFor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1a13075cc99c96b8be1ef69b90d2acab7d2182d86940d2c5cc10756b5d53ad1b"
+    }
+  },
+  "calendarMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "both"
+  },
+  "calendarSelected": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "2026-10-03T12:00:00.000Z"
+  },
+  "callContact": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "145c1707701c0a704ecf2f283282efad495e8b3964984e3d551dee52c112daba"
+    }
+  },
+  "callNoteModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "callId": null,
+      "note": "",
+      "saving": false,
+      "error": ""
+    }
+  },
+  "callTypeClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3a7eb9bf430ddf4b9696eb0e4d249359bc209fcdbeadf98a4aab63bb505b9c47"
+    }
+  },
+  "callTypeLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0c14e953c48a6cbe120af7cce0995c69270d4bf08a218300ae5c12cfc9680c54"
+    }
+  },
+  "can": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9c52f0e7b040c707f0ab1d23ef39ecfa9f9fb7b5262351d8fd5ad6bad34ef1be"
+    }
+  },
+  "canAccessView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0cc19cf437a7248f31f2ec78e7eeb82e7d55d5a1477e0edab4981c53086faaff"
+    }
+  },
+  "cancelEditCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "331d564777ab12329b817adee10262f9fe44f8fa917ac6f2ad7817370ee4e3d1"
+    }
+  },
+  "cancelEditLeadSource": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "23b8097f12f4040cba2a5fe0f902934a75fc3b0e68f9543f9eccae6e974f3ac0"
+    }
+  },
+  "cancelEditStandardField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5c53386527694057bbcde229601f49ac7358598d8d4611a288e6b4a85617beb1"
+    }
+  },
+  "cancelQueueItem": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e599685f1b55c9ddea66cff30b40eb3601942506369450e36ca38b4b2efd9765"
+    }
+  },
+  "canChangeTaskPerson": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e21c275e10695494dc60f66f8004c2e8f3182a84b9334da5b5762f0fbcf1b550"
+    }
+  },
+  "canRecordAction": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "daced7dff0d6dc0fa8c68123b1555f2cb19c2236cd26efd0e4f3a13bda97ab45"
+    }
+  },
+  "canScrollLeft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "canScrollRight": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "catalogName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d618f44c704eb469024891fe384ce67f0b52030a6826ceb35a7a3a62a235c18d"
+    }
+  },
+  "changeDocumentType": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8611f08f308c25d60dfb25ce6ecf0440d0c6650a9036acba112dfa5628cce828"
+    }
+  },
+  "changeLeadStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "903d5eaef03a626c0b1b08528b4fb56dea57098ecbae9f0ec14f846022179f39"
+    }
+  },
+  "changeProjectTaskStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8dc625d47f89e0b4b6d5377e77ce97846dc5a354597a533826923c8270f99b61"
+    }
+  },
+  "changeTicketAssignee": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "24b61caaa4ab0f2834ab9398ed9abb1420c4cd09a04d2ddbe6fb84d5f266860d"
+    }
+  },
+  "changeTicketPriority": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b41d7303cfaffbc98c585ff8b0318169ad202fcfa58d2cd1ec2270d9f8920452"
+    }
+  },
+  "changeTicketStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cf145d55dece00e020beb1649ed0f971664891fa1bb5109f95e66011f8590f9e"
+    }
+  },
+  "changeTicketTeam": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8a33ad4e1384b217988fb95821205559a46214092ce7c880db7509d36cc5bd8f"
+    }
+  },
+  "chartError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "checkReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2fc30e5c123099a32700d6a45b91a310d665c88f63abe25c321e9a3ffd707683"
+    }
+  },
+  "chooseModernHeroBackground": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ad481de598c9096a6bb5b9c112bad5cadf6b901ad17e058ece7d576083c703ff"
+    }
+  },
+  "clientName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9a4d06bb11627d0a9990c3b1f55ea9616926149b36db10cd283b0e9fc88dbbcf"
+    }
+  },
+  "clients": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "closeArchivePreview": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "757a6cabc6d9fabc089481d396af3cb9acd134dc59e5ec46727af0fb1b24d17c"
+    }
+  },
+  "closeDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a1c638f6369b48ac3db1ca6da3f3c3d4ed70087c484ae75bc5abcf7c24a58e7d"
+    }
+  },
+  "closeJournal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "95aac9154d4ca95761b1696ba9abace877846a098aacc8c5fe38f79fe1ff1cc5"
+    }
+  },
+  "closeModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9b2fe691b331bb8df4f376cc24ecd32bc7ec346f2813a61d2112c40449a6ef6c"
+    }
+  },
+  "closeNewTicketModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1ed3cb736f8a0d544fc3c156e131ef2316aabe0b91887d93de44d692cac979fd"
+    }
+  },
+  "closeProject": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a171d626f9058e74815dabd580071d89c75cc772eae01cafad4d67da10d46cbd"
+    }
+  },
+  "closeSmsModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "80f17c8c50a4051efe685b8bc308ca8cbe2e6dbe6d058d195714f486d73745a7"
+    }
+  },
+  "closeTeamModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "088267261afba930ba454c225dc66dae2648c3466f638f4739694892a4bedaea"
+    }
+  },
+  "closeTicketDrawer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ca7c7dca6ab6a10cbe7f5cb973156bef90e0c80316179c5841c4ecb080489901"
+    }
+  },
+  "columnLabels": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": {
+        "name": "Nazwa",
+        "email": "Email",
+        "phone": "Telefon",
+        "company": "Firma",
+        "assignee": "Opiekun",
+        "status": "Status",
+        "actions": "Akcje"
+      },
+      "leads": {
+        "title": "Tytuł",
+        "client": "Klient",
+        "stage": "Etap",
+        "value": "Wartość",
+        "assignee": "Opiekun",
+        "expected_close_date": "Data zamknięcia",
+        "source": "Źródło",
+        "probability": "Prawdopodobieństwo",
+        "actions": "Akcje"
+      },
+      "contacts": {
+        "name": "Osoba",
+        "client": "Klient",
+        "position": "Stanowisko",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "actions": "Akcje"
+      },
+      "tasks": {
+        "title": "Zadanie",
+        "status": "Status",
+        "priority": "Priorytet",
+        "due_date": "Termin",
+        "context": "Klient / kontekst",
+        "assignees": "Wykonawcy",
+        "actions": "Akcje"
+      },
+      "projects": {
+        "name": "Nazwa projektu",
+        "status": "Status",
+        "client": "Klient",
+        "manager": "Opiekun",
+        "members": "Zespół",
+        "budget": "Budżet",
+        "dates": "Terminy",
+        "progress": "Postęp",
+        "actions": "Akcje"
+      }
+    }
+  },
+  "columnPickerOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "confirmPasswordReset": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "52a8cbf9b558a4a7b2d420f77ba541690b4782a5fb9c1dece379037671c65938"
+    }
+  },
+  "contacts": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "contactSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "convertLead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1ef0f274246c54429b2063d18783e77e8c169b576d521b292186a55d939674e5"
+    }
+  },
+  "copyLeadWebhookToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "062ee57fcf15605496746a8a6634c3764d31e4f97499e85c873c36ca6866f349"
+    }
+  },
+  "copyLeadWebhookUrl": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "90fbc70be60485210fcba8ac14be1731a6fd3d27caf94e21546b0625bd8867ee"
+    }
+  },
+  "copyLink": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6107119db7c5439462426651dcae6cec020639c1effb1b6643041f513dfeee86"
+    }
+  },
+  "copyText": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "115bdd17f8ae61fe1d6c6a231f475e56a7796bfd3a52ca4932ba116c20ba2a3f"
+    }
+  },
+  "copyToClipboard": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f5ce4b34ad46c3d91c23e627d9ddcd3f6d7e1bbadf34dcc79613536e6a36a044"
+    }
+  },
+  "copyTrackingLink": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c303ff3d942a6033c1f6d0a4425724ad92f8704469846a7a81da65383cef9697"
+    }
+  },
+  "copyWebhookToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cc887fcfc326990e2c55386c595508a253cfbb4fd5d56fd047b4b6a094a2ab66"
+    }
+  },
+  "copyWebhookUrl": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bd6eb6d57b9158726e065c1fdf899d4f334acc37cbb10eb852bb5e9258b31369"
+    }
+  },
+  "createCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ae3f816246b29b852fc51ed469f018846ae0448d579378e00624b9c838f32542"
+    }
+  },
+  "createManagedRole": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "163112b909cf872c1ac431abf2312cee915c96eb7f11196600309fd79c021a41"
+    }
+  },
+  "createTranslationLanguage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4be71a0167b7aef8b18c318fba05b93036836eda3b34797f1a2341c99eecdc8d"
+    }
+  },
+  "currentView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "dashboard"
+  },
+  "customEntity": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ad920da259cbc122b18c7f311bcf525379ab7bce0acf3c9bdd479301e03d3c3b"
+    }
+  },
+  "customEntityLabels": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": "Klienci",
+      "leads": "Leady",
+      "projects": "Projekty",
+      "contacts": "Kontakty",
+      "tasks": "Zadania",
+      "meetings": "Spotkania",
+      "services": "Usługi",
+      "service_catalog": "Katalog usług",
+      "documents": "Dokumenty",
+      "offers": "Oferty",
+      "templates": "Szablony",
+      "users": "Pracownicy"
+    }
+  },
+  "customFieldDefs": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "customFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "customFieldsFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "customFieldsReady": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": true
+  },
+  "customFieldsRequest": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "customKindLabels": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "text": "Tekst krótki",
+      "textarea": "Długi tekst",
+      "number": "Liczba",
+      "date": "Data",
+      "boolean": "Tak / Nie"
+    }
+  },
+  "customLeadStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "customTableValues": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "customValuesEntity": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "clients"
+  },
+  "customValuesError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "customValuesFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "customValuesRecordData": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "customValuesRecords": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "customValuesSaving": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "customValuesSelectedRecord": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "customValuesSuccess": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "darkMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "dashboardCards": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "d5a0c861e736c6f7b52e3d081ea046fd5d2d7277d3f47197aaf53ad8be58dfe6",
+    "value": null
+  },
+  "dashboardSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "dashboardTasksByTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3c9bf878528f894acf68318979c3a96b10cfc28b0ac1483734f89d04a7491489"
+    }
+  },
+  "dashboardTaskStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "41e7b6646b8b98ee8b525fca2290a5b8cdf7f408300ea43126a6fb1e057da4ac",
+    "value": null
+  },
+  "dashboardTaskTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "today"
+  },
+  "defaultColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": [
+        "name",
+        "email",
+        "phone",
+        "company",
+        "assignee",
+        "status",
+        "actions"
+      ],
+      "leads": [
+        "title",
+        "client",
+        "stage",
+        "value",
+        "assignee",
+        "expected_close_date",
+        "actions"
+      ],
+      "contacts": [
+        "name",
+        "client",
+        "position",
+        "email",
+        "phone",
+        "actions"
+      ],
+      "tasks": [
+        "title",
+        "status",
+        "priority",
+        "due_date",
+        "context",
+        "assignees",
+        "actions"
+      ],
+      "projects": [
+        "name",
+        "status",
+        "client",
+        "manager",
+        "members",
+        "budget",
+        "dates",
+        "progress",
+        "actions"
+      ]
+    }
+  },
+  "deleteCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f178b09465ed7035a33396469fe3da8738c3ddcf42c84ff2cd8a094de85a0551"
+    }
+  },
+  "deleteDeviceSubmit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1f5c6b797123ca7c5d6f5613135163b7c7accf7fc3191693b8502efdaa4c972c"
+    }
+  },
+  "deleteLeadSource": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "041978724b69d6c1c1222ca1e17e890973419658c1a4e3bd4f5016e17774bc31"
+    }
+  },
+  "deleteManagedRole": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6251a52aba72728db01c90639b6cfff20e298ab722a1524fa3f35afa24eab50c"
+    }
+  },
+  "deleteReminder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "421a343c4c02b124d67d0680b5a4de222ab7546ebf825c347f807022240b4971"
+    }
+  },
+  "deleteTeam": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1a7795a3693aae0c3fe4e348b0982ca23a28de88a483944aee09b0007e00b91c"
+    }
+  },
+  "deleteTicket": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "509c53d8de4ca4281997eb36c7c6d3bf63ff4f20df19790208c435a0b68df727"
+    }
+  },
+  "detailError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "detailPanel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "detailView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "type": "client",
+      "id": null,
+      "data": null,
+      "tab": "overview",
+      "contacts": [],
+      "tasks": [],
+      "documents": [],
+      "comments": [],
+      "activities": [],
+      "newComment": "",
+      "loading": false
+    }
+  },
+  "deviceModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingId": null,
+      "form": {
+        "name": "",
+        "phone_number": "",
+        "token": "",
+        "sync_from": "",
+        "is_active": true
+      },
+      "error": ""
+    }
+  },
+  "directory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "directoryError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "directoryLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "disablePush": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c0b508edf90b5660c6150a658f0e9aa9577066ce2eb29dc2da8d75150c03a9c1"
+    }
+  },
+  "dismissNotice": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6520fafd09c3807bdeb81412458d7fef9cac8b83978efac95877b7b43b315a18"
+    }
+  },
+  "displayedTaskStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "a7e9a67a094b5ac170e5635f9d85ceb1af7aaa2265ef93c072c7f1626b0a3097",
+    "value": null
+  },
+  "docTypeLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a6af404dd3c59dae5c4f5b6537f74ee27e38ef29cd80881888e35420f26a09e0"
+    }
+  },
+  "documentRelationPicker": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c89fe3a44287afb37fa18d8dfbc241a62e585f9b17f8408217958b247ec011b5"
+    }
+  },
+  "documents": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "documentTypeLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8258bbe11475a7a5568540ed559e394f8f713b8a88a3ab95b874a88178616820"
+    }
+  },
+  "documentTypeModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingKey": null,
+      "form": {
+        "key": "",
+        "name": "",
+        "fields": [],
+        "is_active": true
+      },
+      "error": ""
+    }
+  },
+  "documentTypes": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "downloadAttachment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9d0a619250d1cce0724d5769e32c5e4c7b8b21efd3ffaa90a3f2d67c8ac813c3"
+    }
+  },
+  "downloadPdf": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "16a6f384a8676812780624aae581fbce015d3a99e3b881dfd2058c0e4e30f1ae"
+    }
+  },
+  "dragFrame": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "draggedLead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "draggedProjectTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "draggedTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "dragOverProjectStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "dragOverStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "dragOverTaskStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "dragSpeed": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "dragY": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "editAttachmentName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c15ecb38be99175f63a9860fe2fe8aa51a3fe835006d47f0cc0bbe45096e0741"
+    }
+  },
+  "editingCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "editingLeadSourceIndex": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "editingLeadSourceName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "editingStandardField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "editJournalCall": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cf0d5259c7b60df37b813ae8309359810ff59d4dc873cb521c064141ce3553aa"
+    }
+  },
+  "editProjectStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fe098d7c985aafa9bf43f787c0692ae9731378f5ffcabe833077b510a65f0d78"
+    }
+  },
+  "editStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d3874382927c7a87b23de578cfd3cc4cb7dba667bedeec258bf6713e960577a4"
+    }
+  },
+  "editTaskStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "12313231afbe9379883434bdb6b8e2cc2e8749db003296da9d6d052350e64738"
+    }
+  },
+  "effectivePermissions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "emailEditorTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "edit"
+  },
+  "emailTemplateError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "emailTemplateForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "subject": "",
+      "body_html": ""
+    }
+  },
+  "emailTemplates": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "emailTemplateSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "emptyArchive": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "537833b76bdd8496022ffa36b93f416aa65cab41df1c48565a8edaf283034005"
+    }
+  },
+  "enablePush": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a28e903ca540cab4bb4b1dc3d3766165ff33b115afeb712869b323a0a28c0fc2"
+    }
+  },
+  "enableReminderSound": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a69dab9b7cafccb63202c70edd7814fd0dfd57027567e280db31874242e357e0"
+    }
+  },
+  "endLeadDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6e778a3475e1a877b35865107857a3b8a4d0a1df334d2f5a4796977c75d4b494"
+    }
+  },
+  "endProjectTaskDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bc663b443c8fd894d38851d6a22dc810fc3b0bcefe091fca9346c35dfe3b7d8c"
+    }
+  },
+  "endTaskDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6207d9d47152584ff4c917fd1bceba0e8278e30bba947562eb7e0b90ba6d6fee"
+    }
+  },
+  "ensureLookups": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "60c569358e50e260f8d20fae8accc2fe7eb0e06ff0d55ca032e6acc52302ecc0"
+    }
+  },
+  "entityLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9c079aae64a21ae68306e30d157ac6f532b9f956dcb9db0c4f35c96e8fec02a9"
+    }
+  },
+  "entityTelephony": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "loading": false,
+      "type": "",
+      "id": null,
+      "phones": [],
+      "selectedPhone": "",
+      "calls": [],
+      "messages": [],
+      "replyText": "",
+      "sending": false
+    }
+  },
+  "entityTelephonyModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "loading": false,
+      "type": "",
+      "id": null,
+      "title": "",
+      "phones": [],
+      "selectedPhone": "",
+      "calls": [],
+      "messages": [],
+      "replyText": "",
+      "sending": false,
+      "tab": "all"
+    }
+  },
+  "executeActionSubmit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "096969e033bcd660366f2326da1f2d2e27c7658d29bdc111478be8f4a3246ce0"
+    }
+  },
+  "fieldsFor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3d5c0ee90a168f5debf73e55a23f04e01577859afd435bb661c87079c44d0274"
+    }
+  },
+  "filteredArchiveItems": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7c2bf73edeb392acf59181a373e864f16662cf2e792b7a2fdb169547598dbf05"
+    }
+  },
+  "filteredClients": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "a0cf514f34e877befddf8bfcf02cb7006c5bc52ef9be8f28343e052906575708",
+    "value": null
+  },
+  "filteredContacts": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "7c23102a7f8efc25ac17a60830866157e40686a219671117cf8f5683f4769ca0",
+    "value": null
+  },
+  "filteredProjects": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "398424331c3b91a246b3201ed99e48d880da8443ea3c53848d8d87144f810458",
+    "value": null
+  },
+  "filteredProjectTasks": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "3af71805a0022307d937825b320864486d45588827ea391bd6d25a187af36a23",
+    "value": null
+  },
+  "filteredTickets": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "e73fa4822c2f14ea10da12d5c887f559b87fd3ee9b5c3fdd2d9a9fbe45d4c873",
+    "value": null
+  },
+  "filteredUsers": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "197d6c1d3073b003fab5d2663cde965df1e3a774ca3b4c52d8b845ebeb200d7a",
+    "value": null
+  },
+  "forgotModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "code": "",
+      "password": "",
+      "awaitingCode": false,
+      "open": false,
+      "email": "",
+      "loading": false,
+      "success": "",
+      "error": ""
+    }
+  },
+  "formatArchiveDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ae84af016ec7a27a2846fb31e420156c44432b81e06f2f93472e7c6b2e6b0a68"
+    }
+  },
+  "formatDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "35a3f6104dc496d1c7216ea215b74defd01edb14f0aa1727dfa5066de4016d2c"
+    }
+  },
+  "formatDateTime": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "acfebd8b18550aff9bb6da218cf6f1c3f546f8d74cabe9008f71af26739d0199"
+    }
+  },
+  "formatLastSeen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4d7f8f5dd827d2f12376d63c511aa11749755f2fda245e53888f07ecf8122d90"
+    }
+  },
+  "formatNumber": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "08a89c1b128783e469f8bf666c7852fda4324add0bac971e17980bdf23c2106a"
+    }
+  },
+  "formatPhoneLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f85706848604009c0d611d520f69dcb9847e27242954fc1c8d2c412ca9d261fd"
+    }
+  },
+  "formatTaskDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fa7d19b7406fafacee51ee28957648c079181e6fab0f8355f9e438163b3e6c5a"
+    }
+  },
+  "fullName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a3b5114e4212d5416932595115da5fb6bb68d562ce313937319d7fbc02e9af8b"
+    }
+  },
+  "funnelTotal": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "de8501d2c19f98bd0031a40a0f6d703da18561c947faa6a8bbde95458e497abb",
+    "value": null
+  },
+  "generateDeviceToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cf135529b7e42d94287f771b88de594be5498bd7e725d0a70e6ad2204c58a980"
+    }
+  },
+  "generateDoc": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "42c1cde1fb54a4c56015cf8cebe61afeb4f73b80a64432f07b9f004b2eec5c0f"
+    }
+  },
+  "generateModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "type": "document",
+      "item": null,
+      "templateId": "",
+      "custom": {},
+      "typeFields": {},
+      "error": ""
+    }
+  },
+  "generateNewLeadWebhookToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6efd23b676a95ec4ecca80929f8f0c56d38a6c3cd34e8ecf35205696b9763182"
+    }
+  },
+  "generateOffer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fea778a77ec8bc06dcc4bd60a8f961fc087d05eca192d69d57511e59c8976fa4"
+    }
+  },
+  "generationFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8048f9d8cbe3c008829d11e7cca73113ad06b267007eb0bb6d79774c84abc861"
+    }
+  },
+  "generationTypeFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4ebdce7a1f1c3308a4506901fd1cb3dd42e86a8eb8688d4bd9702b54bb9723a7"
+    }
+  },
+  "getAllStandardFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5e3e096a319c887f9f4371aa4692eff6fed26706d371a227f26f75a52c2fdc3b"
+    }
+  },
+  "getContactByPhone": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "58d9e064c732130c0ad41852884aaee4a5f269c143511a9748893fe92a893444"
+    }
+  },
+  "getCustomFieldValue": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "865f6217dad14f7dba6b20e86422e821ebd4e87409610ed757141da2456a6505"
+    }
+  },
+  "getMenuModuleConfig": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e4bbd1c6e8c898aec83602361da55c0b0cbe1b39009d9e62dcf56a5271a3d7bf"
+    }
+  },
+  "getRenderedEmailPreview": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4979af9b15cf900199630dc475f79d4cd86e66235d4b16468ba3434b8dd37cc4"
+    }
+  },
+  "getTicketTrackingUrl": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "53d3fb4278efc960b8f2b27f43b261bae816991a01ded22c9ddc558af017888a"
+    }
+  },
+  "getUserDefaultDevice": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "430a84932b1ce8206af14dbae0e42cd00d83a0cf8f9f65401ba694ddbf928516"
+    }
+  },
+  "goToToday": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "af19ac0adec61ca2ccec034aa3b60567993bd79c13ba05ed91bced8f0c58d57d"
+    }
+  },
+  "greeting": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "ccd914ddc801c80938fa1694f8a72566af3003f06809286fd4921227aecc427e",
+    "value": null
+  },
+  "handleHashChange": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e30c00dc6ad1be9a83916885873d0968ae75f733b2bd3ffe056f4b17dc9f5590"
+    }
+  },
+  "hasConnectedPhone": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "75d6af2e936b3421f18778263569e87545685b5a7ce88bea9d54b270cde8148c"
+    }
+  },
+  "helpdeskForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "helpdesk_enabled": true,
+      "helpdesk_path": "/pomoc",
+      "helpdesk_title": "Centrum Pomocy",
+      "helpdesk_header_subtitle": "Wsparcie i obsługa zgłoszeń",
+      "helpdesk_badge": "Zgłoszenie serwisowe",
+      "helpdesk_heading": "W czym możemy Ci pomóc?",
+      "helpdesk_description": "Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail.",
+      "helpdesk_success_heading": "Zgłoszenie zostało wysłane!",
+      "helpdesk_success_description": "Wysłaliśmy potwierdzenie na Twój adres e-mail wraz z bezpośrednim linkiem do śledzenia statusu zgłoszenia.",
+      "helpdesk_footer_text": "Obsługa klienta · Bezpieczny portal pomocy",
+      "helpdesk_logo": "",
+      "helpdesk_accent_color": "#018bfc",
+      "helpdesk_categories": [],
+      "helpdesk_auto_assign": true,
+      "helpdesk_auto_assign_target": "team",
+      "helpdesk_default_team_id": "",
+      "helpdesk_default_user_id": "",
+      "helpdesk_webhook_enabled": true,
+      "helpdesk_webhook_token": ""
+    }
+  },
+  "init": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c098413e1a7c1676991ab40107d79f957015c0d6d05d0d6c469ef76ae05a19a6"
+    }
+  },
+  "initialsFrom": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "eec65d5c748bd25030fb957b348dd48bf1343c1c2981e9f51b16f85b09a976d8"
+    }
+  },
+  "initPush": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "38bf160eccebe55d7d75d98987a02fa3af8b41d314ee650fa15d3baf02e62793"
+    }
+  },
+  "insertTemplateText": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "184cb06cc67b9ea8d1384831016beb1b2a3991c1504469edd0cd0a30dc1ab9dd"
+    }
+  },
+  "isAdmin": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "isColumnVisible": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "72dcf49d4df6dfba1d4e9dc985b70488373260bdc30248644c63c6d2f68a08ca"
+    }
+  },
+  "isFollowing": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ef43cc4df246b7b907836b79a6616a8038a65c2fe594a1824eff92849ddcaf19"
+    }
+  },
+  "isKnownView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3582bb0cbcf5dde569e756b0c3503a23369d28ff35a3c129a4d41d649083519c"
+    }
+  },
+  "isOverdue": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "dd830787c71f07649f203f94474387a159514505b1f2954d1488c2136c547e26"
+    }
+  },
+  "isStandardFieldRequired": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "190186c75ce288a5dc9ffc32ec79f40130672dff5713c901b981091f19580b08"
+    }
+  },
+  "isTeamMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "09f3fcd16e531784e678a26f684d4c45281f65063b50192a1c8a5a5c24e5a985"
+    }
+  },
+  "journal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "kind": "note",
+      "status": "",
+      "content": "",
+      "address": "",
+      "selected": null,
+      "search": "",
+      "history": [],
+      "saving": false,
+      "error": "",
+      "loading": false,
+      "revision": 0,
+      "editingId": null
+    }
+  },
+  "kanbanLeft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "kanbanMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "kanban"
+  },
+  "kanbanScrollIndex": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "lastDragEnd": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "leadFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "leadNextLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5282d1d39ab36b5a5a38483b007317f0450be4285d78bd4cdd30e2991f4b2274"
+    }
+  },
+  "leadNextTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "32a51bbdf9c9ac4ca80d80d0bbc978bd62d8a952d9e02c6bb7c17ec11dfcf0cf"
+    }
+  },
+  "leadPicker": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1d220876d82de19de1634ab3f8c25699a61b1c93047bf513cfd478e8fa993ca5"
+    }
+  },
+  "leads": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "leadSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "leadSettingsSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "leadSources": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      "Strona WWW",
+      "Polecenie",
+      "Telefon",
+      "Social Media",
+      "Kampania Google",
+      "Inne"
+    ]
+  },
+  "leadStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "d81515928448daa5ed0fb924398dc53205a4139aa222708efb938fdde5cbb492",
+    "value": null
+  },
+  "leadWebhookEnabled": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "leadWebhookToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "listError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "listPage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1d897aa7c944781c14184625bf956849afa35317e2470b3cfe38659d821631eb"
+    }
+  },
+  "listPageCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a865fdafdd01eb5181f073d84bfa11db9f357d4ff76dff60bcdca05992051722"
+    }
+  },
+  "listPages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": 1,
+      "contacts": 1,
+      "projects": 1,
+      "tasks": 1,
+      "services": 1,
+      "offers": 1,
+      "documents": 1,
+      "serviceCatalog": 1,
+      "templates": 1,
+      "users": 1,
+      "tickets": 1
+    }
+  },
+  "listPageSizes": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": 10,
+      "contacts": 10,
+      "projects": 10,
+      "tasks": 10,
+      "services": 10,
+      "offers": 10,
+      "documents": 10,
+      "serviceCatalog": 10,
+      "templates": 10,
+      "users": 10,
+      "tickets": 10
+    }
+  },
+  "loadAllCustomFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e2f638303e0f292159d04d2633ff48efb6aec256b00c9bf56cdc2949f222c2c9"
+    }
+  },
+  "loadAllReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "98a6d2fe2d3160bd1c01fb831c00645d8f2c62a1ed9e01b18b439213adfcea0b"
+    }
+  },
+  "loadArchive": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5f6caf5858b7c4560d3d6af718ccdfa708f0c9e932081f95d3ee3f30ff0fcd93"
+    }
+  },
+  "loadAttachments": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "37c2d3025e3e31175ad739b6a6faf590176ae8e7f3fe3f494a06a915f277fe65"
+    }
+  },
+  "loadClientOptions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e9667bb8aeaf2575d119446a33a711c7d7a1df6a7cd5965261a4e6c242d23083"
+    }
+  },
+  "loadCustomFieldDefs": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "db25f7ca86143b71648c83ea8e5c84bcf1a739b382999d1c4c535e77613f01bd"
+    }
+  },
+  "loadCustomFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2c9527cabe7e8900d257c661f80b6c53df5ee4a2acf1518f44dbe4978dc57da2"
+    }
+  },
+  "loadCustomValuesForTable": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5df94b0b28e261fcff3c8cd757f5427e40b2bb3c3e58cf875aca1955635bbb0b"
+    }
+  },
+  "loadDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "088d69c81bca12338b7361b441b55a9ec043cec964bf39e458f1d36cb273584d"
+    }
+  },
+  "loadDirectory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "03899a17aa5906a0ad93c0a6c0ac711a86c7a2b58a805239dfa4f993035aea12"
+    }
+  },
+  "loadEmailTemplates": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "37f855498ee19d18dd95916e5fd74965209f118cf0e32a733ed32586d89fc3ed"
+    }
+  },
+  "loadEntityTelephony": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ca6c885509e01813dc987382575955b37ef42997facfda1d4d87ec0c883de268"
+    }
+  },
+  "loadHelpdeskSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f0b2fd0ffb9965c79b659a3a371260599c42ef931d9e4f1622dc20a1ae4232d9"
+    }
+  },
+  "loadMe": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f63701331ab8152d3256ba6113af7e99feaea2085fed1ac86e28dac266b626e9"
+    }
+  },
+  "loadMyPermissions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c72a552f36deaea499746164619f0f8ff5a6f2c44194c35cde235068d572eaa7"
+    }
+  },
+  "loadNotifications": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cf6d7dab8a3910de319f0569c43b61c2e5decebc5f820e771c90f447a14ac062"
+    }
+  },
+  "loadPermissions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "de9d390e0ec97e4ad0b5c440ae28db142629eb252a2d5ab0223166580d210ade"
+    }
+  },
+  "loadProjectTasks": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5be3a62c17becd457904b65537eb6df647bdea0889a83f9ba61679c985d4e334"
+    }
+  },
+  "loadReleases": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "93492d72f90fa9817e1409c9c44cd7470994ffc081d971b84b2286539ca5f3e9"
+    }
+  },
+  "loadReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "856404966ffd8025da6a8176211aa3d29a7087c1eeccbd38106acd5e4a209e63"
+    }
+  },
+  "loadSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6c5c05922f14071b80642770c9f6f5e38667c19fb3321f76f9e09e7b2625dcc6"
+    }
+  },
+  "loadSmsData": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "96b001805337610250f1b0e001b6db1c1726e649065537e49c5d618d6aae5e62"
+    }
+  },
+  "loadSmsDevices": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e257ca6f0fd0e9884315369f9aad3593b4c8164ac787204d07a41bee85c8fba9"
+    }
+  },
+  "loadSmtpSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "540a0fe351ef17f3a7f3a5abe0d0bfac083d6ff9cf366b791cdd88b5429a8c0b"
+    }
+  },
+  "loadStandardRequiredFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "96389c99fa6210beb55ab9371a93642f1b9edeffe1dc6e70da20787bcc1c1be8"
+    }
+  },
+  "loadStats": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "523b3485e4c10d8f0b6a400eae5e0e09adaaf0aa4f1f3b91d220a3a11b53a412"
+    }
+  },
+  "loadTaskAssignees": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0c2391c888a78188a0def670f9ae189e3582b46b58f59c1169323f29a5a1ed70"
+    }
+  },
+  "loadTeams": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cebe7de6feb9dc82a3456c6fb4c97e8c3b86c96aa3e957ce2dde5ee19b2af8b1"
+    }
+  },
+  "loadTicketConfig": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f80d9b84d971d1a1232951b7ee7bf1e4fad76b20cae1a9715346a39c48fb17b5"
+    }
+  },
+  "loadTranslations": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f7b90a9a136c918c74e4b5f0f80f5e1a2764303f215add07b743d575447776f1"
+    }
+  },
+  "localDateKey": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "35871fb9bfbb37ed61ae805c32289a8fe8b6506ad1466e277c8adc793f708e79"
+    }
+  },
+  "locale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "pl"
+  },
+  "login": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "54d2951ffd98092224670857fa529b84ec3d60de31c1f8eb8abfa17459e282e3"
+    }
+  },
+  "loginError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "loginForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "email": "",
+      "password": ""
+    }
+  },
+  "loginLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "logout": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f3ca4f3acbe5adb55437bb85a1ddf2bc913f2a6c788f6f61151b074ee98ff26c"
+    }
+  },
+  "makePhoneCall": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2887fde9776e280e54b15fb7b630671a5236940378a82469dd1b86d465c3ac25"
+    }
+  },
+  "managedRoles": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "markNotificationsRead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b1aed2b9673cc447165a5b0b318092c612568fe4993b239ed975afaec85ee432"
+    }
+  },
+  "markNotificationUnread": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "12896355089f5de84b67a144790074516b840d074ac6043845896b6920e0683e"
+    }
+  },
+  "meetings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "menu": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6\"/></svg>"
+      },
+      {
+        "id": "crm",
+        "label": "CRM",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z\"/></svg>",
+        "children": [
+          {
+            "id": "clients",
+            "label": "Klienci",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4\"/></svg>"
+          },
+          {
+            "id": "leads",
+            "label": "Leady",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 7h8m0 0v8m0-8l-8 8-4-4-6 6\"/></svg>"
+          },
+          {
+            "id": "contacts",
+            "label": "Kontakty",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "projects",
+        "label": "Projekty",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z\"/></svg>"
+      },
+      {
+        "id": "tasks",
+        "label": "Zadania",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4\"/></svg>"
+      },
+      {
+        "id": "meetings",
+        "label": "Kalendarz",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z\"/></svg>"
+      },
+      {
+        "id": "services_group",
+        "label": "Usługi",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\"/></svg>",
+        "children": [
+          {
+            "id": "services",
+            "label": "Usługi",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\"/></svg>"
+          },
+          {
+            "id": "serviceCatalog",
+            "label": "Katalog usług",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "documents_group",
+        "label": "Dokumenty",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"/></svg>",
+        "children": [
+          {
+            "id": "offers",
+            "label": "Oferty",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"/></svg>"
+          },
+          {
+            "id": "documents",
+            "label": "Dokumenty",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z\"/></svg>"
+          },
+          {
+            "id": "templates",
+            "label": "Szablony",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z\"/></svg>"
+          },
+          {
+            "id": "documentTypes",
+            "label": "Typy dokumentów",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 7h16M4 12h16M4 17h10\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "tickets_group",
+        "label": "Tickety",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z\"/></svg>",
+        "children": [
+          {
+            "id": "tickets",
+            "label": "Lista ticketów",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4\"/></svg>"
+          },
+          {
+            "id": "ticketSettings",
+            "label": "Ustawienia ticketów",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z\"/><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "sms",
+        "label": "Telefonia & SMS",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z\"/></svg>"
+      },
+      {
+        "id": "portal_group",
+        "label": "Portal użytkownika",
+        "adminOnly": true,
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h16v16H4zM4 9h16M9 9v11\"/></svg>",
+        "children": [
+          {
+            "id": "portalTickets",
+            "label": "Tickety",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 10h8m-8 4h5m-8 7l2.5-3H19a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2v3z\"/></svg>"
+          },
+          {
+            "id": "portalSpaces",
+            "label": "Portale",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M3 7h18M5 7v12h14V7M8 11h3m-3 4h8\"/></svg>"
+          },
+          {
+            "id": "portalSettings",
+            "label": "Ustawienia portalu",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h16v16H4zM4 9h16M9 9v11\"/></svg>"
+          },
+          {
+            "id": "portalUsers",
+            "label": "Użytkownicy portalu",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h16v16H4zM4 9h16M9 9v11\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "users",
+        "label": "Pracownicy",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z\"/></svg>"
+      },
+      {
+        "id": "notifications",
+        "label": "Powiadomienia",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9\"/></svg>"
+      },
+      {
+        "id": "settings",
+        "label": "Ustawienia",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z\"/><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\"/></svg>"
+      },
+      {
+        "id": "archive",
+        "label": "Archiwum",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4\"/></svg>"
+      }
+    ]
+  },
+  "menuModulesList": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard",
+        "group": "Główne"
+      },
+      {
+        "id": "clients",
+        "label": "CRM - Klienci",
+        "group": "CRM"
+      },
+      {
+        "id": "leads",
+        "label": "CRM - Leady",
+        "group": "CRM"
+      },
+      {
+        "id": "contacts",
+        "label": "CRM - Kontakty",
+        "group": "CRM"
+      },
+      {
+        "id": "projects",
+        "label": "Projekty",
+        "group": "Główne"
+      },
+      {
+        "id": "tasks",
+        "label": "Zadania",
+        "group": "Główne"
+      },
+      {
+        "id": "meetings",
+        "label": "Kalendarz",
+        "group": "Główne"
+      },
+      {
+        "id": "services",
+        "label": "Usługi",
+        "group": "Usługi"
+      },
+      {
+        "id": "serviceCatalog",
+        "label": "Katalog usług",
+        "group": "Usługi"
+      },
+      {
+        "id": "offers",
+        "label": "Oferty",
+        "group": "Dokumenty"
+      },
+      {
+        "id": "documents",
+        "label": "Dokumenty",
+        "group": "Dokumenty"
+      },
+      {
+        "id": "templates",
+        "label": "Szablony",
+        "group": "Dokumenty"
+      },
+      {
+        "id": "tickets",
+        "label": "Lista ticketów",
+        "group": "Tickety"
+      },
+      {
+        "id": "ticketSettings",
+        "label": "Ustawienia ticketów",
+        "group": "Tickety"
+      },
+      {
+        "id": "sms",
+        "label": "Telefonia & SMS",
+        "group": "Komunikacja"
+      },
+      {
+        "id": "archive",
+        "label": "Archiwum",
+        "group": "System"
+      }
+    ]
+  },
+  "menuPermissionsState": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "menuSettingsSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "modal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingId": null,
+      "form": {},
+      "error": "",
+      "view": null,
+      "lockedRelations": []
+    }
+  },
+  "modalTitle": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "55d98f995780fd9ca0c7feab3f78daf90b8e7046952470df516856fbfdd7f3e8"
+    }
+  },
+  "monthLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "0aa9ef9d9f9c662c4f2f76872a7809d61ada1a4b6327fa73e625cc16d3cf6f58",
+    "value": null
+  },
+  "moveLead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2b123cd172bd3caeca0eba25bde698bff356a34fd1c00c7f208caf25697a8840"
+    }
+  },
+  "moveProjectStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "88a5acb9f21eacca8a86f0e81feb31b10318a7bcca8eaf3ff436ce7900b96039"
+    }
+  },
+  "moveProjectTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "56b8c65b080db0b31c8281ac261ed002f46b73630fdaf78516e65038c09920c0"
+    }
+  },
+  "moveStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6b439584d85c17ad95e6e17a4f0ab9c5e77b6820dc6e8c79b45ac60efc3819cf"
+    }
+  },
+  "moveTaskStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "126e1b788d298168e205190745d40c4f5cbaa15d4920a7d4c618439931d2b21b"
+    }
+  },
+  "moveTaskToStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "045ee14e06820fe8148121f38fdd837fc1ceb85d708493e1636fad2265b3ec6c"
+    }
+  },
+  "needsSetup": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "newCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "entity": "clients",
+      "label": "",
+      "kind": "text",
+      "required": false
+    }
+  },
+  "newHelpdeskCategory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "id": "",
+      "name": ""
+    }
+  },
+  "newLeadSourceName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "newMemberRole": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "member"
+  },
+  "newMemberUserId": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "newRoleName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "newTranslationLanguage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "code": "",
+      "name": "",
+      "base_locale": "pl"
+    }
+  },
+  "nextDetailTask": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "b071ff5ed28e428233fec7af36a2d887717b82088283f6f11749037392d3b9d4",
+    "value": null
+  },
+  "nextMonth": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1007b494942f51089570db520a5257580753e11fad882bf2f03d3606b670cbd9"
+    }
+  },
+  "normalizePhone": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "17331c068e9ad9ca0bcd273813651588a88d903a93b7028d7b2009512ccc0896"
+    }
+  },
+  "normalizePhoneVariants": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "03259aba441b947cffd1c26d041746a75b30572aa71893c0a2846df511d023da"
+    }
+  },
+  "noteLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f9fa4682da4be93ef5909fa11b2907dc96032788413ecc87073e5ec00d3ac7f8"
+    }
+  },
+  "notice": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "noticeTimer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "notificationAction": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b6a7c230a46dbaa1e8345dfa3a93c079d1e2058ae674e360129ce9ea00bc9163"
+    }
+  },
+  "notificationFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "all"
+  },
+  "notificationRead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "notifications": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "notificationSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "notificationsError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "notificationsLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "notificationsOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "notificationTimer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "notify": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "848ab5c915ca79405418a5e49954d1164153ea6fe73358ecd1eb98e61306f3f9"
+    }
+  },
+  "offers": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "offerStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "27cc764f8a0cced27bc46e930466a5f0526bed21f6800acef6c859944e6b2828"
+    }
+  },
+  "onCustomValuesEntityChange": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "63a08bdfd695307656bc343dbe93992e892653d1f431848bd7fed1caa34d6dd1"
+    }
+  },
+  "onCustomValuesRecordChange": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "225cdb622fe2df7edcdb9edbba73a831d7ad0046df50f49eed66c0b1c5d88027"
+    }
+  },
+  "onSmsClientSelected": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c56cca5deafc6b47213a9115f0168d138af070cea50316986b4325a470accbfd"
+    }
+  },
+  "onTicketClientSelect": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b9623a2d92f45667b5363586cede77503da65abe9efaa94cda1b5dbbc00bca8d"
+    }
+  },
+  "openActionModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e8d4fc63010d65457b128ebe54573c2c59e6b18b6cba52bfe4531d1ebc692deb"
+    }
+  },
+  "openArchivePreview": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1d36f892f67434dab3dac6b73454be66014c83655d5df2f8dcf43f8de4ea65cc"
+    }
+  },
+  "openAttachments": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2f9e1115cae3fd54a17540bb48cc97e2d94a1a0b5c00be27c303505939b0e945"
+    }
+  },
+  "openCalendarEvent": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8e14c0b79c487f6986c9727296680bb12dbbce048e3e22aa4347dabf4b92079b"
+    }
+  },
+  "openCallNote": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e3fc40de38fe33e5d0ab2c8365a02fe62ceb0a3645ee5b715bf20e3bcccb8af5"
+    }
+  },
+  "openDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fe55eb3858d15dd090bed462c31ae50a9b28339e1da8320fdfefae78d6141ddf"
+    }
+  },
+  "openDeviceModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0bc7c16967e8e0553be0c3a1a32bfaf3f0245d810b2b2b4594ff7ea97b5b6259"
+    }
+  },
+  "openDocumentTypeModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "850d6de1198c9f948d82d6f53fc1042c1894247914aed5333ce8b1d04ad4c8e4"
+    }
+  },
+  "openEditCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1a8599b18d9b3802139204a2da904aa53a246a45ceefcc813b22b38a59c3062f"
+    }
+  },
+  "openEditStandardField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "eb7ef37c6b76612b3f3a313450605ecf2516056ebb9ec20490e9211132f6cdec"
+    }
+  },
+  "openEntityTelephonyModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a4ed65be8fd6a4f40acf85fad87c3d056c5c62247ee7286d5497d8b84f045d4e"
+    }
+  },
+  "openForgotPassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7581e0ab28b0a31ccd833188e00f78dff9fe3bde41937881c75b529f213bf05d"
+    }
+  },
+  "openGenerate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b9990475581e45427c89303b359c982ac623ab9d0a4afb85e26bc12f27b832e4"
+    }
+  },
+  "openJournal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "00290c8e9d1b3e0a1384ffeacbef1453585fc7d86fa253c7b183d0770caa067f"
+    }
+  },
+  "openLink": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4e03d9c15cc998c6277dcf589fd702e3ec9a7e0bd316dc4a0f6250403e1876f8"
+    }
+  },
+  "openMenuGroups": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "crm": true,
+      "services_group": false,
+      "documents_group": false,
+      "tickets_group": false,
+      "portal_group": false
+    }
+  },
+  "openModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f9ed61938ede06fceacb06b135347002b79f774ce583ed5d04f2e74992b281bc"
+    }
+  },
+  "openNewTicketModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ff1b948e5062d14cd9d08dcafca34ebdaf1150c146642e532b2fee1658220df4"
+    }
+  },
+  "openNotification": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f7ad628449b141119a7d86f561309f12ed3243589157106c60339dc603be8359"
+    }
+  },
+  "openPassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "32c9f7374a078d650696aa025a9bd6928f177064f481b2ccec7c88b24dfcdfc4"
+    }
+  },
+  "openProfile": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "565cdc717da41a85826c007211b9b0068a4bd6093817bba827b4ebe60a1df441"
+    }
+  },
+  "openProject": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c53c25bc4a1cc33335ef421775baf9493a27a4aae85f422e4bbbc6ef129b1e73"
+    }
+  },
+  "openSearchRecord": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c0d751edfbce47d15d28bf69eb4231bee9c9b191b0696efc3b15d553826b3924"
+    }
+  },
+  "openServiceEdit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2638764cd4d63cae8dde0795c0268ee4ab1e9fb405fde461741cc2e1d465f263"
+    }
+  },
+  "openSmsModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "86ce57242cffb305e62b0fe282dcaa2c6dafab9348cb839a2bab797cccb7f5c4"
+    }
+  },
+  "openTaskDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0e925b002b736784a95b878a06ab2fcdf8689f6ff5be3bd29a5813906042ba15"
+    }
+  },
+  "openTeamModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f05a5ee73f54b48be3204d88d6ff151cd3e7f2e63d829eedbd7c980a823a2c7b"
+    }
+  },
+  "openTemplateModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8fd385312b98a315b7d71c8c5949dff6be40884987a80a43d40004a767387af5"
+    }
+  },
+  "openTicketDetails": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a0890dfc7d070d2b7c5a7385f37cd868875c0b236848aed46bc840ba31036b24"
+    }
+  },
+  "pagedItems": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "893dd482124d95b72581f03766d6ee0a0e5dc5bf99493f2253cb4f2088b53b02"
+    }
+  },
+  "panelKeydown": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "99ea0496e6c84eeae3db6d805a25659c5c19e95185dacb42c5fce6010b2ca0be"
+    }
+  },
+  "password": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "form": {
+        "current_password": "",
+        "new_password": "",
+        "confirm": ""
+      },
+      "error": "",
+      "success": ""
+    }
+  },
+  "patchTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6592501ecf5cde01564b0ddaf4c342276ec204b40afd3b9dc47ec5ccb80d7d42"
+    }
+  },
+  "permanentDeleteFromModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "84b2806613f8fd3f54e1d003dd9b51a4ba3944fab691a80b4b0643480a1225a9"
+    }
+  },
+  "permanentDeleteItem": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9151a93df1698d753d4f8c4c93b1f0c0dce7dffe0836d7a1537df6459928d9ce"
+    }
+  },
+  "permissionCatalog": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "permissionError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "permissionRule": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e994da55bb15224266602625c8c6545d52aa664e7584ea4131de79902381035a"
+    }
+  },
+  "permissionSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "permissionSubject": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "role:manager"
+  },
+  "phonesMatch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e4e6435a0ab44b186e64e36973f49295f0833de93340efec87468836ee04590e"
+    }
+  },
+  "playReminderSound": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7b757ba90dffecd8246083e3f5b745f5b6764d2a59d56c485706d2701b6169b5"
+    }
+  },
+  "previewBranding": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "de82eb480f66beee9c04c19bc536d158ebaf8c61eef97913fbb2ed2429ad12b7"
+    }
+  },
+  "previewTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "97dad9ba7ddeceaf117f1e5cef8375c0f52a654c5829cbdbdd1bc64ca52c093e"
+    }
+  },
+  "prevMonth": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9ce227374bf2a9972afe1cb94b284b15feb8a9eef7ba1f9b2a7f05dd7cf3d327"
+    }
+  },
+  "priorityLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1ed1c90a14235817e637208a099fa4f8901e9341053a4860f29ed2a9e01319bd"
+    }
+  },
+  "profile": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "form": {
+        "email_notifications": {}
+      },
+      "error": "",
+      "success": ""
+    }
+  },
+  "projectKanbanMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "kanban"
+  },
+  "projectName": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8cfa3a0047d96b33ccd6efc8e2d87c366f44141c56b5ab4094efc133664bce8c"
+    }
+  },
+  "projectProgress": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "94f1d0a0df8fbbba32ea5eebea9ac34be3d5435309252ef3283fa7f6bb06cb59"
+    }
+  },
+  "projects": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "projectSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "projectStageDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "projectStageEditorOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "projectStageError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "projectStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "6a277fd0968b9a55b7e755aa27703c25817979a48565e4011e6c80e9d084a363",
+    "value": null
+  },
+  "projectStageSaving": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "projectStatusClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b4333d7dd97db1e4b937b9ffcfc065d906931dab66d87d910b59d00246a33cb3"
+    }
+  },
+  "projectStatusFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "projectStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ad235a0454450eac8804186e2e880dfea2cd2891862c7596992d9beaf412e1a8"
+    }
+  },
+  "projectTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "kanban"
+  },
+  "projectTaskFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "projectTasks": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "projectTaskSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "pushBusy": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "pushEnabled": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "pushError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "pushRegistration": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "db89c01cdbe4755476be1832c968ca9b2a7af4bec96e284355dea0140fe05391"
+    }
+  },
+  "pushSupported": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "de12a192afffef81809c0baf18eec84d425b5160de557c51a6b68e0daef0b715",
+    "value": null
+  },
+  "queueStatusClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "403ed783cad919aa6e0eba46f2d07b2d6706151aff96db0933daafe40bcd2848"
+    }
+  },
+  "quickAdd": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "73a8279966985f162a1c429f4d28ee292435c9072136e3dc778a7c8307364f6d"
+    }
+  },
+  "quickAddFromService": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "84f6e364d2631de6654c59fbe08152d7cd00021212b40a992772fe4a8b7acd4f"
+    }
+  },
+  "quickAddProjectTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e5c07daa60b7deb56598d8ceeb948b1164d74c88ebd33c7f2b179802a7069b56"
+    }
+  },
+  "quickAssign": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7fd85de9e3365b9eb7ceb9c97ed4bfc780f2e2f71b8e0fb86f48a2cef09a59f1"
+    }
+  },
+  "quickSetStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c9aecb2c236ec8059304eef51fe62238616dcf45be0d283bf164b7c67bcb38be"
+    }
+  },
+  "quickTrigger": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "89b39bb2f529bf5fa484aede4f868cb18573ad28606f72dd5173eaae8a8d03a3"
+    }
+  },
+  "rateServiceRisk": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "684dfd313a47d0920c2a003ae4641ed249046d299be7c14e24e1a582c904ec01"
+    }
+  },
+  "rateServiceStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "169603b9e7a97adb71a937d6047cd2183dd53e30d62bd6abf6e504b56e583fa3"
+    }
+  },
+  "rawProjectStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "b60242f97824a1125b616b0214bc39e083e752db9591b8923b38a838c18d8a6e",
+    "value": null
+  },
+  "recomputeVisibleCols": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "21d54c3cdc56fd29c6ec24a8e6c78a55ea103380011af6db288f098318f08657"
+    }
+  },
+  "recordLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2218c30e6746fb7a890bacc1ec0332fbb29a4b6f20ab9e7797f5c8a1ef97f29c"
+    }
+  },
+  "recordType": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "043f5dbd1cf4dcaf4e7ebac9cbf91de3ddaa2e21ceb800a95dcfa15e7b21d9dd"
+    }
+  },
+  "refreshEntityTelephonyModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "979bbaaa7a9b44006db9e957a27d60238d98370ab0b81c1ff4b928a1fcb7b1be"
+    }
+  },
+  "refreshTemplatePreview": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "80b0a47efd4a4cd1c0726c22c4001aed303a7ed6bb3e0cbe99c782a1794d6709"
+    }
+  },
+  "regenerateWebhookToken": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "60b8b99c2c1a4a1586a94ac27f85e9466b5c154c878568c24c50743ee561ca0a"
+    }
+  },
+  "relativeTime": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4700f7fdea05622d0e9dea19580c892166e7e914265fec0ee8361cd9fbe2ad91"
+    }
+  },
+  "releaseError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "releaseInfo": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "releaseLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "reload": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a2e02c536bf90946825c8845a079bce78d62e9251733aeafa419611f7b4d9d3a"
+    }
+  },
+  "reminderActive": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "reminderAdding": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "reminderBusy": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "reminderDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "reminderError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "reminderLink": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "reminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "reminderSnooze": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "10"
+  },
+  "remindersOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "reminderSoundReady": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "reminderTitle": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "remove": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9377da2bdff8a43b83db4de6bf94c1d67df5a04df0b40ad21b9967fc7c2e962b"
+    }
+  },
+  "removeAttachment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "da142ef741969a45b0b07c7750a76484898a91af1fab076f9f84eb9ef2c34f42"
+    }
+  },
+  "removeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "36cf380341a8356f11d79807e9b122087ab365a17c9ba4d6c8d30bc4e5344a3c"
+    }
+  },
+  "removeComment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8593160e8d47227a7d6c9cd83c64bc235e3c40036c3062fd83cc2938960d1dd8"
+    }
+  },
+  "removeDocumentType": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d748706134c56c25155c6e4e6683390209074b701b56714808361a70c31d47ae"
+    }
+  },
+  "removeHelpdeskCategory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a15c69933a5092d19026b2308b1e7fc1516d556d5d8ab373519decae9ed0f0a2"
+    }
+  },
+  "removeHelpdeskLogo": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3032b5b309592b4a2f1a12519cdc9bcf1113bc7ad47f2dc18772677f32c5379b"
+    }
+  },
+  "removeMultiUser": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e38ae5d0cb0248b64d85e9290fbe91881b9b65f39b2269d536ab6096a9996ddd"
+    }
+  },
+  "removeProjectMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a31f14ad9b06ebece14f2373c0a3b00efbadfb1e78fe9dd47c0d1a2d91d96360"
+    }
+  },
+  "removeProjectStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "35a7c27d14bd4b1a84f864a3d7c7d9182f196930744f0969840d6dc7f7bf3347"
+    }
+  },
+  "removeServiceAssignee": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "78e0e04c1a6d10997de8a561e8dbd0249a99dc88bc7e3a9f5738ab54f3edddda"
+    }
+  },
+  "removeTaskStage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a50a66b17e5c68e3e0b2c3facdf467c7024d32fb2727210d29628efe4f75d689"
+    }
+  },
+  "removeTeamMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "53bc34e1b32000403c33b28183cf1498fc497ce35258296253af530333ef68cd"
+    }
+  },
+  "removeTeamMemberFromTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "561724476badbdb39e848a9bae13c36c00bc21b4072a75c50a059da4b62bb3c4"
+    }
+  },
+  "removeTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d56063a46491320ea3feb040629dc6f65d17cfc6e70e47feb2327606760e7faa"
+    }
+  },
+  "renameAttachment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f335f4dea1b6faeceaa76cbc5001c88d9f405e64488b99515d4a990841bb2aa2"
+    }
+  },
+  "renameManagedRole": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1b04ed889ba21f2b1dea06d14e9e997bb12a0e0bf6044d1a4d40cad6acc66370"
+    }
+  },
+  "renderFunnel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1df0fd6035a573e12066bf44fefc0b24e7983dba454ad5473b774264048ca0fb"
+    }
+  },
+  "resetColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "079184dd44de39c365958f5bbf7b68c5fecfb500253a2e45c4294bcad0dcf25e"
+    }
+  },
+  "resetEmailTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9b0a05b079570d62e89fb2d1b0ab3292ac15f380d5a62dab34bd4d3b54984069"
+    }
+  },
+  "resetSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cb26162f99f7adca58507d7677e6fd4197ae3b8d5e2c382a084d070885ebfaa6"
+    }
+  },
+  "resetStandardFieldLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "455d2f2fed06dd2d97adef1d131ce6ebf1cacb15af64b5363d896d59370db902"
+    }
+  },
+  "resolveReminder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "76cea9dd20358a68ee064cfad2cb575a420d670a96b44e12a04cf541f81ceb66"
+    }
+  },
+  "restoreItem": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2dbdb2ac0c037aadc30d6ecd5835feffdb6a033446ec4792af8f44f6ab2d2320"
+    }
+  },
+  "restoreReminder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d1b47d0b14db7235db4e18a2d2943d5d5107a5b0d48c142c4e6d03a501a15920"
+    }
+  },
+  "returnFocus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "returnScroll": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "roleLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "96cc6502b631daa53d8cac92bdd2d1c0b2e5c3270f942daca4b81043f8212661"
+    }
+  },
+  "roleNameDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "roleRules": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "save": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ce97b47d731eb9268e290fbb9366fa32fc4a15093a880b924a976b9acd32db43"
+    }
+  },
+  "saveAllStandardFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b1ad57e1d8cdc55b9426e1b497cbc5e3c13755d8886af474e137528250bede06"
+    }
+  },
+  "saveCallNote": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d506f2bfb1e22a0d31e41c3530e1c087b428a4406f30050d699b6ec5027b2def"
+    }
+  },
+  "saveCustomValues": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "918c8c9105ecb9e25e5574f977bdfcccdfc1f51e376537c20539e8b1b95bc26b"
+    }
+  },
+  "saveDeviceSubmit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0f880b6c6854aaa4e6096970a51a899861e547a3b5d06bfeb4f6c9a3cfbb3712"
+    }
+  },
+  "saveDocumentType": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "afdff196e75bf587a2adb1f4edbd1b27b44dbebb016b4ba57453ba853d1198c5"
+    }
+  },
+  "saveEditCustomField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "46b8015686b172b986c7ef75c472b67da8711c6864d61a3aba62a06bb8737da8"
+    }
+  },
+  "saveEditLeadSource": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a87fd28e2df7a0dd0978cc26d47000bdad3dccf2876cc6cbd06fbc7abbf2fcf9"
+    }
+  },
+  "saveEditStandardField": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "08fc0fa47658ba313bd13f600c48e8b65c3991285a7e23f22d034f3dbe94c0db"
+    }
+  },
+  "saveEmailTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "083947aa3db5ca7a32a62001abc8d3c7dfc1bc5868a84b171a47a7fe48b642dd"
+    }
+  },
+  "saveHelpdeskSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "577b9469d80e2bae2f3e800e856b198f6cc9c11c46f78ca65665fa74303fa1b7"
+    }
+  },
+  "saveJournal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c5fd94346f7ffdb104108445a5df0094866366913c4e8566339d639b906caed6"
+    }
+  },
+  "saveLeadSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bea1328cf49900fc2645d520a3369fa471de37e60e3e5acce7bd9af5c18486e2"
+    }
+  },
+  "saveMenuSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7e0d41330bbc0765acc8b8d8991e031c6211f1f33fe66d357fefe16ddb075a22"
+    }
+  },
+  "saveNewTicket": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "377c379672a62f68e0ca1e7765cfeb4a72cf38879a962ce04821248d37441e96"
+    }
+  },
+  "savePassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "dda73b552bb02acbb5da05bfc011b822ffe6f86b9c69fdfafc99c49e81cb3413"
+    }
+  },
+  "savePermissions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "14f8923354351d3748b2f05ec1903f778f20f234213fa64c5c33e08dacfe8e19"
+    }
+  },
+  "saveProfile": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a25e4b8fdc153a831508e89bf7fc5791ecc4594f17c4ba44fee06d7b861eebc8"
+    }
+  },
+  "saveProjectStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "aabf90c05afde76359b9255adc34d656b346174b5eba2b6bf6c099214c58e3b7"
+    }
+  },
+  "saveReminder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7ed8f0726de5f0a56a4efc7940a4a4c60998430c83e9ab888edfbf3a51533bd1"
+    }
+  },
+  "saveSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f91f318c7e12dcaf746a0700236f703ac515b584178cb8bdeecf6b6597eb830f"
+    }
+  },
+  "saveSmtpSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "22574bdb6138e1ba67c441d2876e3c4b80c67499a6c309860da4b140d4eb3e5e"
+    }
+  },
+  "saveStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6ad3be827ec49651af5b3604028bfe48c2132adec0b5932991a7237c75072ff4"
+    }
+  },
+  "saveTaskAssignees": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b502d9c6a931e32a863344419f8b3544a10f9b6ad9c3b6a5080d6513a2da747e"
+    }
+  },
+  "saveTaskStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "26e588d2cd2e2c3c6c65cb56a6f7b3aed56e0d066d08f4db01f4e2f2ce5c8f10"
+    }
+  },
+  "saveTeam": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f91e937d832c3a093cca1609241fd3aed6a5fd7cf9dbd54d0a23c5ca5324345e"
+    }
+  },
+  "saveTeamModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b171be9253df86d12143ba1e756a7562228d3e926c5123897ec9011e17d36f01"
+    }
+  },
+  "saveTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0ec3ee68650ef45f8b1ce51a552a76bee88365d8bc5406249405f44469075544"
+    }
+  },
+  "saveTranslations": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "01fff50f11fb10df6aa98c5f51242d357a0dfd0d2c33bbd22b5eb0bb5b09b5de"
+    }
+  },
+  "savingLead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "savingLeadSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "savingMenuSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "savingRecord": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "savingTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "scrollKanban": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e0c43bca676dea37659dedf977fdbfea2764989a02eb17c541a2fe115a0f9c77"
+    }
+  },
+  "scrollKanbanTo": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "eb03618c4bf5e466a34357d9f2169fb329c9dc2ba3f14674a1c90ad1712eda5c"
+    }
+  },
+  "search": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "searchDirectory": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "48464daa1226fbd8515265f6eef1725a3d04bf687e9f9d977955e5a9f55c8558"
+    }
+  },
+  "selectCalendarDay": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ac5796ca338ae1da3f2320cae6009eefd3d86a44fdb2d8a6f5079b2dc697d9f7"
+    }
+  },
+  "selectedDocumentTypeFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9b1c5115eea3125b31ffc9bab27931c851385996bc2d010574071322ffd97d4b"
+    }
+  },
+  "selectedEmailTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "selectedTemplateFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5c269b8926ebcd608016700469325b1d5d06846f7c78b03982bc8237e082addb"
+    }
+  },
+  "selectEmailTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "52b6003c19db50d384984b13da3dea05d77b56a3c26bf2e699bb4063397d9200"
+    }
+  },
+  "selectJournalRecord": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "678c4cd69e228f3a84d5c8476350696476c3c18f887d96bac7df5dcb90b8947d"
+    }
+  },
+  "selectTranslationLocale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9053cae305bd6d8148379121b9882da0cbdef1dc36355018aafd62e27889ea90"
+    }
+  },
+  "selectView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d12e6220cb178ec156a91f98a3f1e2b9d3e5cc820644359ad9101c58668ad83c"
+    }
+  },
+  "sendEntityTelephonyModalSms": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b7f2dc6105b8bcaa85bbeee249df246c96dc78a879c95c427673ff8e4be3fad6"
+    }
+  },
+  "sendInlineEntityTelephonySms": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6fb9caa450ea7eb7577cc74ad3b24302dcee09abac2de1cadc7896fce77b9ca8"
+    }
+  },
+  "sendSmsFromDetail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "635f4aeb3b2d2acfa66dc8de1f5385602cc40441a1387335188aea99bd60c61d"
+    }
+  },
+  "sendSmsSubmit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "93edf6292aa43ecbce9b162569e5d25b8ad59e8f35896f2bf1bd90a8a3d37c16"
+    }
+  },
+  "sendThreadReply": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "98843295c5a26c36f51c1635c09efb692b7595fd35e99dcad53019a7240c05c1"
+    }
+  },
+  "sendTicketReply": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "57be3dc4c9ba0bfc10ac59a9992c10833fa32e9a7cecc70e15c1eea981200e1d"
+    }
+  },
+  "serviceCatalog": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "serviceRiskClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e00ea7a5cf76130b1aa4ca5e5d49f782aaf71ed7e06db9317294251f9b7cd4e1"
+    }
+  },
+  "serviceRiskLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c0281dc25a1e594f633496887d5c8ccd2e6642ef9e1dbefe8221a834459f9d8d"
+    }
+  },
+  "services": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "serviceStatusClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cfa3804ca2bd5c4a3dbaa38aa7d6767a1385d376c78dbd37501025f46b4daf60"
+    }
+  },
+  "serviceStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "696c1465948ccbf9016f49d510980bbd7ba7594464b780114d24a1c570d96a0c"
+    }
+  },
+  "setAssignee": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0187abe736181a2743ae906d61e776611d56f095861da1b474808b0115a08441"
+    }
+  },
+  "setBoardColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "da0cfe58be8055a0e096a8e61ba7b322cca4431b9da236bd4c326702fd14f39b"
+    }
+  },
+  "setJournalKind": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "46de4c0651c16fb21e3cd8f37ca58ffa305acf9600f1ec6716f5e6517c9f126a"
+    }
+  },
+  "setListPage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4d4a8e4c2917258e769a9009c348cb3228d5707513563f1487d9c4f9845f0465"
+    }
+  },
+  "setListPageSize": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d9d7bf9a8a2cac1d727e4de20332fd49707d423992f5ed331f1be657a8e485f8"
+    }
+  },
+  "setLocale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "111c66e8bcb5655bacddbaeaa6a1699fa314f86f15fdb2c252f0f05799d3ab4b"
+    }
+  },
+  "setMenuModuleEnabled": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4a8424c96f2b20fd3fec74bcc10671cd1d3ef6f1765bad5e99e47848f565c0ce"
+    }
+  },
+  "setMenuModuleRole": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "516441ffeedee2c18c6cd60800a8e18b2aad69925084b73e739a7883067c8294"
+    }
+  },
+  "setPermissionRule": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3e25202959632ebdfc6a9e948d441bb852a4c51fe851a603ed6dee9b73ec2697"
+    }
+  },
+  "settingsError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "settingsForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "settingsSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "settingsTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "branding"
+  },
+  "setupError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "setupForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "password": "",
+      "password_confirm": ""
+    }
+  },
+  "setupLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "showPassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "showSetupPassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "sidebarOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "smsCalls": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "smsComposer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "deviceId": "",
+      "clientId": "",
+      "phoneNumber": "",
+      "message": "",
+      "sending": false,
+      "error": "",
+      "success": ""
+    }
+  },
+  "smsDevices": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "smsError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "smsFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "search": "",
+      "type": "all",
+      "deviceId": ""
+    }
+  },
+  "smsLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "smsMessages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "smsQueue": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "smsStats": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "smsTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "messages"
+  },
+  "smsThreadModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "address": "",
+      "client": null,
+      "messages": [],
+      "loading": false,
+      "replyText": "",
+      "sending": false
+    }
+  },
+  "smsThreads": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "smtpError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "smtpForm": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "smtp_host": "",
+      "smtp_port": 587,
+      "smtp_user": "",
+      "smtp_password": "",
+      "smtp_from_email": "",
+      "smtp_from_name": "",
+      "smtp_encryption": "tls",
+      "smtp_enabled": false,
+      "smtp_password_set": false
+    }
+  },
+  "smtpSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "smtpTestEmail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "smtpTestLoading": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "smtpTestResult": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "stageDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "stageEditorOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "stageError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "stageSaving": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "standardFieldDefinitions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": [
+        {
+          "key": "name",
+          "label": "Nazwa klienta",
+          "type": "text",
+          "systemRequired": true
+        },
+        {
+          "key": "email",
+          "label": "Adres e-mail",
+          "type": "email"
+        },
+        {
+          "key": "phone",
+          "label": "Numer telefonu",
+          "type": "text"
+        },
+        {
+          "key": "company",
+          "label": "Nazwa firmy",
+          "type": "text"
+        },
+        {
+          "key": "address",
+          "label": "Adres siedziby",
+          "type": "textarea"
+        },
+        {
+          "key": "status",
+          "label": "Status klienta",
+          "type": "select"
+        },
+        {
+          "key": "notes",
+          "label": "Dodatkowe informacje",
+          "type": "textarea"
+        }
+      ],
+      "leads": [
+        {
+          "key": "title",
+          "label": "Tytuł szansy / leadu",
+          "type": "text",
+          "systemRequired": true
+        },
+        {
+          "key": "client_id",
+          "label": "Klient powiązany",
+          "type": "client-select"
+        },
+        {
+          "key": "value",
+          "label": "Wartość szansy (zł)",
+          "type": "number"
+        },
+        {
+          "key": "stage",
+          "label": "Etap sprzedaży",
+          "type": "select"
+        },
+        {
+          "key": "source",
+          "label": "Źródło pozyskania",
+          "type": "text"
+        },
+        {
+          "key": "probability",
+          "label": "Prawdopodobieństwo (%)",
+          "type": "number"
+        },
+        {
+          "key": "expected_close_date",
+          "label": "Przewidywane zamknięcie",
+          "type": "date"
+        },
+        {
+          "key": "notes",
+          "label": "Notatki",
+          "type": "textarea"
+        }
+      ],
+      "contacts": [
+        {
+          "key": "first_name",
+          "label": "Imię",
+          "type": "text",
+          "systemRequired": true
+        },
+        {
+          "key": "last_name",
+          "label": "Nazwisko",
+          "type": "text"
+        },
+        {
+          "key": "is_primary",
+          "label": "Główna osoba kontaktowa",
+          "type": "checkbox"
+        },
+        {
+          "key": "email",
+          "label": "Adres e-mail",
+          "type": "email"
+        },
+        {
+          "key": "phone",
+          "label": "Numer telefonu",
+          "type": "text"
+        },
+        {
+          "key": "position",
+          "label": "Stanowisko / Rola",
+          "type": "text"
+        },
+        {
+          "key": "client_id",
+          "label": "Przypisany klient",
+          "type": "client-select"
+        },
+        {
+          "key": "notes",
+          "label": "Notatki o kontakcie",
+          "type": "textarea"
+        }
+      ],
+      "tasks": [
+        {
+          "key": "title",
+          "label": "Tytuł zadania",
+          "type": "text",
+          "systemRequired": true
+        },
+        {
+          "key": "description",
+          "label": "Opis zadania",
+          "type": "textarea"
+        },
+        {
+          "key": "status",
+          "label": "Status realizacji",
+          "type": "select"
+        },
+        {
+          "key": "priority",
+          "label": "Priorytet",
+          "type": "select"
+        },
+        {
+          "key": "due_date",
+          "label": "Termin wykonania",
+          "type": "datetime-local"
+        },
+        {
+          "key": "client_id",
+          "label": "Powiązany klient",
+          "type": "client-select"
+        },
+        {
+          "key": "project_id",
+          "label": "Powiązany projekt",
+          "type": "project-select"
+        }
+      ]
+    }
+  },
+  "standardFieldLabels": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "standardFieldsFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "standardFieldsSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "standardRequiredEntities": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      {
+        "key": "clients",
+        "label": "Klienci"
+      },
+      {
+        "key": "leads",
+        "label": "Leady"
+      },
+      {
+        "key": "contacts",
+        "label": "Osoby kontaktowe"
+      },
+      {
+        "key": "tasks",
+        "label": "Zadania"
+      }
+    ]
+  },
+  "standardRequiredFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": [
+        "name"
+      ],
+      "leads": [
+        "title"
+      ],
+      "contacts": [
+        "first_name"
+      ],
+      "tasks": [
+        "title"
+      ]
+    }
+  },
+  "startEditLeadSource": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b72d788d47858a2f44c3f51f1aaaac63ee1c43457dda079a4ea87955ef8b827c"
+    }
+  },
+  "startLeadDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bf6fa386682064d4b65db51b67062f979416f1beacdc195b0f191be3ddd108f8"
+    }
+  },
+  "startNotifications": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ce0249005f53cb061ce94c4e952c51f21841e2bedf16699e35f59a88d46d02a0"
+    }
+  },
+  "startProjectTaskDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "e8f2c0c54c0fa5ec4108f5a08ad609c4b9228d0e2652dbe33371ea336e5980e7"
+    }
+  },
+  "startReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0ab9f45b6d024b58c8979bec60dbb3e56f43bd91ade3ab6c1bba09019c0119f5"
+    }
+  },
+  "startTaskDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "25788819a2eae6be5e9a3b41f7a31b3bfd7d2cec97a8fe7ff096411c780921c2"
+    }
+  },
+  "stats": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "cards": {},
+      "funnel": {},
+      "overdue_tasks": [],
+      "today_tasks": [],
+      "upcoming_tasks": [],
+      "upcoming_meetings": []
+    }
+  },
+  "statusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7ab716a2f39ca3ba5cb2ee52c322ddd37ab0bc6544029fbfbc44b9793ff45177"
+    }
+  },
+  "stopBoardDrag": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c3747889b7332f3b52c5236ba3b10f1f92845bd86982e6880f60360cdf1c9e99"
+    }
+  },
+  "stopNotifications": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "4fe6e4835e2354c0f9df96ba9a64e0aecb71ac0459d1de64110eeb86891854fa"
+    }
+  },
+  "stopReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f32b9c97300079edaf2fc131ad8aabfe12346db6e24272b0ce240ad0b0ae7bab"
+    }
+  },
+  "submitForgotPassword": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9b8b097574bb09cd6819da36401db26f366a3b75ffbb4eef10628c77161ffb9a"
+    }
+  },
+  "submitGeneration": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b254311aaaa48764bd91468b10741c56d1945a98c4c536329d2423399a831238"
+    }
+  },
+  "submitSetup": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fb70b870f42246a7b5b112d8ee0d11cfc5a6de6fa9afccb9d821ceff04ab83f1"
+    }
+  },
+  "switchSmsTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ebfde3ef2bdb67fc5201868793b32a97d1ed3e53e79118a746c57e359783f9bb"
+    }
+  },
+  "syncDocumentTypeSelection": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3dc429300c670d6a270883fd21e7cedb9b303e06cae8d464481618f7b3b0e622"
+    }
+  },
+  "syncingTelephony": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "syncTelephony": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "367424aeab3b82166aa07f25c47e93f95feffb290ba01068dd71cd03976dd43a"
+    }
+  },
+  "t": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "faf6c67b025283c3bfacc1be04ccc23ea59274756a8ceabecb6fcd0fe16010fd"
+    }
+  },
+  "taskAssigneeStatusClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "329e3caaa643bebae7cb1e63bddb9eb58a24b8ae286fc8b1cc63e79708368a6c"
+    }
+  },
+  "taskAssigneeStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "739edb94bf4207f9301e4c1e284950e67e3e62c5f0b9e2c9d46faa34bf5c0da5"
+    }
+  },
+  "taskAssigneesUI": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "taskBoardStages": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "ab8b69d140b0d81d5944884bef5040a875453f813226722b9394f0fe1fa6320e",
+    "value": null
+  },
+  "taskFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "taskProgress": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "236e23924b82500238e73b8202e59dedea403283e4e47eb8fea9e94c7e0c51a2"
+    }
+  },
+  "tasks": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "taskScope": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "taskSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "taskStageColor": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "68e7a58f6aa2edc93b56706a3db19c3c87763383ac506f964958a767c6be17f4"
+    }
+  },
+  "taskStageDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "taskStageEditorOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "taskStageError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "taskStageLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fcc095feead819a53228ed3e1fc2c956efc077dce85cd6850fcf6ef6a4ecd2d2"
+    }
+  },
+  "taskStageSaving": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
+  "taskStatusStages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": [
+      {
+        "id": "todo",
+        "label": "Do zrobienia",
+        "accent": "#865528"
+      },
+      {
+        "id": "in_progress",
+        "label": "W toku",
+        "accent": "#008c9f"
+      },
+      {
+        "id": "done",
+        "label": "Zrobione",
+        "accent": "#16886e"
+      }
+    ]
+  },
+  "taskViewMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "table"
+  },
+  "teamModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingId": null,
+      "form": {
+        "name": "",
+        "description": "",
+        "color": "#018bfc",
+        "leader_id": null,
+        "member_ids": []
+      },
+      "error": "",
+      "saving": false
+    }
+  },
+  "teamRules": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "teams": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "templateModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingId": null,
+      "form": {
+        "name": "",
+        "type": "offer",
+        "content": "",
+        "variables": []
+      },
+      "error": "",
+      "previewError": "",
+      "previewLoading": false
+    }
+  },
+  "templates": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "templateTypeFields": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "941bdb09c4e110106d913a542b646d57ab96176b757f0628b766ec4132810836"
+    }
+  },
+  "testSmtpSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "76858edf9d0efafe340b83a5cbf4e7291e9ab077ddc549cabcd67192d5c58dce"
+    }
+  },
+  "ticketAssigneeFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "ticketCategories": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "ticketCategoryFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "ticketCategoryLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cd33cc4d8f62db3d23a25981220213e5140762622c83137a0d24a34d2dc30d94"
+    }
+  },
+  "ticketConfig": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "ticketDrawer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "ticket": null,
+      "loading": false,
+      "replyContent": "",
+      "isInternal": false,
+      "savingReply": false,
+      "error": ""
+    }
+  },
+  "ticketFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "ticketModal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "editingId": null,
+      "form": {
+        "title": "",
+        "client_id": "",
+        "contact_name": "",
+        "contact_email": "",
+        "contact_phone": "",
+        "category": "general",
+        "priority": "medium",
+        "status": "new",
+        "assignee_id": "",
+        "team_id": "",
+        "description": ""
+      },
+      "error": "",
+      "saving": false
+    }
+  },
+  "ticketPriorityClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7a992235b62b6945538be06b1210c0fa5483bcf3a658fdb39b818f9c53925c6e"
+    }
+  },
+  "ticketPriorityFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "ticketPriorityLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "68820a805bae5c63adeb4b0068081336fede6a8ad739411c91e28de34a1f3413"
+    }
+  },
+  "tickets": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "ticketSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "ticketStats": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "d6ae574db396284825e06efb190b2715a873a92e2201434503c9fd959f110ad8",
+    "value": null
+  },
+  "ticketStatusClass": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "fdeb1ae194af8ea2e7f370395342c19db8680a3c897ccf39ff599d9593cefb88"
+    }
+  },
+  "ticketStatusLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "276df8cb72ce61de9db09a4369ef29930c553d578d10c92827b3ce6dabd32afb"
+    }
+  },
+  "ticketTeamFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "todayLabel": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "a2a1f28ce4ed975c8c368af5d8c1a4f46daa72edb030e6dfe3a91ed6ff890e36",
+    "value": null
+  },
+  "toggleColumn": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "7692c2f06ba158567377be1328fcb71d5da730e0d8563d84fd4b8a1d3c5817e8"
+    }
+  },
+  "toggleFollow": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "366dbbd0f762d4907709909b459d84cb38fdb47ab0749c41ecbbd11863bb0666"
+    }
+  },
+  "toggleMenuGroup": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "702069b09ae4c94fc264100de2753f5e3cdcac295e836d777b59d8df0e6ba770"
+    }
+  },
+  "toggleNotificationRead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b30b71d2a63a5fcce07494a1c1d302ba8d1616dd38bf0fac463b03b444c7cef9"
+    }
+  },
+  "toggleNotifications": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b12ee015d6ccc9faadb5da748fa9e52f66190b60dc594c94d48a4198199bc31c"
+    }
+  },
+  "toggleReminders": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d280ad7c1bfccca9bad5812ca25af515aa8c586ceb26d43cc6a3e432cd8e3410"
+    }
+  },
+  "toggleStandardFieldRequired": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3319b7810e4d2734931275861174891ddc28a5aa14ddbea54421e2ca5a07bfd6"
+    }
+  },
+  "toggleTask": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f0ed6de713b765c3fff6871e92ed8db79dbe0ec7e588c57f40a4d597d61c7059"
+    }
+  },
+  "toggleTeamMember": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "64e322138d479f81d4dcf58e7a9648ce6a49acbbfe50d13f12da6473ae410373"
+    }
+  },
+  "token": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "translationBase": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f0852cffb696869c1f94e6c0b378c352b3b94b44d545544d1680909933c5eaf1"
+    }
+  },
+  "translationData": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "languages": {
+        "pl": {
+          "name": "Polski",
+          "base": "pl"
+        },
+        "en": {
+          "name": "English",
+          "base": "en"
+        }
+      },
+      "overrides": {}
+    }
+  },
+  "translationDraft": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "translationError": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "translationKeys": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f6c09712645627acbf83e6ac75804f5cecf1fd7ee3b0e3d76b1b9bd9527f8f08"
+    }
+  },
+  "translationLimit": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 80
+  },
+  "translationLocale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "pl"
+  },
+  "translationOriginal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {}
+  },
+  "translationSaved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "translationSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "trapJournal": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b746e90b069f121807c31e10d7f8a818bfe2079db435c8c28cf9e7d8586e5118"
+    }
+  },
+  "trapReminderFocus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ab2cca8eabee17151e56794aff72e446be97c8883499b22ef1b5c34ed7b76f65"
+    }
+  },
+  "undoAction": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "undoNotice": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "bf50798afd785b23a552c7a4f7cfed8b007e67acf3a8f95fdfbb3c826e97ac25"
+    }
+  },
+  "unreadNotifications": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "1d1b46c54f8642ff01818c2d8ccd9bd1b95c6dc8ae901ac8b2615cf3470733f4",
+    "value": null
+  },
+  "updateKanbanScroll": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "17e7d5f2b64cb3a7b7d6bec7d682daeddac781e700cebc1c5219fbb8243c57f9"
+    }
+  },
+  "updateTaskAssigneeComment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "239467f809efac6fe6673f1530afdad54359822faf54885d8396375af821d1d7"
+    }
+  },
+  "updateTaskAssigneeStatus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f6e288f2feea59ccd70893e2dbd3fce868ac425a792c06fc18c4256c4020a7d0"
+    }
+  },
+  "uploadAttachment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f0372ad9ccf2294d269827baf17772a46d4a35fe54f8103ce66fa6acda6586dd"
+    }
+  },
+  "uploadAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "577b7736fbad821de887be1bfc7b6a8bce8c5e6e40993dbcf0779e328657ca69"
+    }
+  },
+  "uploadBrandFile": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ca4c4c6bed6396e41b006b4002f06ec344b25e9fc4f13848f74e9664cad3888b"
+    }
+  },
+  "uploadHelpdeskLogo": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "046263da5ec088fb890a4fd3dc15a22587dccf1da95b6fbcd51bf0a2a1da995d"
+    }
+  },
+  "user": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "users": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": []
+  },
+  "usersById": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "b77af1e3d50fc09d7ae906c6ff4cf73f8e62ca74532985ab1728f0e75767a231",
+    "value": null
+  },
+  "userSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "usersNotInTeam": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "426cb9de671f2f26cc982ef452d87ca848d2490fbcd31a9044bc7982047b0cf6"
+    }
+  },
+  "userTab": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": "employees"
+  },
+  "userTeamFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "viewDoc": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3b19d03350fea5371f4a3147a8c0e318492977d56630d134b435c0bcf7f1cacc"
+    }
+  },
+  "viewOffer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d75239cab85505d2bbd74272a3201386bbacf061ace1eb5c0837e5fbd62549b6"
+    }
+  },
+  "viewThread": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f45cd59f686f2bc870b187215eff4f1c00e17383eabfbc1d3c7976bf78c849d1"
+    }
+  },
+  "visibleColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clients": [
+        "name",
+        "email",
+        "phone",
+        "company",
+        "assignee",
+        "status",
+        "actions"
+      ],
+      "leads": [
+        "title",
+        "client",
+        "stage",
+        "value",
+        "assignee",
+        "expected_close_date",
+        "actions"
+      ],
+      "contacts": [
+        "name",
+        "client",
+        "position",
+        "email",
+        "phone",
+        "actions"
+      ],
+      "tasks": [
+        "title",
+        "status",
+        "priority",
+        "due_date",
+        "context",
+        "assignees",
+        "actions"
+      ],
+      "projects": [
+        "name",
+        "status",
+        "client",
+        "manager",
+        "members",
+        "budget",
+        "dates",
+        "progress",
+        "actions"
+      ]
+    }
+  },
+  "visibleKanbanCols": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 5
+  },
+  "visibleMenu": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "75a8b97e0a5be50db74bcd5769499b9d0c0c406545b9c253366ef5bb88a96ed3",
+    "value": null
+  },
+  "visibleTasks": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "5919975eee79f380449ca6e50e9ab9ff405b8cb534dfe170a83df2480f003399",
+    "value": null
+  }
+}

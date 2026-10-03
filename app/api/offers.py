@@ -1,5 +1,4 @@
 import os
-import secrets
 from flask import Blueprint, request, jsonify, send_file, Response, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
@@ -10,26 +9,16 @@ from ..services.pdf_service import html_to_pdf
 from ..utils.sanitize import apply_payload, build_model
 from ..utils.activity import log_activity
 from ..utils.deletion import soft_delete
-from .public import rendered_html_response
+from ..utils.http_responses import rendered_html_response
 
 offers_bp = Blueprint('offers', __name__)
 PDF_DIR = 'generated/offers'
 
 
-def _ensure_token(offer):
-    if not offer.public_token:
-        offer.public_token = secrets.token_urlsafe(32)
-    return offer.public_token
-
-
-def _ensure_template(offer):
-    if offer.template_id:
-        return True
-    tpl = Template.query.filter_by(type='offer', is_active=True).first()
-    if not tpl:
-        return False
-    offer.template_id = tpl.id
-    return True
+from ..services.offer_service import (
+    ensure_token as _ensure_token,
+    ensure_template as _ensure_template,
+)
 
 
 @offers_bp.route('', methods=['GET'])

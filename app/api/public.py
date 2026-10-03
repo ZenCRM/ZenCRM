@@ -1,17 +1,11 @@
 """Publiczne endpointy bez autoryzacji – widok ofert/dokumentów przez token."""
-from flask import Blueprint, Response, abort
+from flask import Blueprint, abort
+from ..utils.http_responses import RENDERED_HTML_CSP, rendered_html_response
 from markupsafe import escape
 from ..models.offer import Offer
 from ..models.document import Document
 
 public_bp = Blueprint('public', __name__)
-RENDERED_HTML_CSP = "sandbox; default-src 'none'; img-src data: https:; style-src 'unsafe-inline'; font-src data:"
-
-
-def rendered_html_response(html):
-    response = Response(html, mimetype='text/html')
-    response.headers['Content-Security-Policy'] = RENDERED_HTML_CSP
-    return response
 
 
 @public_bp.route('/offer/<token>', methods=['GET'])
