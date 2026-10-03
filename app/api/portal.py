@@ -21,7 +21,7 @@ from ..models.offer import Offer
 from ..models.service import Service
 from ..models.ticket import Ticket, TicketMessage
 from ..services.pdf_service import html_to_pdf
-from .tickets import _apply_auto_assignment
+from ..services.ticket_service import apply_auto_assignment as _apply_auto_assignment
 from ..utils.portal import portal_settings, MODULES
 
 portal_bp = Blueprint('portal', __name__)
