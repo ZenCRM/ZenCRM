@@ -2479,5 +2479,6 @@ window.ZenLocales.pl = {
   "Szablon jest nieprawidłowy lub przekracza limit czasu, pamięci albo rozmiaru.": "Szablon jest nieprawidłowy lub przekracza limit czasu, pamięci albo rozmiaru.",
   "Niedozwolona operacja w szablonie.": "Niedozwolona operacja w szablonie.",
   "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.",
-  "Widok kompaktowy": "Widok kompaktowy"
+  "Widok kompaktowy": "Widok kompaktowy",
+  "Skala interfejsu": "Skala interfejsu"
 };

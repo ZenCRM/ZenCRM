@@ -2479,5 +2479,6 @@ window.ZenLocales.en = {
   "Szablon jest nieprawidłowy lub przekracza limit czasu, pamięci albo rozmiaru.": "The template is invalid or exceeds the time, memory or size limit.",
   "Niedozwolona operacja w szablonie.": "Operation not permitted in a template.",
   "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "The server is handling other mail operations. Please try again shortly.",
-  "Widok kompaktowy": "Compact view"
+  "Widok kompaktowy": "Compact view",
+  "Skala interfejsu": "Interface scale"
 };

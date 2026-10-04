@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" :class="{ 'dark': darkMode, 'theme-modern': settingsForm?.ui_template === 'modern', 'classic-sidebar-dark': settingsForm?.ui_template !== 'modern' && darkSidebar, 'classic-sidebar-light': settingsForm?.ui_template !== 'modern' && !darkSidebar }" x-data="crmApp()" @dragend.window="if (draggedLead) endLeadDrag()" @drop.window="if (draggedLead) endLeadDrag()" @blur.window="if (draggedLead) endLeadDrag()">
+<html lang="pl" :class="{ 'dark': darkMode, 'theme-modern': settingsForm?.ui_template === 'modern', 'classic-sidebar-dark': settingsForm?.ui_template !== 'modern' && darkSidebar, 'classic-sidebar-light': settingsForm?.ui_template !== 'modern' && !darkSidebar }" x-data="crmApp()" :style="{ zoom: uiScale / 100, '--ui-scale': uiScale / 100 }" @dragend.window="if (draggedLead) endLeadDrag()" @drop.window="if (draggedLead) endLeadDrag()" @blur.window="if (draggedLead) endLeadDrag()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,15 +26,15 @@
     <link rel="stylesheet" href="/css/app.css?v=20260928portal3">
     <link rel="stylesheet" href="/css/ux.css?v=20260928c">
     <link rel="stylesheet" href="/css/windmill.css?v=20260928topbar3">
-    <link rel="stylesheet" href="/css/kanban.css?v=20261004compact1">
+    <link rel="stylesheet" href="/css/kanban.css?v=20261004scale1">
     <link rel="stylesheet" href="/css/notifications.css?v=20260928topbar3">
-    <link rel="stylesheet" href="/css/modern.css?v=20261004layout1">
+    <link rel="stylesheet" href="/css/modern.css?v=20261004scale1">
     <link rel="stylesheet" href="/css/calendar.css?v=20260929a">
-    <link rel="stylesheet" href="/css/app-shell.css?v=20261004profile1">
+    <link rel="stylesheet" href="/css/app-shell.css?v=20261004scale1">
 
     <!-- Aplikacja (musi być PRZED Alpine, dlatego bez "defer") -->
-    <script src="/locales/pl.js?v=20261004compact1"></script>
-    <script src="/locales/en.js?v=20261004compact1"></script>
+    <script src="/locales/pl.js?v=20261004scale1"></script>
+    <script src="/locales/en.js?v=20261004scale1"></script>
     <script>try { window.ZenCustomI18n = localStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('zen-i18n-catalog') || 'null') : null; } catch (_) {} window.ZenCustomI18n ||= {languages:{pl:{name:'Polski',base:'pl'},en:{name:'English',base:'en'}},overrides:{}};</script>
     <script src="/js/i18n.js?v=20261004profile1"></script>
     <script src="/js/config.js?v=20261004mail10-20261004mail3"></script>
@@ -42,7 +42,7 @@
     <script src="/js/api.js?v=20260929translations2"></script>
     <script src="/js/icons.js?v=20260929files1"></script>
     <script src="/js/dashboard.js?v=20260928taskstages3"></script>
-    <script src="/js/ux.js?v=20261004compact1"></script>
+    <script src="/js/ux.js?v=20261004scale1"></script>
     <script src="/js/modules/records.js?v=20260929doctypes1"></script>
     <script src="/js/modules/documents.js?v=20261004templates1"></script>
     <script src="/js/modules/mailboxes.js?v=20261004mail10"></script>
@@ -56,7 +56,7 @@
     <script src="/js/settings/permissions.js?v=structure1"></script>
     <script src="/js/settings/general.js?v=structure1"></script>
     <script src="/js/settings/translations.js?v=structure1"></script>
-    <script src="/js/settings/appearance.js?v=20261004sidebar1"></script>
+    <script src="/js/settings/appearance.js?v=20261004scale1"></script>
     <script src="/js/settings/fields.js?v=structure1"></script>
     <script src="/js/settings/helpdesk.js?v=structure1"></script>
     <script src="/js/settings/email.js?v=structure1"></script>

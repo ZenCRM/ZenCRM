@@ -1,6 +1,12 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.appearance = function () { return {
+        uiScale: Math.min(150, Math.max(50, Number(localStorage.getItem('zen-ui-scale')) || 100)),
+        setUiScale() {
+            this.uiScale = Math.min(150, Math.max(50, Number(this.uiScale) || 100));
+            localStorage.setItem('zen-ui-scale', this.uiScale);
+            this.$nextTick(() => window.dispatchEvent(new Event('resize')));
+        },
         get darkSidebar() {
             return this.settingsForm?.ui_template === 'modern' || this.settingsForm?.ui_classic_sidebar === 'dark';
         },

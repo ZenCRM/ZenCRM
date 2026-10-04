@@ -703,6 +703,7 @@
 
                         <!-- ═══ SZABLONY WYGLĄDU ═══ -->
                         <div x-show="settingsTab === 'appearance'" x-cloak>
+                            <label class="zen-column-count"><span x-text="window.ZenI18n.t('Skala interfejsu')"></span><select class="ux-input" x-model.number="uiScale" @change="setUiScale()" :aria-label="window.ZenI18n.t('Skala interfejsu')"><template x-for="scale in [50,67,75,80,90,100,110,125,150]" :key="scale"><option :value="scale" x-text="scale + '%'"></option></template></select></label>
                             <h2 class="settings-section-title" x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</h2>
                             <p class="settings-section-desc" x-text="window.ZenI18n.t('Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.')">Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.</p>
                             <div class="zen-template-options" role="radiogroup" :aria-label="window.ZenI18n.t('Szablon interfejsu')">

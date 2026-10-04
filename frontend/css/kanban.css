@@ -228,6 +228,11 @@
     background:color-mix(in srgb,var(--stage-accent) 16%,var(--wm-surface,#fff));
 }
 
+/* Reduce spacing as more stages are shown, independently of interface scale. */
+.zen-lead-board { --board-gap:8px; }
+.zen-lead-board[data-density="balanced"] { --board-gap:6px; }
+.zen-lead-board[data-density="dense"] { --board-gap:5px; }
+.zen-lead-board[data-density="tight"] { --board-gap:4px; }
 /* Keep lead cards distinct from their column in both themes. */
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-col-new,
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-col-header {
@@ -238,24 +243,24 @@
     background:#28313b;
 }
 
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-cols { gap:8px; }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-new { flex:0 0 max(176px,calc((100% - 32px) / 5));min-width:0;border-radius:10px; }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-header { padding:9px 8px; }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-header .title { font-size:12px; }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-body { padding:6px;gap:7px; }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .zen-lead-card { padding:9px;border-radius:8px; }
-.zen-board-compact .zen-lead-card-title { font-size:12px;line-height:1.35;margin:6px 0 8px; }
-.zen-board-compact .zen-lead-card-value { margin-bottom:7px; }
-.zen-board-compact .zen-lead-card-owner { gap:4px;margin:7px 0;font-size:10px;flex-wrap:wrap; }
-.zen-board-compact .zen-lead-owner-avatar { width:21px;height:21px; }
-.zen-board-compact .zen-lead-card-footer { gap:4px;margin-top:7px;padding-top:7px;flex-wrap:wrap; }
-.zen-board-compact .zen-lead-card-amount { font-size:13px; }
-.zen-board-compact .zen-lead-card-edit { width:28px;height:28px; }
-.zen-board-compact .zen-lead-card-action { padding:5px 0; }
-.zen-board-compact .zen-lead-card-action p { font-size:11px; }
-.zen-board-compact .zen-lead-card-probability { gap:4px;font-size:10px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-cols { gap:var(--board-gap); }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-col-new { flex:0 0 max(176px,calc((100% - 20px) / 5));min-width:0;border-radius:10px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-col-header { padding:9px 8px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-col-header .title { font-size:12px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-col-body { padding:6px;gap:7px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card { padding:9px;border-radius:8px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-title { font-size:12px;line-height:1.35;margin:6px 0 8px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-value { margin-bottom:7px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-owner { gap:4px;margin:7px 0;font-size:10px;flex-wrap:wrap; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-owner-avatar { width:21px;height:21px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-footer { gap:4px;margin-top:7px;padding-top:7px;flex-wrap:wrap; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-amount { font-size:13px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-edit { width:28px;height:28px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-action { padding:5px 0; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-action p { font-size:11px; }
+:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .zen-lead-card-probability { gap:4px;font-size:10px; }
 @media(max-width:640px) {
-    :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-new { flex-basis:200px; }
+    :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is(.zen-board-compact,[data-density="dense"],[data-density="tight"]) .kanban-col-new { flex-basis:200px; }
 }
 
 .windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card,
@@ -269,4 +274,19 @@
 .theme-modern .windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card:hover {
     border-color:var(--stage-accent);
     box-shadow:0 6px 18px #0f172a24;
+}
+
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-cols { gap:var(--board-gap); }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is([data-density],.zen-board-compact) .kanban-col-new { flex:0 0 max(176px,calc((100% - (var(--board-columns,4) - 1)*var(--board-gap)) / var(--board-columns,4)));max-height:calc(var(--ui-viewport-height,100dvh) - 160px); }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .kanban-col-header { padding:12px 10px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .kanban-col-body { padding:8px;gap:9px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .zen-lead-card { padding:12px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="tight"] .kanban-col-header { padding:7px 6px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="tight"] .kanban-col-body { padding:4px;gap:5px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="tight"] .zen-lead-card { padding:7px; }
+.zen-lead-board[data-density="tight"] .zen-lead-card-title { margin:5px 0 6px;font-size:11px; }
+.zen-lead-board[data-density="tight"] .zen-lead-card-owner { margin:5px 0; }
+.zen-lead-board[data-density="tight"] .zen-lead-card-footer { margin-top:5px;padding-top:5px; }
+@media(max-width:640px) {
+    :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is([data-density],.zen-board-compact) .kanban-col-new { flex-basis:200px;min-width:200px; }
 }

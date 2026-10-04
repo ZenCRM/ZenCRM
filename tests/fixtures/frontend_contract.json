@@ -5306,6 +5306,14 @@
     "writable": true,
     "value": "branding"
   },
+  "setUiScale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "31267f01d043ef813defaae89c1d9e35cbe98286bba0142c433b9f7e9307e064"
+    }
+  },
   "setupError": {
     "enumerable": true,
     "configurable": true,
@@ -6550,6 +6558,12 @@
     "value": {
       "function": "ab2cca8eabee17151e56794aff72e446be97c8883499b22ef1b5c34ed7b76f65"
     }
+  },
+  "uiScale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 100
   },
   "undoAction": {
     "enumerable": true,

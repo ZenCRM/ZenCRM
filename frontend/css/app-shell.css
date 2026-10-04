@@ -1,9 +1,10 @@
+html { --ui-viewport-height:calc(100dvh / var(--ui-scale,1)); }
 /* The document owns vertical scrolling; only the mobile menu is a drawer. */
 .windmill-app > .zen-app-layout,
-.theme-modern .windmill-app > .zen-app-layout { height:auto;min-height:100dvh;overflow:visible;align-items:stretch; }
-.windmill-app .zen-app-content { min-height:100dvh; }
+.theme-modern .windmill-app > .zen-app-layout { height:auto;min-height:var(--ui-viewport-height,100dvh);overflow:visible;align-items:stretch; }
+.windmill-app .zen-app-content { min-height:var(--ui-viewport-height,100dvh); }
 .windmill-app main.zen-app-main,
-.theme-modern .windmill-app main.zen-app-main { height:auto;min-height:100dvh;overflow:visible; }
+.theme-modern .windmill-app main.zen-app-main { height:auto;min-height:var(--ui-viewport-height,100dvh);overflow:visible; }
 .zen-app-sidebar { scrollbar-width:thin;scrollbar-color:transparent transparent; }
 .zen-app-sidebar:hover,.zen-app-sidebar:focus-within { scrollbar-color:#8a9baa66 transparent; }
 .zen-app-sidebar::-webkit-scrollbar { width:4px; }
@@ -13,7 +14,7 @@
  .windmill-app aside.zen-app-sidebar { position:static;align-self:stretch;max-height:none;height:auto;overflow:visible; }
 }
 @media(max-width:1023px) {
- .windmill-app aside.zen-app-sidebar { height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain; }
+ .windmill-app aside.zen-app-sidebar { height:var(--ui-viewport-height,100dvh);max-height:var(--ui-viewport-height,100dvh);overflow-y:auto;overscroll-behavior:contain; }
 }
 /* Classic sidebar colors are independent of the page's light/dark mode. */
 .classic-sidebar-light { --sidebar-bg:#fff;--sidebar-text:#374151;--sidebar-border:#e5e7eb;--sidebar-hover:#f4f5f7;--sidebar-active:#eaf6fb;--sidebar-active-text:#0069ad; }
