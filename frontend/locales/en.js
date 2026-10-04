@@ -2487,5 +2487,7 @@ window.ZenLocales.en = {
   "Standardowy": "Standard",
   "Skala obszaru roboczego": "Workspace scale",
   "Sidebar zachowuje swój rozmiar.": "The sidebar keeps its size.",
-  "Przywróć widok domyślny": "Reset to default view"
+  "Przywróć widok domyślny": "Reset to default view",
+  "Skala kanbanu": "Kanban scale",
+  "Skalowanie dotyczy tylko tablicy leadów.": "Scaling applies only to the lead board."
 };

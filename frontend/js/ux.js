@@ -132,15 +132,21 @@ window.ZenUX = {
     },
     boardColumns: Math.min(6, Math.max(2, Number(localStorage.getItem('zen-board-columns')) || 4)),
     boardCompact: localStorage.getItem('zen-board-compact') === 'true',
+    leadBoardScale: Math.min(150, Math.max(50, Number(localStorage.getItem('zen-lead-board-scale') ?? localStorage.getItem('zen-ui-scale')) || 100)),
+    setLeadBoardScale() {
+        this.leadBoardScale = Math.min(150, Math.max(50, Number(this.leadBoardScale) || 100));
+        localStorage.setItem('zen-lead-board-scale', this.leadBoardScale);
+        this.$nextTick(() => this.recomputeVisibleCols());
+    },
     boardViewOpen: false,
     selectBoardColumns(count) {
         this.boardCompact = false; this.boardColumns = Math.min(6, Math.max(2, Number(count) || 4));
         localStorage.setItem('zen-board-compact', false); this.setBoardColumns();
     },
     resetBoardView() {
-        this.boardCompact = false; this.boardColumns = 4; this.uiScale = 100;
+        this.boardCompact = false; this.boardColumns = 4; this.leadBoardScale = 100;
         localStorage.setItem('zen-board-compact', false);
-        this.setBoardColumns(); this.setUiScale();
+        this.setBoardColumns(); this.setLeadBoardScale();
     },
     get effectiveBoardColumns() { return this.boardCompact ? 5 : this.boardColumns; },
     toggleBoardCompact() { this.boardCompact = !this.boardCompact; localStorage.setItem('zen-board-compact', this.boardCompact); this.$nextTick(() => this.recomputeVisibleCols()); },

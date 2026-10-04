@@ -2410,6 +2410,12 @@
     "writable": true,
     "value": 0
   },
+  "leadBoardScale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 100
+  },
   "leadCardEditor": {
     "enumerable": true,
     "configurable": true,
@@ -4609,7 +4615,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "600b3a7b77fddde037380c7f0e8534b5e775cef818106a2627a1363ff143bbd8"
+      "function": "6153a907c1c0edf5ec23e804d32ccad74a0a51c0a1110df19dc252d738acd7f7"
     }
   },
   "resetColumns": {
@@ -5240,6 +5246,14 @@
       "function": "46de4c0651c16fb21e3cd8f37ca58ffa305acf9600f1ec6716f5e6517c9f126a"
     }
   },
+  "setLeadBoardScale": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cc68586842448ae3dbf8cb50549c679207c12cdb123970049d161cd44151220a"
+    }
+  },
   "setListPage": {
     "enumerable": true,
     "configurable": true,
@@ -5327,14 +5341,6 @@
     "configurable": true,
     "writable": true,
     "value": "branding"
-  },
-  "setUiScale": {
-    "enumerable": true,
-    "configurable": true,
-    "writable": true,
-    "value": {
-      "function": "31267f01d043ef813defaae89c1d9e35cbe98286bba0142c433b9f7e9307e064"
-    }
   },
   "setupError": {
     "enumerable": true,
@@ -6580,12 +6586,6 @@
     "value": {
       "function": "ab2cca8eabee17151e56794aff72e446be97c8883499b22ef1b5c34ed7b76f65"
     }
-  },
-  "uiScale": {
-    "enumerable": true,
-    "configurable": true,
-    "writable": true,
-    "value": 100
   },
   "undoAction": {
     "enumerable": true,

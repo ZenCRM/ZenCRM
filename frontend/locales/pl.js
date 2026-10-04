@@ -2487,5 +2487,7 @@ window.ZenLocales.pl = {
   "Standardowy": "Standardowy",
   "Skala obszaru roboczego": "Skala obszaru roboczego",
   "Sidebar zachowuje swój rozmiar.": "Sidebar zachowuje swój rozmiar.",
-  "Przywróć widok domyślny": "Przywróć widok domyślny"
+  "Przywróć widok domyślny": "Przywróć widok domyślny",
+  "Skala kanbanu": "Skala kanbanu",
+  "Skalowanie dotyczy tylko tablicy leadów.": "Skalowanie dotyczy tylko tablicy leadów."
 };

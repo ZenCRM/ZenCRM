@@ -277,7 +277,7 @@
 }
 
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-cols { gap:var(--board-gap); }
-:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is([data-density],.zen-board-compact) .kanban-col-new { flex:0 0 max(176px,calc((100% - (var(--board-columns,4) - 1)*var(--board-gap)) / var(--board-columns,4)));max-height:calc(var(--ui-viewport-height,100dvh) - 160px); }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board:is([data-density],.zen-board-compact) .kanban-col-new { flex:0 0 max(176px,calc((100% - (var(--board-columns,4) - 1)*var(--board-gap)) / var(--board-columns,4)));max-height:calc((100dvh - 160px) / var(--ui-scale,1)); }
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .kanban-col-header { padding:12px 10px; }
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .kanban-col-body { padding:8px;gap:9px; }
 :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board[data-density="balanced"] .zen-lead-card { padding:12px; }
@@ -312,4 +312,3 @@
 .zen-scale-presets { display:flex;align-items:center;justify-content:space-between;color:var(--wm-muted);font-size:11px; }
 .zen-scale-presets button { padding:4px 9px;background:var(--wm-subtle);border:1px solid var(--wm-border);border-radius:6px;color:var(--wm-text); }
 .zen-board-view-reset { width:100%;margin-top:16px;padding:10px 0 0;border-top:1px solid var(--wm-border);color:var(--wm-accent-text);font-size:12px; }
-.zen-settings-scale { max-width:360px;margin-bottom:20px;padding:16px;border:1px solid var(--wm-border);border-radius:12px; }
