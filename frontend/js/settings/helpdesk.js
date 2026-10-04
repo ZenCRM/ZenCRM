@@ -115,7 +115,7 @@ window.ZenSettings.helpdesk = function () { return {
         },
 
         copyWebhookUrl() {
-            const url = `${window.location.origin}/api/tickets/webhook`;
+            const url = `${(this.settingsForm?.crm_base_url || window.location.origin)}/api/tickets/webhook`;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(() => this.notify(window.ZenI18n.t('Skopiowano URL webhooka')));
             } else {

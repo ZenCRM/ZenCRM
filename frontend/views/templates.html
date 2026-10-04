@@ -1,21 +1,19 @@
 <!-- ═══ SZABLONY ═══ -->
             <div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === &#x27;templates&#x27;" x-cloak class="zen-document-templates">
                 <div class="zen-templates-heading"><div><span class="zen-eyebrow" x-text="window.ZenI18n.t('DOKUMENTY')">DOKUMENTY</span><h1 x-text="window.ZenI18n.t('Szablony')">Szablony</h1><p x-text="templates.length + ' ' + window.ZenI18n.t('szablonów ofert i dokumentów')"></p></div><button type="button" x-show="canRecordAction('templates', 'create')" @click="openTemplateModal()" class="ux-button" x-text="window.ZenI18n.t('+ Dodaj szablon')">+ Dodaj szablon</button></div>
-                <div class="zen-templates-grid">
-                    <template x-for="t in pagedItems('templates', templates)" :key="t.id">
+                <div class="flex flex-wrap gap-3 mb-5"><input class="ux-input" x-model="templateSearch" @input="listPages.templates = 1" :placeholder="window.ZenI18n.t(&quot;Szukaj szablonu…&quot;)" :aria-label="window.ZenI18n.t(&quot;Szukaj szablonu&quot;)"><select class="ux-input" x-model="templateFilter" @change="listPages.templates = 1" :aria-label="window.ZenI18n.t(&quot;Filtruj przeznaczenie&quot;)"><option value="" x-text="window.ZenI18n.t(&quot;Wszystkie szablony&quot;)">Wszystkie szablony</option><option value="offer" x-text="window.ZenI18n.t(&quot;Oferty&quot;)">Oferty</option><option value="document" x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</option></select></div><div class="zen-templates-grid">
+                    <template x-for="t in pagedItems('templates', filteredTemplates)" :key="t.id">
                         <article class="zen-template-card">
-                            <div class="zen-template-card-top"><span class="zen-template-card-icon" aria-hidden="true" x-html="zenIcon(t.type === 'offer' ? 'folder' : 'document')"></span><span class="zen-template-card-type" x-text="t.type === 'offer' ? window.ZenI18n.t('Oferta') : window.ZenI18n.t('Dokument')"></span></div>
+                            <div class="zen-template-card-top"><span class="zen-template-card-icon" aria-hidden="true" x-html="zenIcon(t.type === &#x27;offer&#x27; ? &#x27;folder&#x27; : &#x27;document&#x27;)"></span><span class="zen-template-card-type" x-text="t.type === 'offer' ? window.ZenI18n.t('Oferta') : window.ZenI18n.t('Dokument')"></span></div>
                             <h2 x-text="t.name"></h2>
                             <p class="zen-template-card-meta" x-text="t.document_type_key ? (documentTypes.find(kind => kind.key === t.document_type_key)?.name || t.document_type_key) : (t.type === 'document' ? window.ZenI18n.t('Każdy typ dokumentu') : window.ZenI18n.t('Szablon oferty'))"></p>
-                            <div class="zen-template-card-actions">
-                                <button type="button" @click="openTemplateModal(t)" class="ux-text-button"><span x-html="zenIcon('edit')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Edytuj')">Edytuj</span></button>
-                                <button type="button" @click="remove(t.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;) + ' ' + t.name" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon('trash')" aria-hidden="true"></span></button>
+                            <div class="zen-template-card-actions"><button type="button" x-show="canRecordAction('templates', 'create')" @click="duplicateTemplate(t)" class="ux-text-button"><span x-text="window.ZenI18n.t(&quot;Utwórz kopię&quot;)">Utwórz kopię</span></button>
+                                <button type="button" x-show="canRecordAction('templates', 'edit')" @click="openTemplateModal(t)" class="ux-text-button"><span x-html="zenIcon(&#x27;edit&#x27;)" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Edytuj')">Edytuj</span></button>
+                                <button type="button" x-show="canRecordAction('templates', 'delete')" @click="removeTemplate(t.id)" class="zen-list-action zen-action-trash" :aria-label="window.ZenI18n.t(&quot;Usuń&quot;) + ' ' + t.name" :title="window.ZenI18n.t(&quot;Usuń&quot;)"><span x-html="zenIcon(&#x27;trash&#x27;)" aria-hidden="true"></span></button>
                             </div>
                         </article>
                     </template>
                 </div>
-                <div x-show="!templates.length" class="zen-templates-empty"><span x-html="zenIcon('document')" aria-hidden="true"></span><h2 x-text="window.ZenI18n.t('Brak szablonów')">Brak szablonów</h2><p x-text="window.ZenI18n.t('Dodaj pierwszy szablon oferty lub dokumentu.')">Dodaj pierwszy szablon oferty lub dokumentu.</p></div>
-                <div x-data="{ pagerView: 'templates', get pagerItems() { return this.templates } }"><% include "views/pagination.html" %></div>
+                <div x-show="!templates.length" class="zen-templates-empty"><span x-html="zenIcon(&#x27;document&#x27;)" aria-hidden="true"></span><h2 x-text="window.ZenI18n.t('Brak szablonów')">Brak szablonów</h2><p x-text="window.ZenI18n.t('Dodaj pierwszy szablon oferty lub dokumentu.')">Dodaj pierwszy szablon oferty lub dokumentu.</p></div>
+                <div x-data="{ pagerView: 'templates', get pagerItems() { return this.filteredTemplates } }"><% include "views/pagination.html" %></div>
             </div>
-
-

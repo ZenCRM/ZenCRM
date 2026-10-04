@@ -206,7 +206,7 @@ window.ZenModules.documents = function () { return {
                     ? `/offers/${item.id}/link`
                     : `/documents/${item.id}/link`;
                 const r = await this.api(endpoint, { method: 'POST' });
-                const fullUrl = window.location.origin + r.public_url;
+                const fullUrl = (this.settingsForm?.crm_base_url || window.location.origin) + r.public_url;
                 await navigator.clipboard.writeText(fullUrl);
                 this.notify(window.ZenI18n.t('Link skopiowany:\n') + fullUrl);
             } catch (e) { this.notify(window.ZenI18n.t('Błąd: ') + e.message); }
@@ -228,9 +228,15 @@ window.ZenModules.documents = function () { return {
                 };
             this.templateModal.error = '';
             this.templateModal.previewError = '';
+            this.templateStudio.mode = tpl && /{%|<script|<iframe/i.test(tpl.content) ? 'source' : 'visual';
+            if (!tpl) this.templateModal.form.content = this.starterTemplate();
+            this.templateStudio.original = JSON.stringify(this.templateModal.form);
+            this.templateStudio.variableSearch = '';
+            this.templateStudio.saving = false;
             this.templateModal.open = true;
             if (!this.documentTypes.length) this.api('/document-types').then(r => { this.documentTypes = r; }).catch(() => {});
             this.$nextTick(() => this.refreshTemplatePreview());
+            if (this.templateStudio.mode === 'visual') this.mountVisualTemplate();
         },
 
         addTemplateField() {
@@ -252,7 +258,10 @@ window.ZenModules.documents = function () { return {
         },
 
         async saveTemplate() {
+            if (this.templateStudio.saving) return;
             this.templateModal.error = '';
+            if (!this.templateModal.form.name.trim() || !this.templateModal.form.content.trim()) { this.templateModal.error = window.ZenI18n.t("Podaj nazwę i treść szablonu"); return; }
+            this.templateStudio.saving = true;
             try {
                 if (this.templateModal.editingId) {
                     await this.api(`/templates/${this.templateModal.editingId}`, {
@@ -266,6 +275,7 @@ window.ZenModules.documents = function () { return {
                 this.templateModal.open = false;
                 await this.reload();
             } catch (e) { this.templateModal.error = e.message; }
+            finally { this.templateStudio.saving = false; }
         },
 
         async removeTemplate(id) {
@@ -281,8 +291,20 @@ window.ZenModules.documents = function () { return {
         },
 
         async refreshTemplatePreview() {
+            const requestId = this._templatePreviewRequest = (this._templatePreviewRequest || 0) + 1;
             const frame = this.$refs.templatePreviewFrame;
             if (!frame) return;
+            const fitPage = () => {
+                const width = Math.max(180, frame.parentElement.clientWidth - 24);
+                frame.style.width = '794px'; frame.style.height = '1123px';
+                frame.style.zoom = Math.min(1, width / 794);
+            };
+            fitPage();
+            this._templateResizeObserver?.disconnect();
+            if (typeof ResizeObserver !== 'undefined') {
+                this._templateResizeObserver = new ResizeObserver(fitPage);
+                this._templateResizeObserver.observe(frame.parentElement);
+            }
             this.templateModal.previewLoading = true;
             this.templateModal.previewError = '';
             try {
@@ -301,13 +323,14 @@ window.ZenModules.documents = function () { return {
                     }),
                 });
                 const html = await r.text();
+                if (requestId !== this._templatePreviewRequest) return;
                 frame.srcdoc = html;
-                if (!r.ok) this.templateModal.previewError = 'Sprawdź składnię szablonu. Szczegóły są w podglądzie.';
+                if (!r.ok) this.templateModal.previewError = window.ZenI18n.t("Sprawdź składnię szablonu. Szczegóły są w podglądzie.");
             } catch (e) {
+                if (requestId !== this._templatePreviewRequest) return;
                 this.templateModal.previewError = e.message;
-                frame.srcdoc = '<pre style="color:red;padding:20px">' + e.message + '</pre>';
             } finally {
-                this.templateModal.previewLoading = false;
+                if (requestId === this._templatePreviewRequest) this.templateModal.previewLoading = false;
             }
         },
 

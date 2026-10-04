@@ -41,6 +41,7 @@
 
         <!-- FORM BODY (RESPONSIVE GRID) -->
         <form @submit.prevent="save()" :class="{'zen-lead-edit-form': (modal.view || currentView) === 'leads', 'zen-task-edit-form': (modal.view || currentView) === 'tasks'}" class="flex-1 overflow-y-auto p-6 space-y-5">
+            <div x-show="(modal.view || currentView) === 'users' && isAdmin" class="employee-form-avatar"><button type="button" x-show="modal.editingId" @click="openEmployeeAvatar(users.find(u => u.id === modal.editingId))" x-text="window.ZenI18n.t('Zmień zdjęcie pracownika')"></button><p x-show="!modal.editingId" x-text="window.ZenI18n.t('Po utworzeniu konta możesz dodać zdjęcie pracownika na jego karcie.')"></p></div>
             <p x-show="(modal.view || currentView) === 'clients' && modal.form.address" class="text-sm text-gray-500"><span x-text="window.ZenI18n.t('Zapisany adres:')"></span> <span x-text="modal.form.address"></span></p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <template x-for="field in fieldsFor(modal.view || currentView)" :key="field.key">

@@ -126,6 +126,7 @@ function crmApp() {
             tab: 'overview',
             contacts: [],
             tasks: [],
+            meetings: [],
             documents: [],
             comments: [],
             activities: [],
@@ -192,6 +193,7 @@ function crmApp() {
         menu: window.ZenConfig.MENU,
         openMenuGroups: {
             crm: true,
+            mail_group: false,
             services_group: false,
             documents_group: false,
             tickets_group: false,

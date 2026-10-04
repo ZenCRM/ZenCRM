@@ -4,7 +4,7 @@ import smtplib
 import ssl
 import re
 from markupsafe import escape
-from urllib.parse import urlsplit
+from ..utils.urls import public_base_url
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -13,19 +13,9 @@ from email.utils import formataddr
 from flask import current_app, request
 from ..models.setting import Setting
 from ..models.email_template import EmailTemplate
+from ..utils.secret_storage import unseal
 
 logger = logging.getLogger('zencrm.emails')
-
-
-def public_base_url():
-    """Configured public origin (PUBLIC_BASE_URL or company website), or '' when unset or unsafe."""
-    value = (current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or '').strip()
-    if value and '://' not in value:
-        value = 'https://' + value
-    parsed = urlsplit(value)
-    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
-        return ''
-    return f'{parsed.scheme}://{parsed.netloc}'
 
 
 def staff_link_base_url():
@@ -40,7 +30,7 @@ def get_smtp_config():
         'host': (Setting.get_value('smtp_host', '') or '').strip(),
         'port': int(Setting.get_value('smtp_port', '587') or 587),
         'user': (Setting.get_value('smtp_user', '') or '').strip(),
-        'password': (Setting.get_value('smtp_password', '') or '').strip(),
+        'password': unseal(Setting.get_value('smtp_password', '') or ''),
         'from_email': (Setting.get_value('smtp_from_email', '') or '').strip() or 'powiadomienia@zencrm.pl',
         'from_name': (Setting.get_value('smtp_from_name', '') or '').strip() or Setting.get_value('brand_name', 'ZenCRM'),
         'encryption': (Setting.get_value('smtp_encryption', 'tls') or 'tls').strip().lower(),

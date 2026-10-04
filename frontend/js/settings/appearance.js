@@ -1,6 +1,9 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.appearance = function () { return {
+        get darkSidebar() {
+            return this.settingsForm?.ui_template === 'modern' || this.settingsForm?.ui_classic_sidebar === 'dark';
+        },
         classicPalettes: [
             {id: 'blue', label: 'Niebieski', primary: '#007fce', secondary: '#009fb9'},
             {id: 'green', label: 'Zielony', primary: '#16886e', secondary: '#0891b2'},
@@ -25,9 +28,13 @@ window.ZenSettings.appearance = function () { return {
             this.settingsSaved = '';
             this.settingsError = '';
             try {
+                const appearanceKeys = ['ui_template','ui_classic_sidebar','ui_hero_background','brand_color_primary','brand_color_secondary'];
+                const values = this.settingsTab === 'appearance'
+                    ? Object.fromEntries(appearanceKeys.filter(key => key in this.settingsForm).map(key => [key,this.settingsForm[key]]))
+                    : this.settingsForm;
                 const updated = await this.api('/settings', {
                     method: 'PUT',
-                    body: JSON.stringify(this.settingsForm),
+                    body: JSON.stringify(values),
                 });
                 this.settingsForm = { ...updated };
                 this.applyTheme();
@@ -101,6 +108,8 @@ window.ZenSettings.appearance = function () { return {
                     --wm-tint: ${this._lighten(primary, 92)}; --wm-accent-text: ${this._darken(primary, 15)};
                 }
                 html.dark:not(.theme-modern) .windmill-app { --wm-tint: ${this._darken(primary, 65)}; --wm-accent-text: ${this._lighten(primary, 65)}; }
+                html.classic-sidebar-light .zen-app-sidebar { --sidebar-active: ${this._lighten(primary, 92)}; --sidebar-active-text: ${this._darken(primary, 15)}; }
+                html.classic-sidebar-dark .zen-app-sidebar { --sidebar-active: ${this._darken(primary, 65)}; --sidebar-active-text: ${this._lighten(primary, 65)}; }
                 html:not(.theme-modern) .windmill-app .zen-client-card { --client-blue: ${primary}; --client-cyan: ${secondary}; }
                 html:not(.theme-modern) .windmill-app .zen-contacts { --metric: ${primary}; --metric-tint: ${this._lighten(primary, 92)}; }
                 html:not(.theme-modern) .windmill-app .zen-tasks { --metric: ${secondary}; --metric-tint: ${this._lighten(secondary, 92)}; }
@@ -135,8 +144,8 @@ window.ZenSettings.appearance = function () { return {
             // Logo w sidebarze
             const sidebarLogo = document.getElementById('zen-sidebar-logo');
             if (sidebarLogo) {
-                sidebarLogo.src = (this.darkMode || s.ui_template === 'modern') ? darkLogo : lightLogo;
-                sidebarLogo.style.filter = s.ui_template === 'modern' && darkLogo === '/logo.png' ? 'brightness(0) invert(1)' : '';
+                sidebarLogo.src = this.darkSidebar ? darkLogo : lightLogo;
+                sidebarLogo.style.filter = this.darkSidebar && darkLogo === '/logo.png' ? 'brightness(0) invert(1)' : '';
                 if (s.brand_logo_size) {
                     sidebarLogo.style.height = `${s.brand_logo_size}px`;
                     sidebarLogo.style.maxHeight = `${s.brand_logo_size}px`;

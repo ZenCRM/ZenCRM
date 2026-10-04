@@ -12,6 +12,8 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = 2592000      # 30 dni
 
     PUSH_ENABLED = os.getenv("PUSH_ENABLED", "true").lower() == "true"
+    MAIL_POLLING_ENABLED = os.getenv('MAIL_POLLING_ENABLED', 'true').lower() == 'true'
+    MAILBOX_ENCRYPTION_KEY = os.getenv('MAILBOX_ENCRYPTION_KEY', '').strip() or None
     VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@example.com")
     GUS_API_KEY = os.getenv('GUS_API_KEY', '').strip()
     GUS_TEST_MODE = os.getenv('GUS_TEST_MODE', 'false').lower() == 'true'

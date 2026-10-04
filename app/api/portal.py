@@ -477,7 +477,8 @@ def attachment(space_id, item_id):
 @portal_bp.route('/configuration', methods=['GET', 'PUT'])
 def configuration():
     if request.method == 'GET':
-        response = jsonify(portal_settings())
+        from ..utils.urls import public_base_url
+        response = jsonify({**portal_settings(), 'crm_base_url': public_base_url()})
         response.headers['Cache-Control'] = 'no-store'
         return response
     admin()
@@ -514,7 +515,8 @@ def configuration():
     if not config['enabled']:
         PortalSession.query.delete()
     db.session.commit()
-    return jsonify(config)
+    from ..utils.urls import public_base_url
+    return jsonify({**config, 'crm_base_url': public_base_url()})
 
 
 @portal_bp.route('/branding', methods=['POST'])

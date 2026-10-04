@@ -1,6 +1,7 @@
 """Domyslne wartosci ustawien CRM."""
 
 DEFAULTS = {
+    'crm_base_url': '',
     'client_company_provider': '',
     'client_statuses': 'null',
     'client_metrics': 'null',
@@ -39,6 +40,7 @@ DEFAULTS = {
 
     # ── UI ──
     'ui_template':           'classic',
+    'ui_classic_sidebar':    'light',
     'ui_hero_background':    'random',
     'ui_show_footer':        'false',
     'ui_footer_text':        '© 2026 ZenCRM',

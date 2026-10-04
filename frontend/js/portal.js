@@ -12,7 +12,7 @@
     if (manager && embed) document.body.classList.add('embedded');
     function portalLink() {
         const url = new URL(configuration.address, location.origin);
-        return url.href;
+        return configuration.crm_base_url ? new URL(url.pathname, configuration.crm_base_url).href : url.href;
     }
     function applyBranding() {
         let logo = document.querySelector('#portal-logo');
@@ -30,11 +30,25 @@
     let spaceId = Number(sessionStorage.getItem('portalSpace') || 0);
     let isAdmin = false;
     function el(tag, text, parent) { const node = document.createElement(tag); if (text != null) node.textContent = text; if (parent) parent.append(node); return node; }
-    function error(e) { message.textContent = e.message || String(e); }
+    function icon(kind, parent) {
+        const paths = {document:'M6 3h8l4 4v14H6z M14 3v5h4 M9 12h6 M9 16h6',ticket:'M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4z M14 5v3 M14 11v2 M14 16v3',service:'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M6 6l2 2 M16 16l2 2 M6 18l2-2 M16 8l2-2 M12 8a4 4 0 1 0 0 8a4 4 0 0 0 0-8',info:'M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18 M12 11v6 M12 7v1'};
+        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('viewBox','0 0 24 24'); svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); svg.setAttribute('stroke-width','1.7'); svg.setAttribute('aria-hidden','true');
+        const path = document.createElementNS(svg.namespaceURI,'path'); path.setAttribute('d',paths[kind] || paths.document); path.setAttribute('stroke-linecap','round'); path.setAttribute('stroke-linejoin','round'); svg.append(path); parent.append(svg);
+    }
+    function error(e) {
+        message.textContent = e.message || String(e);
+        if (root.querySelector('.portal-loading')) {
+            root.replaceChildren(); const empty=el('div',null,root); empty.className='empty-state';
+            el('h3',window.ZenI18n.t('Nie udało się wczytać portalu.'),empty);
+            button(empty,window.ZenI18n.t('Spróbuj ponownie'),route,'secondary');
+        }
+    }
     async function run(action, button) {
+        if (button?.disabled) return;
         message.textContent = '';
-        if (button) button.disabled = true;
-        try { await action(); } catch (e) { error(e); } finally { if (button) button.disabled = false; }
+        if (button) { button.disabled = true; button.setAttribute('aria-busy', 'true'); }
+        try { await action(); } catch (e) { error(e); } finally { root.removeAttribute('aria-busy'); if (button) { button.disabled = false; button.removeAttribute('aria-busy'); } }
     }
     async function api(path, method = 'GET', data, raw = false) {
         const headers = manager ? {Authorization:'Bearer ' + (localStorage.getItem('token') || '')} : {'X-Portal-Token':portalToken};
@@ -64,7 +78,7 @@
     }
     function form(parent, label, action) {
         const f = el('form', null, parent), submit = el('button', label, f); submit.type = 'submit';
-        f.onsubmit = event => { event.preventDefault(); run(() => action(), submit); };
+        f.onsubmit = event => { event.preventDefault(); if (!submit.disabled) run(() => action(), submit); };
         // Keep submit at the bottom as controls are added.
         const observer = new MutationObserver(() => { if (f.lastChild !== submit) f.append(submit); });
         observer.observe(f, {childList:true});
@@ -75,7 +89,14 @@
     function login() {
         root.replaceChildren();
         applyBranding();
-        const section = el('section', null, root); section.className = 'login-card';
+        const shell = el('div', null, root); shell.className = 'portal-login-shell';
+        const welcome = el('div', null, shell); welcome.className = 'portal-welcome';
+        el('span', window.ZenI18n.t('STREFA KLIENTA'), welcome).className = 'eyebrow';
+        el('h2', window.ZenI18n.t('Wszystko, co ważne. W jednym miejscu.'), welcome);
+        el('p', window.ZenI18n.t('Przeglądaj materiały, sprawdzaj zgłoszenia i kontaktuj się z zespołem.'), welcome).className = 'section-lead';
+        const features = el('div', null, welcome); features.className = 'portal-welcome-features';
+        for (const [kind, title] of [['document',window.ZenI18n.t('Dokumenty i oferty')],['ticket',window.ZenI18n.t('Zgłoszenia i odpowiedzi')],['service',window.ZenI18n.t('Informacje o usługach')]]) { const row = el('div',null,features); icon(kind,row); el('span',title,row); }
+        const section = el('section', null, shell); section.className = 'login-card';
         el('span', window.ZenI18n.t('STREFA KLIENTA'), section).className = 'eyebrow';
         el('h2', window.ZenI18n.t('Zaloguj się do portalu'), section);
         el('p', window.ZenI18n.t('Dokumenty, oferty i kontakt z Twoim opiekunem w jednym miejscu.'), section).className = 'section-lead';
@@ -88,6 +109,11 @@
         });
         const email = input(f, window.ZenI18n.t('Email'), 'email', '', true); email.autocomplete = 'username';
         const password = input(f, window.ZenI18n.t('Hasło'), 'password', '', true); password.autocomplete = 'current-password';
+        password.parentElement.classList.add('portal-password-field');
+        const toggle = button(password.parentElement, window.ZenI18n.t('Pokaż hasło'), () => {
+            const visible = password.type === 'password'; password.type = visible ? 'text' : 'password';
+            toggle.textContent = window.ZenI18n.t(visible ? 'Ukryj hasło' : 'Pokaż hasło'); toggle.setAttribute('aria-pressed',String(visible));
+        }, 'portal-password-toggle'); toggle.setAttribute('aria-pressed','false');
     }
     async function showSpace() {
         const space = await api(base()); root.replaceChildren();
@@ -111,6 +137,13 @@
             const desc = input(ef, window.ZenI18n.t('Opis powitalny'), 'textarea', space.description);
         }
         if (manager) el('p', window.ZenI18n.t('Dokumenty, oferty i usługi pojawiają się automatycznie z karty klienta. Tutaj dodasz ticket lub informację.'), section).className = 'section-lead portal-source-note';
+        if (!manager) {
+            const overview = el('div', null, section); overview.className = 'portal-overview';
+            for (const [kind, label, count] of [['document',window.ZenI18n.t('Materiały'),space.items.filter(i=>i.kind !== 'ticket').length],['ticket',window.ZenI18n.t('Otwarte zgłoszenia'),space.items.filter(i=>i.kind === 'ticket' && i.status !== 'closed').length],['info',window.ZenI18n.t('Wszystkie elementy'),space.items.length]]) {
+                const metric = el('div',null,overview), symbol = el('span',null,metric); symbol.className='portal-metric-icon'; icon(kind,symbol);
+                const copy = el('div',null,metric); el('span',label,copy); el('strong',String(count),copy);
+            }
+        }
         function addItemForm(kind, summary, submit) {
             const add = el('details', null, section); add.className = 'action-panel'; el('summary', summary, add);
             const f = form(add, submit, async () => {
@@ -119,21 +152,41 @@
             });
             const title = input(f, window.ZenI18n.t('Tytuł'), 'text', '', true), content = input(f, window.ZenI18n.t('Treść'), 'textarea');
             content.required = kind === 'ticket';
+            if (kind === 'ticket' && !manager) {
+                const actions = el('div',null,hero); actions.className='actions';
+                button(actions,window.ZenI18n.t('Nowe zgłoszenie'),()=>{ add.open=true; add.scrollIntoView({behavior:'smooth',block:'center'}); title.focus({preventScroll:true}); });
+            }
         }
         if (manager || configuration.modules.includes('ticket')) addItemForm('ticket', manager ? window.ZenI18n.t('Dodaj ticket') : window.ZenI18n.t('Zgłoś ticket'), manager ? window.ZenI18n.t('Dodaj ticket') : window.ZenI18n.t('Wyślij ticket'));
         if (manager) addItemForm('info', window.ZenI18n.t('Dodaj informację'), window.ZenI18n.t('Dodaj informację'));
-        const filters = el('nav', null, section), list = el('div', null, section); filters.className = 'filter-bar'; list.className = 'item-list';
-        const draw = filter => { list.replaceChildren(); for (const item of space.items.filter(i => !filter || i.kind === filter)) itemCard(list, item); if (!list.children.length) el('p', window.ZenI18n.t('Brak materiałów.'), list); };
-        button(filters, window.ZenI18n.t('Wszystko'), () => draw(''), 'secondary');
-        for (const [key, label] of Object.entries(kinds)) if (manager || configuration.modules.includes(key)) button(filters, label, () => draw(key), 'secondary');
-        draw('');
+        const tools = el('div',null,section); tools.className='portal-materials-toolbar';
+        const filters = el('nav', null, tools); filters.className='filter-bar'; filters.setAttribute('aria-label',window.ZenI18n.t('Filtr materiałów'));
+        const search = input(tools,window.ZenI18n.t('Szukaj w portalu'),'search'); search.placeholder=window.ZenI18n.t('Tytuł lub treść'); search.parentElement.className='portal-search';
+        const count = el('p',null,section); count.className='portal-results-count'; count.setAttribute('role','status');
+        const list = el('div', null, section); list.className='item-list'; let currentFilter=''; const filterButtons=[];
+        const draw = filter => {
+            currentFilter=filter; const term=search.value.trim().toLocaleLowerCase(window.ZenI18n.locale);
+            const items=space.items.filter(i=>(!filter || i.kind===filter) && [i.title,i.content].join(' ').toLocaleLowerCase(window.ZenI18n.locale).includes(term));
+            list.replaceChildren(); for (const item of items) itemCard(list,item);
+            count.textContent=window.ZenI18n.t('Wyświetlono {count} z {total}',{count:items.length,total:space.items.length});
+            for (const [key,control] of filterButtons) { control.classList.toggle('selected',key===filter); control.setAttribute('aria-pressed',String(key===filter)); }
+            if (!items.length) { const empty=el('div',null,list); empty.className='empty-state'; icon('document',empty); el('h3',window.ZenI18n.t('Brak materiałów.'),empty); el('p',window.ZenI18n.t('Zmień filtr lub wpisane wyszukiwanie.'),empty); }
+        };
+        filterButtons.push(['',button(filters,window.ZenI18n.t('Wszystko'),()=>draw(''),'secondary')]);
+        for (const [key,label] of Object.entries(kinds)) if (manager || configuration.modules.includes(key)) filterButtons.push([key,button(filters,label,()=>draw(key),'secondary')]);
+        search.oninput=()=>draw(currentFilter); draw('');
     }
+
     function itemCard(parent, item) {
         const card = el('article', null, parent), path = base() + '/items/' + item.id;
-        card.className = 'item-card';
+        card.className = 'item-card'; card.dataset.kind = item.kind;
         const dateStr = item.created_at ? (' · ' + new Date(item.created_at + (item.created_at.endsWith('Z') ? '' : 'Z')).toLocaleString(window.ZenI18n.locale)) : '';
-        el('p', kinds[item.kind] + (item.kind === 'ticket' ? ' · ' + ({open:window.ZenI18n.t('Otwarte'), in_progress:window.ZenI18n.t('W realizacji'), closed:window.ZenI18n.t('Zamknięte')}[item.status] || item.status) : '') + dateStr, card).className = 'badge';
-        el('h3', item.title, card); el('p', item.content, card).className = 'content';
+        const meta=el('div',null,card); meta.className='item-card-meta';
+        el('span',kinds[item.kind] || item.kind,meta).className='badge';
+        if (item.kind==='ticket') el('span',({open:window.ZenI18n.t('Otwarte'),in_progress:window.ZenI18n.t('W realizacji'),closed:window.ZenI18n.t('Zamknięte')}[item.status] || item.status),meta).className='status-pill '+item.status;
+        const heading=el('div',null,card); heading.className='item-card-heading'; const symbol=el('span',null,heading); symbol.className='item-card-icon'; icon(item.kind,symbol); el('h3',item.title,heading);
+        if (dateStr) { const date=el('time',dateStr.slice(3),card); date.className='item-card-date'; date.dateTime=item.created_at; }
+        el('p',item.content,card).className='content item-card-content';
         if (item.filename) button(card, window.ZenI18n.t('Pobierz: ') + item.filename, async () => {
             const blob = await api(path + '/file', 'GET', undefined, true), url = URL.createObjectURL(blob), a = el('a');
             a.href = url; a.download = item.filename; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -147,7 +200,7 @@
         if (item.kind === 'ticket') {
             const thread = el('details', null, card); el('summary', window.ZenI18n.t('Odpowiedzi'), thread);
             const replies = el('div', null, thread);
-            const load = async () => { const rows = await api(path + '/replies'); replies.replaceChildren(); for (const r of rows) { const row = el('div', null, replies); row.className = 'reply'; el('p', r.author + ' · ' + new Date(r.created_at + (r.created_at.endsWith('Z') ? '' : 'Z')).toLocaleString(window.ZenI18n.locale), row).className = 'muted'; el('p', r.content, row).className = 'content'; } };
+            const load = async () => { const rows = await api(path + '/replies'); replies.replaceChildren(); if (!rows.length) el('p',window.ZenI18n.t('Brak odpowiedzi. Możesz rozpocząć rozmowę.'),replies).className='muted'; for (const r of rows) { const row = el('div', null, replies); row.className = 'reply'; el('p', r.author + ' · ' + new Date(r.created_at + (r.created_at.endsWith('Z') ? '' : 'Z')).toLocaleString(window.ZenI18n.locale), row).className = 'muted'; el('p', r.content, row).className = 'content'; } };
             thread.addEventListener('toggle', () => { if (thread.open) run(load); });
             if (item.status !== 'closed') {
                 const f = form(thread, window.ZenI18n.t('Wyślij odpowiedź'), async () => { await api(path + '/replies', 'POST', {content:answer.value}); answer.value = ''; await load(); });
@@ -417,7 +470,8 @@
         filter.onchange = draw; draw();
     }
     async function route() {
-        message.textContent = ''; root.replaceChildren();
+        message.textContent = ''; root.replaceChildren(); root.setAttribute('aria-busy','true');
+        const loading=el('div',window.ZenI18n.t('Ładowanie portalu…'),root); loading.className='portal-loading'; loading.setAttribute('role','status');
         configuration = await api('/portal/configuration');
         if (!manager) {
             applyBranding();

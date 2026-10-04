@@ -120,7 +120,7 @@
     <div class="zen-lead-stage-track" role="group" :aria-label="window.ZenI18n.t('Zmień etap leada')"><template x-for="stage in leadStages" :key="stage.id"><button type="button" :style="leadStageStyle(stage.id)" :aria-pressed="stage.id === detailView.data?.stage" :disabled="!!savingLead || !canRecordAction('leads', 'edit')" @click="changeLeadStage(detailView.data, stage.id)"><span class="zen-lead-stage-dot"></span><span x-text="stage.label"></span><span x-show="stage.id === detailView.data?.stage" aria-hidden="true">✓</span></button></template></div>
     <p class="ux-muted" x-text="window.ZenI18n.t('Wybierz etap, aby zapisać zmianę. Zmianę możesz cofnąć w komunikacie potwierdzenia.')"></p>
 </section>
-<div class="ux-toolbar ux-detail-actions" x-show="!detailView.loading && detailView.data"><button x-show="detailView.data?.phone || (detailView.contacts || []).some(c => c.phone)" @click="callContact()" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;phone&#x27;)"></span><span x-text="user?.default_call_method === &#x27;android&#x27; ? window.ZenI18n.t(&#x27;Połącz&#x27;) : window.ZenI18n.t(&#x27;Zadzwoń&#x27;)"></span></button><a x-show="detailView.data?.email" :href="'mailto:' + (detailView.data?.email || '')" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;mail&#x27;)" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Napisz e-mail')">Napisz e-mail</span></span></a><button @click="sendSmsFromDetail()" class="ux-text-button !bg-emerald-600 hover:!bg-emerald-700 !text-white !border-emerald-600 shadow-sm font-medium"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><span><span x-text="window.ZenI18n.t('Wyślij SMS')">Wyślij SMS</span></span></button></div>
+<div class="ux-toolbar ux-detail-actions" x-show="!detailView.loading && detailView.data"><button x-show="detailView.data?.phone || (detailView.contacts || []).some(c => c.phone)" @click="callContact()" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;phone&#x27;)"></span><span x-text="user?.default_call_method === &#x27;android&#x27; ? window.ZenI18n.t(&#x27;Połącz&#x27;) : window.ZenI18n.t(&#x27;Zadzwoń&#x27;)"></span></button><a x-show="detailView.data?.email" :href="user?.default_email_method === 'crm' ? '#mailboxes' : 'mailto:' + (detailView.data?.email || '')" @click="if (user?.default_email_method === 'crm') { $event.preventDefault(); writeEmail(detailView.data.email); }" class="ux-text-button"><span class="zen-icon-wrap" x-html="zenIcon(&#x27;mail&#x27;)" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t('Napisz e-mail')">Napisz e-mail</span></span></a><button @click="sendSmsFromDetail()" class="ux-text-button !bg-emerald-600 hover:!bg-emerald-700 !text-white !border-emerald-600 shadow-sm font-medium"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><span><span x-text="window.ZenI18n.t('Wyślij SMS')">Wyślij SMS</span></span></button></div>
                     <!-- TABS -->
 
 
@@ -140,6 +140,7 @@
                             <span class="detail-tab-count !bg-emerald-100 dark:!bg-emerald-950 !text-emerald-700 dark:!text-emerald-300"
                                   x-text="(entityTelephony?.calls?.length || 0) + (entityTelephony?.messages?.length || 0)"></span>
                         </button>
+                        <button class="detail-tab-v2" x-show="detailView.type === 'client'" :class="{'active': detailView.tab === 'email'}" @click="detailView.tab = 'email'; loadClientMail(detailView.data.id)"><span class="zen-icon-wrap" x-html="mailIcon('mail')"></span><span>E-Mail</span><span class="detail-tab-count" x-text="clientMail.clientId === detailView.data?.id ? clientMail.total : 0"></span></button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;services&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;services&#x27;" x-show="detailView.type === &#x27;client&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Usługi&quot;)">Usługi</span> <span class="detail-tab-count" x-text="(detailView.clientServices || []).length"></span>
                         </button>
@@ -151,6 +152,9 @@
                         </button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;tasks&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;tasks&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span> <span class="detail-tab-count" x-text="(detailView.tasks || []).length"></span>
+                        </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === 'meetings' ? 'active' : ''" @click="detailView.tab = 'meetings'">
+                            <span x-text="window.ZenI18n.t('Spotkania')">Spotkania</span> <span class="detail-tab-count" x-text="(detailView.meetings || []).length"></span>
                         </button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
@@ -165,10 +169,12 @@
                             <button type="button" class="detail-more-trigger" @click="moreOpen = !moreOpen" :aria-expanded="moreOpen" :aria-label="window.ZenI18n.t('Więcej zakładek')">☰</button>
                             <div class="detail-more-menu" x-show="moreOpen" x-cloak>
                                 <button class="detail-more-mobile" @click="detailView.tab = 'telephony'; loadEntityTelephony(detailView.type, detailView.data.id, detailView.data.phone); moreOpen = false" x-text="window.ZenI18n.t('Połączenia i SMS')"></button>
+                                <button class="detail-more-mobile" x-show="detailView.type === 'client'" @click="detailView.tab = 'email'; loadClientMail(detailView.data.id); moreOpen = false">E-Mail</button>
                                 <button class="detail-more-mobile" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'services'; moreOpen = false" x-text="window.ZenI18n.t('Usługi')"></button>
                                 <button class="detail-more-wide-hidden" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'tickets'; moreOpen = false" x-text="window.ZenI18n.t('Tickety')"></button>
                                 <button class="detail-more-wide-hidden" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'leads'; moreOpen = false" x-text="window.ZenI18n.t('Leady')"></button>
                                 <button @click="detailView.tab = 'tasks'; moreOpen = false" x-text="window.ZenI18n.t('Zadania')"></button>
+                                <button @click="detailView.tab = 'meetings'; moreOpen = false" x-text="window.ZenI18n.t('Spotkania')"></button>
                                 <button @click="detailView.tab = 'documents'; moreOpen = false" x-text="window.ZenI18n.t('Dokumenty')"></button>
                                 <button @click="openAttachments(detailView.type, detailView.data.id); moreOpen = false" x-text="window.ZenI18n.t('Pliki')"></button>
                                 <button @click="detailView.tab = 'comments'; moreOpen = false" x-text="window.ZenI18n.t('Notatki i kontakt')"></button>
@@ -520,6 +526,33 @@
                             </div>
                         </div>
 
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === 'meetings'" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg" x-text="window.ZenI18n.t('Spotkania')">Spotkania</h3>
+                                <button type="button" @click="quickAdd('meeting')" class="detail-add-btn" x-text="window.ZenI18n.t('+ Dodaj spotkanie')">+ Dodaj spotkanie</button>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="meeting in (detailView.meetings || [])" :key="meeting.id">
+                                    <div class="detail-section flex items-start gap-3">
+                                        <span class="zen-icon-wrap text-brand-600 dark:text-brand-400" x-html="zenIcon('calendar')" aria-hidden="true"></span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-semibold break-words" x-text="meeting.title"></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" x-text="formatDateTime(meeting.start_time) + ' – ' + formatDateTime(meeting.end_time)"></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words" x-show="meeting.location" x-text="meeting.location"></p>
+                                            <span class="inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full"
+                                                  :class="meeting.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200' : meeting.status === 'cancelled' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200'"
+                                                  x-text="window.ZenI18n.t(meeting.status === 'completed' ? 'Odbyto sie' : meeting.status === 'cancelled' ? 'Odwolane' : 'Zaplanowane')"></span>
+                                        </div>
+                                        <button type="button" class="detail-add-btn shrink-0" @click="openModal(meeting, null, true, 'meetings', {lockedRelations: ['client_id', 'lead_id']})" x-text="window.ZenI18n.t('Edytuj')">Edytuj</button>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="!(detailView.meetings || []).length" class="detail-empty">
+                                <p class="font-medium" x-text="window.ZenI18n.t('Brak spotkań')">Brak spotkań</p>
+                                <button type="button" @click="quickAdd('meeting')" class="mt-2 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" x-text="window.ZenI18n.t('+ Dodaj spotkanie')"></button>
+                            </div>
+                        </div>
+
                         <div x-show="!detailView.loading && !detailError && detailView.tab === 'files'" x-cloak><% include "views/attachments-panel.html" %></div>
                         <div x-show="!detailView.loading &amp;&amp; !detailError &amp;&amp; detailView.tab === &#x27;documents&#x27;" x-cloak>
                             <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
@@ -597,6 +630,15 @@
                                 </template>
                                 <p x-show="(detailView.activities || []).length === 0" class="text-center text-gray-500 py-8"><span x-text="window.ZenI18n.t(&quot;Brak aktywności&quot;)">Brak aktywności</span></p>
                             </div>
+                        </div>
+
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === 'email' && detailView.type === 'client'" x-cloak class="client-mail-history">
+                         <div class="client-mail-heading"><div><span class="client-mail-eyebrow"><span x-text="window.ZenI18n.t(&quot;KORESPONDENCJA Z KLIENTEM&quot;)">KORESPONDENCJA Z KLIENTEM</span></span><h3><span class="client-mail-icon" x-html="mailIcon(&#x27;mail&#x27;)"></span>E-Mail <span class="client-mail-total" x-text="clientMail.total"></span></h3><p><span x-text="window.ZenI18n.t(&quot;Historia wiadomości klienta i jego osób kontaktowych.&quot;)">Historia wiadomości klienta i jego osób kontaktowych.</span></p></div><div class="client-mail-header-actions"><button class="ux-text-button" :disabled="clientMail.loading" @click="loadClientMail(detailView.data.id, clientMail.page)" :aria-label="window.ZenI18n.t(&quot;Odśwież historię e-mail&quot;)"><span class="client-mail-icon" x-html="mailIcon(&#x27;refresh&#x27;)"></span></button><button class="ux-button" x-show="clientMail.emails.length" @click="writeEmail(detailView.data.email || clientMail.emails[0])"><span class="client-mail-icon" x-html="mailIcon(&#x27;send&#x27;)"></span><span x-text="window.ZenI18n.t(&quot;Napisz e-mail&quot;)">Napisz e-mail</span></button></div></div>
+                         <div class="client-mail-addresses"><span class="client-mail-address-label"><span x-text="window.ZenI18n.t(&quot;POWIĄZANE ADRESY&quot;)">POWIĄZANE ADRESY</span></span><template x-for="email in clientMail.emails" :key="email"><span x-text="email"></span></template></div>
+                         <p class="mail-error" role="alert" x-show="clientMail.error" x-text="clientMail.error"></p><p class="ux-muted" x-show="clientMail.loading"><span x-text="window.ZenI18n.t(&quot;Ładowanie wiadomości…&quot;)">Ładowanie wiadomości…</span></p>
+                         <div class="client-mail-empty" x-show="!clientMail.loading && !clientMail.error && !clientMail.items.length"><span class="client-mail-empty-icon" x-html="mailIcon(&#x27;inbox&#x27;)"></span><h4><span x-text="window.ZenI18n.t(&quot;Tu pojawi się Wasza korespondencja&quot;)">Tu pojawi się Wasza korespondencja</span></h4><p x-text="clientMail.emails.length ? window.ZenI18n.t(&quot;Zsynchronizuj swoją skrzynkę, aby zobaczyć wiadomości od klienta i jego kontaktów.&quot;) : window.ZenI18n.t(&quot;Dodaj adres e-mail klienta lub jego kontaktu, aby powiązać korespondencję.&quot;)"></p></div>
+                         <div class="client-mail-list"><template x-for="(message, index) in clientMail.items" :key="message.id"><div><div class="client-mail-day" x-show="index === 0 || clientMailDate(message.created_at) !== clientMailDate(clientMail.items[index - 1]?.created_at)" x-text="clientMailDate(message.created_at)"></div><button class="client-mail-card" :class="{&#x27;unread&#x27;: !message.is_read, &#x27;sent&#x27;: message.folder === &#x27;sent&#x27;}" @click="openClientMailMessage(message)"><span class="client-mail-avatar" x-text="mailInitial(message.folder === &#x27;sent&#x27; ? message.recipients[0] || message.cc?.[0] || message.bcc?.[0] : message.sender)"></span><div><div class="client-mail-meta"><span class="client-mail-direction-badge"><span class="client-mail-icon" x-html="mailIcon(message.folder === &#x27;sent&#x27; ? &#x27;send&#x27; : &#x27;inbox&#x27;)"></span><span x-text="message.folder === &#x27;sent&#x27; ? window.ZenI18n.t(&quot;Wysłana&quot;) : window.ZenI18n.t(&quot;Odebrana&quot;)"></span></span><span class="client-mail-unread" x-show="!message.is_read"><span x-text="window.ZenI18n.t(&quot;Nieodczytana&quot;)">Nieodczytana</span></span><time x-text="new Date(message.created_at + &#x27;Z&#x27;).toLocaleTimeString(locale, {hour:&#x27;2-digit&#x27;,minute:&#x27;2-digit&#x27;})"></time></div><h4 x-text="message.subject || window.ZenI18n.t(&quot;(bez tematu)&quot;)"></h4><p class="client-mail-participants" x-text="message.folder === &#x27;sent&#x27; ? window.ZenI18n.t(&quot;Do: &quot;) + [...message.recipients, ...(message.cc || []), ...(message.bcc || [])].join(&#x27;, &#x27;) : message.sender"></p><p class="client-mail-snippet" x-text="message.body"></p><div class="client-mail-card-footer"><span><span class="client-mail-icon" x-html="mailIcon(&#x27;mail&#x27;)"></span><span x-text="message.mailbox_name"></span></span><span x-show="message.attachments?.length"><span class="client-mail-icon" x-html="mailIcon(&#x27;paperclip&#x27;)"></span><span x-text="window.ZenI18n.t(&#x27;{count} załączników&#x27;, {count: message.attachments?.length})"></span></span></div></div><span class="client-mail-open" aria-hidden="true">↗</span></button></div></template></div>
+                         <div class="client-mail-pagination" x-show="clientMail.pages > 1"><button class="ux-text-button" :disabled="clientMail.page &lt;= 1 || clientMail.loading" @click="loadClientMail(detailView.data.id, clientMail.page - 1)"><span x-text="window.ZenI18n.t(&quot;← Poprzednia&quot;)">← Poprzednia</span></button><span x-text="clientMail.page + &#x27; / &#x27; + clientMail.pages"></span><button class="ux-text-button" :disabled="clientMail.page &gt;= clientMail.pages || clientMail.loading" @click="loadClientMail(detailView.data.id, clientMail.page + 1)"><span x-text="window.ZenI18n.t(&quot;Następna →&quot;)">Następna →</span></button></div>
                         </div>
 
                         <!-- ═══ ZAKŁADKA: POŁĄCZENIA I SMS ═══ -->

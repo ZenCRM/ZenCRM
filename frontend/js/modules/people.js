@@ -1,5 +1,73 @@
 window.ZenModules = window.ZenModules || {};
 window.ZenModules.people = function () { return {
+        userStatusFilter: '',
+        employeeAvatar: {open:false, user:null, file:null, preview:'', remove:false, busy:false, error:''},
+        openEmployeeAvatar(employee) {
+            if (this.user?.role !== 'admin' || !employee?.id || this.employeeAvatar.busy) return;
+            this.closeEmployeeAvatar();
+            this._employeeAvatarTrigger = typeof document !== 'undefined' ? document.activeElement : null;
+            if (typeof document !== 'undefined') { this._employeeAvatarOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }
+            this.employeeAvatar = {open:true,user:{...employee},file:null,preview:'',remove:false,busy:false,error:''};
+            if (this.$nextTick) this.$nextTick(() => document.querySelector('.employee-avatar-dialog button')?.focus());
+        },
+        closeEmployeeAvatar() {
+            if (this.employeeAvatar.busy) return;
+            if (this.employeeAvatar.preview) URL.revokeObjectURL(this.employeeAvatar.preview);
+            this.employeeAvatar = {open:false,user:null,file:null,preview:'',remove:false,busy:false,error:''};
+            this._employeeAvatarTrigger?.focus(); this._employeeAvatarTrigger = null;
+            if (typeof document !== 'undefined' && this._employeeAvatarOverflow !== undefined) { document.body.style.overflow = this._employeeAvatarOverflow; this._employeeAvatarOverflow = undefined; }
+        },
+        trapEmployeeAvatarFocus(event) {
+            const controls = [...event.currentTarget.querySelectorAll('button:not(:disabled),input:not(:disabled)')].filter(node => node.getClientRects().length);
+            if (!controls.length) return;
+            const first = controls[0], last = controls[controls.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        },
+        selectEmployeeAvatar(event) {
+            const file = event.target.files?.[0]; event.target.value = '';
+            if (!file || this.employeeAvatar.busy) return;
+            this.employeeAvatar.error = '';
+            if (file.size > 2 * 1024 * 1024 || !['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)) {
+                this.employeeAvatar.error = window.ZenI18n.t('Wybierz obraz PNG, JPG, GIF lub WEBP do 2 MB.'); return;
+            }
+            if (this.employeeAvatar.preview) URL.revokeObjectURL(this.employeeAvatar.preview);
+            this.employeeAvatar.file = file;
+            this.employeeAvatar.preview = URL.createObjectURL(file);
+            this.employeeAvatar.remove = false;
+        },
+        markEmployeeAvatarRemoved() {
+            if (this.employeeAvatar.busy) return;
+            if (this.employeeAvatar.preview) URL.revokeObjectURL(this.employeeAvatar.preview);
+            this.employeeAvatar.preview = ''; this.employeeAvatar.file = null; this.employeeAvatar.remove = true;
+        },
+        async saveEmployeeAvatar() {
+            const editor = this.employeeAvatar, token = this.token;
+            if (this.user?.role !== 'admin' || !editor.user?.id || editor.busy || (!editor.file && !editor.remove)) return;
+            editor.busy = true; editor.error = '';
+            try {
+                const options = {method:editor.remove ? 'DELETE' : 'POST',headers:{Authorization:'Bearer ' + token,'Accept-Language':window.ZenI18n.locale}};
+                if (!editor.remove) { const body = new FormData(); body.append('file',editor.file); options.body = body; }
+                const response = await fetch(`/api/users/${editor.user.id}/avatar`,options);
+                const data = await response.json();
+                if (this.token !== token || this.employeeAvatar !== editor) return;
+                if (!response.ok) throw new Error(data.error || window.ZenI18n.t('Nie udało się zapisać zdjęcia.'));
+                const updated = data.user || {...(this.users.find(u => u.id === editor.user.id) || editor.user),avatar_url:null};
+                this.users = this.users.map(u => u.id === updated.id ? {...u,...updated} : u);
+                for (const team of this.teams || []) {
+                    if (team.leader?.id === updated.id) team.leader = {...team.leader,avatar_url:updated.avatar_url};
+                    team.members = (team.members || []).map(u => u.id === updated.id ? {...u,avatar_url:updated.avatar_url} : u);
+                }
+                if (this.modal.editingId === updated.id && this.modal.view === 'users') this.modal.form.avatar_url = updated.avatar_url;
+                if (this.user.id === updated.id) {
+                    this.user = {...this.user,...updated}; this.avatarTs = Date.now();
+                    this.profile.form.avatar_url = updated.avatar_url || '';
+                    localStorage.setItem('user',JSON.stringify(this.user));
+                }
+                editor.busy = false; this.closeEmployeeAvatar(); this.notify(window.ZenI18n.t('Zdjęcie pracownika zapisane.'));
+            } catch (error) { if (this.token === token && this.employeeAvatar === editor) editor.error = error.message; }
+            finally { editor.busy = false; }
+        },
         async uploadAvatar(event) {
             const file = event.target.files && event.target.files[0];
             if (!file) return;
@@ -168,6 +236,8 @@ window.ZenModules.people = function () { return {
             return (this.users || []).filter(u => {
                 const nameMatch = !q || `${u.first_name || ''} ${u.last_name || ''} ${u.email || ''}`.toLowerCase().includes(q);
                 if (!nameMatch) return false;
+                if (this.userStatusFilter === 'active' && !u.is_active) return false;
+                if (this.userStatusFilter === 'inactive' && u.is_active) return false;
                 if (teamId) {
                     return (u.teams || []).some(t => t.id === teamId) || (u.team_ids || []).includes(teamId);
                 }

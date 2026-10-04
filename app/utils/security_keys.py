@@ -6,6 +6,9 @@ from pathlib import Path
 
 
 def configure_secrets(app):
+    mailbox_key = app.config.get('MAILBOX_ENCRYPTION_KEY')
+    if mailbox_key is not None and (not isinstance(mailbox_key, str) or len(mailbox_key) < 32):
+        raise RuntimeError('MAILBOX_ENCRYPTION_KEY must contain at least 32 characters')
     insecure = {None, '', 'dev-secret', 'jwt-dev-secret',
                 'twoj-sekret', 'twoj-jwt-sekret',
                 'zmien-mnie-na-bezpieczny-losowy-ciag',

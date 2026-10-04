@@ -19,6 +19,11 @@
             </p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
+            <a href="https://zencrm.pl/pobierz" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg shadow-sm transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
+                <span x-text="window.ZenI18n.t('Pobierz aplikację')">Pobierz aplikację</span>
+            </a>
             <button @click="openSmsModal()"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
@@ -756,8 +761,8 @@
                     <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase"><span x-text="window.ZenI18n.t(&quot;1. Adres serwera (Host)&quot;)">1. Adres serwera (Host)</span></div>
                     <div class="text-xs text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Wprowadź w aplikacji adres serwera CRM:')">Wprowadź adres:</div>
                     <div class="p-2 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-mono text-[11px] text-gray-900 dark:text-white select-all break-all"
-                         x-text="window.location.origin"></div>
-                    <button @click="copyToClipboard(window.location.origin, 'Skopiowano adres serwera CRM')" class="text-[11px] text-brand-600 dark:text-brand-400 hover:underline">
+                         x-text="(settingsForm.crm_base_url || window.location.origin)"></div>
+                    <button @click="copyToClipboard((settingsForm.crm_base_url || window.location.origin), 'Skopiowano adres serwera CRM')" class="text-[11px] text-brand-600 dark:text-brand-400 hover:underline">
                         <span x-text="window.ZenI18n.t('Kopiuj adres URL')">Kopiuj adres URL</span>
                     </button>
                 </div>

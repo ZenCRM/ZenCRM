@@ -86,6 +86,7 @@
 .theme-modern .windmill-app .zen-pipeline-metrics .zen-task-summary-tile .zen-icon-wrap { background:#d9edf4;color:#087e9b; }
 .theme-modern .windmill-app .zen-list-summary .zen-task-summary-tile strong,
 .theme-modern .windmill-app .zen-pipeline-metrics .zen-task-summary-tile strong { color:var(--wm-text); }
+.theme-modern .windmill-app .zen-client-metrics.zen-list-summary .zen-task-summary-tile { background:var(--client-metric-color,#007fce)!important;color:var(--client-metric-text,#fff)!important; }
 .theme-modern .windmill-app main .overflow-x-auto:has(> table):not(.detail-section) { border:1px solid var(--wm-border);border-radius:14px;background:var(--wm-surface);box-shadow:0 8px 24px #12344b0c; }
 .theme-modern .windmill-app main table { background:var(--wm-surface);color:var(--wm-text);border-collapse:separate;border-spacing:0; }
 .theme-modern .windmill-app main table thead th { background:#e9f3f7;color:#526d7e;border-bottom:1px solid #d6e7ee;padding:13px 16px;font-size:11px;font-weight:750;letter-spacing:.045em;white-space:nowrap; }
@@ -161,7 +162,7 @@
 .theme-modern.dark .zen-template-card-icon,.theme-modern.dark .zen-template-card-type { background:#244558;color:#a8e2ec; }
 
 /* Modern fills the available workspace; content scrolls inside the main pane. */
-.theme-modern .windmill-app > div[x-show="token"] { width:100%;height:100dvh; }
+.theme-modern .windmill-app > div[x-show="token"] { width:100%;height:auto;min-height:100dvh; }
 .theme-modern .windmill-app main { width:100%!important;max-width:none!important;height:100%;min-height:0;padding:0!important;background:var(--wm-page); }
 .theme-modern .windmill-app main > div[x-show*="currentView"] { width:100%;max-width:none;min-height:100%;box-sizing:border-box;padding:22px 26px; }
 .theme-modern .windmill-app main > .zen-projects-view { padding:30px 34px!important; }

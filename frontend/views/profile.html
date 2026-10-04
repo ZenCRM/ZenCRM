@@ -3,7 +3,7 @@
      @keydown.escape.window="profile.open = false">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h3 class="text-lg font-semibold"><span x-text="window.ZenI18n.t(&quot;Mój profil&quot;)">Mój profil</span></h3>
+            <h3 class="text-lg font-semibold"><span x-text="window.ZenI18n.t(&quot;Profil i ustawienia&quot;)">Profil i ustawienia</span></h3>
             <button @click="profile.open = false" class="text-2xl leading-none hover:text-red-500">&times;</button>
         </div>
         <form @submit.prevent="saveProfile()" class="p-6 space-y-4">
@@ -78,6 +78,11 @@
                 <p class="text-xs text-gray-500 mt-1" x-text="window.ZenI18n.t('Określa, czy główny przycisk telefonu natychmiast zleca połączenie z podłączonego telefonu Android, czy uruchamia link tel:.')"></p>
             </div>
 
+            <div class="pt-3 border-t border-gray-100 dark:border-gray-700">
+                <label for="profile-email-method" class="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200"><span x-text="window.ZenI18n.t(&quot;Przycisk „Napisz e-mail”&quot;)">Przycisk „Napisz e-mail”</span></label>
+                <select id="profile-email-method" x-model="profile.form.default_email_method" class="w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none"><option value="mailto" x-text="window.ZenI18n.t(&quot;Domyślna aplikacja pocztowa (mailto:)&quot;)">Domyślna aplikacja pocztowa (mailto:)</option><option value="crm" x-text="window.ZenI18n.t(&quot;Podpięta skrzynka w CRM&quot;)">Podpięta skrzynka w CRM</option></select>
+                <p class="text-xs text-gray-500 mt-1"><span x-text="window.ZenI18n.t(&quot;Wybierz, gdzie otwierać nową wiadomość do klienta. W CRM użyjesz swojej skrzynki osobistej lub skrzynki zespołu.&quot;)">Wybierz, gdzie otwierać nową wiadomość do klienta. W CRM użyjesz swojej skrzynki osobistej lub skrzynki zespołu.</span></p>
+            </div>
             <div class="pt-3 border-t border-gray-100 dark:border-gray-700">
                 <label class="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">
                     <span x-text="window.ZenI18n.t('Powiadomienia e-mail')">Powiadomienia e-mail</span>

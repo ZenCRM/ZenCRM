@@ -22,3 +22,12 @@ class SecurityKeysTest(unittest.TestCase):
         configure_secrets(app)
         self.assertEqual(app.config['SECRET_KEY'], 'a' * 32)
         self.assertEqual(app.config['JWT_SECRET_KEY'], 'b' * 32)
+
+    def test_explicit_mailbox_key_must_be_strong(self):
+        app = Flask(__name__)
+        app.config.update(SECRET_KEY='a' * 32, JWT_SECRET_KEY='b' * 32, MAILBOX_ENCRYPTION_KEY='short')
+        with self.assertRaises(RuntimeError):
+            configure_secrets(app)
+        app.config['MAILBOX_ENCRYPTION_KEY'] = 'c' * 32
+        configure_secrets(app)
+        self.assertEqual(app.config['MAILBOX_ENCRYPTION_KEY'], 'c' * 32)

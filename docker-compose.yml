@@ -10,6 +10,7 @@ services:
       - FLASK_ENV=production
       - SECRET_KEY=${SECRET_KEY:-}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - MAILBOX_ENCRYPTION_KEY=${MAILBOX_ENCRYPTION_KEY:-}
       - DATABASE_URL=sqlite:////app/instance/zencrm.db
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
       - TRUSTED_PROXY_HOPS=${TRUSTED_PROXY_HOPS:-0}

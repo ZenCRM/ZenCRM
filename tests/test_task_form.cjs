@@ -3,7 +3,8 @@ const {createComponent}=require('./helpers/frontend_contract.cjs');
 const app=createComponent();
 app.user={id:7,first_name:'Anna',last_name:'Nowak'};
 app.canRecordAction=()=>true;app.ensureLookups=()=>{};app.loadCustomFields=()=>{};
-const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+// createComponent uses the fixed 2026-10-03 clock for deterministic defaults.
+const tomorrow=new Date('2026-10-03T12:00:00Z');tomorrow.setDate(tomorrow.getDate()+1);
 const day=`${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
 for(const source of ['tasks','dashboard','clients','projects','services','leads','calendar']) {
  app.currentView=source;

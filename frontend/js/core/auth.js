@@ -107,14 +107,23 @@ window.ZenCore.auth = function () { return {
         },
 
         async logout() {
+            if (this.mail) {
+                this.mail.downloadController?.abort();
+                this.mail.cancelSync = true;
+                this.mail.request = (this.mail.request || 0) + 1;
+            }
             await this.disablePush();
             this.stopNotifications();
+            this.stopMailCount();
             this.stopReminders();
             this.endLeadDrag();
             this.detailView.open = false;
             this.detailPanel = false;
             this.token = '';
+            if (this.employeeAvatar) { this.employeeAvatar.busy = false; this.closeEmployeeAvatar(); }
             this.user = null;
+            if (this.mail) this.mail = window.ZenModules.mailboxes().mail;
+            if (this.clientMail) { this.clientMail.request++; this.clientMail = window.ZenModules.mailboxes().clientMail; }
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             sessionStorage.removeItem('zen-i18n-catalog');
@@ -136,6 +145,7 @@ window.ZenCore.auth = function () { return {
                 current_password: '',
                 avatar_url: this.user?.avatar_url || '',
                 default_call_method: this.user?.default_call_method || 'link',
+                default_email_method: this.user?.default_email_method || 'mailto',
                 email_notifications: {
                     ticket_assigned: notifs.ticket_assigned !== false,
                     ticket_reply: notifs.ticket_reply !== false,

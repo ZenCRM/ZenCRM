@@ -416,7 +416,7 @@ window.ZenModules.tickets = function () {
 
         getTicketTrackingUrl(token) {
             const helpdeskPath = this.ticketConfig?.helpdesk_path || '/pomoc';
-            return `${window.location.origin}${helpdeskPath}?ticket=${encodeURIComponent(token || '')}`;
+            return `${(this.settingsForm?.crm_base_url || window.location.origin)}${helpdeskPath}?ticket=${encodeURIComponent(token || '')}`;
         },
 
         copyTrackingLink(token) {

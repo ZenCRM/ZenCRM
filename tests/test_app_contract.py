@@ -28,7 +28,10 @@ def capture_contract():
                      for key in ('name', 'type', 'nullable', 'default', 'primary_key')}
                     for column in inspector.get_columns(table)
                 ],
-                'foreign_keys': inspector.get_foreign_keys(table),
+                # Reflection order is not a semantic part of the schema (batch
+                # migrations can rebuild unnamed constraints in either order).
+                'foreign_keys': sorted(inspector.get_foreign_keys(table),
+                                       key=lambda fk: tuple(fk['constrained_columns'])),
                 'unique_constraints': inspector.get_unique_constraints(table),
             }
             for table in sorted(inspector.get_table_names())

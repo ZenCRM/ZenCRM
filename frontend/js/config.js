@@ -239,6 +239,12 @@ window.ZenConfig = {
                 { id: 'contacts',  label: window.ZenI18n.t('Kontakty'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>' },
             ]
         },
+        { id: 'mail_group', label: window.ZenI18n.t('Poczta e-mail'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 5h18v14H3zM3 5l9 8 9-8"/></svg>', children: [
+            { id: 'mailboxes', label: window.ZenI18n.t('Poczta: Odebrane'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 4h16v16H4zM4 13h5l2 3h2l2-3h5"/></svg>' },
+            { id: 'mailSent', label: window.ZenI18n.t('Wysłane'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="m3 3 18 9-18 9 4-9-4-9Zm4 9h14"/></svg>' },
+            { id: 'mailAccounts', label: window.ZenI18n.t('Skrzynki'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 4h18v7H3zM3 15h18v5H3zM7 7h.01M7 18h.01"/></svg>' },
+            { id: 'mailSettings', label: window.ZenI18n.t('Ustawienia'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16M8 5v4m8 1v4m-6 1v4"/></svg>' },
+        ] },
         { id: 'projects',  label: window.ZenI18n.t('Projekty'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>' },
         { id: 'tasks',     label: window.ZenI18n.t('Zadania'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>' },
         { id: 'meetings',  label: window.ZenI18n.t('Kalendarz'), icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>' },

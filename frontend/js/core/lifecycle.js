@@ -2,6 +2,7 @@
 window.ZenCore = window.ZenCore || {};
 window.ZenCore.lifecycle = function () { return {
         async init() {
+            this.isAdmin = this.user?.role === 'admin';
             if (this.token) {
                 try {
                     const catalog = await this.api('/translations/catalog');
@@ -15,6 +16,7 @@ window.ZenCore.lifecycle = function () { return {
                 } catch (e) { console.warn('Nie pobrano tłumaczeń:', e.message); }
             }
             this.startNotifications();
+            this.startMailCount();
             this.startReminders();
             this.initPush();
             this.$watch('user', (v) => {

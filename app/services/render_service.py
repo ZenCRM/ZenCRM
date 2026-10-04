@@ -1,7 +1,7 @@
 """Renderowanie szablonów ofert/dokumentów do HTML (Jinja2)."""
 from ..utils.i18n import t
 from datetime import datetime, timedelta
-from jinja2.sandbox import SandboxedEnvironment
+from .template_sandbox import run_template
 from ..models.client import Client
 from ..models.template import Template
 
@@ -64,7 +64,7 @@ def build_context(obj, entity_type="offer"):
 
 
 def render_template_string(t, ctx):
-    return SandboxedEnvironment(autoescape=True).from_string(t).render(**ctx)
+    return run_template(t, ctx)
 
 
 def render_offer(offer):

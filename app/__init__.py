@@ -67,5 +67,7 @@ def create_app(config_class=Config):
 
     from .services.push_service import start_push_worker
     start_push_worker(app)
+    from .services.mailbox_worker import start_mail_worker
+    start_mail_worker(app)
 
     return app

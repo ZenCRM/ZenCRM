@@ -6,8 +6,13 @@ from pathlib import Path
 
 try:
     import fcntl
-except ImportError:  # Windows runs the single-process development server only.
+except ImportError:
     fcntl = None
+
+try:
+    import msvcrt
+except ImportError:
+    msvcrt = None
 
 from alembic.script import ScriptDirectory
 from flask import current_app
@@ -97,13 +102,26 @@ def _schema_lock():
     """Serialise schema changes when several processes start at once."""
     url = db.engine.url
     backend = url.get_backend_name()
-    if backend == 'sqlite' and url.database and url.database != ':memory:' and fcntl:
-        with open(f'{url.database}.migrate.lock', 'w') as handle:
-            fcntl.flock(handle, fcntl.LOCK_EX)
+    if backend == 'sqlite' and url.database and url.database != ':memory:' and (fcntl or msvcrt):
+        with open(f'{url.database}.migrate.lock', 'a+b') as handle:
+            if fcntl:
+                fcntl.flock(handle, fcntl.LOCK_EX)
+            else:
+                # Windows byte-range locks require a byte and a stable file offset.
+                handle.seek(0, 2)
+                if handle.tell() == 0:
+                    handle.write(b'0')
+                    handle.flush()
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
             try:
                 yield
             finally:
-                fcntl.flock(handle, fcntl.LOCK_UN)
+                if fcntl:
+                    fcntl.flock(handle, fcntl.LOCK_UN)
+                else:
+                    handle.seek(0)
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
     elif backend in ('mysql', 'mariadb', 'postgresql'):
         acquire, release = {
             'postgresql': ('SELECT pg_advisory_lock(80412)', 'SELECT pg_advisory_unlock(80412)'),
@@ -167,6 +185,8 @@ def _report_orphans():
 
 
 def _seed_defaults():
+    from .utils.secret_storage import migrate_smtp_password
+    migrate_smtp_password()
     from .models.document_type import DocumentType
     from .models.email_template import EmailTemplate
     DocumentType.seed_defaults()
