@@ -1,5 +1,8 @@
 import os
-from flask import Blueprint, request, jsonify
+import re
+import uuid
+from PIL import Image, ImageOps, UnidentifiedImageError
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.user import User
@@ -15,6 +18,15 @@ ALLOWED_EXT = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 AVATAR_DIR = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..', 'uploads', 'avatars'))
 MAX_SIZE = 2 * 1024 * 1024
+
+
+def remove_avatar_file(user_id, avatar_url):
+    filename = (avatar_url or '').removeprefix('/api/avatars/')
+    if re.fullmatch(r'user_' + str(user_id) + r'(?:_[a-f0-9]{32})?\.(?:png|jpg|jpeg|gif|webp)', filename):
+        try:
+            os.remove(os.path.join(AVATAR_DIR, filename))
+        except FileNotFoundError:
+            pass
 
 USER_FIELDS = ('email', 'first_name', 'last_name', 'role', 'is_active', 'avatar_url', 'default_call_method', 'default_email_method', 'email_notifications')
 
@@ -153,6 +165,7 @@ def delete_user(user_id):
 @users_bp.route('/<int:user_id>/avatar', methods=['POST'])
 @jwt_required()
 def upload_avatar(user_id):
+    request.max_content_length = MAX_SIZE + 65536
     u = db.session.get(User, user_id)
     if not u:
         return jsonify({'error': 'Użytkownik nie istnieje'}), 404
@@ -173,20 +186,32 @@ def upload_avatar(user_id):
     if size > MAX_SIZE:
         return jsonify({'error': 'Plik za duży (max 2 MB)'}), 400
 
+    try:
+        with Image.open(f) as source:
+            if source.format not in ('PNG', 'JPEG', 'GIF', 'WEBP') or source.width * source.height > 16000000:
+                raise ValueError('Wybierz poprawny obraz PNG, JPG, GIF lub WEBP.')
+            source.load()
+            image = ImageOps.exif_transpose(source).convert('RGBA')
+            image.info.clear()
+            image.thumbnail((512, 512))
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
+        return jsonify({'error': 'Wybierz poprawny obraz PNG, JPG, GIF lub WEBP.'}), 400
+
     os.makedirs(AVATAR_DIR, exist_ok=True)
-    filename = f'user_{user_id}.{ext}'
-
-    for old_ext in ALLOWED_EXT:
-        old = os.path.join(AVATAR_DIR, f'user_{user_id}.{old_ext}')
-        if os.path.exists(old) and old_ext != ext:
-            try:
-                os.remove(old)
-            except OSError:
-                pass
-
-    f.save(os.path.join(AVATAR_DIR, filename))
+    filename = f'user_{user_id}_{uuid.uuid4().hex}.png'
+    image.save(os.path.join(AVATAR_DIR, filename), format='PNG')
+    old_url = u.avatar_url
     u.avatar_url = f'/api/avatars/{filename}'
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        remove_avatar_file(user_id, f'/api/avatars/{filename}')
+        raise
+    try:
+        remove_avatar_file(user_id, old_url)
+    except OSError:
+        current_app.logger.warning('Could not remove previous avatar for user %s', user_id)
     return jsonify({'ok': True, 'avatar_url': u.avatar_url, 'user': u.to_dict()}), 200
 
 
@@ -196,13 +221,11 @@ def delete_avatar(user_id):
     u = db.session.get(User, user_id)
     if not u:
         return jsonify({'error': 'Użytkownik nie istnieje'}), 404
-    for ext in ALLOWED_EXT:
-        p = os.path.join(AVATAR_DIR, f'user_{user_id}.{ext}')
-        if os.path.exists(p):
-            try:
-                os.remove(p)
-            except OSError:
-                pass
+    old_url = u.avatar_url
     u.avatar_url = None
     db.session.commit()
+    try:
+        remove_avatar_file(user_id, old_url)
+    except OSError:
+        current_app.logger.warning('Could not remove avatar for user %s', user_id)
     return jsonify({'ok': True}), 200

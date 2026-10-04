@@ -906,6 +906,14 @@
       "function": "eaa1eb13473d1068fa6e7c6d5f0bfbd5a2316e0ee7a872930a340638b240fb15"
     }
   },
+  "closeEmployeeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "432ddd7a98538a6634753e50e9e5d3ca0e575749ace06fd90a21e29c1183579c"
+    }
+  },
   "closeJournal": {
     "enumerable": true,
     "configurable": true,
@@ -1816,6 +1824,20 @@
       "function": "93fedc7e3f4df68553164e58a41b3855f9ca419264bcedd1a8c33f833b433d19"
     }
   },
+  "employeeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "open": false,
+      "user": null,
+      "file": null,
+      "preview": "",
+      "remove": false,
+      "busy": false,
+      "error": ""
+    }
+  },
   "emptyArchive": {
     "enumerable": true,
     "configurable": true,
@@ -1978,7 +2000,7 @@
   "filteredUsers": {
     "enumerable": true,
     "configurable": true,
-    "get": "197d6c1d3073b003fab5d2663cde965df1e3a774ca3b4c52d8b845ebeb200d7a",
+    "get": "9355b086177a08f06861550223205b6163a39e9fd8e166a7960415957eae6ddf",
     "value": null
   },
   "forgotModal": {
@@ -2913,7 +2935,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "d4835db2b8274a0740c307acd87ac78b5eeb8911b0e880f07e8a6b8a53f62292"
+      "function": "c5b899b32370a0d3a5c3aec6cd893432e4ce08b3da3734f3d9ec67335ed4e29b"
     }
   },
   "lookupClientGus": {
@@ -3095,6 +3117,14 @@
     "configurable": true,
     "writable": true,
     "value": []
+  },
+  "markEmployeeAvatarRemoved": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9d3f1f37c1705a5d8e9dca70dee3e93813c6b0097fcbaaa042e360c1d3171fc3"
+    }
   },
   "markNotificationsRead": {
     "enumerable": true,
@@ -3735,6 +3765,14 @@
     "writable": true,
     "value": {
       "function": "eb7ef37c6b76612b3f3a313450605ecf2516056ebb9ec20490e9211132f6cdec"
+    }
+  },
+  "openEmployeeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "124d5fae3e454a80e239d50f1f66ca4cffc2ebc26b0fd5c40a32d85bbf923d32"
     }
   },
   "openEntityTelephonyModal": {
@@ -4794,6 +4832,14 @@
       "function": "083947aa3db5ca7a32a62001abc8d3c7dfc1bc5868a84b171a47a7fe48b642dd"
     }
   },
+  "saveEmployeeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "df55cc3103aff748cdccde9a45491f02e45d4815fb547d9a7164268bec08ce90"
+    }
+  },
   "saveHelpdeskSettings": {
     "enumerable": true,
     "configurable": true,
@@ -5080,6 +5126,14 @@
     "writable": true,
     "value": {
       "function": "52b6003c19db50d384984b13da3dea05d77b56a3c26bf2e699bb4063397d9200"
+    }
+  },
+  "selectEmployeeAvatar": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b1a18b116229ba8f4f825f920bc5f51b3085ca47621f097cad437e7c8c6dd757"
     }
   },
   "selectJournalRecord": {
@@ -6571,6 +6625,14 @@
     "writable": true,
     "value": ""
   },
+  "trapEmployeeAvatarFocus": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "c017f1c84995b49f51e90f9b74e6b1a8b098782a65e93bebea99c2dae3c6591e"
+    }
+  },
   "trapJournal": {
     "enumerable": true,
     "configurable": true,
@@ -6700,6 +6762,12 @@
     "value": {
       "function": "426cb9de671f2f26cc982ef452d87ca848d2490fbcd31a9044bc7982047b0cf6"
     }
+  },
+  "userStatusFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
   },
   "userTab": {
     "enumerable": true,

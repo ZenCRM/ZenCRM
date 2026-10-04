@@ -120,6 +120,7 @@ window.ZenCore.auth = function () { return {
             this.detailView.open = false;
             this.detailPanel = false;
             this.token = '';
+            if (this.employeeAvatar) { this.employeeAvatar.busy = false; this.closeEmployeeAvatar(); }
             this.user = null;
             if (this.mail) this.mail = window.ZenModules.mailboxes().mail;
             if (this.clientMail) { this.clientMail.request++; this.clientMail = window.ZenModules.mailboxes().clientMail; }

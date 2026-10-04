@@ -1,7 +1,8 @@
 <!-- ═══ PRACOWNICY I ZESPOŁY ═══ -->
-<div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'users'" x-cloak class="space-y-4">
+<div :inert="detailView.open &amp;&amp; detailPanel" x-show="(!detailView.open || detailPanel) &amp;&amp; currentView === 'users'" x-cloak class="employee-directory space-y-4">
+    <div class="employee-heading"><div><h2 x-text="window.ZenI18n.t('Pracownicy i zespoły')"></h2><p x-text="window.ZenI18n.t('Poznaj zespół, sprawdź role i zarządzaj profilami pracowników.')"></p></div><div class="employee-summary"><span><strong x-text="users.filter(u => u.is_active).length"></strong><span x-text="window.ZenI18n.t('Aktywne konta')"></span></span><span><strong x-text="teams.length"></strong><span x-text="window.ZenI18n.t('Zespoły')"></span></span></div></div>
     <!-- Pasek zakładek i akcji -->
-    <div class="flex items-center justify-between gap-4 flex-wrap pb-1 border-b border-gray-200 dark:border-gray-700">
+    <div class="employee-toolbar flex items-center justify-between gap-4 flex-wrap pb-1 border-b border-gray-200 dark:border-gray-700">
         <!-- Zakładki -->
         <div class="flex items-center gap-2">
             <button type="button" @click="userTab = 'employees'"
@@ -31,7 +32,9 @@
                             <option :value="t.id" x-text="t.name"></option>
                         </template>
                     </select>
+                    <select class="ux-input text-xs" x-model="userStatusFilter" :aria-label="window.ZenI18n.t('Status konta')"><option value="" x-text="window.ZenI18n.t('Wszystkie konta')"></option><option value="active" x-text="window.ZenI18n.t('Aktywne')"></option><option value="inactive" x-text="window.ZenI18n.t('Nieaktywne')"></option></select>
                     <button type="button" @click="openModal(null, null, false, 'users')"
+                            x-show="isAdmin"
                             class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 !text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                         <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span class="text-white" x-text="window.ZenI18n.t('Dodaj pracownika')">Dodaj pracownika</span>
@@ -52,18 +55,20 @@
     <!-- 1. ZAKŁADKA PRACOWNICY -->
     <!-- ─────────────────────────────────────────────────────────── -->
     <div x-show="userTab === 'employees'" class="space-y-4">
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <p class="employee-result-count" role="status" x-text="window.ZenI18n.t('Wyświetlono {count} z {total}', {count: filteredUsers.length, total: users.length})"></p>
+        <div class="employee-grid">
             <template x-for="u in pagedItems('users', filteredUsers)" :key="u.id">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 text-center flex flex-col justify-between hover:shadow-md transition">
+                <div class="employee-card" :class="{'is-inactive': !u.is_active}">
                     <div>
+                        <span class="employee-account-status" :class="u.is_active ? 'is-active' : 'is-disabled'" x-text="window.ZenI18n.t(u.is_active ? 'Aktywne konto' : 'Nieaktywne konto')"></span>
                         <template x-if="u.avatar_url">
-                            <img :src="u.avatar_url" class="w-16 h-16 rounded-full object-cover mx-auto mb-3 shadow-sm border border-gray-100 dark:border-gray-700">
+                            <img :src="u.avatar_url" :alt="fullName(u)" loading="lazy" class="w-16 h-16 rounded-full object-cover mx-auto mb-3 shadow-sm border border-gray-100 dark:border-gray-700">
                         </template>
                         <template x-if="!u.avatar_url">
                             <div class="w-16 h-16 rounded-full avatar-gradient text-white mx-auto flex items-center justify-center text-2xl font-bold mb-3 shadow-sm" x-text="initialsFrom(u)"></div>
                         </template>
                         <p class="font-bold text-gray-900 dark:text-gray-100 text-base" x-text="fullName(u)"></p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3 truncate" x-text="u.email"></p>
+                        <p class="employee-email" x-text="u.email"></p>
 
                         <div class="flex items-center justify-center gap-1.5 flex-wrap mb-3">
                             <span class="px-2.5 py-0.5 text-xs rounded-full font-medium inline-block"
@@ -94,8 +99,8 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700/60">
-                        <button @click="openModal(u, null, false, 'users')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span></button>
+                    <div class="employee-card-actions" x-show="isAdmin">
+                        <button @click="openModal(u, null, false, 'users')" class="zen-list-action zen-action-edit" :aria-label="window.ZenI18n.t('Edytuj')" :title="window.ZenI18n.t('Edytuj')"><span x-html="zenIcon('edit')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Edytuj')"></span></button><button type="button" class="employee-avatar-action" @click="openEmployeeAvatar(u)" :aria-label="window.ZenI18n.t('Zdjęcie pracownika') + ': ' + fullName(u)"><span x-text="window.ZenI18n.t('Zdjęcie')"></span></button>
                     </div>
                 </div>
             </template>
@@ -103,9 +108,20 @@
 
         <div x-show="filteredUsers.length === 0" class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
             <p class="text-sm font-medium text-gray-500" x-text="window.ZenI18n.t('Brak pracowników spełniających kryteria')">Brak pracowników spełniających kryteria</p>
-            <button x-show="userSearch || userTeamFilter" @click="userSearch = ''; userTeamFilter = '';" class="mt-2 text-xs text-brand-600 dark:text-brand-400 hover:underline cursor-pointer" x-text="window.ZenI18n.t('Wyczyść filtry')">Wyczyść filtry</button>
+            <button x-show="userSearch || userTeamFilter || userStatusFilter" @click="userSearch = ''; userTeamFilter = ''; userStatusFilter = '';" class="mt-2 text-xs text-brand-600 dark:text-brand-400 hover:underline cursor-pointer" x-text="window.ZenI18n.t('Wyczyść filtry')">Wyczyść filtry</button>
         </div>
         <div x-data="{ pagerView: 'users', get pagerItems() { return this.filteredUsers } }"><% include "views/pagination.html" %></div>
+    </div>
+
+    <div x-show="employeeAvatar.open" x-cloak class="employee-avatar-overlay" @keydown.escape.stop="closeEmployeeAvatar()" @click.self="closeEmployeeAvatar()">
+        <section class="employee-avatar-dialog" role="dialog" aria-modal="true" aria-labelledby="employee-avatar-title" @keydown.tab="trapEmployeeAvatarFocus($event)">
+            <header><div><h3 id="employee-avatar-title" x-text="window.ZenI18n.t('Zdjęcie pracownika')"></h3><p x-text="fullName(employeeAvatar.user || {})"></p></div><button type="button" @click="closeEmployeeAvatar()" :disabled="employeeAvatar.busy" :aria-label="window.ZenI18n.t('Zamknij')">&times;</button></header>
+            <div class="employee-avatar-preview"><template x-if="!employeeAvatar.remove && (employeeAvatar.preview || employeeAvatar.user?.avatar_url)"><img :src="employeeAvatar.preview || employeeAvatar.user.avatar_url" :alt="fullName(employeeAvatar.user || {})"></template><template x-if="employeeAvatar.remove || !(employeeAvatar.preview || employeeAvatar.user?.avatar_url)"><span class="avatar-gradient" x-text="initialsFrom(employeeAvatar.user || {})"></span></template></div>
+            <p class="employee-avatar-hint" x-text="window.ZenI18n.t('PNG, JPG, GIF lub WEBP, maksymalnie 2 MB. Zdjęcie zostanie dopasowane automatycznie.')"></p>
+            <div class="employee-avatar-controls"><label class="employee-file-button" :class="{'is-busy':employeeAvatar.busy}"><span x-text="window.ZenI18n.t('Wybierz zdjęcie')"></span><input type="file" accept="image/png,image/jpeg,image/gif,image/webp" @change="selectEmployeeAvatar($event)" :disabled="employeeAvatar.busy"></label><button type="button" @click="markEmployeeAvatarRemoved()" :disabled="employeeAvatar.busy" x-show="!employeeAvatar.remove && (employeeAvatar.preview || employeeAvatar.user?.avatar_url)" x-text="window.ZenI18n.t('Usuń zdjęcie')"></button></div>
+            <p class="employee-avatar-error" role="alert" x-show="employeeAvatar.error" x-text="employeeAvatar.error"></p>
+            <footer><button type="button" @click="closeEmployeeAvatar()" :disabled="employeeAvatar.busy" x-text="window.ZenI18n.t('Anuluj')"></button><button type="button" class="employee-avatar-save" @click="saveEmployeeAvatar()" :disabled="employeeAvatar.busy || (!employeeAvatar.file && !employeeAvatar.remove)" :aria-busy="employeeAvatar.busy" x-text="window.ZenI18n.t(employeeAvatar.busy ? 'Zapisywanie…' : 'Zapisz zmiany')"></button></footer>
+        </section>
     </div>
 
     <!-- ─────────────────────────────────────────────────────────── -->
