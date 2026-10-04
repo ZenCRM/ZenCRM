@@ -463,6 +463,12 @@
     "writable": true,
     "value": 4
   },
+  "boardCompact": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
   "boardDrag": {
     "enumerable": true,
     "configurable": true,
@@ -1750,6 +1756,12 @@
     "value": {
       "function": "12313231afbe9379883434bdb6b8e2cc2e8749db003296da9d6d052350e64738"
     }
+  },
+  "effectiveBoardColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "1328298b66bacbbe0ff9f2dc1dec2dff3f54a8d9cb5e75c17e1dd1953e9ceb84",
+    "value": null
   },
   "effectivePermissions": {
     "enumerable": true,
@@ -6352,6 +6364,14 @@
     "configurable": true,
     "get": "a2a1f28ce4ed975c8c368af5d8c1a4f46daa72edb030e6dfe3a91ed6ff890e36",
     "value": null
+  },
+  "toggleBoardCompact": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2d6bd52b722bcf56e654dbbe0805d91c3526f9a1aed33b985db93bcddae6d898"
+    }
   },
   "toggleClientMetric": {
     "enumerable": true,

@@ -10,12 +10,13 @@
                             <span x-text="window.ZenI18n.t('Lista')">Lista</span>
                         </button>
                     </div>
-                    <label class="zen-column-count" x-show="kanbanMode === 'kanban'">
+                    <label class="zen-column-count" x-show="kanbanMode === 'kanban' &amp;&amp; !boardCompact">
                         <span x-text="window.ZenI18n.t('Kolumny na ekranie')">Kolumny na ekranie</span>
                         <select class="ux-input" x-model.number="boardColumns" @change="setBoardColumns()">
                             <template x-for="n in [2,3,4,5,6]" :key="n"><option :value="n" x-text="n"></option></template>
                         </select>
                     </label>
+                    <button type="button" x-show="kanbanMode === 'kanban'" @click="toggleBoardCompact()" :aria-pressed="boardCompact" class="kanban-tab" :class="{ active: boardCompact }" x-text="window.ZenI18n.t('Widok kompaktowy')"></button>
                     <button x-show="user?.role === 'admin' &amp;&amp; kanbanMode === 'kanban'" @click="editStages()" class="ux-text-button"><span x-text="window.ZenI18n.t('Ustaw statusy')">Ustaw statusy</span></button>
                     <input class="ux-input" type="search" x-model.debounce.150ms="leadSearch" :placeholder="window.ZenI18n.t('Szukaj leada lub klienta')" :aria-label="window.ZenI18n.t('Szukaj leada')">
                     <select class="ux-input" x-model="leadFilter" :aria-label="window.ZenI18n.t('Filtr leadów')">
@@ -64,9 +65,9 @@
 
                 <div class="zen-board-guidance" x-show="kanbanMode === 'kanban'"><span x-text="window.ZenI18n.t('Przeciągnij kartę do innego etapu lub wybierz etap na karcie.')"></span><span x-text="boardLeads.length + ' / ' + leads.length"></span></div>
                 <!-- Kanban View -->
-                <div class="kanban-board zen-lead-board" x-show="kanbanMode === 'kanban'">
+                <div class="kanban-board zen-lead-board" :class="{ 'zen-board-compact': boardCompact }" x-show="kanbanMode === 'kanban'">
                     <div class="kanban-viewport" :class="{ 'ux-more-left': canScrollLeft, 'ux-more-right': canScrollRight }">
-                        <div class="kanban-cols" :style="{ '--board-columns': boardColumns }" x-ref="kanbanCols" x-init="$nextTick(() => recomputeVisibleCols())" @scroll.passive="updateKanbanScroll()" @dragover.prevent="boardDrag($event)" @dragleave="if (!$el.contains($event.relatedTarget)) { stopBoardDrag(); dragOverStage = null; }" :class="{ 'ux-dragging': draggedLead }" tabindex="0" :aria-label="window.ZenI18n.t('Etapy leadów')" @keydown.left.self.prevent="scrollKanban(-1)" @keydown.right.self.prevent="scrollKanban(1)">
+                        <div class="kanban-cols" :style="{ '--board-columns': effectiveBoardColumns }" x-ref="kanbanCols" x-init="$nextTick(() => recomputeVisibleCols())" @scroll.passive="updateKanbanScroll()" @dragover.prevent="boardDrag($event)" @dragleave="if (!$el.contains($event.relatedTarget)) { stopBoardDrag(); dragOverStage = null; }" :class="{ 'ux-dragging': draggedLead }" tabindex="0" :aria-label="window.ZenI18n.t('Etapy leadów')" @keydown.left.self.prevent="scrollKanban(-1)" @keydown.right.self.prevent="scrollKanban(1)">
                             <template x-for="stage in leadStages" :key="stage.id">
                                 <div class="kanban-col-new" :data-stage="stage.id" :style="{ '--stage-accent': stage.accent, '--stage-tint': stage.accent + '12' }" :class="{ dragover: dragOverStage === stage.id }" @dragenter.prevent="if (draggedLead) dragOverStage = stage.id" @dragover.prevent="if (draggedLead) dragOverStage = stage.id" @drop.prevent.stop="moveLead($event, stage.id)">
                                     <div class="kanban-col-header" >

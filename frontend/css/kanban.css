@@ -229,15 +229,44 @@
 }
 
 /* Keep lead cards distinct from their column in both themes. */
-.windmill-app .zen-lead-board .kanban-card-new.zen-lead-card,
-.theme-modern .windmill-app .zen-lead-board .kanban-card-new.zen-lead-card {
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-col-new,
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board .kanban-col-header {
+    background:#e5e7eb;
+}
+:is(html,.theme-modern).dark .windmill-app .zen-lead-board.kanban-board .kanban-col-new,
+:is(html,.theme-modern).dark .windmill-app .zen-lead-board.kanban-board .kanban-col-header {
+    background:#28313b;
+}
+
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-cols { gap:8px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-new { flex:0 0 max(176px,calc((100% - 32px) / 5));min-width:0;border-radius:10px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-header { padding:9px 8px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-header .title { font-size:12px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-body { padding:6px;gap:7px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .zen-lead-card { padding:9px;border-radius:8px; }
+.zen-board-compact .zen-lead-card-title { font-size:12px;line-height:1.35;margin:6px 0 8px; }
+.zen-board-compact .zen-lead-card-value { margin-bottom:7px; }
+.zen-board-compact .zen-lead-card-owner { gap:4px;margin:7px 0;font-size:10px;flex-wrap:wrap; }
+.zen-board-compact .zen-lead-owner-avatar { width:21px;height:21px; }
+.zen-board-compact .zen-lead-card-footer { gap:4px;margin-top:7px;padding-top:7px;flex-wrap:wrap; }
+.zen-board-compact .zen-lead-card-amount { font-size:13px; }
+.zen-board-compact .zen-lead-card-edit { width:28px;height:28px; }
+.zen-board-compact .zen-lead-card-action { padding:5px 0; }
+.zen-board-compact .zen-lead-card-action p { font-size:11px; }
+.zen-board-compact .zen-lead-card-probability { gap:4px;font-size:10px; }
+@media(max-width:640px) {
+    :is(html,.theme-modern) .windmill-app .zen-lead-board.kanban-board.zen-board-compact .kanban-col-new { flex-basis:200px; }
+}
+
+.windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card,
+.theme-modern .windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card {
     border-color:color-mix(in srgb,var(--stage-accent) 30%,var(--wm-border));
     border-left:4px solid var(--stage-accent);
     background:color-mix(in srgb,var(--stage-accent) 3%,var(--wm-surface));
     box-shadow:0 3px 10px #0f172a14;
 }
-.windmill-app .zen-lead-board .kanban-card-new.zen-lead-card:hover,
-.theme-modern .windmill-app .zen-lead-board .kanban-card-new.zen-lead-card:hover {
+.windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card:hover,
+.theme-modern .windmill-app .zen-lead-board.kanban-board .kanban-card-new.zen-lead-card:hover {
     border-color:var(--stage-accent);
     box-shadow:0 6px 18px #0f172a24;
 }

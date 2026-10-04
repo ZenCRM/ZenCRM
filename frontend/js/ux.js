@@ -131,6 +131,9 @@ window.ZenUX = {
         finally { this.taskStageSaving = false; }
     },
     boardColumns: Math.min(6, Math.max(2, Number(localStorage.getItem('zen-board-columns')) || 4)),
+    boardCompact: localStorage.getItem('zen-board-compact') === 'true',
+    get effectiveBoardColumns() { return this.boardCompact ? 5 : this.boardColumns; },
+    toggleBoardCompact() { this.boardCompact = !this.boardCompact; localStorage.setItem('zen-board-compact', this.boardCompact); this.$nextTick(() => this.recomputeVisibleCols()); },
     calendarSelected: new Date(),
     localDateKey(date) { return [date.getFullYear(), String(date.getMonth()+1).padStart(2,'0'), String(date.getDate()).padStart(2,'0')].join('-'); },
     get filteredContacts() { const term = this.contactSearch.trim().toLocaleLowerCase(window.ZenI18n.locale); return this.contacts.filter(c => [c.first_name,c.last_name,c.email,c.phone,this.clientName(c.client_id)].join(' ').toLocaleLowerCase(window.ZenI18n.locale).includes(term)); },

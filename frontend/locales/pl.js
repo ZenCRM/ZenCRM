@@ -2478,5 +2478,6 @@ window.ZenLocales.pl = {
   "SMTP password requires migration; run seed.py": "SMTP password requires migration; run seed.py",
   "Szablon jest nieprawidłowy lub przekracza limit czasu, pamięci albo rozmiaru.": "Szablon jest nieprawidłowy lub przekracza limit czasu, pamięci albo rozmiaru.",
   "Niedozwolona operacja w szablonie.": "Niedozwolona operacja w szablonie.",
-  "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę."
+  "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.",
+  "Widok kompaktowy": "Widok kompaktowy"
 };
