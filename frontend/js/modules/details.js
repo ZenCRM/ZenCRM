@@ -15,6 +15,7 @@ window.ZenModules.details = function () { return {
                 tab: 'overview',
                 contacts: [],
                 tasks: [],
+                meetings: [],
                 documents: [],
                 comments: [],
                 activities: [],
@@ -104,18 +105,22 @@ window.ZenModules.details = function () { return {
             const ep = t === 'client' ? 'clients' : 'leads';
 
             try {
-                const [data, contacts, tasks, documents, comments, activities] = await Promise.all([
+                const [data, contacts, tasks, documents, comments, activities, meetings] = await Promise.all([
                     this.api(`/${ep}/${id}`),
                     this.api(`/contacts?${entityParam}_id=${id}`),
                     this.api(`/tasks?${entityParam}_id=${id}`),
                     this.api(`/documents?${entityParam}_id=${id}`),
                     this.api(`/comments?entity_type=${entityParam}&entity_id=${id}`),
                     this.api(`/activities?entity_type=${entityParam}&entity_id=${id}`),
+                    this.api(`/meetings?${entityParam}_id=${id}`),
                 ]);
 
+                if (this.detailView !== view || !view.open) return;
                 view.data = data;
                 view.contacts = contacts || [];
                 view.tasks = tasks || [];
+                view.meetings = (meetings || []).slice().sort((a, b) =>
+                    new Date(a.start_time) - new Date(b.start_time) || a.id - b.id);
                 view.documents = documents || [];
                 view.comments = comments || [];
                 view.activities = activities || [];
@@ -236,6 +241,7 @@ window.ZenModules.details = function () { return {
                     tab: 'overview',
                     contacts: [],
                     tasks: [],
+                    meetings: [],
                     documents: [],
                     comments: [],
                     activities: [],

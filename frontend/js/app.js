@@ -126,6 +126,7 @@ function crmApp() {
             tab: 'overview',
             contacts: [],
             tasks: [],
+            meetings: [],
             documents: [],
             comments: [],
             activities: [],

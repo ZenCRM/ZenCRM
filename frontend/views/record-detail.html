@@ -153,6 +153,9 @@
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;tasks&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;tasks&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span> <span class="detail-tab-count" x-text="(detailView.tasks || []).length"></span>
                         </button>
+                        <button class="detail-tab-v2" :class="detailView.tab === 'meetings' ? 'active' : ''" @click="detailView.tab = 'meetings'">
+                            <span x-text="window.ZenI18n.t('Spotkania')">Spotkania</span> <span class="detail-tab-count" x-text="(detailView.meetings || []).length"></span>
+                        </button>
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;documents&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;documents&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Dokumenty&quot;)">Dokumenty</span> <span class="detail-tab-count" x-text="(detailView.documents || []).length"></span>
                         </button>
@@ -171,6 +174,7 @@
                                 <button class="detail-more-wide-hidden" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'tickets'; moreOpen = false" x-text="window.ZenI18n.t('Tickety')"></button>
                                 <button class="detail-more-wide-hidden" x-show="detailView.type === &#x27;client&#x27;" @click="detailView.tab = 'leads'; moreOpen = false" x-text="window.ZenI18n.t('Leady')"></button>
                                 <button @click="detailView.tab = 'tasks'; moreOpen = false" x-text="window.ZenI18n.t('Zadania')"></button>
+                                <button @click="detailView.tab = 'meetings'; moreOpen = false" x-text="window.ZenI18n.t('Spotkania')"></button>
                                 <button @click="detailView.tab = 'documents'; moreOpen = false" x-text="window.ZenI18n.t('Dokumenty')"></button>
                                 <button @click="openAttachments(detailView.type, detailView.data.id); moreOpen = false" x-text="window.ZenI18n.t('Pliki')"></button>
                                 <button @click="detailView.tab = 'comments'; moreOpen = false" x-text="window.ZenI18n.t('Notatki i kontakt')"></button>
@@ -519,6 +523,33 @@
                             </div>
                             <div x-show="(detailView.tasks || []).length === 0" class="detail-empty">
                                 <p class="font-medium"><span x-text="window.ZenI18n.t(&quot;Brak zadań&quot;)">Brak zadań</span></p>
+                            </div>
+                        </div>
+
+                        <div x-show="!detailView.loading && !detailError && detailView.tab === 'meetings'" x-cloak>
+                            <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h3 class="font-semibold text-lg" x-text="window.ZenI18n.t('Spotkania')">Spotkania</h3>
+                                <button type="button" @click="quickAdd('meeting')" class="detail-add-btn" x-text="window.ZenI18n.t('+ Dodaj spotkanie')">+ Dodaj spotkanie</button>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="meeting in (detailView.meetings || [])" :key="meeting.id">
+                                    <div class="detail-section flex items-start gap-3">
+                                        <span class="zen-icon-wrap text-brand-600 dark:text-brand-400" x-html="zenIcon('calendar')" aria-hidden="true"></span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-semibold break-words" x-text="meeting.title"></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" x-text="formatDateTime(meeting.start_time) + ' – ' + formatDateTime(meeting.end_time)"></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words" x-show="meeting.location" x-text="meeting.location"></p>
+                                            <span class="inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full"
+                                                  :class="meeting.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200' : meeting.status === 'cancelled' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200'"
+                                                  x-text="window.ZenI18n.t(meeting.status === 'completed' ? 'Odbyto sie' : meeting.status === 'cancelled' ? 'Odwolane' : 'Zaplanowane')"></span>
+                                        </div>
+                                        <button type="button" class="detail-add-btn shrink-0" @click="openModal(meeting, null, true, 'meetings', {lockedRelations: ['client_id', 'lead_id']})" x-text="window.ZenI18n.t('Edytuj')">Edytuj</button>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="!(detailView.meetings || []).length" class="detail-empty">
+                                <p class="font-medium" x-text="window.ZenI18n.t('Brak spotkań')">Brak spotkań</p>
+                                <button type="button" @click="quickAdd('meeting')" class="mt-2 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" x-text="window.ZenI18n.t('+ Dodaj spotkanie')"></button>
                             </div>
                         </div>
 

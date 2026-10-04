@@ -654,6 +654,7 @@ window.ZenLocales.en = {
   "So": "Sat",
   "Sobota": "Saturday",
   "Spotkania": "Meetings",
+  "Brak spotkań": "No meetings",
   "Spotkanie": "Meeting",
   "Spróbuj ponownie": "Try again",
   "Sredni": "Medium",

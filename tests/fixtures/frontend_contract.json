@@ -1086,7 +1086,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "1ef0f274246c54429b2063d18783e77e8c169b576d521b292186a55d939674e5"
+      "function": "fe2e4bb391e1b97cb74267fc0e726c01af651a418583111a1901b2be2a5b4b02"
     }
   },
   "copyLeadWebhookToken": {
@@ -1489,6 +1489,7 @@
       "tab": "overview",
       "contacts": [],
       "tasks": [],
+      "meetings": [],
       "documents": [],
       "comments": [],
       "activities": [],
@@ -2692,7 +2693,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "71b60a930295e1b3d589ee16068cf0748332c84bd1fd75ebb45fa02780485ba4"
+      "function": "d24db0e65d2da647c59bccc9e22956e05bcd40a08aa8e6e4a8adfdb15dcfb8ac"
     }
   },
   "loadDirectory": {
@@ -3732,7 +3733,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "f61fac9aba92a9808c2e3abd1ec1ff48b01fd881073bc29a920211c8275d9fe5"
+      "function": "774f7cbe2aabd74a7eeb0741ccfc02146ea0f59ca82a9d1c2f8a7955ff331c7b"
     }
   },
   "openDeviceModal": {

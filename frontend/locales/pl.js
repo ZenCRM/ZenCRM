@@ -654,6 +654,7 @@ window.ZenLocales.pl = {
   "So": "So",
   "Sobota": "Sobota",
   "Spotkania": "Spotkania",
+  "Brak spotkań": "Brak spotkań",
   "Spotkanie": "Spotkanie",
   "Spróbuj ponownie": "Spróbuj ponownie",
   "Sredni": "Średni",
