@@ -1,0 +1,41 @@
+/* The document owns vertical scrolling; only the mobile menu is a drawer. */
+.windmill-app > .zen-app-layout,
+.theme-modern .windmill-app > .zen-app-layout { height:auto;min-height:100dvh;overflow:visible;align-items:stretch; }
+.windmill-app .zen-app-content { min-height:100dvh; }
+.windmill-app main.zen-app-main,
+.theme-modern .windmill-app main.zen-app-main { height:auto;min-height:100dvh;overflow:visible; }
+.zen-app-sidebar { scrollbar-width:thin;scrollbar-color:transparent transparent; }
+.zen-app-sidebar:hover,.zen-app-sidebar:focus-within { scrollbar-color:#8a9baa66 transparent; }
+.zen-app-sidebar::-webkit-scrollbar { width:4px; }
+.zen-app-sidebar::-webkit-scrollbar-thumb { background:transparent;border-radius:8px; }
+.zen-app-sidebar:hover::-webkit-scrollbar-thumb,.zen-app-sidebar:focus-within::-webkit-scrollbar-thumb { background:#8a9baa66; }
+@media(min-width:1024px) {
+ .windmill-app aside.zen-app-sidebar { position:static;align-self:stretch;max-height:none;height:auto;overflow:visible; }
+}
+@media(max-width:1023px) {
+ .windmill-app aside.zen-app-sidebar { height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain; }
+}
+/* Classic sidebar colors are independent of the page's light/dark mode. */
+.classic-sidebar-light { --sidebar-bg:#fff;--sidebar-text:#374151;--sidebar-border:#e5e7eb;--sidebar-hover:#f4f5f7;--sidebar-active:#eaf6fb;--sidebar-active-text:#0069ad; }
+.classic-sidebar-dark { --sidebar-bg:#122d45;--sidebar-text:#d8e8f2;--sidebar-border:#25465f;--sidebar-hover:#1b3b55;--sidebar-active:#204d6d;--sidebar-active-text:#b1e4ff; }
+:is(.classic-sidebar-light,.classic-sidebar-dark) .windmill-app aside.zen-app-sidebar { background:var(--sidebar-bg)!important;border-color:var(--sidebar-border)!important;color:var(--sidebar-text); }
+:is(.classic-sidebar-light,.classic-sidebar-dark) .zen-app-sidebar>div:first-child { border-color:var(--sidebar-border)!important; }
+:is(.classic-sidebar-light,.classic-sidebar-dark) .zen-app-sidebar nav :is(a,button) { color:var(--sidebar-text)!important; }
+:is(.classic-sidebar-light,.classic-sidebar-dark) .zen-app-sidebar nav :is(a,button):hover { background:var(--sidebar-hover)!important; }
+:is(.classic-sidebar-light,.classic-sidebar-dark) .windmill-app .zen-app-sidebar nav a[aria-current="page"],
+:is(.classic-sidebar-light,.classic-sidebar-dark) .zen-app-sidebar nav button:has(+div a[aria-current="page"]) { background:var(--sidebar-active)!important;color:var(--sidebar-active-text)!important; }
+.classic-sidebar-dark .zen-app-sidebar { color-scheme:dark; }
+.classic-sidebar-light .zen-app-sidebar { color-scheme:light; }
+.zen-sidebar-options { display:flex;flex-wrap:wrap;gap:12px; }
+.zen-sidebar-option { display:flex;align-items:center;gap:12px;padding:14px 20px;border:1px solid var(--wm-border,#e5e7eb);border-radius:12px;cursor:pointer;background:var(--wm-surface,#fff);font-size:14px;font-weight:600; }
+.zen-sidebar-option.selected { border-color:var(--wm-accent,#007fce);box-shadow:0 0 0 2px var(--wm-tint,#eaf6fb); }
+.zen-sidebar-option:focus-within { outline:2px solid var(--wm-accent,#007fce);outline-offset:2px; }
+.zen-sidebar-option input { accent-color:var(--wm-accent,#007fce); }
+.zen-sidebar-swatch { width:28px;height:34px;border:1px solid #d9e0e8;border-radius:5px;background:linear-gradient(90deg,#fff 30%,#f1f5f9 30%); }
+.zen-sidebar-swatch.dark-swatch { background:linear-gradient(90deg,#122d45 30%,#f1f5f9 30%);border-color:#25465f; }
+
+.zen-theme-switch{position:relative;display:inline-block;flex:0 0 36px;width:36px;height:20px;border-radius:999px;background:#b7c2cc;overflow:hidden;transition:background-color .15s}
+.zen-theme-switch.is-on{background:var(--wm-accent,#007fce)}
+.zen-theme-switch-thumb{position:absolute;left:2px;top:2px;display:block;width:16px;height:16px;border-radius:50%;background:#fff;transform:translateX(0);transition:transform .15s;box-shadow:0 1px 3px #10263d26}
+.zen-theme-switch.is-on .zen-theme-switch-thumb{transform:translateX(16px)}
+@media(prefers-reduced-motion:reduce){.zen-theme-switch,.zen-theme-switch-thumb{transition:none}}

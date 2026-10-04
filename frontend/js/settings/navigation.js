@@ -1,6 +1,18 @@
 /* Settings component section; state is created for each CRM instance. */
 window.ZenSettings = window.ZenSettings || {};
 window.ZenSettings.navigation = function () { return {
+        get menuModulesList() {
+            const rows = [];
+            for (const item of this.menu || []) {
+                rows.push({id:item.id, label:item.label, group:item.children ? window.ZenI18n.t('Grupa menu') : window.ZenI18n.t('Główne'),
+                    isGroup:!!item.children, adminOnly:this.menuRequiresAdmin(item.id), locked:item.id === 'settings'});
+                for (const child of item.children || []) {
+                    rows.push({id:child.id, label:child.label, group:item.label, isGroup:false,
+                        adminOnly:this.menuRequiresAdmin(child.id), locked:child.id === 'settings'});
+                }
+            }
+            return rows;
+        },
         clientMetricDraft: [],
         get clientMetricChoices() {
             return [
@@ -66,11 +78,12 @@ window.ZenSettings.navigation = function () { return {
         getMenuModuleConfig(id) {
             const current = this.menuPermissionsState[id];
             return {
-                enabled: current?.enabled !== false,
-                role: current?.role || 'all',
+                enabled: id === 'settings' || current?.enabled !== false,
+                role: this.menuRequiresAdmin(id) ? 'admin' : (current?.role || 'all'),
             };
         },
         setMenuModuleEnabled(id, enabled) {
+            if (id === 'settings') return;
             if (!this.menuPermissionsState[id]) {
                 this.menuPermissionsState[id] = { enabled: true, role: 'all' };
             }
@@ -79,6 +92,7 @@ window.ZenSettings.navigation = function () { return {
             this.settingsForm.menu_permissions = JSON.stringify(this.menuPermissionsState);
         },
         setMenuModuleRole(id, role) {
+            if (this.menuRequiresAdmin(id) || !['all','manager','admin'].includes(role)) return;
             if (!this.menuPermissionsState[id]) {
                 this.menuPermissionsState[id] = { enabled: true, role: 'all' };
             }

@@ -39,6 +39,7 @@ DEFAULTS = {
 
     # ── UI ──
     'ui_template':           'classic',
+    'ui_classic_sidebar':    'light',
     'ui_hero_background':    'random',
     'ui_show_footer':        'false',
     'ui_footer_text':        '© 2026 ZenCRM',

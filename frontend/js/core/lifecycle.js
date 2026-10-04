@@ -15,6 +15,7 @@ window.ZenCore.lifecycle = function () { return {
                 } catch (e) { console.warn('Nie pobrano tłumaczeń:', e.message); }
             }
             this.startNotifications();
+            this.startMailCount();
             this.startReminders();
             this.initPush();
             this.$watch('user', (v) => {

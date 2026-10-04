@@ -5,6 +5,7 @@ from ..models.email_template import EmailTemplate, DEFAULT_TEMPLATES
 from ..models.setting import Setting
 from ..services.email_service import get_smtp_config, test_smtp_connection
 from ..utils.deletion import is_admin
+from ..utils.secret_storage import unseal
 
 emails_bp = Blueprint('emails', __name__)
 
@@ -157,7 +158,7 @@ def test_smtp():
         'host': data.get('host') or data.get('smtp_host') or Setting.get_value('smtp_host', ''),
         'port': data.get('port') or data.get('smtp_port') or Setting.get_value('smtp_port', '587'),
         'user': data.get('user') or data.get('smtp_user') or Setting.get_value('smtp_user', ''),
-        'password': data.get('password') or data.get('smtp_password') or Setting.get_value('smtp_password', ''),
+        'password': data.get('password') or data.get('smtp_password') or unseal(Setting.get_value('smtp_password', '') or ''),
         'from_email': data.get('from_email') or data.get('smtp_from_email') or Setting.get_value('smtp_from_email', ''),
         'from_name': data.get('from_name') or data.get('smtp_from_name') or Setting.get_value('smtp_from_name', 'ZenCRM'),
         'encryption': data.get('encryption') or data.get('smtp_encryption') or Setting.get_value('smtp_encryption', 'tls'),

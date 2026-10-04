@@ -13,6 +13,7 @@ from email.utils import formataddr
 from flask import current_app, request
 from ..models.setting import Setting
 from ..models.email_template import EmailTemplate
+from ..utils.secret_storage import unseal
 
 logger = logging.getLogger('zencrm.emails')
 
@@ -40,7 +41,7 @@ def get_smtp_config():
         'host': (Setting.get_value('smtp_host', '') or '').strip(),
         'port': int(Setting.get_value('smtp_port', '587') or 587),
         'user': (Setting.get_value('smtp_user', '') or '').strip(),
-        'password': (Setting.get_value('smtp_password', '') or '').strip(),
+        'password': unseal(Setting.get_value('smtp_password', '') or ''),
         'from_email': (Setting.get_value('smtp_from_email', '') or '').strip() or 'powiadomienia@zencrm.pl',
         'from_name': (Setting.get_value('smtp_from_name', '') or '').strip() or Setting.get_value('brand_name', 'ZenCRM'),
         'encryption': (Setting.get_value('smtp_encryption', 'tls') or 'tls').strip().lower(),

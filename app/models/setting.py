@@ -24,6 +24,9 @@ class Setting(db.Model):
 
     @classmethod
     def set_value(cls, key, value, category='general'):
+        if key == 'smtp_password' and value:
+            from ..utils.secret_storage import seal
+            value = seal(str(value))
         s = cls.query.filter_by(key=key).first()
         if s:
             s.value = value

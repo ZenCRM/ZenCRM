@@ -10,10 +10,13 @@ from pathlib import Path
 from flask import Flask, abort, jsonify
 from app.utils.i18n import init_i18n, t, default_email, activity_text
 from app.models.email_template import DEFAULT_TEMPLATES
-from tools.audit_i18n import ROOT, catalog, calls, backend_messages
+from tools.audit_i18n import ROOT, catalog, calls, backend_messages, untranslated_feature_copy
 
 
 class CatalogTests(unittest.TestCase):
+    def test_new_feature_views_do_not_bypass_translation_catalog(self):
+        self.assertEqual(list(untranslated_feature_copy()), [])
+
     def test_used_keys_exist_in_both_languages(self):
         pl, en = catalog('pl'), catalog('en')
         self.assertEqual(pl.keys(), en.keys())

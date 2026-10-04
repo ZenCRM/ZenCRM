@@ -728,6 +728,13 @@
                                 <p class="text-xs text-gray-500 mt-2" x-text="window.ZenI18n.t('Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.')">Przełącznik szablonu pokazuje podgląd. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.</p>
                             </div>
                             <div x-show="(settingsForm.ui_template || 'classic') === 'classic'" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="font-semibold mb-2"><span x-text="window.ZenI18n.t(&quot;Kolor paska bocznego&quot;)">Kolor paska bocznego</span></h3>
+                                <p class="text-sm text-gray-500 mb-4"><span x-text="window.ZenI18n.t(&quot;Wybierz jasny lub ciemny sidebar. Kolor pozostałej części aplikacji pozostaje niezależny.&quot;)">Wybierz jasny lub ciemny sidebar. Kolor pozostałej części aplikacji pozostaje niezależny.</span></p>
+                                <div class="zen-sidebar-options" role="radiogroup" :aria-label="window.ZenI18n.t(&quot;Kolor paska bocznego&quot;)">
+                                    <label class="zen-sidebar-option" :class="(settingsForm.ui_classic_sidebar || &#x27;light&#x27;) === &#x27;light&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;"><input type="radio" name="classic-sidebar" value="light" x-model="settingsForm.ui_classic_sidebar" @change="applyTheme()"><span class="zen-sidebar-swatch" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t(&quot;Jasny&quot;)">Jasny</span></span></label>
+                                    <label class="zen-sidebar-option" :class="settingsForm.ui_classic_sidebar === &#x27;dark&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;"><input type="radio" name="classic-sidebar" value="dark" x-model="settingsForm.ui_classic_sidebar" @change="applyTheme()"><span class="zen-sidebar-swatch dark-swatch" aria-hidden="true"></span><span><span x-text="window.ZenI18n.t(&quot;Ciemny&quot;)">Ciemny</span></span></label>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2 mb-6"><span x-text="window.ZenI18n.t(&quot;Podgląd zmienia się od razu. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.&quot;)">Podgląd zmienia się od razu. Zapisz ustawienia, aby zastosować wybór dla wszystkich użytkowników.</span></p>
                                 <h3 class="font-semibold mb-2" x-text="window.ZenI18n.t('Wariant kolorystyczny')"></h3>
                                 <p class="text-sm text-gray-500 mb-4" x-text="window.ZenI18n.t('Wybierz gotową paletę lub dopasuj kolory poniżej.')"></p>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" role="group" :aria-label="window.ZenI18n.t('Wariant kolorystyczny')">
@@ -1288,6 +1295,7 @@
                         <div x-show="settingsTab === 'menu'" x-cloak class="space-y-6">
                             <div>
                                 <h2 class="settings-section-title"><span x-text="window.ZenI18n.t('Ustawienia widoczności menu i modułów')">Ustawienia widoczności menu i modułów</span></h2>
+                                <p class="settings-section-desc"><span x-text="window.ZenI18n.t(&quot;Wyłączenie grupy ukrywa również jej podpozycje. Każdą podpozycję możesz też skonfigurować osobno.&quot;)">Wyłączenie grupy ukrywa również jej podpozycje. Każdą podpozycję możesz też skonfigurować osobno.</span></p>
                                 <p class="settings-section-desc"><span x-text="window.ZenI18n.t('Określ, które pozycje menu są aktywne w systemie oraz dla jakich ról są dostępne. Wyłączenie pozycji powoduje jej ukrycie oraz blokadę dostępu.')">Określ, które pozycje menu są aktywne w systemie oraz dla jakich ról są dostępne. Wyłączenie pozycji powoduje jej ukrycie oraz blokadę dostępu.</span></p>
                             </div>
 
@@ -1298,26 +1306,27 @@
                                     <div class="w-1/4 text-right" x-text="window.ZenI18n.t('Dostępność dla ról')">Dostępność dla ról</div>
                                 </div>
                                 <template x-for="mod in menuModulesList" :key="mod.id">
-                                    <div class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-gray-50/50 dark:hover:bg-gray-750/50 transition">
+                                    <div :data-menu-module="mod.id" :class="mod.isGroup ? &#x27;bg-gray-50 dark:bg-gray-750&#x27; : &#x27;&#x27;" class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-gray-50/50 dark:hover:bg-gray-750/50 transition">
                                         <div class="w-1/2 flex items-center gap-3">
                                             <span class="text-xs px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium" x-text="mod.group"></span>
-                                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200" x-text="mod.label"></span>
+                                            <div><span class="text-sm font-semibold text-gray-800 dark:text-gray-200" x-text="mod.label"></span><p x-show="mod.locked" class="text-xs text-gray-500 mt-1"><span x-text="window.ZenI18n.t(&quot;Panel administratora jest zawsze dostępny dla administratorów.&quot;)">Panel administratora jest zawsze dostępny dla administratorów.</span></p></div>
                                         </div>
                                         <div class="w-1/4 flex justify-center">
                                             <label class="relative inline-flex items-center cursor-pointer">
                                                 <input type="checkbox" :checked="getMenuModuleConfig(mod.id).enabled"
+                                                       :disabled="mod.locked" :aria-label="window.ZenI18n.t(&quot;Widoczność: &quot;) + mod.label"
                                                        @change="setMenuModuleEnabled(mod.id, $event.target.checked)"
                                                        class="sr-only peer">
                                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
                                                 <span class="ml-2 text-xs font-medium"
-                                                      :class="getMenuModuleConfig(mod.id).enabled ? 'text-green-600 dark:text-green-400' : 'text-gray-400'"
+                                                      :class="getMenuModuleConfig(mod.id).enabled ? &#x27;text-green-600 dark:text-green-400&#x27; : &#x27;text-gray-400&#x27;"
                                                       x-text="getMenuModuleConfig(mod.id).enabled ? window.ZenI18n.t('Włączone') : window.ZenI18n.t('Wyłączone')"></span>
                                             </label>
                                         </div>
                                         <div class="w-1/4 flex justify-end">
                                             <select :value="getMenuModuleConfig(mod.id).role"
                                                     @change="setMenuModuleRole(mod.id, $event.target.value)"
-                                                    :disabled="!getMenuModuleConfig(mod.id).enabled"
+                                                    :disabled="mod.adminOnly || !getMenuModuleConfig(mod.id).enabled" :aria-label="window.ZenI18n.t(&quot;Dostępność dla ról: &quot;) + mod.label"
                                                     class="ux-input text-xs w-48">
                                                 <option value="all" x-text="window.ZenI18n.t('Wszyscy użytkownicy')">Wszyscy użytkownicy</option>
                                                 <option value="manager" x-text="window.ZenI18n.t('Tylko manager i admin')">Tylko manager i admin</option>

@@ -13,6 +13,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     avatar_url = db.Column(db.String(500))
     default_call_method = db.Column(db.String(20), default='link')  # 'link' or 'android'
+    default_email_method = db.Column(db.String(20), nullable=False, default='mailto', server_default='mailto')
     email_notifications = db.Column(db.Text, default='{}')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -66,6 +67,7 @@ class User(db.Model):
             'is_active': self.is_active,
             'avatar_url': self.avatar_url,
             'default_call_method': self.default_call_method or 'link',
+            'default_email_method': self.default_email_method or 'mailto',
             'devices': devices_list,
             'phone': devices_list[0]['phone_number'] if devices_list and devices_list[0].get('phone_number') else None,
             'email_notifications': self.get_email_notifications(),

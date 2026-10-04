@@ -22,7 +22,7 @@ PUBLIC_KEYS = frozenset({
 })
 UI_KEYS = PUBLIC_KEYS | frozenset({
     'gus_enabled', 'client_company_provider', 'client_statuses', 'client_metrics',
-    'ui_template', 'ui_hero_background',
+    'ui_template', 'ui_hero_background', 'ui_classic_sidebar',
     'ui_detail_client', 'ui_detail_lead', 'ui_detail_task', 'ui_detail_service',
     'ui_show_footer', 'ui_footer_text', 'ui_dark_default',
     'lead_stages', 'task_stages', 'required_standard_fields', 'standard_field_labels',
@@ -123,6 +123,8 @@ def update_settings():
     try:
         if 'ui_template' in data and data['ui_template'] not in ('classic', 'modern'):
             raise ValueError('Wybierz dostępny szablon interfejsu.')
+        if 'ui_classic_sidebar' in data and data['ui_classic_sidebar'] not in ('light', 'dark'):
+            raise ValueError('Wybierz jasny lub ciemny pasek boczny.')
         if 'ui_hero_background' in data and data['ui_hero_background'] not in ('random', 'mountains', 'forest', 'coast'):
             raise ValueError('Wybierz dostępne tło sekcji hero.')
         for kind in ('client', 'lead', 'task', 'service'):

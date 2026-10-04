@@ -38,6 +38,17 @@ class SettingsAccessTest(unittest.TestCase):
         db.drop_all()
         self.ctx.pop()
 
+    def test_classic_sidebar_setting_is_validated_and_shared_without_becoming_public(self):
+        self.assertEqual(self.client.get('/api/settings/ui',headers=self.headers['employee']).json['ui_classic_sidebar'],'light')
+        for value in ('light','dark'):
+            response = self.client.put('/api/settings',headers=self.headers['admin'],json={'ui_classic_sidebar':value})
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(self.client.get('/api/settings/ui',headers=self.headers['employee']).json['ui_classic_sidebar'],value)
+        for value in ('automatic',None,True):
+            self.assertEqual(self.client.put('/api/settings',headers=self.headers['admin'],json={'ui_classic_sidebar':value}).status_code,400)
+        self.assertEqual(self.client.put('/api/settings',headers=self.headers['employee'],json={'ui_classic_sidebar':'light'}).status_code,403)
+        self.assertNotIn('ui_classic_sidebar',self.client.get('/api/settings/public').json)
+
     def test_anonymous_cannot_read_private_settings(self):
         for path in ('/api/settings', '/api/settings/full', '/api/settings/ui'):
             response = self.client.get(path)

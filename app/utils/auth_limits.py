@@ -8,7 +8,7 @@ from ..extensions import db
 from ..models.auth_security import AuthRateLimit
 
 
-def auth_limit(limit, seconds=900):
+def auth_limit(limit, seconds=900, by_user=False, scope=None):
     def decorate(func):
         @wraps(func)
         def limited(*args, **kwargs):
@@ -18,7 +18,10 @@ def auth_limit(limit, seconds=900):
             # ProxyFix (TRUSTED_PROXY_HOPS), and a body-supplied key such as the login
             # email would let anyone lock a known account out from another address.
             identity = request.remote_addr or 'unknown'
-            key = hashlib.sha256(f'{request.endpoint}:{identity}:{window}'.encode()).hexdigest()
+            if by_user:
+                from .deletion import current_user
+                identity = 'user:' + str(current_user().id)
+            key = hashlib.sha256(f'{scope or request.endpoint}:{identity}:{window}'.encode()).hexdigest()
             AuthRateLimit.query.filter(AuthRateLimit.expires_at <= now).delete()
             if not db.session.get(AuthRateLimit, key):
                 try:

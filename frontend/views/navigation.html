@@ -1,15 +1,15 @@
 <!-- ═══════════════ APLIKACJA ═══════════════ -->
-<div x-show="token" x-cloak class="flex h-screen overflow-hidden">
+<div x-show="token" x-cloak class="zen-app-layout flex min-h-screen">
 
     <!-- SIDEBAR -->
-    <aside class="zen-app-sidebar fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto bg-white dark:bg-gray-800
+    <aside class="zen-app-sidebar fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800
                   border-r border-gray-200 dark:border-gray-700 transition-transform duration-200
                   lg:static lg:translate-x-0 lg:flex-shrink-0"
            :class="sidebarOpen ? &#x27;translate-x-0&#x27; : &#x27;-translate-x-full&#x27;">
         <div class="px-3 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center">
             <a href="#dashboard" @click.prevent="selectView('dashboard')" :aria-label="window.ZenI18n.t('Przejdź do dashboardu')" class="inline-flex items-center justify-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-500">
             <img id="zen-sidebar-logo"
-                 :src="((darkMode || settingsForm?.ui_template === 'modern') &amp;&amp; settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
+                 :src="(darkSidebar &amp;&amp; settingsForm?.brand_logo_dark) ? settingsForm.brand_logo_dark : (settingsForm?.brand_logo_light || '/logo.png')"
                  @error="$el.src = '/logo.png'"
                  :alt="settingsForm?.brand_name || window.ZenI18n.t(&quot;ZenCRM&quot;)"
                  class="h-20 w-auto max-w-full object-contain">
@@ -49,6 +49,10 @@
                                     <span x-text="item.label"></span>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <span x-show="item.id === 'mail_group' && unreadMailCount > 0"
+                                          title="Nieprzeczytane wiadomości e-mail"
+                                          class="px-2 py-0.5 text-xs font-bold rounded-full bg-red-600 text-white shadow-xs"
+                                          x-text="unreadMailCount"></span>
                                     <span x-show="item.id === &#x27;tickets_group&#x27; &amp;&amp; activeTicketsCount &gt; 0"
                                           class="px-2 py-0.5 text-xs font-bold rounded-full bg-red-600 text-white shadow-xs"
                                           x-text="activeTicketsCount"></span>
@@ -74,6 +78,10 @@
                                         <span x-show="child.id === &#x27;tickets&#x27; &amp;&amp; activeTicketsCount &gt; 0"
                                               class="ml-auto px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-red-600 text-white shadow-xs"
                                               x-text="activeTicketsCount"></span>
+                                        <span x-show="child.id === 'mailboxes' && unreadMailCount > 0"
+                                              title="Nieprzeczytane wiadomości e-mail"
+                                              class="ml-auto px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-red-600 text-white shadow-xs"
+                                              x-text="unreadMailCount"></span>
                                     </a>
                                 </template>
                             </div>
@@ -89,7 +97,7 @@
          class="fixed inset-0 z-20 bg-black/40 lg:hidden"></div>
 
     <!-- MAIN -->
-    <div class="flex flex-col flex-1 min-w-0">
+    <div class="zen-app-content flex flex-col flex-1 min-w-0">
 
 <button @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen" :aria-label="window.ZenI18n.t(&quot;Otwórz menu nawigacji&quot;)" class="zen-mobile-nav lg:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
                 <% include "views/reminders.html" %>
@@ -164,7 +172,7 @@
                                   x-text="roleLabel(user?.role)"></span>
                         </div>
 
-                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t('Język')"></span><select :value="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t('Język')"><template x-for="(language, code) in window.ZenCustomI18n.languages" :key="code"><option :value="code" x-text="language.name"></option></template></select></label></div>
+                        <div class="px-4 py-2"><label class="zen-language"><span x-text="window.ZenI18n.t('Język')"></span><select x-model="locale" @change="setLocale($event.target.value)" :aria-label="window.ZenI18n.t('Język')"><template x-for="(language, code) in window.ZenCustomI18n.languages" :key="code"><option :value="code" :selected="code === locale" x-text="language.name"></option></template></select></label></div>
                         <div class="py-1">
                             <button @click="open = false; openProfile()"
                                     class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -172,7 +180,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
-                                <span x-text="window.ZenI18n.t(&quot;Mój profil&quot;)">Mój profil</span>
+                                <span x-text="window.ZenI18n.t(&quot;Profil i ustawienia&quot;)">Profil i ustawienia</span>
                             </button>
                             <button @click="open = false; openPassword()"
                                     class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -183,6 +191,7 @@
                                 <span x-text="window.ZenI18n.t(&quot;Zmień hasło&quot;)">Zmień hasło</span>
                             </button>
                             <button @click="open = false; darkMode = !darkMode"
+                                    role="switch" :aria-checked="darkMode" :aria-label="window.ZenI18n.t('Tryb ciemny')"
                                     class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <span class="flex items-center gap-3">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,10 +200,8 @@
                                     </svg>
                                     <span x-text="window.ZenI18n.t(&quot;Tryb ciemny&quot;)">Tryb ciemny</span>
                                 </span>
-                                <span class="w-9 h-5 rounded-full transition relative"
-                                      :class="darkMode ? &#x27;bg-brand-600&#x27; : &#x27;bg-gray-300 dark:bg-gray-600&#x27;">
-                                    <span class="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform"
-                                          :class="darkMode ? &#x27;translate-x-4&#x27; : &#x27;translate-x-0.5&#x27;"></span>
+                                <span class="zen-theme-switch" :class="{'is-on':darkMode}" aria-hidden="true">
+                                    <span class="zen-theme-switch-thumb"></span>
                                 </span>
                             </button>
                         </div>
@@ -213,6 +220,6 @@
                 </div>
 
 <!-- ─── MAIN CONTENT ─── -->
-        <main class="flex-1 overflow-y-auto p-2 sm:p-3 w-full">
+        <main class="zen-app-main flex-1 p-2 sm:p-3 w-full">
 
 

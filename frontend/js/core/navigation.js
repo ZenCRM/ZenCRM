@@ -1,33 +1,29 @@
 /* Core component methods; composed before UX and feature modules. */
 window.ZenCore = window.ZenCore || {};
 window.ZenCore.navigation = function () { return {
+        menuRequiresAdmin(id) {
+            return ['settings','users','documentTypes','portal_group','portalSettings','portalUsers','portalSpaces','portalTickets'].includes(id);
+        },
         canAccessView(viewId) {
             if (!viewId) return true;
-            if (viewId === 'settings') return this.user?.role === 'admin' || this.isAdmin;
-            if (viewId === 'documentTypes') return this.user?.role === 'admin' || this.isAdmin;
-
+            const admin = this.user?.role === 'admin' || this.isAdmin;
+            // Keep the administration panel available to prevent accidental lockout.
+            if (viewId === 'settings') return !!admin;
             let perms = {};
             try {
-                if (this.settingsForm?.menu_permissions) {
-                    perms = typeof this.settingsForm.menu_permissions === 'string'
-                        ? JSON.parse(this.settingsForm.menu_permissions)
-                        : this.settingsForm.menu_permissions;
-                }
+                const value = this.settingsForm?.menu_permissions;
+                perms = typeof value === 'string' ? JSON.parse(value) : (value || {});
             } catch (_) {}
-
-            const cfg = perms[viewId];
-            if (cfg) {
-                if (cfg.enabled === false) return false;
-                const role = cfg.role || 'all';
-                if (role === 'admin') return this.user?.role === 'admin' || this.isAdmin;
-                if (role === 'manager') return this.user?.role === 'admin' || this.user?.role === 'manager' || this.isAdmin;
-                if (role === 'all') return true;
-            }
-
-            if (['users', 'documentTypes', 'portal_group', 'portalSettings', 'portalUsers', 'portalSpaces', 'portalTickets'].includes(viewId)) {
-                return this.user?.role === 'admin' || this.isAdmin;
-            }
-            return true;
+            const allowed = id => {
+                if (this.menuRequiresAdmin(id) && !admin) return false;
+                const config = perms?.[id];
+                if (config?.enabled === false) return false;
+                if (config?.role === 'admin') return !!admin;
+                if (config?.role === 'manager') return !!admin || this.user?.role === 'manager';
+                return true;
+            };
+            const parent = (this.menu || []).find(item => item.children?.some(child => child.id === viewId));
+            return allowed(viewId) && (!parent || allowed(parent.id));
         },
 
         get visibleMenu() {
@@ -87,7 +83,12 @@ window.ZenCore.navigation = function () { return {
                 }
             }
 
+            const viewChanged = this.currentView !== id;
             this.currentView = id;
+            if (['mailboxes','mailSent'].includes(id)) {
+                this.mail.folder = id === 'mailSent' ? 'sent' : 'inbox';
+                this.mail.page = 1; this.mail.search = ''; this.mail.readFilter = '';
+            }
             if (window.innerWidth < 1024) this.sidebarOpen = false;
 
             // Zapisz do URL hash i localStorage
@@ -98,6 +99,7 @@ window.ZenCore.navigation = function () { return {
 
             if (!skipReload) await this.reload();
             if (this.currentView !== id) return;
+            if (viewChanged) this.$nextTick(() => window.scrollTo({top:0, behavior:'instant'}));
 
             // Jeśli to widok leadów – policz widoczne kolumny po renderze
             if (id === 'leads') {
@@ -109,6 +111,7 @@ window.ZenCore.navigation = function () { return {
         },
 
         async reload() {
+            if (['mailboxes', 'mailSent', 'mailAccounts', 'mailSettings'].includes(this.currentView)) { await this.loadMailboxes(); return; }
             const view = this.currentView;
             const requestId = this._reloadRequest = (this._reloadRequest || 0) + 1;
             this.listError = '';

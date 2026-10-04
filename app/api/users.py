@@ -16,7 +16,7 @@ AVATAR_DIR = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..', 'uploads', 'avatars'))
 MAX_SIZE = 2 * 1024 * 1024
 
-USER_FIELDS = ('email', 'first_name', 'last_name', 'role', 'is_active', 'avatar_url', 'default_call_method', 'email_notifications')
+USER_FIELDS = ('email', 'first_name', 'last_name', 'role', 'is_active', 'avatar_url', 'default_call_method', 'default_email_method', 'email_notifications')
 
 
 @users_bp.before_request
@@ -57,6 +57,8 @@ def get_user(user_id):
 @jwt_required()
 def create_user():
     data = request.get_json(silent=True) or {}
+    if 'default_email_method' in data and data['default_email_method'] not in ('mailto', 'crm'):
+        return jsonify({'error': 'Wybierz domyślną aplikację pocztową lub pocztę w CRM'}), 400
     if not data.get('email'):
         return jsonify({'error': 'Email jest wymagany'}), 400
     if User.query.filter_by(email=data['email']).first():
@@ -105,6 +107,8 @@ def update_user(user_id):
         return jsonify({'error': 'Nieznana rola'}), 400
     if 'default_call_method' in data and data['default_call_method'] not in ('link', 'android'):
         return jsonify({'error': 'Nieprawidłowa metoda połączeń'}), 400
+    if 'default_email_method' in data and data['default_email_method'] not in ('mailto', 'crm'):
+        return jsonify({'error': 'Wybierz domyślną aplikację pocztową lub pocztę w CRM'}), 400
     # Avatars are set only by the upload endpoint; the profile form may keep or clear them.
     if data.get('avatar_url') not in (None, '', u.avatar_url):
         return jsonify({'error': 'Avatar can only be changed by uploading an image'}), 400

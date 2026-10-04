@@ -4,6 +4,8 @@ from flask import send_from_directory
 
 
 def register_api(app):
+    from ..api.mailboxes import mailboxes_bp
+    app.register_blueprint(mailboxes_bp, url_prefix='/api/mailboxes')
     from ..models import (user, client, lead, task, meeting, service,
                          template, offer, document, contact, comment, activity,
                          service_catalog, task_assignee, setting, sms, workspace, project, team, ticket, permission, email_template, auth_security, attachment, document_type, translation)

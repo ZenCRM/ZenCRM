@@ -666,6 +666,108 @@
       ]
     },
     {
+      "path": "/api/mailboxes",
+      "endpoint": "mailboxes.connect_box",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/mailboxes",
+      "endpoint": "mailboxes.list_boxes",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>",
+      "endpoint": "mailboxes.disconnect_box",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>",
+      "endpoint": "mailboxes.update_box",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/messages",
+      "endpoint": "mailboxes.list_messages",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/messages/<int:message_id>",
+      "endpoint": "mailboxes.get_message",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/messages/<int:message_id>/attachments/<part_id>",
+      "endpoint": "mailboxes.get_attachment",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/messages/<int:message_id>/read",
+      "endpoint": "mailboxes.mark_read",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/send",
+      "endpoint": "mailboxes.send",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/<int:box_id>/sync",
+      "endpoint": "mailboxes.sync",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/clients/<int:client_id>/messages",
+      "endpoint": "mailboxes.client_messages",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/mailboxes/unread",
+      "endpoint": "mailboxes.unread_count",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
       "path": "/api/meetings",
       "endpoint": "meetings.create_item",
       "methods": [
@@ -3268,6 +3370,322 @@
             "id"
           ],
           "options": {}
+        }
+      ],
+      "unique_constraints": []
+    },
+    "mail_messages": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "mailbox_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "remote_uid",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message_id",
+          "type": "VARCHAR(998)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "folder",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sender",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "recipients",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "subject",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "body",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "is_read",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "cc",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "bcc",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "body_html",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "attachments",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "content_version",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "mailbox_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "mailboxes",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "mail_message_uid",
+          "column_names": [
+            "mailbox_id",
+            "remote_uid"
+          ]
+        }
+      ]
+    },
+    "mailboxes": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "team_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_encrypted",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "imap_host",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "imap_port",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "smtp_host",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "smtp_port",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "smtp_security",
+          "type": "VARCHAR(10)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "signature",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_sync_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "uid_validity",
+          "type": "VARCHAR(50)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "signature_format",
+          "type": "VARCHAR(10)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sync_interval_minutes",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'5'",
+          "primary_key": 0
+        },
+        {
+          "name": "next_sync_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sync_claim_token",
+          "type": "VARCHAR(36)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "sync_claim_until",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "team_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "teams",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
         }
       ],
       "unique_constraints": []
@@ -6159,6 +6577,13 @@
           "type": "DATETIME",
           "nullable": true,
           "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "default_email_method",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": "'mailto'",
           "primary_key": 0
         }
       ],

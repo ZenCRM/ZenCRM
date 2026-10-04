@@ -4,7 +4,7 @@ window.ZenModules.details = function () { return {
             if (Date.now() - this.lastDragEnd < 300) return;
             if (this.detailView.newComment?.trim() && !confirm(window.ZenI18n.t('Odrzucić niezapisany komentarz?'))) return;
             if (this.settingsForm?.ui_template === 'modern') this.chooseModernHeroBackground();
-            if (!this.detailView.open) { this.returnScroll = document.querySelector('main')?.scrollTop || 0; this.returnFocus = document.activeElement; }
+            if (!this.detailView.open) { this.returnScroll = window.scrollY || 0; this.returnFocus = document.activeElement; }
             this.detailPanel = this.settingsForm?.ui_template === 'modern' ? false : this.settingsForm?.['ui_detail_' + type] !== 'full';
             this.detailError = '';
             this.detailView = {
@@ -48,7 +48,7 @@ window.ZenModules.details = function () { return {
             }
             this.reload().then(() => this.$nextTick(() => {
                 this.$refs.kanbanCols?.scrollTo({ left: this.kanbanLeft, behavior: 'instant' });
-                document.querySelector('main')?.scrollTo({ top: this.returnScroll, behavior: 'instant' });
+                window.scrollTo({ top: this.returnScroll, behavior: 'instant' });
                 this.recomputeVisibleCols();
                 this.returnFocus?.focus({ preventScroll: true });
             }));
@@ -146,6 +146,7 @@ window.ZenModules.details = function () { return {
 
                 if (typeof this.loadEntityTelephony === 'function') {
                     this.loadEntityTelephony(t, id, data?.phone);
+                    if (t === 'client') this.loadClientMail(id);
                 }
 
                 // Wczytaj pola własne dla rekordu

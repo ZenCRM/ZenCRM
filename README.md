@@ -441,6 +441,7 @@ Set two random secrets of at least 32 characters, or leave them blank so the app
 | --- | --- |
 | <code>SECRET_KEY</code> | Flask application secret. |
 | <code>JWT_SECRET_KEY</code> | Separate secret for login tokens. |
+| <code>MAILBOX_ENCRYPTION_KEY</code> | Optional separate key for mailbox passwords, at least 32 characters. Defaults to <code>SECRET_KEY</code>; changing it after connecting accounts requires migrating their passwords. |
 | <code>DATABASE_URL</code> | SQLAlchemy database URL; SQLite by default. |
 | <code>PUBLIC_BASE_URL</code> | Public CRM address used in notification links, for example <code>https://crm.example.com</code>. Set it before enabling helpdesk emails. |
 | <code>TRUSTED_PROXY_HOPS</code> | Number of trusted reverse proxy hops; set only when the application cannot be reached around the proxy. Required behind a reverse proxy, otherwise all clients share one login rate limit. |
@@ -451,6 +452,12 @@ Set two random secrets of at least 32 characters, or leave them blank so the app
 | <code>ZENCRM_VERSION</code> | Optional version identifier; the Docker image sets it at build time. |
 
 Back up the database and uploaded files before deploying a new release. The schema is versioned with Alembic migrations (<code>migrations/</code>) and upgraded at startup; installations from before migrations are completed once and stamped with the baseline revision. Before every migration a SQLite database is copied next to the original (<code>*.before-&lt;revision&gt;.bak</code>), and the application refuses to start on a database from a newer release. Use HTTPS for an Internet-facing installation and protect your secrets.
+
+Notification SMTP passwords are encrypted with `SECRET_KEY`. Startup preparation (`python seed.py`, also run by the Docker entrypoint) converts existing plaintext settings without changing the password. Preserve the installation secret and its backup; rotating it requires re-encrypting credentials. Existing backups may still contain the old plaintext setting and need protected storage.
+
+Mailbox synchronization shares a database lease between manual requests and periodic polling. A malformed or oversized message is recorded as skipped, while other messages continue importing; the original remains available in your mail provider. Each sync has a 60-second transport deadline and a 64 MiB response budget; completed messages survive later provider failures. Costly mailbox requests are limited per user and to two simultaneous HTTP requests per process. A full synchronization may require another request after the rate limit resets.
+
+Document templates render in an isolated Python subprocess, with a 128 MiB memory cap, a two-second CPU cap, a three-second wall timeout and at most 2 MiB of HTML output. One renderer runs per application process. Windows uses a Job Object and Unix uses resource limits; inability to apply the limits fails closed. Preview requires template creation or editing permission. These limits may reject unusually large or complex templates.
 
 ### Documentation and contributions
 

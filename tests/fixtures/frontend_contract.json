@@ -54,6 +54,12 @@
       "error": ""
     }
   },
+  "activeMailbox": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "de72b56bbe2d46716ee65a83316b273703c8b2cb0d9693e4eda59f68d3dd8927",
+    "value": null
+  },
   "activeProject": {
     "enumerable": true,
     "configurable": true,
@@ -128,6 +134,14 @@
     "writable": true,
     "value": {
       "function": "65e3ea7bb4b9e92eccda6874f5e08d67becb252ad4aec716d0c46f7717039e4f"
+    }
+  },
+  "addMailRecipients": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a2574d569ea580fa11b01ac3a26bf6f89b81ebd01ad93cb54422572c6cd234ee"
     }
   },
   "addMultiUser": {
@@ -276,12 +290,20 @@
       "function": "d62b0aa97d425138eb2fb989c30515dd1b92e92cf82101f80c08a0fb750397e1"
     }
   },
+  "applyTemplateStarter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8e002fb5582624d4f2186796c08b23ed08caf1454bb77083ac6ef417bc20cb4c"
+    }
+  },
   "applyTheme": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "cd6fb61523d4dc88c5e237187c6ba8bfe274959423bf4c66984c992163d07a2b"
+      "function": "63895cdddbfdf2d86c8e12509f02aa4b82808b42a6e0e4de6720cc5238a4fe66"
     }
   },
   "archiveFromModal": {
@@ -548,7 +570,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "0cc19cf437a7248f31f2ec78e7eeb82e7d55d5a1477e0edab4981c53086faaff"
+      "function": "c47e061cf099c897fe824368b141467ae6f20a4158e5dd7fb210015956fe35dd"
     }
   },
   "cancelEditCustomField": {
@@ -590,6 +612,12 @@
     "value": {
       "function": "e21c275e10695494dc60f66f8004c2e8f3182a84b9334da5b5762f0fbcf1b550"
     }
+  },
+  "canManageMailbox": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "f016b3f2a535fa3c086e53799291a710d7fa1e20b86b377d446d907118728753",
+    "value": null
   },
   "canRecordAction": {
     "enumerable": true,
@@ -633,6 +661,14 @@
     "writable": true,
     "value": {
       "function": "78ed4a64af3be82e6643a8f00d2c54a13917fae956aa9e5f70611a928d23a912"
+    }
+  },
+  "changeMailFolder": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "2a14d3dcbd9ecf63a74a6a95c12007c1d22b53ad875b24b25a156bfc2b5b7ea7"
     }
   },
   "changeProjectTaskStage": {
@@ -734,6 +770,30 @@
       }
     ]
   },
+  "clientMail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "clientId": null,
+      "items": [],
+      "total": 0,
+      "pages": 0,
+      "page": 1,
+      "emails": [],
+      "loading": false,
+      "error": "",
+      "request": 0
+    }
+  },
+  "clientMailDate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "1208ec80111a91d1944834a439a12306cfba594c5d1a4cbc063765f96d43339d"
+    }
+  },
   "clientMetricChoices": {
     "enumerable": true,
     "configurable": true,
@@ -831,7 +891,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "a1c638f6369b48ac3db1ca6da3f3c3d4ed70087c484ae75bc5abcf7c24a58e7d"
+      "function": "eaa1eb13473d1068fa6e7c6d5f0bfbd5a2316e0ee7a872930a340638b240fb15"
     }
   },
   "closeJournal": {
@@ -880,6 +940,14 @@
     "writable": true,
     "value": {
       "function": "088267261afba930ba454c225dc66dae2648c3466f638f4739694892a4bedaea"
+    }
+  },
+  "closeTemplateStudio": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "96fa1656d445b2a51c55b298727019aa103834ee8a9a070787d2ddf5c38629de"
     }
   },
   "closeTicketDrawer": {
@@ -957,12 +1025,28 @@
     "get": "c49f1dc592e575d892a81bcb634d4456056ed6148580313ecea84f6ebb9e6ff3",
     "value": null
   },
+  "composeMail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "31fd9aa6e623271fc15fddca018413a6e788e60ac461dcd78c4db4f11b7cf150"
+    }
+  },
   "confirmPasswordReset": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
       "function": "52a8cbf9b558a4a7b2d420f77ba541690b4782a5fb9c1dece379037671c65938"
+    }
+  },
+  "connectMailbox": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "171286d9592f2d2e8f985113f4fbc49ee6c227147201b6a7482c788e3972779a"
     }
   },
   "contacts": {
@@ -1214,6 +1298,12 @@
     "writable": true,
     "value": false
   },
+  "darkSidebar": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "c916695761148dddac8c05dd7037b12e2466468029e64447eb809e8b4c5917b4",
+    "value": null
+  },
   "dashboardCards": {
     "enumerable": true,
     "configurable": true,
@@ -1429,6 +1519,14 @@
       "function": "c0b508edf90b5660c6150a658f0e9aa9577066ce2eb29dc2da8d75150c03a9c1"
     }
   },
+  "disconnectMailbox": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5c6c50338a858e091ebd83b5204021b429f1e8538185e4833415bb455ab85706"
+    }
+  },
   "dismissNotice": {
     "enumerable": true,
     "configurable": true,
@@ -1503,6 +1601,14 @@
       "function": "9d0a619250d1cce0724d5769e32c5e4c7b8b21efd3ffaa90a3f2d67c8ac813c3"
     }
   },
+  "downloadMailAttachment": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "baff54567e17f45e9c78e9a7c602af321a6bef7fee6ca5d64ae3d45a1b5b5d29"
+    }
+  },
   "downloadPdf": {
     "enumerable": true,
     "configurable": true,
@@ -1565,6 +1671,14 @@
     "writable": true,
     "value": 0
   },
+  "duplicateTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8e8ce7a75c1fcbf070b6a358f20012d77d3254ce43d83d620f2822e86e09736f"
+    }
+  },
   "editAttachmentName": {
     "enumerable": true,
     "configurable": true,
@@ -1603,6 +1717,14 @@
     "writable": true,
     "value": {
       "function": "cf0d5259c7b60df37b813ae8309359810ff59d4dc873cb521c064141ce3553aa"
+    }
+  },
+  "editMailboxSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "df134a3069f9495abd521d3e64c39ef8e49c7a01d8a883471005ed54a8c33fc6"
     }
   },
   "editProjectStages": {
@@ -1823,6 +1945,12 @@
     "get": "3af71805a0022307d937825b320864486d45588827ea391bd6d25a187af36a23",
     "value": null
   },
+  "filteredTemplates": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "cdc32032f87e598c33bc8983c4a1cd6ca6748306c44ca3881eac71f761027445",
+    "value": null
+  },
   "filteredTickets": {
     "enumerable": true,
     "configurable": true,
@@ -2011,7 +2139,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "e4bbd1c6e8c898aec83602361da55c0b0cbe1b39009d9e62dcf56a5271a3d7bf"
+      "function": "855e00876b0bc95516d64fa948e1bd47526239756233c83c73a1f06f2d738bd8"
     }
   },
   "getRenderedEmailPreview": {
@@ -2115,7 +2243,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "c098413e1a7c1676991ab40107d79f957015c0d6d05d0d6c469ef76ae05a19a6"
+      "function": "180147681066844e96ba02c1cd2a798ecef51783c8646413b64e4d7023b16901"
     }
   },
   "initialsFrom": {
@@ -2132,6 +2260,22 @@
     "writable": true,
     "value": {
       "function": "38bf160eccebe55d7d75d98987a02fa3af8b41d314ee650fa15d3baf02e62793"
+    }
+  },
+  "insertStudioBlock": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "9684f1aafc2e5afdefb97fb4b18aa12cc03d9cbd90f74868d1e39f4984fbe805"
+    }
+  },
+  "insertStudioText": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a6ee27d9edbf97c55afda853fa1d4895160160e808dd59508517f25efb4397ea"
     }
   },
   "insertTemplateText": {
@@ -2457,6 +2601,14 @@
       "function": "37c2d3025e3e31175ad739b6a6faf590176ae8e7f3fe3f494a06a915f277fe65"
     }
   },
+  "loadClientMail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5f3a853e95f9181e926f896616a59b9a74c158e6c662ca42b537d496d49e9bd3"
+    }
+  },
   "loadClientOptions": {
     "enumerable": true,
     "configurable": true,
@@ -2494,7 +2646,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "088d69c81bca12338b7361b441b55a9ec043cec964bf39e458f1d36cb273584d"
+      "function": "71b60a930295e1b3d589ee16068cf0748332c84bd1fd75ebb45fa02780485ba4"
     }
   },
   "loadDirectory": {
@@ -2527,6 +2679,22 @@
     "writable": true,
     "value": {
       "function": "f0b2fd0ffb9965c79b659a3a371260599c42ef931d9e4f1622dc20a1ae4232d9"
+    }
+  },
+  "loadMailboxes": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "d758a06d030a874e7687542091d7db39e97b83a3f540979106809f76f8645b54"
+    }
+  },
+  "loadMailMessages": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5bbe27904e2cc963a1e705767ea8c5fe49c5cc4d13e1b2814cb1ca9440efd58d"
     }
   },
   "loadMe": {
@@ -2665,6 +2833,14 @@
       "function": "f7b90a9a136c918c74e4b5f0f80f5e1a2764303f215add07b743d575447776f1"
     }
   },
+  "loadUnreadMailCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a35d626aa680f2e809d25de93d3e5e01fa31bde044f556f58881d6b5e5d6ed5a"
+    }
+  },
   "localDateKey": {
     "enumerable": true,
     "configurable": true,
@@ -2713,7 +2889,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "f3ca4f3acbe5adb55437bb85a1ddf2bc913f2a6c788f6f61151b074ee98ff26c"
+      "function": "d4835db2b8274a0740c307acd87ac78b5eeb8911b0e880f07e8a6b8a53f62292"
     }
   },
   "lookupClientGus": {
@@ -2722,6 +2898,164 @@
     "writable": true,
     "value": {
       "function": "392da7329a681cc989b58d9eafff2068c0a4f3a7881fe1e791d10dfaf20a08f7"
+    }
+  },
+  "mail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "boxes": [],
+      "teams": [],
+      "boxId": "",
+      "folder": "inbox",
+      "items": [],
+      "selected": null,
+      "search": "",
+      "readFilter": "",
+      "unread": 0,
+      "page": 1,
+      "pages": 0,
+      "total": 0,
+      "busy": false,
+      "loading": false,
+      "error": "",
+      "connecting": false,
+      "settings": false,
+      "settingsTab": "signature",
+      "signature": "",
+      "signatureFormat": "text",
+      "password": "",
+      "connection": {},
+      "composing": false,
+      "recipientInputs": {
+        "to": "",
+        "cc": "",
+        "bcc": ""
+      },
+      "recipientErrors": {
+        "to": "",
+        "cc": "",
+        "bcc": ""
+      },
+      "recipientFocus": "",
+      "recipientIndex": 0,
+      "showCc": false,
+      "showBcc": false,
+      "composeMode": "new",
+      "compose": {
+        "to": "",
+        "cc": "",
+        "bcc": "",
+        "subject": "",
+        "body": "",
+        "include_signature": true
+      },
+      "form": {},
+      "htmlView": true,
+      "remoteImages": false,
+      "downloading": "",
+      "syncingAll": false,
+      "cancelSync": false,
+      "syncProgress": {
+        "processed": 0,
+        "imported": 0,
+        "total": 0
+      }
+    }
+  },
+  "mailComposeTitle": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "33a3db64c0c61ba52178ee7a659c3a4dad863d0eeb0c492d3a10aad9fd16e53e",
+    "value": null
+  },
+  "mailCountRequest": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
+  "mailCountTimer": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": null
+  },
+  "mailFileSize": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "987ed259dc578a2bdebe498ba151c8d5848af8e1a86c2f25854dd95c90c58732"
+    }
+  },
+  "mailHTMLDocument": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3cb04e62e2c498420a359b1cd05fc4bf55222145e2c6d9e0fb70a6b2f2e8ae21"
+    }
+  },
+  "mailIcon": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0fafaf7c27551c8380af63c3924df90db9400e1b099ca708cffd999a3042a335"
+    }
+  },
+  "mailInitial": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "6a9a0a9bcd18a364597cce02d325c059bfba349a9400fe4d428f648e73a02093"
+    }
+  },
+  "mailPageDescription": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "0a04f4b9ab28519ef6fb44aa63e1489c351772c50e254c06aea9917168932f76",
+    "value": null
+  },
+  "mailPageTitle": {
+    "enumerable": true,
+    "configurable": true,
+    "get": "b5788f335480d2fd99a19590050f38c66708ea60a9a5f56e47e5124ce1af432f",
+    "value": null
+  },
+  "mailRecipientKey": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a524c46cb0fe00eccd3277b62df28fc0fa965649d40a3db97e7c5d6a783c519e"
+    }
+  },
+  "mailRecipientList": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0369e9e3bcc62280bf8137915d91f4acffe6e027c52b76c069c7e8c532e30bc4"
+    }
+  },
+  "mailRecipientSuggestions": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f03c18ad6a148f69408eeed06e34d3d19af50b60e45a34531b7c4a235410a6c1"
+    }
+  },
+  "mailSignatureDocument": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cc22249aa69fb853f914e5397588895fbe5fb924338a74c0110af2a9d0a47ede"
     }
   },
   "makePhoneCall": {
@@ -2789,6 +3123,33 @@
             "id": "contacts",
             "label": "Kontakty",
             "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z\"/></svg>"
+          }
+        ]
+      },
+      {
+        "id": "mail_group",
+        "label": "Poczta e-mail",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M3 5h18v14H3zM3 5l9 8 9-8\"/></svg>",
+        "children": [
+          {
+            "id": "mailboxes",
+            "label": "Odebrane",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h16v16H4zM4 13h5l2 3h2l2-3h5\"/></svg>"
+          },
+          {
+            "id": "mailSent",
+            "label": "Wysłane",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"m3 3 18 9-18 9 4-9-4-9Zm4 9h14\"/></svg>"
+          },
+          {
+            "id": "mailAccounts",
+            "label": "Skrzynki",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M3 4h18v7H3zM3 15h18v5H3zM7 7h.01M7 18h.01\"/></svg>"
+          },
+          {
+            "id": "mailSettings",
+            "label": "Ustawienia",
+            "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" stroke-linecap=\"round\" d=\"M4 7h16M4 12h16M4 17h16M8 5v4m8 1v4m-6 1v4\"/></svg>"
           }
         ]
       },
@@ -2926,95 +3287,22 @@
   "menuModulesList": {
     "enumerable": true,
     "configurable": true,
-    "writable": true,
-    "value": [
-      {
-        "id": "dashboard",
-        "label": "Dashboard",
-        "group": "Główne"
-      },
-      {
-        "id": "clients",
-        "label": "CRM - Klienci",
-        "group": "CRM"
-      },
-      {
-        "id": "leads",
-        "label": "CRM - Leady",
-        "group": "CRM"
-      },
-      {
-        "id": "contacts",
-        "label": "CRM - Kontakty",
-        "group": "CRM"
-      },
-      {
-        "id": "projects",
-        "label": "Projekty",
-        "group": "Główne"
-      },
-      {
-        "id": "tasks",
-        "label": "Zadania",
-        "group": "Główne"
-      },
-      {
-        "id": "meetings",
-        "label": "Kalendarz",
-        "group": "Główne"
-      },
-      {
-        "id": "services",
-        "label": "Usługi",
-        "group": "Usługi"
-      },
-      {
-        "id": "serviceCatalog",
-        "label": "Katalog usług",
-        "group": "Usługi"
-      },
-      {
-        "id": "offers",
-        "label": "Oferty",
-        "group": "Dokumenty"
-      },
-      {
-        "id": "documents",
-        "label": "Dokumenty",
-        "group": "Dokumenty"
-      },
-      {
-        "id": "templates",
-        "label": "Szablony",
-        "group": "Dokumenty"
-      },
-      {
-        "id": "tickets",
-        "label": "Lista ticketów",
-        "group": "Tickety"
-      },
-      {
-        "id": "ticketSettings",
-        "label": "Ustawienia ticketów",
-        "group": "Tickety"
-      },
-      {
-        "id": "sms",
-        "label": "Telefonia & SMS",
-        "group": "Komunikacja"
-      },
-      {
-        "id": "archive",
-        "label": "Archiwum",
-        "group": "System"
-      }
-    ]
+    "get": "bddb3689b7de7b3a16d7980056fb2a637844a0f839079feded48f779acc3a7d9",
+    "value": null
   },
   "menuPermissionsState": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {}
+  },
+  "menuRequiresAdmin": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "97f7acfe400a028bd02a0ad3d6d9732b96ea41e167081ae58a666452853e1b17"
+    }
   },
   "menuSettingsSaved": {
     "enumerable": true,
@@ -3048,6 +3336,14 @@
     "configurable": true,
     "get": "0aa9ef9d9f9c662c4f2f76872a7809d61ada1a4b6327fa73e625cc16d3cf6f58",
     "value": null
+  },
+  "mountVisualTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3cf36218b3ae098403d0decb842caaa99d450a2744d2e9f146b6075ce2c7314e"
+    }
   },
   "moveLead": {
     "enumerable": true,
@@ -3369,12 +3665,20 @@
       "function": "e3fc40de38fe33e5d0ab2c8365a02fe62ceb0a3645ee5b715bf20e3bcccb8af5"
     }
   },
+  "openClientMailMessage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a7ddbb7ee237a9477375555975f2df8f11f41c1e378e92fa84d7a745a082e7a7"
+    }
+  },
   "openDetail": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "fe55eb3858d15dd090bed462c31ae50a9b28339e1da8320fdfefae78d6141ddf"
+      "function": "f61fac9aba92a9808c2e3abd1ec1ff48b01fd881073bc29a920211c8275d9fe5"
     }
   },
   "openDeviceModal": {
@@ -3465,12 +3769,37 @@
       "function": "4e03d9c15cc998c6277dcf589fd702e3ec9a7e0bd316dc4a0f6250403e1876f8"
     }
   },
+  "openMailAccount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "cee7e335d600ce86bd69fb55d5d9d83b0247a9fb6ea433704c9186e2db4fd7e5"
+    }
+  },
+  "openMailboxConnect": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "b6e5183a65575c3c0ff7944309ddb6537deaf4687bcef3471ee80a30fc82ef2b"
+    }
+  },
+  "openMailboxSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "0c83261390152dc1c20040c008206de4da72bcface4e96e7de211e848fcdd3f9"
+    }
+  },
   "openMenuGroups": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
       "crm": true,
+      "mail_group": false,
       "services_group": false,
       "documents_group": false,
       "tickets_group": false,
@@ -3514,7 +3843,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "565cdc717da41a85826c007211b9b0068a4bd6093817bba827b4ebe60a1df441"
+      "function": "46af20056a0d1660fe5de51cdf05331b5471a6a658aadb2e6a5717ef68809a85"
     }
   },
   "openProject": {
@@ -3570,7 +3899,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "8fd385312b98a315b7d71c8c5949dff6be40884987a80a43d40004a767387af5"
+      "function": "9d5dcc2f0cccce90241be6f55cf7a055fc1a8312066d9dedfc7b03c30d834e7b"
     }
   },
   "openTicketDetails": {
@@ -3610,6 +3939,14 @@
       },
       "error": "",
       "success": ""
+    }
+  },
+  "pasteMailRecipients": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f3ef7c9a45d78631070b3eef8c931bf82fa1d673a7cc85bd66839f957f1b7bcf"
     }
   },
   "patchTask": {
@@ -3986,7 +4323,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "80b0a47efd4a4cd1c0726c22c4001aed303a7ed6bb3e0cbe99c782a1794d6709"
+      "function": "87ceed50f4a710efcf7edb450df43ce23c2cf221141cb6e10a839dbb55a3d60d"
     }
   },
   "regenerateWebhookToken": {
@@ -4028,7 +4365,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "a2e02c536bf90946825c8845a079bce78d62e9251733aeafa419611f7b4d9d3a"
+      "function": "cb92d56d0fd5de06c21c0331ce46c5910a791947e4e282bdc48336cc018f49b2"
     }
   },
   "reminderActive": {
@@ -4151,6 +4488,14 @@
     "writable": true,
     "value": {
       "function": "3032b5b309592b4a2f1a12519cdc9bcf1113bc7ad47f2dc18772677f32c5379b"
+    }
+  },
+  "removeMailRecipient": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "dd44960e3daee4643c2d2c22763a34bcd22a9742b384896c911b553a88839e7e"
     }
   },
   "removeMultiUser": {
@@ -4449,6 +4794,14 @@
       "function": "bea1328cf49900fc2645d520a3369fa471de37e60e3e5acce7bd9af5c18486e2"
     }
   },
+  "saveMailboxSettings": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3b896a4acf01096ccccf89c15ed2f31e9ddc9e18f065632a84ce15f4b50bc981"
+    }
+  },
   "saveMenuSettings": {
     "enumerable": true,
     "configurable": true,
@@ -4510,7 +4863,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "cc082174e8ca9616292cbb58580db95771104c96e78d77f35ca629f2f312140c"
+      "function": "d6624b2962b2dcf40d29ec1d9e46479ecf7ca8d7cea3d30b7683c7295b6e3645"
     }
   },
   "saveSmtpSettings": {
@@ -4566,7 +4919,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "0ec3ee68650ef45f8b1ce51a552a76bee88365d8bc5406249405f44469075544"
+      "function": "df00a6225987411107772c03447eb170ef6f235ce6ebf323c8f7a05b2f9baff3"
     }
   },
   "saveTranslations": {
@@ -4697,6 +5050,14 @@
       "function": "678c4cd69e228f3a84d5c8476350696476c3c18f887d96bac7df5dcb90b8947d"
     }
   },
+  "selectMailMessage": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "f38d92a16ec493359f784f06c95b92a031da11a0e52b0a47250c2deea3663f04"
+    }
+  },
   "selectTranslationLocale": {
     "enumerable": true,
     "configurable": true,
@@ -4710,7 +5071,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "d12e6220cb178ec156a91f98a3f1e2b9d3e5cc820644359ad9101c58668ad83c"
+      "function": "ac632957a0a2d2003652b8ef30d80a93c86ed08d9628b11dcdbdeaa0c0fa3e94"
     }
   },
   "sendEntityTelephonyModalSms": {
@@ -4727,6 +5088,14 @@
     "writable": true,
     "value": {
       "function": "6fb9caa450ea7eb7577cc74ad3b24302dcee09abac2de1cadc7896fce77b9ca8"
+    }
+  },
+  "sendMail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "badcb9180b3a161a07ea0de6a5f008b82de3d65ac959b5c073a9edec65e782ba"
     }
   },
   "sendSmsFromDetail": {
@@ -4858,7 +5227,15 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "111c66e8bcb5655bacddbaeaa6a1699fa314f86f15fdb2c252f0f05799d3ab4b"
+      "function": "d007f36a6910f4f44023310191f1b6ca204e9a62ff49dbe2ad29b4dc400b403c"
+    }
+  },
+  "setMailRead": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "89dc5b8bca08ca53f4aa21d2e6c55f8519d135f774748215ddcf461b6bf10a72"
     }
   },
   "setMenuModuleEnabled": {
@@ -4866,7 +5243,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "4a8424c96f2b20fd3fec74bcc10671cd1d3ef6f1765bad5e99e47848f565c0ce"
+      "function": "0d6dd5cfd0b4adc1fe49492f810ece148776cdebd536676f9d29bdddf15d84c6"
     }
   },
   "setMenuModuleRole": {
@@ -4874,7 +5251,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "516441ffeedee2c18c6cd60800a8e18b2aad69925084b73e739a7883067c8294"
+      "function": "934532def118f90a129c27c0187bd78a4fb23e8e0a8c35a1fdae6a6983c3bf13"
     }
   },
   "setPermissionRule": {
@@ -4883,6 +5260,14 @@
     "writable": true,
     "value": {
       "function": "3e25202959632ebdfc6a9e948d441bb852a4c51fe851a603ed6dee9b73ec2697"
+    }
+  },
+  "setTemplateMode": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "ae38ab347d7685383ebbb8bb17bc95e87949d5aa2428413da8dba3838471c203"
     }
   },
   "settingsError": {
@@ -5391,12 +5776,28 @@
       "function": "b72d788d47858a2f44c3f51f1aaaac63ee1c43457dda079a4ea87955ef8b827c"
     }
   },
+  "starterTemplate": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "a1210510fdb6abb447b68ef8405559023de3a69b8413c6a3dff261dffa325aa5"
+    }
+  },
   "startLeadDrag": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
       "function": "bf6fa386682064d4b65db51b67062f979416f1beacdc195b0f191be3ddd108f8"
+    }
+  },
+  "startMailCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3d3bcfac64c7cfac33c5ac8ed06bfe8c49a3c5565589d788aed19abf24db2cd6"
     }
   },
   "startNotifications": {
@@ -5460,6 +5861,14 @@
       "function": "c3747889b7332f3b52c5236ba3b10f1f92845bd86982e6880f60360cdf1c9e99"
     }
   },
+  "stopMailCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "8453834771e6ea162369c65fb7fe2dd3dce8b39070b234c2756a6b9e60115b9d"
+    }
+  },
   "stopNotifications": {
     "enumerable": true,
     "configurable": true,
@@ -5521,6 +5930,14 @@
     "configurable": true,
     "writable": true,
     "value": false
+  },
+  "syncMailbox": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "33e010c792c39a55141755edeab68f12ed9d64d8a58f649b18af183c43779b72"
+    }
   },
   "syncTelephony": {
     "enumerable": true,
@@ -5712,6 +6129,20 @@
     "writable": true,
     "value": []
   },
+  "templateFilter": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "templateFormat": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "41d98af67fe4eeab277b9b9a0eb456f5c4ddd024e950ee828179f8f536873c8a"
+    }
+  },
   "templateModal": {
     "enumerable": true,
     "configurable": true,
@@ -5736,12 +6167,38 @@
     "writable": true,
     "value": []
   },
+  "templateSearch": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": ""
+  },
+  "templateStudio": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "mode": "visual",
+      "saving": false,
+      "original": "",
+      "variableSearch": "",
+      "starter": "business"
+    }
+  },
   "templateTypeFields": {
     "enumerable": true,
     "configurable": true,
     "writable": true,
     "value": {
       "function": "941bdb09c4e110106d913a542b646d57ab96176b757f0628b766ec4132810836"
+    }
+  },
+  "templateVariables": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "aedd521e022967916ea478a2b0381b6e1e913247b3ef5b984d2bd26dafe845df"
     }
   },
   "testSmtpSettings": {
@@ -6088,6 +6545,12 @@
       "function": "bf50798afd785b23a552c7a4f7cfed8b007e67acf3a8f95fdfbb3c826e97ac25"
     }
   },
+  "unreadMailCount": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": 0
+  },
   "unreadNotifications": {
     "enumerable": true,
     "configurable": true,
@@ -6288,5 +6751,13 @@
     "configurable": true,
     "get": "5919975eee79f380449ca6e50e9ab9ff405b8cb534dfe170a83df2480f003399",
     "value": null
+  },
+  "writeEmail": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "5da817d944274704291bb5d563d01dedbea278120477bb2cb8d204f0a351afb2"
+    }
   }
 }

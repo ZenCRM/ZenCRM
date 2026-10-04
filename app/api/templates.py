@@ -8,6 +8,27 @@ from ..schemas.template import TemplateSchema
 from ..services.render_service import render_preview
 from ..utils.sanitize import apply_payload, build_model
 from ..utils.deletion import hard_delete
+from ..utils.i18n import t
+from html import escape
+from ..services.template_sandbox import run_template
+from ..utils.auth_limits import auth_limit
+from ..utils.permissions import has_permission
+from ..utils.deletion import current_user
+
+
+def validate_content(data, tpl=None):
+    name = data.get('name', tpl.name if tpl else '')
+    content = data.get('content', tpl.content if tpl else '')
+    kind = data.get('type', tpl.type if tpl else '')
+    if not isinstance(name, str) or not name.strip() or len(name) > 200:
+        raise ValueError('Podaj nazwę szablonu (do 200 znaków)')
+    if kind not in ('offer', 'document'):
+        raise ValueError('Wybierz ofertę lub dokument')
+    if not isinstance(content, str) or not content.strip() or len(content) > 1000000:
+        raise ValueError('Podaj treść szablonu (do 1 MB)')
+    run_template(content, validate=True)
+    if 'name' in data:
+        data['name'] = name.strip()
 
 templates_bp = Blueprint('templates', __name__)
 schema = TemplateSchema()
@@ -62,6 +83,7 @@ def get_item(item_id):
 def create_item():
     data = request.get_json(silent=True) or {}
     try:
+        validate_content(data)
         validate_variables(data)
         validate_document_type(data)
         tpl = build_model(Template, data)
@@ -79,6 +101,7 @@ def update_item(item_id):
     tpl = Template.query.get_or_404(item_id)
     try:
         data = validate_variables(request.get_json(silent=True) or {})
+        validate_content(data, tpl)
         type_check = {**data, 'type': data.get('type', tpl.type)}
         validate_document_type(type_check)
         if 'document_type_key' in data:
@@ -103,8 +126,13 @@ def delete_item(item_id):
 
 @templates_bp.route('/preview', methods=['POST'])
 @jwt_required()
+@auth_limit(30, seconds=60, by_user=True, scope='template-render')
 def preview_inline():
+    if not any(has_permission(current_user(), 'templates.' + action) for action in ('create', 'edit')):
+        return jsonify(error='Brak uprawnienia do podglądu szablonów'), 403
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify(error='Nieprawidłowe dane'), 400
     content = data.get('content', '')
     tpl_type = data.get('type', 'offer')
     try:
@@ -114,14 +142,17 @@ def preview_inline():
     except Exception as e:
         return Response(
             f'<pre style="color:red;padding:20px;font-family:monospace">'
-            f'Błąd renderowania szablonu:\n\n{e}</pre>',
+            f'{escape(t("Błąd renderowania szablonu:"))}\n\n{escape(str(e))}</pre>',
             mimetype='text/html', status=400,
         )
 
 
 @templates_bp.route('/<int:item_id>/preview', methods=['GET'])
 @jwt_required()
+@auth_limit(30, seconds=60, by_user=True, scope='template-render')
 def preview_saved(item_id):
+    if not any(has_permission(current_user(), 'templates.' + action) for action in ('create', 'edit')):
+        return jsonify(error='Brak uprawnienia do podglądu szablonów'), 403
     tpl = Template.query.get_or_404(item_id)
     try:
         kind = db.session.get(DocumentType, tpl.document_type_key) if tpl.document_type_key else None
@@ -130,6 +161,6 @@ def preview_saved(item_id):
     except Exception as e:
         return Response(
             f'<pre style="color:red;padding:20px;font-family:monospace">'
-            f'Błąd renderowania szablonu:\n\n{e}</pre>',
+            f'{escape(t("Błąd renderowania szablonu:"))}\n\n{escape(str(e))}</pre>',
             mimetype='text/html', status=400,
         )
