@@ -54,7 +54,7 @@
     <!-- ─────────────────────────────────────────────────────────── -->
     <!-- 1. ZAKŁADKA PRACOWNICY -->
     <!-- ─────────────────────────────────────────────────────────── -->
-    <div x-show="userTab === 'employees'" class="space-y-4">
+    <div x-show="userTab === 'employees'" class="employee-tab-panel space-y-4">
         <p class="employee-result-count" role="status" x-text="window.ZenI18n.t('Wyświetlono {count} z {total}', {count: filteredUsers.length, total: users.length})"></p>
         <div class="employee-grid">
             <template x-for="u in pagedItems('users', filteredUsers)" :key="u.id">
@@ -110,7 +110,7 @@
             <p class="text-sm font-medium text-gray-500" x-text="window.ZenI18n.t('Brak pracowników spełniających kryteria')">Brak pracowników spełniających kryteria</p>
             <button x-show="userSearch || userTeamFilter || userStatusFilter" @click="userSearch = ''; userTeamFilter = ''; userStatusFilter = '';" class="mt-2 text-xs text-brand-600 dark:text-brand-400 hover:underline cursor-pointer" x-text="window.ZenI18n.t('Wyczyść filtry')">Wyczyść filtry</button>
         </div>
-        <div x-data="{ pagerView: 'users', get pagerItems() { return this.filteredUsers } }"><% include "views/pagination.html" %></div>
+        <div class="employee-pagination" x-data="{ pagerView: 'users', get pagerItems() { return this.filteredUsers } }"><% include "views/pagination.html" %></div>
     </div>
 
     <div x-show="employeeAvatar.open" x-cloak class="employee-avatar-overlay" @keydown.escape.stop="closeEmployeeAvatar()" @click.self="closeEmployeeAvatar()">
@@ -127,7 +127,7 @@
     <!-- ─────────────────────────────────────────────────────────── -->
     <!-- 2. ZAKŁADKA ZESPOŁY -->
     <!-- ─────────────────────────────────────────────────────────── -->
-    <div x-show="userTab === 'teams'" class="space-y-4">
+    <div x-show="userTab === 'teams'" class="employee-tab-panel space-y-4">
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <template x-for="team in teams" :key="'team-card-' + team.id">
                 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition">
