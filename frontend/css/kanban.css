@@ -227,3 +227,17 @@
 .windmill-app .kanban-col-new.dragover {
     background:color-mix(in srgb,var(--stage-accent) 16%,var(--wm-surface,#fff));
 }
+
+/* Keep lead cards distinct from their column in both themes. */
+.windmill-app .zen-lead-board .kanban-card-new.zen-lead-card,
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new.zen-lead-card {
+    border-color:color-mix(in srgb,var(--stage-accent) 30%,var(--wm-border));
+    border-left:4px solid var(--stage-accent);
+    background:color-mix(in srgb,var(--stage-accent) 3%,var(--wm-surface));
+    box-shadow:0 3px 10px #0f172a14;
+}
+.windmill-app .zen-lead-board .kanban-card-new.zen-lead-card:hover,
+.theme-modern .windmill-app .zen-lead-board .kanban-card-new.zen-lead-card:hover {
+    border-color:var(--stage-accent);
+    box-shadow:0 6px 18px #0f172a24;
+}
