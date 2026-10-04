@@ -12,7 +12,7 @@
     if (manager && embed) document.body.classList.add('embedded');
     function portalLink() {
         const url = new URL(configuration.address, location.origin);
-        return url.href;
+        return configuration.crm_base_url ? new URL(url.pathname, configuration.crm_base_url).href : url.href;
     }
     function applyBranding() {
         let logo = document.querySelector('#portal-logo');

@@ -429,7 +429,7 @@
                     document.getElementById('hd-submit-view').classList.add('hidden');
                     document.getElementById('hd-success-view').classList.remove('hidden');
                     document.getElementById('succ-number').textContent = data.ticket_number;
-                    const fullLink = location.origin + location.pathname + '?ticket=' + data.token;
+                    const fullLink = (config.crm_base_url || location.origin) + (config.path || location.pathname) + '?ticket=' + encodeURIComponent(data.token);
                     document.getElementById('succ-link').value = fullLink;
                     document.getElementById('succ-btn-track').href = fullLink;
                     const success = document.getElementById('hd-success-view'); success.setAttribute('tabindex','-1'); success.focus(); success.scrollIntoView({behavior:'smooth',block:'start'});

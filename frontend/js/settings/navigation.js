@@ -170,7 +170,7 @@ window.ZenSettings.navigation = function () { return {
             }
         },
         async copyLeadWebhookUrl() {
-            const url = window.location.origin + '/api/leads/webhook';
+            const url = (this.settingsForm?.crm_base_url || window.location.origin) + '/api/leads/webhook';
             try {
                 await navigator.clipboard.writeText(url);
                 this.notify(window.ZenI18n.t('Skopiowano URL webhooka'));

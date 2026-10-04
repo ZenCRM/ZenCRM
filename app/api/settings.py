@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, send_from_directory, abort, curre
 from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.setting import Setting
+from ..utils.urls import public_base_url, normalize_crm_url
 from ..utils.settings_defaults import seed_defaults, _category
 from ..utils.deletion import is_admin, current_user
 
@@ -15,7 +16,7 @@ MAX_SIZE = 2 * 1024 * 1024
 
 # Explicit lists prevent newly added credentials from becoming public.
 PUBLIC_KEYS = frozenset({
-    'brand_name', 'brand_color_primary', 'brand_color_secondary',
+    'crm_base_url', 'brand_name', 'brand_color_primary', 'brand_color_secondary',
     'brand_logo_light', 'brand_logo_dark', 'brand_logo_size', 'brand_favicon',
     'login_bg_type', 'login_bg_color', 'login_bg_color2', 'login_bg_image',
     'login_welcome_text', 'login_footer', 'login_show_logo',
@@ -42,6 +43,7 @@ SECRET_KEYS = frozenset({'smtp_password', 'gus_api_key'})
 def settings_values(items):
     values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items}
     from ..services.company_lookup import provider
+    values['crm_base_url'] = public_base_url()
     values['client_company_provider'] = provider()
     values['gus_api_key_set'] = bool(Setting.get_value('gus_api_key', '') or current_app.config.get('GUS_API_KEY', ''))
     return values
@@ -56,6 +58,7 @@ def selected_settings(keys):
         res['client_company_provider'] = provider()
     if not is_admin() and 'lead_webhook_token' in res:
         del res['lead_webhook_token']
+    res['crm_base_url'] = public_base_url()
     return jsonify(res), 200
 
 
@@ -77,6 +80,7 @@ def public_settings():
     seed_defaults()
     items = Setting.query.filter(Setting.key.in_(PUBLIC_KEYS)).all()
     data = {s.key: s.value for s in items}
+    data['crm_base_url'] = public_base_url()
     data['needs_setup'] = (User.query.first() is None)
     return jsonify(data), 200
 
@@ -109,7 +113,17 @@ def list_full():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
     items = Setting.query.order_by(Setting.category, Setting.key).all()
     values = settings_values(items)
-    return jsonify([{**s.to_dict(), 'value': '', 'configured': values['gus_api_key_set']} if s.key == 'gus_api_key' else ({**s.to_dict(), 'value': ''} if s.key in SECRET_KEYS else s.to_dict()) for s in items]), 200
+    result = []
+    for setting in items:
+        row = setting.to_dict()
+        if setting.key in SECRET_KEYS:
+            row['value'] = ''
+        if setting.key == 'gus_api_key':
+            row['configured'] = values['gus_api_key_set']
+        if setting.key == 'crm_base_url':
+            row['value'] = values['crm_base_url']
+        result.append(row)
+    return jsonify(result), 200
 
 
 @settings_bp.route('', methods=['PUT'])
@@ -121,6 +135,8 @@ def update_settings():
 
     data = request.get_json(silent=True) or {}
     try:
+        if 'crm_base_url' in data:
+            data['crm_base_url'] = normalize_crm_url(data['crm_base_url'])
         if 'ui_template' in data and data['ui_template'] not in ('classic', 'modern'):
             raise ValueError('Wybierz dostępny szablon interfejsu.')
         if 'ui_classic_sidebar' in data and data['ui_classic_sidebar'] not in ('light', 'dark'):

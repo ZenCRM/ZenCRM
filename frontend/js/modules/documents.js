@@ -206,7 +206,7 @@ window.ZenModules.documents = function () { return {
                     ? `/offers/${item.id}/link`
                     : `/documents/${item.id}/link`;
                 const r = await this.api(endpoint, { method: 'POST' });
-                const fullUrl = window.location.origin + r.public_url;
+                const fullUrl = (this.settingsForm?.crm_base_url || window.location.origin) + r.public_url;
                 await navigator.clipboard.writeText(fullUrl);
                 this.notify(window.ZenI18n.t('Link skopiowany:\n') + fullUrl);
             } catch (e) { this.notify(window.ZenI18n.t('Błąd: ') + e.message); }

@@ -294,6 +294,7 @@ def public_helpdesk_config():
             logo = '/logo.png'
 
     return jsonify({
+        'crm_base_url': public_base_url(),
         'enabled': config.get('helpdesk_enabled', True),
         'path': config.get('helpdesk_path', '/pomoc'),
         'title': config.get('helpdesk_title', 'Centrum Pomocy'),

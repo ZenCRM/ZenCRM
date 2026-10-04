@@ -1,6 +1,7 @@
 """Domyslne wartosci ustawien CRM."""
 
 DEFAULTS = {
+    'crm_base_url': '',
     'client_company_provider': '',
     'client_statuses': 'null',
     'client_metrics': 'null',

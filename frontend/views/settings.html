@@ -822,6 +822,11 @@
                                     <input type="text" x-model="settingsForm.company_www">
                                 </div>
                             </div>
+                            <div class="settings-field">
+                                <label for="crm-base-url"><span x-text="window.ZenI18n.t('Adres CRM')">Adres CRM</span></label>
+                                <input id="crm-base-url" type="url" x-model="settingsForm.crm_base_url" placeholder="https://crm.twojadomena.pl" autocomplete="url">
+                                <p class="text-xs text-gray-500 mt-2" x-text="window.ZenI18n.t('Publiczny adres tej aplikacji. Używany w linkach do zgłoszeń, portalu klienta, dokumentów i powiadomień e-mail.')"></p>
+                            </div>
                         </div>
 
                         <!-- ═══ HELPDESK & TICKETY ═══ -->
@@ -839,7 +844,7 @@
                                         <p class="text-xs text-gray-500 dark:text-gray-400" x-text="window.ZenI18n.t(&#x27;Samodzielny portal, gdzie każdy klient może zgłosić problem i śledzić ticket przez unikalny link.&#x27;)"></p>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <a :href="helpdeskForm.helpdesk_path || &#x27;/pomoc&#x27;" target="_blank"
+                                        <a :href="(settingsForm.crm_base_url || window.location.origin) + (helpdeskForm.helpdesk_path || &#x27;/pomoc&#x27;)" target="_blank"
                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
                                             <svg class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                                             <span x-text="window.ZenI18n.t(&#x27;Otwórz portal&#x27;)"></span>
@@ -1040,7 +1045,7 @@
                                     <div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1" x-text="window.ZenI18n.t(&#x27;Adres Webhooka (POST)&#x27;)"></label>
                                         <div class="flex items-center gap-2">
-                                            <input type="text" readonly :value="window.location.origin + &#x27;/api/tickets/webhook&#x27;"
+                                            <input type="text" readonly :value="(settingsForm.crm_base_url || window.location.origin) + &#x27;/api/tickets/webhook&#x27;"
                                                    class="w-full font-mono text-xs py-2 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
                                             <button type="button" @click="copyWebhookUrl()"
                                                     class="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 whitespace-nowrap">
@@ -1415,7 +1420,7 @@
                                         <div>
                                             <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1" x-text="window.ZenI18n.t('Adres URL Webhooka (POST)')">Adres URL Webhooka (POST)</label>
                                             <div class="flex gap-2">
-                                                <input type="text" readonly :value="window.location.origin + '/api/leads/webhook'" class="ux-input flex-1 font-mono text-xs bg-gray-100 dark:bg-gray-900 select-all">
+                                                <input type="text" readonly :value="(settingsForm.crm_base_url || window.location.origin) + '/api/leads/webhook'" class="ux-input flex-1 font-mono text-xs bg-gray-100 dark:bg-gray-900 select-all">
                                                 <button type="button" @click="copyLeadWebhookUrl()" class="ux-button text-xs px-3"><span x-text="window.ZenI18n.t('Kopiuj URL')">Kopiuj URL</span></button>
                                             </div>
                                         </div>

@@ -151,7 +151,7 @@ window.ZenSettings.email = function () { return {
             const compName = this.settingsForm?.company_name || this.settingsForm?.brand_name || 'ZenCRM Demo';
             const compEmail = this.settingsForm?.company_email || 'kontakt@twojadomena.pl';
             const rawLogo = this.settingsForm?.brand_logo_light || this.settingsForm?.helpdesk_logo || '/logo.png';
-            const fullLogoUrl = rawLogo.startsWith('http') ? rawLogo : (window.location.origin + rawLogo);
+            const fullLogoUrl = rawLogo.startsWith('http') ? rawLogo : ((this.settingsForm?.crm_base_url || window.location.origin) + rawLogo);
             const logoTag = `<img src="${fullLogoUrl}" alt="${compName}" style="max-height: 46px; max-width: 220px; object-fit: contain; display: inline-block;" />`;
             const logoHeader = `<div style="text-align: left; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb;">${logoTag}</div>`;
 
@@ -166,6 +166,7 @@ window.ZenSettings.email = function () { return {
                 employee_name: this.user?.first_name || 'Anna Nowak',
                 agent_name: this.user?.first_name || 'Anna Nowak',
                 user_name: window.ZenI18n.t('Jan Kowalski'),
+                ticket_url: (this.settingsForm?.crm_base_url || window.location.origin) + (this.helpdeskForm?.helpdesk_path || '/pomoc') + '?ticket=demo',
                 ticket_number: 'TK-1042',
                 ticket_title: window.ZenI18n.t('Problem z logowaniem do panelu'),
                 ticket_priority: window.ZenI18n.t('Wysoki'),
@@ -177,11 +178,11 @@ window.ZenSettings.email = function () { return {
                 task_due_date: '2026-10-05 16:00',
                 task_priority: window.ZenI18n.t('Wysoki'),
                 task_description: window.ZenI18n.t('Przygotować konfigurację eksportu danych i zweryfikować uprawnienia w panelu klienta.'),
-                portal_url: window.location.origin + '/portal',
-                login_url: window.location.origin,
-                crm_ticket_url: window.location.origin + '/#tickets',
-                crm_task_url: window.location.origin + '/#tasks',
-                crm_client_url: window.location.origin + '/#clients/1',
+                portal_url: (this.settingsForm?.crm_base_url || window.location.origin) + '/portal.html',
+                login_url: (this.settingsForm?.crm_base_url || window.location.origin),
+                crm_ticket_url: (this.settingsForm?.crm_base_url || window.location.origin) + '/#tickets',
+                crm_task_url: (this.settingsForm?.crm_base_url || window.location.origin) + '/#tasks',
+                crm_client_url: (this.settingsForm?.crm_base_url || window.location.origin) + '/#clients/1',
                 login_email: window.ZenI18n.t('jan.kowalski@example.com'),
                 password: 'WymaganeHaslo123!',
                 temp_password: 'Xy9#mK2$pL',

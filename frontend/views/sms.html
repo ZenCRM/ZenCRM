@@ -761,8 +761,8 @@
                     <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase"><span x-text="window.ZenI18n.t(&quot;1. Adres serwera (Host)&quot;)">1. Adres serwera (Host)</span></div>
                     <div class="text-xs text-gray-600 dark:text-gray-300" x-text="window.ZenI18n.t('Wprowadź w aplikacji adres serwera CRM:')">Wprowadź adres:</div>
                     <div class="p-2 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-mono text-[11px] text-gray-900 dark:text-white select-all break-all"
-                         x-text="window.location.origin"></div>
-                    <button @click="copyToClipboard(window.location.origin, 'Skopiowano adres serwera CRM')" class="text-[11px] text-brand-600 dark:text-brand-400 hover:underline">
+                         x-text="(settingsForm.crm_base_url || window.location.origin)"></div>
+                    <button @click="copyToClipboard((settingsForm.crm_base_url || window.location.origin), 'Skopiowano adres serwera CRM')" class="text-[11px] text-brand-600 dark:text-brand-400 hover:underline">
                         <span x-text="window.ZenI18n.t('Kopiuj adres URL')">Kopiuj adres URL</span>
                     </button>
                 </div>

@@ -2516,5 +2516,8 @@ window.ZenLocales.en = {
   "Zespół wsparcia": "Support team",
   "Nie udało się wczytać portalu.": "Unable to load the portal.",
   "Brak odpowiedzi. Możesz rozpocząć rozmowę.": "No replies yet. You can start the conversation.",
-  "Wybierz kategorię": "Choose a category"
+  "Wybierz kategorię": "Choose a category",
+  "Adres CRM": "CRM address",
+  "Publiczny adres tej aplikacji. Używany w linkach do zgłoszeń, portalu klienta, dokumentów i powiadomień e-mail.": "The public address of this application. Used in links to tickets, the client portal, documents and email notifications.",
+  "Podaj poprawny adres CRM, np. https://crm.twojadomena.pl.": "Enter a valid CRM address, e.g. https://crm.example.com."
 };

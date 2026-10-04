@@ -4,7 +4,7 @@ import smtplib
 import ssl
 import re
 from markupsafe import escape
-from urllib.parse import urlsplit
+from ..utils.urls import public_base_url
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -16,17 +16,6 @@ from ..models.email_template import EmailTemplate
 from ..utils.secret_storage import unseal
 
 logger = logging.getLogger('zencrm.emails')
-
-
-def public_base_url():
-    """Configured public origin (PUBLIC_BASE_URL or company website), or '' when unset or unsafe."""
-    value = (current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or '').strip()
-    if value and '://' not in value:
-        value = 'https://' + value
-    parsed = urlsplit(value)
-    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
-        return ''
-    return f'{parsed.scheme}://{parsed.netloc}'
 
 
 def staff_link_base_url():

@@ -1,22 +1,10 @@
 """Tickets domain helpers. The API caller owns authorization and transactions."""
-from urllib.parse import urlsplit
+from ..utils.urls import public_base_url
 from flask import current_app
 from ..extensions import db
 from ..models.client import Client
 from ..models.contact import Contact
 from ..utils.helpdesk import get_helpdesk_config
-
-
-def public_base_url():
-    from ..models.setting import Setting
-    value = current_app.config.get('PUBLIC_BASE_URL') or Setting.get_value('company_www', '') or ''
-    value = value.strip()
-    if value and '://' not in value:
-        value = 'https://' + value
-    parsed = urlsplit(value)
-    if parsed.scheme not in ('https', 'http') or not parsed.hostname or parsed.username or parsed.password:
-        return ''
-    return f'{parsed.scheme}://{parsed.netloc}'
 
 
 # ─────────────────────────────────────────────────────────────
@@ -63,7 +51,7 @@ def notify_ticket_created(ticket):
         config = get_helpdesk_config()
         base_url = public_base_url()
         if not base_url:
-            current_app.logger.warning('Set PUBLIC_BASE_URL to enable ticket notification links')
+            current_app.logger.warning('Set the CRM address in settings to enable ticket notification links')
             return
         tracking_url = f"{base_url}{config.get('helpdesk_path', '/pomoc')}?ticket={ticket.token}"
 

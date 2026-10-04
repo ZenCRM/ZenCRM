@@ -2516,5 +2516,8 @@ window.ZenLocales.pl = {
   "Zespół wsparcia": "Zespół wsparcia",
   "Nie udało się wczytać portalu.": "Nie udało się wczytać portalu.",
   "Brak odpowiedzi. Możesz rozpocząć rozmowę.": "Brak odpowiedzi. Możesz rozpocząć rozmowę.",
-  "Wybierz kategorię": "Wybierz kategorię"
+  "Wybierz kategorię": "Wybierz kategorię",
+  "Adres CRM": "Adres CRM",
+  "Publiczny adres tej aplikacji. Używany w linkach do zgłoszeń, portalu klienta, dokumentów i powiadomień e-mail.": "Publiczny adres tej aplikacji. Używany w linkach do zgłoszeń, portalu klienta, dokumentów i powiadomień e-mail.",
+  "Podaj poprawny adres CRM, np. https://crm.twojadomena.pl.": "Podaj poprawny adres CRM, np. https://crm.twojadomena.pl."
 };
