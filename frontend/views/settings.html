@@ -703,7 +703,7 @@
 
                         <!-- ═══ SZABLONY WYGLĄDU ═══ -->
                         <div x-show="settingsTab === 'appearance'" x-cloak>
-                            <label class="zen-column-count"><span x-text="window.ZenI18n.t('Skala interfejsu')"></span><select class="ux-input" x-model.number="uiScale" @change="setUiScale()" :aria-label="window.ZenI18n.t('Skala interfejsu')"><template x-for="scale in [50,67,75,80,90,100,110,125,150]" :key="scale"><option :value="scale" x-text="scale + '%'"></option></template></select></label>
+                            <div class="zen-settings-scale"><label for="settings-ui-scale" class="zen-scale-heading"><span x-text="window.ZenI18n.t('Skala obszaru roboczego')"></span><output for="settings-ui-scale" x-text="uiScale + '%'"></output></label><input id="settings-ui-scale" class="zen-scale-slider" type="range" min="50" max="150" step="1" x-model.number="uiScale" @input.debounce.50ms="setUiScale()" :aria-valuetext="uiScale + '%'" :style="{'--slider-progress': (uiScale - 50) + '%'}"><p class="ux-muted" x-text="window.ZenI18n.t('Sidebar zachowuje swój rozmiar.')"></p></div>
                             <h2 class="settings-section-title" x-text="window.ZenI18n.t('Szablony wyglądu')">Szablony wyglądu</h2>
                             <p class="settings-section-desc" x-text="window.ZenI18n.t('Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.')">Wybierz wygląd interfejsu CRM. Obecny szablon pozostaje domyślny.</p>
                             <div class="zen-template-options" role="radiogroup" :aria-label="window.ZenI18n.t('Szablon interfejsu')">

@@ -495,6 +495,12 @@
     "writable": true,
     "value": false
   },
+  "boardViewOpen": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": false
+  },
   "calendarDate": {
     "enumerable": true,
     "configurable": true,
@@ -4598,6 +4604,14 @@
       "function": "1df0fd6035a573e12066bf44fefc0b24e7983dba454ad5473b774264048ca0fb"
     }
   },
+  "resetBoardView": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "600b3a7b77fddde037380c7f0e8534b5e775cef818106a2627a1363ff143bbd8"
+    }
+  },
   "resetColumns": {
     "enumerable": true,
     "configurable": true,
@@ -5000,6 +5014,14 @@
     "writable": true,
     "value": {
       "function": "48464daa1226fbd8515265f6eef1725a3d04bf687e9f9d977955e5a9f55c8558"
+    }
+  },
+  "selectBoardColumns": {
+    "enumerable": true,
+    "configurable": true,
+    "writable": true,
+    "value": {
+      "function": "3fce326651a384b227a3d630662b61532ab7ac2cc9c8522181b8471873a23c1f"
     }
   },
   "selectCalendarDay": {

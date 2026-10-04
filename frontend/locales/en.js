@@ -2480,5 +2480,12 @@ window.ZenLocales.en = {
   "Niedozwolona operacja w szablonie.": "Operation not permitted in a template.",
   "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "The server is handling other mail operations. Please try again shortly.",
   "Widok kompaktowy": "Compact view",
-  "Skala interfejsu": "Interface scale"
+  "Skala interfejsu": "Interface scale",
+  "Widok": "View",
+  "Ustawienia widoku kanban": "Kanban view settings",
+  "Układ kart": "Card layout",
+  "Standardowy": "Standard",
+  "Skala obszaru roboczego": "Workspace scale",
+  "Sidebar zachowuje swój rozmiar.": "The sidebar keeps its size.",
+  "Przywróć widok domyślny": "Reset to default view"
 };

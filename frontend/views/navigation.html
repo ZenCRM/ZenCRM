@@ -97,7 +97,7 @@
          class="fixed inset-0 z-20 bg-black/40 lg:hidden"></div>
 
     <!-- MAIN -->
-    <div class="zen-app-content flex flex-col flex-1 min-w-0">
+    <div class="zen-app-content flex flex-col flex-1 min-w-0" :style="{ zoom: uiScale / 100, '--ui-scale': uiScale / 100, '--ui-viewport-height': 'calc(100dvh / ' + (uiScale / 100) + ')' }">
 
 <button @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen" :aria-label="window.ZenI18n.t(&quot;Otwórz menu nawigacji&quot;)" class="zen-mobile-nav lg:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
                 <% include "views/reminders.html" %>

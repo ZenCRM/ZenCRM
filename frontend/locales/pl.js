@@ -2480,5 +2480,12 @@ window.ZenLocales.pl = {
   "Niedozwolona operacja w szablonie.": "Niedozwolona operacja w szablonie.",
   "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.": "Serwer obsługuje inne operacje poczty. Spróbuj ponownie za chwilę.",
   "Widok kompaktowy": "Widok kompaktowy",
-  "Skala interfejsu": "Skala interfejsu"
+  "Skala interfejsu": "Skala interfejsu",
+  "Widok": "Widok",
+  "Ustawienia widoku kanban": "Ustawienia widoku kanban",
+  "Układ kart": "Układ kart",
+  "Standardowy": "Standardowy",
+  "Skala obszaru roboczego": "Skala obszaru roboczego",
+  "Sidebar zachowuje swój rozmiar.": "Sidebar zachowuje swój rozmiar.",
+  "Przywróć widok domyślny": "Przywróć widok domyślny"
 };

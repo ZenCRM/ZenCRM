@@ -132,6 +132,16 @@ window.ZenUX = {
     },
     boardColumns: Math.min(6, Math.max(2, Number(localStorage.getItem('zen-board-columns')) || 4)),
     boardCompact: localStorage.getItem('zen-board-compact') === 'true',
+    boardViewOpen: false,
+    selectBoardColumns(count) {
+        this.boardCompact = false; this.boardColumns = Math.min(6, Math.max(2, Number(count) || 4));
+        localStorage.setItem('zen-board-compact', false); this.setBoardColumns();
+    },
+    resetBoardView() {
+        this.boardCompact = false; this.boardColumns = 4; this.uiScale = 100;
+        localStorage.setItem('zen-board-compact', false);
+        this.setBoardColumns(); this.setUiScale();
+    },
     get effectiveBoardColumns() { return this.boardCompact ? 5 : this.boardColumns; },
     toggleBoardCompact() { this.boardCompact = !this.boardCompact; localStorage.setItem('zen-board-compact', this.boardCompact); this.$nextTick(() => this.recomputeVisibleCols()); },
     calendarSelected: new Date(),

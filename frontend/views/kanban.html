@@ -10,14 +10,18 @@
                             <span x-text="window.ZenI18n.t('Lista')">Lista</span>
                         </button>
                     </div>
-                    <label class="zen-column-count" x-show="kanbanMode === 'kanban' &amp;&amp; !boardCompact">
-                        <span x-text="window.ZenI18n.t('Kolumny na ekranie')">Kolumny na ekranie</span>
-                        <select class="ux-input" x-model.number="boardColumns" @change="setBoardColumns()">
-                            <template x-for="n in [2,3,4,5,6]" :key="n"><option :value="n" x-text="n"></option></template>
-                        </select>
-                    </label>
-                    <button type="button" x-show="kanbanMode === 'kanban'" @click="toggleBoardCompact()" :aria-pressed="boardCompact" class="kanban-tab" :class="{ active: boardCompact }" x-text="window.ZenI18n.t('Widok kompaktowy')"></button>
-                    <label class="zen-column-count"><span x-text="window.ZenI18n.t('Skala interfejsu')"></span><select class="ux-input" x-model.number="uiScale" @change="setUiScale()" :aria-label="window.ZenI18n.t('Skala interfejsu')"><template x-for="scale in [50,67,75,80,90,100,110,125,150]" :key="scale"><option :value="scale" x-text="scale + '%'"></option></template></select></label>
+                    <div class="zen-board-view" x-show="kanbanMode === 'kanban'" @click.outside="boardViewOpen = false" @keydown.escape.stop="boardViewOpen = false; $refs.boardViewTrigger.focus()">
+                        <button type="button" x-ref="boardViewTrigger" class="zen-board-view-trigger" @click="boardViewOpen = !boardViewOpen" :aria-expanded="boardViewOpen" aria-controls="kanban-view-options">
+                            <span class="zen-icon-wrap" x-html="zenIcon('settings')" aria-hidden="true"></span><span x-text="window.ZenI18n.t('Widok')"></span><small x-text="effectiveBoardColumns + ' · ' + uiScale + '%'"></small>
+                        </button>
+                        <div id="kanban-view-options" class="zen-board-view-panel" x-show="boardViewOpen" x-cloak :style="{ zoom: 100 / uiScale }" role="region" :aria-label="window.ZenI18n.t('Ustawienia widoku kanban')">
+                            <div class="zen-board-view-heading"><strong x-text="window.ZenI18n.t('Ustawienia widoku kanban')"></strong><button type="button" class="zen-list-action" @click="boardViewOpen = false; $refs.boardViewTrigger.focus()" :aria-label="window.ZenI18n.t('Zamknij')">×</button></div>
+                            <div class="zen-board-view-section"><span x-text="window.ZenI18n.t('Układ kart')"></span><div class="zen-board-view-segments"><button type="button" :aria-pressed="!boardCompact" :class="{selected: !boardCompact}" @click="if (boardCompact) toggleBoardCompact()" x-text="window.ZenI18n.t('Standardowy')"></button><button type="button" :aria-pressed="boardCompact" :class="{selected: boardCompact}" @click="if (!boardCompact) toggleBoardCompact()" x-text="window.ZenI18n.t('Widok kompaktowy')"></button></div></div>
+                            <div class="zen-board-view-section"><span x-text="window.ZenI18n.t('Kolumny na ekranie')"></span><div class="zen-board-view-columns"><template x-for="n in [2,3,4,5,6]" :key="n"><button type="button" :class="{selected: effectiveBoardColumns === n}" :aria-pressed="effectiveBoardColumns === n" :aria-label="window.ZenI18n.t('Kolumny na ekranie') + ': ' + n" @click="selectBoardColumns(n)" x-text="n"></button></template></div></div>
+                            <div class="zen-board-view-section"><label for="kanban-ui-scale" class="zen-scale-heading"><span x-text="window.ZenI18n.t('Skala obszaru roboczego')"></span><output for="kanban-ui-scale" x-text="uiScale + '%'"></output></label><input id="kanban-ui-scale" class="zen-scale-slider" type="range" min="50" max="150" step="1" x-model.number="uiScale" @input.debounce.50ms="setUiScale()" :aria-valuetext="uiScale + '%'" :style="{'--slider-progress': (uiScale - 50) + '%'}"><div class="zen-scale-presets"><span>50%</span><button type="button" @click="uiScale = 67; setUiScale()">67%</button><button type="button" @click="uiScale = 100; setUiScale()">100%</button><span>150%</span></div><p x-text="window.ZenI18n.t('Sidebar zachowuje swój rozmiar.')"></p></div>
+                            <button type="button" class="zen-board-view-reset" @click="resetBoardView()" x-text="window.ZenI18n.t('Przywróć widok domyślny')"></button>
+                        </div>
+                    </div>
                     <button x-show="user?.role === 'admin' &amp;&amp; kanbanMode === 'kanban'" @click="editStages()" class="ux-text-button"><span x-text="window.ZenI18n.t('Ustaw statusy')">Ustaw statusy</span></button>
                     <input class="ux-input" type="search" x-model.debounce.150ms="leadSearch" :placeholder="window.ZenI18n.t('Szukaj leada lub klienta')" :aria-label="window.ZenI18n.t('Szukaj leada')">
                     <select class="ux-input" x-model="leadFilter" :aria-label="window.ZenI18n.t('Filtr leadów')">
