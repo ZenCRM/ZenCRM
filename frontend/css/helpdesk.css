@@ -1,0 +1,73 @@
+/* Public support portal, independent of the CRM application shell. */
+body.helpdesk-public { --hd-ink:#18364b;--hd-muted:#647b8a;--hd-border:#dbe6ed;--hd-surface:#fff;--hd-subtle:#f0f6fa;--hd-primary:#007fce;--hd-page:#f1f5f8;font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:var(--hd-ink);background:var(--hd-page); }
+.helpdesk-public.dark { color-scheme:dark;--hd-ink:#e8f2f8;--hd-muted:#a5bac8;--hd-border:#334b5f;--hd-surface:#1b2c3c;--hd-subtle:#22384b;--hd-primary:#38bdf8;--hd-page:#111d29; }
+.helpdesk-public>header { background:var(--hd-surface);border-color:var(--hd-border);box-shadow:none; }
+.helpdesk-public>header>div,.helpdesk-public>main,.helpdesk-public>footer>div { max-width:1140px; }
+.helpdesk-public>main { padding-top:46px;padding-bottom:56px; }
+.helpdesk-public .hd-brand { text-align:left;background:transparent;border:0;padding:0;color:var(--hd-ink); }
+.hd-brand img { max-width:150px; }
+.helpdesk-public #hd-header-title { color:var(--hd-ink);font-size:18px; }
+.helpdesk-public #hd-header-sub { color:var(--hd-muted); }
+#hd-submit-view { display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);column-gap:52px;row-gap:28px;align-items:start; }
+#hd-submit-view>.hd-intro { grid-column:1;grid-row:1;text-align:left;margin:0;max-width:none;padding:14px 0 0; }
+#hd-title { font-size:clamp(30px,3vw,43px);line-height:1.15;letter-spacing:-.04em;color:var(--hd-ink); }
+#hd-desc { font-size:15px;line-height:1.75;margin-top:18px;color:var(--hd-muted); }
+.hd-guide { grid-column:1;grid-row:2;border-top:1px solid var(--hd-border);padding-top:26px; }
+.hd-guide h3 { margin-bottom:20px;font-size:14px;font-weight:750;color:var(--hd-ink); }
+.hd-guide ol { display:grid;gap:22px; }
+.hd-guide li { display:flex;align-items:start;gap:14px; }
+.hd-guide li>span { display:grid;place-items:center;flex-shrink:0;width:34px;height:34px;border:1px solid var(--hd-border);border-radius:10px;background:var(--hd-surface);color:var(--hd-primary);font-size:11px;font-weight:750; }
+.hd-guide strong { display:block;font-size:13px;color:var(--hd-ink); }
+.hd-guide p { margin-top:5px;font-size:12px;line-height:1.65;color:var(--hd-muted); }
+#hd-submit-view>.hd-form-card { grid-column:2;grid-row:1/span 2;width:100%;max-width:none;margin:0;padding:30px;border-color:var(--hd-border);background:var(--hd-surface);box-shadow:0 10px 40px #18364b0b;border-radius:20px; }
+.hd-form-heading { padding-bottom:20px;margin-bottom:22px;border-bottom:1px solid var(--hd-border); }
+.hd-form-heading h3 { font-size:19px;font-weight:750;color:var(--hd-ink); }
+.hd-form-heading p { margin-top:5px;font-size:12px;color:var(--hd-muted); }
+.helpdesk-public form label { font-size:12px;text-transform:none;letter-spacing:0;font-weight:650;color:var(--hd-ink); }
+.helpdesk-public input:not([readonly]),.helpdesk-public select,.helpdesk-public textarea { min-height:45px;background:var(--hd-surface);color:var(--hd-ink);border-color:var(--hd-border);border-radius:10px; }
+.helpdesk-public input:focus-visible,.helpdesk-public textarea:focus-visible,.helpdesk-public select:focus-visible { outline:3px solid #38bdf833;outline-offset:1px;border-color:var(--hd-primary); }
+.helpdesk-public button:focus-visible,.helpdesk-public a:focus-visible { outline:3px solid var(--hd-primary);outline-offset:3px; }
+.helpdesk-public button:disabled { cursor:wait;opacity:.65; }
+#btn-submit,#btn-reply-submit,#succ-btn-track { background:#007fce;color:#fff;min-height:46px;border-radius:10px;box-shadow:0 4px 12px #007fce20; }
+#btn-submit:hover,#btn-reply-submit:hover,#succ-btn-track:hover { background:#0069ad; }
+.hd-secondary { padding:10px 16px;min-height:42px;border:1px solid var(--hd-border);border-radius:10px;background:var(--hd-subtle);color:var(--hd-ink);font-size:12px;font-weight:650; }
+#hd-success-view { border-color:var(--hd-border);background:var(--hd-surface);padding:36px;box-shadow:0 12px 40px #18364b12; }
+#hd-success-view>div.flex { flex-wrap:wrap; }
+#hd-success-view input { color:var(--hd-primary);min-height:40px; }
+#hd-track-view>div { border-color:var(--hd-border);background:var(--hd-surface);box-shadow:0 12px 40px #18364b0b; }
+#hd-track-view .border-gray-200 { border-color:var(--hd-border); }
+#tr-title { color:var(--hd-ink);overflow-wrap:anywhere; }
+#tr-messages { display:grid;gap:16px; }
+.hd-thread-message { padding:18px;border:1px solid var(--hd-border);border-radius:13px;background:var(--hd-subtle);overflow-wrap:anywhere; }
+.hd-thread-message.is-agent { background:color-mix(in srgb,#007fce 7%,var(--hd-surface));border-color:color-mix(in srgb,#007fce 25%,var(--hd-border));border-left:3px solid #007fce; }
+.hd-thread-message>div:first-child { flex-wrap:wrap;row-gap:5px; }
+.hd-thread-message>div:last-child { line-height:1.75;color:var(--hd-ink); }
+.hd-inline-error { padding:12px 14px;border:1px solid #fecaca;border-radius:10px;background:#fff1f2;color:#9f1239;font-size:13px;margin-bottom:14px; }
+.helpdesk-public>footer { background:var(--hd-surface);border-color:var(--hd-border);color:var(--hd-muted); }
+.helpdesk-public.dark .text-gray-900,.helpdesk-public.dark .text-gray-800,.helpdesk-public.dark .text-gray-700 { color:var(--hd-ink); }
+.helpdesk-public.dark .text-gray-600,.helpdesk-public.dark .text-gray-500,.helpdesk-public.dark .text-gray-400 { color:var(--hd-muted); }
+.helpdesk-public.dark #hd-success-view .bg-gray-50 { background:var(--hd-subtle);border-color:var(--hd-border); }
+.helpdesk-public.dark .hd-inline-error { background:#47232d;border-color:#773246;color:#ffb6c3; }
+@media(max-width:760px) {
+ .helpdesk-public>main { padding-top:24px;padding-bottom:32px; }#hd-submit-view { grid-template-columns:1fr;gap:24px; }
+ #hd-submit-view>.hd-intro { grid-column:1;grid-row:1; }#hd-title { font-size:30px; }#hd-desc { font-size:14px; }
+ #hd-submit-view>.hd-form-card { grid-column:1;grid-row:2;padding:22px; }.hd-guide { grid-column:1;grid-row:3; }
+ .hd-guide ol { gap:16px; }#hd-header-badge { display:none; }.hd-brand img { max-width:105px; }#hd-success-view { padding:24px; }
+ #hd-track-view>div { padding:22px; }.hd-thread-message { padding:14px; }
+}
+@media(prefers-reduced-motion:reduce) { .helpdesk-public * { scroll-behavior:auto!important;transition:none!important; } }
+
+.helpdesk-public .hidden,.helpdesk-public [hidden] { display:none!important; }
+
+.helpdesk-public>header { display:flex;align-items:center;gap:24px;padding:0 max(24px,calc((100vw - 1092px)/2)); }
+.helpdesk-public>header>div { flex:1;min-width:0;padding-left:0;padding-right:0; }
+.helpdesk-public>header>label { display:grid;gap:4px;font-size:11px;color:var(--hd-muted); }
+.helpdesk-public>header>label select { min-height:36px;padding:6px 10px;border:1px solid var(--hd-border);background:var(--hd-surface);border-radius:9px;font-size:12px;color:var(--hd-ink); }
+.helpdesk-public.dark .hd-brand img { background:#fff;border-radius:8px;padding:5px; }
+.helpdesk-public.dark #tr-number { background:var(--hd-subtle);color:var(--hd-ink); }
+.helpdesk-public.dark .hd-thread-message.is-agent .text-blue-900 { color:#a0d9ff; }
+@media(max-width:1000px) { .helpdesk-public>header>div>div:last-child { display:none; } }
+@media(max-width:760px) {
+ .helpdesk-public>header { padding:0 16px;gap:10px; }.helpdesk-public .hd-brand { gap:8px; }.helpdesk-public .hd-brand img { max-width:88px; }
+ .helpdesk-public #hd-header-title { font-size:15px; }.helpdesk-public #hd-header-sub { font-size:10px; }
+}

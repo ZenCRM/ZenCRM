@@ -1,31 +1,26 @@
 <!doctype html>
 <html lang="pl">
-<head><script src="/locales/pl.js"></script><script src="/locales/en.js"></script><script src="/js/i18n.js"></script><script defer src="/js/i18n-dom.js"></script>
+<head><script src="/locales/pl.js"></script><script src="/locales/en.js"></script><script>window.ZenCustomI18n = {languages:{pl:{name:"Polski",base:"pl"},en:{name:"English",base:"en"}},overrides:{}};</script><script src="/js/i18n.js"></script><script defer src="/js/i18n-dom.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-i18n-title="Centrum Pomocy">Centrum Pomocy</title>
     <script src="/vendor/tailwind-3.4.17.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
-    </style>
+    <link rel="stylesheet" href="/css/helpdesk.css?v=20261004ux1">
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+<body class="helpdesk-public bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
     <!-- Nagłówek -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <div class="flex items-center gap-3.5 cursor-pointer" onclick="location.href = location.pathname">
+            <button type="button" class="hd-brand flex items-center gap-3.5" onclick="location.href = location.pathname">
                 <img id="hd-logo" src="/logo.png" alt="Logo" class="h-9 w-auto max-w-[180px] object-contain" data-i18n-alt="Logo">
                 <div>
                     <h1 id="hd-header-title" class="font-bold text-lg text-gray-900 leading-tight"><span data-i18n="Centrum Pomocy">Centrum Pomocy</span></h1>
                     <span id="hd-header-sub" class="text-xs text-gray-500 block"><span data-i18n="Wsparcie i obsługa zgłoszeń">Wsparcie i obsługa zgłoszeń</span></span>
                 </div>
-            </div>
+            </button>
             <div class="flex items-center gap-2">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     <span id="hd-header-badge"><span data-i18n="Strefa klienta">Strefa klienta</span></span>
                 </span>
             </div>
@@ -43,35 +38,36 @@
 
         <!-- 1. WIDOK ZGŁASZANIA TICKETU -->
         <div id="hd-submit-view" class="space-y-6">
-            <div class="text-center max-w-xl mx-auto mb-8">
+            <div class="hd-intro text-center max-w-xl mx-auto mb-8">
                 <span id="hd-badge" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 mb-3"><span data-i18n="Zgłoszenie serwisowe">Zgłoszenie serwisowe</span></span>
                 <h2 id="hd-title" class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight"><span data-i18n="W czym możemy Ci pomóc?">W czym możemy Ci pomóc?</span></h2>
                 <p id="hd-desc" class="text-sm text-gray-600 mt-2"><span data-i18n="Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail.">Wypełnij poniższy formularz. Otrzymasz unikalny link do śledzenia statusu zgłoszenia oraz powiadomienie e-mail.</span></p>
             </div>
 
+            <aside class="hd-guide"><h3 data-i18n="Jak działa wsparcie?">Jak działa wsparcie?</h3><ol><li><span>01</span><div><strong data-i18n="Opisz sprawę">Opisz sprawę</strong><p data-i18n="Wybierz kategorię i opisz, czego potrzebujesz.">Wybierz kategorię i opisz, czego potrzebujesz.</p></div></li><li><span>02</span><div><strong data-i18n="Zachowaj link">Zachowaj link</strong><p data-i18n="Po wysłaniu otrzymasz link do swojego zgłoszenia.">Po wysłaniu otrzymasz link do swojego zgłoszenia.</p></div></li><li><span>03</span><div><strong data-i18n="Kontynuuj rozmowę">Kontynuuj rozmowę</strong><p data-i18n="Śledź status i odpowiadaj zespołowi w jednym wątku.">Śledź status i odpowiadaj zespołowi w jednym wątku.</p></div></li></ol></aside>
             <!-- Formularz zgłoszenia -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl mx-auto">
+            <div class="hd-form-card bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl mx-auto"><div class="hd-form-heading"><h3 data-i18n="Nowe zgłoszenie">Nowe zgłoszenie</h3><p data-i18n="Pola oznaczone * są wymagane.">Pola oznaczone * są wymagane.</p></div>
                 <form id="ticket-form" class="space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            <label for="f-email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                                 <span data-i18n="Twój adres e-mail">Twój adres e-mail</span> <span class="text-red-500">*</span>
                             </label>
-                            <input type="email" id="f-email" required placeholder="twoj@email.pl"
+                            <input type="email" id="f-email" autocomplete="email" required placeholder="twoj@email.pl"
                                    class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" data-i18n-placeholder="twoj@email.pl">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            <label for="f-name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                                 <span data-i18n="Imię i nazwisko / Firma">Imię i nazwisko / Firma</span>
                             </label>
-                            <input type="text" id="f-name" placeholder="Jan Kowalski"
+                            <input type="text" id="f-name" autocomplete="organization" placeholder="Jan Kowalski"
                                    class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" data-i18n-placeholder="Jan Kowalski">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            <label for="f-category" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                                 <span data-i18n="Kategoria zgłoszenia">Kategoria zgłoszenia</span> <span class="text-red-500">*</span>
                             </label>
                             <select id="f-category" required
@@ -79,16 +75,16 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            <label for="f-phone" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                                 <span data-i18n="Numer telefonu (opcjonalnie)">Numer telefonu (opcjonalnie)</span>
                             </label>
-                            <input type="tel" id="f-phone" placeholder="+48 123 456 789"
+                            <input type="tel" id="f-phone" autocomplete="tel" placeholder="+48 123 456 789"
                                    class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                        <label for="f-title" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                             <span data-i18n="Temat zgłoszenia">Temat zgłoszenia</span> <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="f-title" required placeholder="Krótki opis problemu lub pytania"
@@ -96,14 +92,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                        <label for="f-description" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                             <span data-i18n="Szczegółowy opis">Szczegółowy opis</span> <span class="text-red-500">*</span>
                         </label>
                         <textarea id="f-description" required rows="5" placeholder="Podaj jak najwięcej szczegółów..."
                                   class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" data-i18n-placeholder="Podaj jak najwięcej szczegółów..."></textarea>
                     </div>
 
-                    <div id="form-error" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium"></div>
+                    <div id="form-error" role="alert" tabindex="-1" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium"></div>
 
                     <div class="pt-2">
                         <button type="submit" id="btn-submit"
@@ -130,9 +126,9 @@
             </p>
             <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-left">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1"><span data-i18n="Twój unikalny link do ticketu">Twój unikalny link do ticketu</span></label>
-                <input type="text" id="succ-link" readonly class="w-full bg-transparent text-xs text-blue-600 font-mono select-all outline-none">
+                <input type="text" id="succ-link" aria-label="Twój unikalny link do ticketu" data-i18n-aria-label="Twój unikalny link do ticketu" readonly class="w-full bg-transparent text-xs text-blue-600 font-mono select-all outline-none">
             </div>
-            <div class="flex gap-2 justify-center pt-2">
+            <div class="flex gap-2 justify-center pt-2"><button type="button" id="copy-ticket-link" class="hd-secondary" data-i18n="Kopiuj link">Kopiuj link</button>
                 <a id="succ-btn-track" href="#" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition">
                     <span data-i18n="Przejdź do zgłoszenia">Przejdź do zgłoszenia</span>
                 </a>
@@ -168,7 +164,7 @@
                 <!-- Wątek konwersacji -->
                 <div class="py-6 space-y-4">
                     <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider"><span data-i18n="Historia zgłoszenia">Historia zgłoszenia</span></h3>
-                    <div id="tr-messages" class="space-y-4">
+                    <div id="tr-messages" role="log" aria-label="Historia zgłoszenia" data-i18n-aria-label="Historia zgłoszenia" class="space-y-4">
                         <!-- Wiadomości renderowane dynamicznie -->
                     </div>
                 </div>
@@ -176,8 +172,9 @@
                 <!-- Formularz odpowiedzi klienta -->
                 <div id="tr-reply-box" class="pt-6 border-t border-gray-200">
                     <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2"><span data-i18n="Dodaj odpowiedź">Dodaj odpowiedź</span></h4>
+                    <div id="reply-error" class="hidden hd-inline-error" role="alert" tabindex="-1"></div>
                     <form id="track-reply-form" class="space-y-3">
-                        <textarea id="tr-reply-content" required rows="3" placeholder="Wpisz treść swojej odpowiedzi..."
+                        <textarea aria-label="Odpowiedź" data-i18n-aria-label="Odpowiedź" id="tr-reply-content" required rows="3" placeholder="Wpisz treść swojej odpowiedzi..."
                                   class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" data-i18n-placeholder="Wpisz treść swojej odpowiedzi..."></textarea>
                         <div class="flex justify-end">
                             <button type="submit" id="btn-reply-submit"
@@ -206,15 +203,25 @@
     <script>
         (async () => {
             const params = new URLSearchParams(location.search);
+            if (params.get('dark') === '1' || localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+            document.getElementById('copy-ticket-link').onclick = async event => {
+                const control = document.getElementById('succ-link'); const copyButton = event.currentTarget;
+                try { await navigator.clipboard.writeText(control.value); copyButton.textContent = window.ZenI18n.t('Skopiowano'); }
+                catch (_) { control.focus(); control.select(); copyButton.textContent = window.ZenI18n.t('Zaznaczono link do skopiowania.'); }
+            };
             const token = params.get('ticket') || params.get('token');
 
             // Pobierz konfigurację portalu
             let config = {};
             try {
                 const res = await fetch('/api/tickets/public/config', {headers: {'Accept-Language': window.ZenI18n.locale}});
+                if (!res.ok) throw new Error('configuration unavailable');
                 config = await res.json();
             } catch (e) {
-                console.error('Błąd pobierania konfiguracji helpdesku:', e);
+                document.getElementById('hd-submit-view').classList.add('hidden');
+                document.getElementById('hd-disabled').classList.remove('hidden');
+                const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'hd-secondary'; retry.textContent = window.ZenI18n.t('Spróbuj ponownie'); retry.onclick = () => location.reload(); document.getElementById('hd-disabled').append(retry);
+                return;
             }
 
             if (config.title) {
@@ -268,6 +275,7 @@
             // Wypełnij kategorie
             const catSelect = document.getElementById('f-category');
             catSelect.innerHTML = '';
+            const categoryPrompt = document.createElement('option'); categoryPrompt.value = ''; categoryPrompt.textContent = window.ZenI18n.t('Wybierz kategorię'); categoryPrompt.disabled = true; categoryPrompt.selected = true; catSelect.append(categoryPrompt);
             (config.categories || []).forEach(c => {
                 const opt = document.createElement('option');
                 opt.value = c.id;
@@ -277,6 +285,8 @@
 
             // Ładowanie i śledzenie ticketu
             async function loadTrackTicket(tok) {
+                const thread = document.getElementById('tr-messages'); thread.setAttribute('aria-busy','true');
+                if (!thread.children.length) thread.textContent = window.ZenI18n.t('Ładowanie zgłoszenia…');
                 try {
                     const res = await fetch('/api/tickets/public/track/' + encodeURIComponent(tok));
                     if (!res.ok) throw new Error(window.ZenI18n.t('Nie znaleziono takiego zgłoszenia.'));
@@ -298,7 +308,7 @@
                         closed: { label: window.ZenI18n.t('Zamknięte'), cls: 'bg-gray-100 text-gray-700' }
                     };
                     const st = statuses[ticket.status] || { label: ticket.status, cls: 'bg-gray-100 text-gray-800' };
-                    statusBadge.textContent = st.label;
+                    statusBadge.textContent = st.label; statusBadge.dataset.status = ticket.status;
                     statusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold ' + st.cls;
 
                     if (ticket.status === 'closed') {
@@ -315,12 +325,12 @@
                     (ticket.messages || []).forEach(m => {
                         const isAgent = (m.sender_type === 'agent');
                         const card = document.createElement('div');
-                        card.className = `p-4 rounded-xl border ${isAgent ? 'bg-blue-50/60 border-blue-200' : 'bg-gray-50 border-gray-200'}`;
+                        card.className = 'hd-thread-message ' + (isAgent ? 'is-agent' : 'is-client');
                         const header = document.createElement('div');
                         header.className = 'flex items-center justify-between gap-2 mb-2 text-xs';
                         const sender = document.createElement('span');
                         sender.className = 'font-bold ' + (isAgent ? 'text-blue-900' : 'text-gray-900');
-                        sender.textContent = isAgent ? window.ZenI18n.t('💬 Zespół Wsparcia') : '👤 ' + (m.sender_name || window.ZenI18n.t('Klient'));
+                        sender.textContent = isAgent ? window.ZenI18n.t('Zespół wsparcia') : (m.sender_name || window.ZenI18n.t('Klient'));
                         const date = document.createElement('span');
                         date.className = 'text-gray-400';
                         date.textContent = new Date(m.created_at).toLocaleString(window.ZenI18n.locale);
@@ -340,7 +350,7 @@
                         error.textContent = e.message;
                         msgBox.appendChild(error);
                     }
-                }
+                } finally { thread.removeAttribute('aria-busy'); }
             }
 
             // Obsługa odpowiedzi w wątku klienta
@@ -349,6 +359,7 @@
                 replyForm.onsubmit = async (e) => {
                     e.preventDefault();
                     const contentInput = document.getElementById('tr-reply-content');
+                    const replyError = document.getElementById('reply-error'); replyError.classList.add('hidden');
                     const content = contentInput.value.trim();
                     if (!content) return;
 
@@ -356,7 +367,8 @@
                     if (!curToken) return;
 
                     const btn = document.getElementById('btn-reply-submit');
-                    btn.disabled = true;
+                    if (btn.disabled) return;
+                    btn.disabled = true; btn.setAttribute('aria-busy','true');
                     try {
                         const res = await fetch('/api/tickets/public/track/' + encodeURIComponent(curToken) + '/reply', {
                             method: 'POST',
@@ -368,9 +380,9 @@
                         contentInput.value = '';
                         await loadTrackTicket(curToken);
                     } catch (err) {
-                        alert(err.message);
+                        replyError.textContent = err.message; replyError.classList.remove('hidden'); replyError.focus();
                     } finally {
-                        btn.disabled = false;
+                        btn.disabled = false; btn.removeAttribute('aria-busy');
                     }
                 };
             }
@@ -390,8 +402,9 @@
 
             form.onsubmit = async (e) => {
                 e.preventDefault();
+                if (btnSubmit.disabled) return;
                 errBox.classList.add('hidden');
-                btnSubmit.disabled = true;
+                btnSubmit.disabled = true; btnSubmit.setAttribute('aria-busy','true');
                 btnSubmit.classList.add('opacity-75');
 
                 const payload = {
@@ -419,11 +432,12 @@
                     const fullLink = location.origin + location.pathname + '?ticket=' + data.token;
                     document.getElementById('succ-link').value = fullLink;
                     document.getElementById('succ-btn-track').href = fullLink;
+                    const success = document.getElementById('hd-success-view'); success.setAttribute('tabindex','-1'); success.focus(); success.scrollIntoView({behavior:'smooth',block:'start'});
                 } catch (err) {
                     errBox.textContent = err.message;
-                    errBox.classList.remove('hidden');
+                    errBox.classList.remove('hidden'); errBox.focus();
                 } finally {
-                    btnSubmit.disabled = false;
+                    btnSubmit.disabled = false; btnSubmit.removeAttribute('aria-busy');
                     btnSubmit.classList.remove('opacity-75');
                 }
             };
