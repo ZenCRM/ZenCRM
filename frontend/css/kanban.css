@@ -12,7 +12,7 @@
     font-weight:750;
     color:var(--wm-muted,#64748b)
 }
-.zen-pipeline-summary h2 {
+.zen-pipeline-summary :is(h1,h2) {
     font-size:22px;
     font-weight:700;
     letter-spacing:-.035em;
@@ -171,7 +171,7 @@
     align-items:flex-start;
     gap:12px
 }
-.zen-pipeline-summary h2 {
+.zen-pipeline-summary :is(h1,h2) {
     font-size:20px
 }
 .zen-pipeline-metrics {
@@ -312,3 +312,15 @@
 .zen-scale-presets { display:flex;align-items:center;justify-content:space-between;color:var(--wm-muted);font-size:11px; }
 .zen-scale-presets button { padding:4px 9px;background:var(--wm-subtle);border:1px solid var(--wm-border);border-radius:6px;color:var(--wm-text); }
 .zen-board-view-reset { width:100%;margin-top:16px;padding:10px 0 0;border-top:1px solid var(--wm-border);color:var(--wm-accent-text);font-size:12px; }
+
+:is(html,.theme-modern) .windmill-app .zen-lead-board .kanban-col-header { flex-direction:column;align-items:stretch;gap:5px; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board .kanban-col-header .zen-lead-column-title { display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px; }
+.zen-lead-column-label { display:flex;align-items:center;gap:8px;min-width:0; }
+.zen-lead-column-name { font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.zen-lead-column-label .zen-stage-dot,.zen-lead-column-label .count { flex-shrink:0; }
+:is(html,.theme-modern) .windmill-app .zen-lead-board .kanban-col-header .total { margin:0 0 0 20px;font-size:11px;color:var(--wm-muted); }
+.windmill-app .zen-lead-board .zen-lead-card-probability .zen-progress { height:10px;border-radius:999px;background:var(--wm-border); }
+.zen-lead-card-probability[data-chance="low"] { --chance-gradient:linear-gradient(90deg,#b45309,#fbbf24); }
+.zen-lead-card-probability[data-chance="medium"] { --chance-gradient:linear-gradient(90deg,#007fce,#22d3ee); }
+.zen-lead-card-probability[data-chance="high"] { --chance-gradient:linear-gradient(90deg,#16886e,#4dd2ae); }
+.windmill-app .zen-lead-board .zen-lead-card-probability .zen-progress .wm-progress-fill { background:var(--chance-gradient,linear-gradient(90deg,#0a9bc0,#4dd2ae));box-shadow:none; }
