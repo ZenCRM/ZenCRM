@@ -2,6 +2,7 @@
 window.ZenCore = window.ZenCore || {};
 window.ZenCore.lifecycle = function () { return {
         async init() {
+            this.isAdmin = this.user?.role === 'admin';
             if (this.token) {
                 try {
                     const catalog = await this.api('/translations/catalog');
