@@ -10,7 +10,17 @@ Platforma umożliwia instalowanie aplikacji przez administratora, udostępnianie
 - Tokeny osobiste na 1–30 dni (panel wydaje na 24 godziny), confidential authorization code + PKCE S256, rotacja refresh tokenów, wykrywanie ponownego użycia i unieważnianie całej rodziny.
 - Wersjonowane, ograniczone operacje klientów, zadań, podsumowania i prywatnego storage; osobny endpoint tokenów aplikacji.
 - Podpisane zdarzenia klientów, zapisane razem ze zmianą biznesową i wysyłane przez osobny worker. Dziennik administracyjny i stan dostarczeń.
-- Panel **Aplikacje**, widżety dashboardu i zakładka **Aplikacje** na karcie klienta. Etykiety PL/EN.
+- Panel **Aplikacje**: sklep z wyszukiwaniem i kategoriami, **Moje aplikacje** oraz osobna sekcja administracyjna. Widżety dashboardu i zakładka **Aplikacje** na karcie klienta. Etykiety PL/EN, układ mobilny i ciemny motyw.
+
+## Preinstalowane aplikacje i sklep
+
+Standardowy start bazy dodaje trzy aplikacje ZenCRM: **Podsumowanie pracy** (liczniki klientów i otwartych zadań, również na dashboardzie), **Katalog klientów** oraz **Lista zadań** (listy z wyszukiwaniem i paginacją). To lokalne deklaracje, bez pobierania paczek i uruchamiania kodu dostawcy. Wszystkie korzystają wyłącznie z zakresów odczytu.
+
+Po włączeniu platformy aplikacje są preinstalowane i udostępnione aktywnym kontom, także utworzonym później. Samo preinstalowanie nie tworzy zgód ani tokenów. Użytkownik wybiera **Szczegóły**, sprawdza zakres i klika **Dodaj do moich aplikacji**; dopiero wtedy może otworzyć narzędzie. Administrator nadal może wyłączyć, odinstalować lub ograniczyć aplikację do konkretnych osób. Restart nie zmienia tych decyzji i nie przywraca odinstalowanych aplikacji.
+
+`GET /api/plugins/store` wymaga aktywnego konta i włączonej platformy. Pokazuje oficjalne definicje lokalne (także niedostępne, bez możliwości aktywacji) oraz zewnętrzne aplikacje udostępnione danemu użytkownikowi. Nie ujawnia list użytkowników, konfiguracji ani zewnętrznych aplikacji spoza jego grupy dostępu. To katalog lokalny; nie ma zakupów, płatności ani pobierania z internetowego marketplace.
+
+Definicje znajdują się w `app/plugins/bundled.py`. Identyfikatory `zencrm-work-summary`, `zencrm-client-directory`, `zencrm-task-list` są zarezerwowane. Manifesty są nieedytowalne w panelu, a status aplikacji ZenCRM wymaga dokładnej zgodności całej definicji; sama nazwa lub ID nie wystarcza. Wyłącznie dla takich definicji administrator może wybrać **Wszyscy aktywni użytkownicy, także nowe konta**. Instalacja API przyjmuje wtedy `all_users: true` i pustą `allowed_users`; baza przechowuje wewnętrzny znacznik `all-active-users`. Dla aplikacji zewnętrznych obowiązuje lista konkretnych osób.
 
 Gmail, Google Drive, magazyn i pełny silnik raportów to kolejne aplikacje/moduły. Przykładowy raport to podsumowanie liczb, bez generatora PDF, harmonogramu i konstruktora raportów. Uwierzytelnianie 2FA należy rozbudować w rdzeniu logowania; plugin nie powinien przejmować uwierzytelniania CRM.
 
@@ -34,7 +44,7 @@ Stary obraz może odmówić uruchomienia z nowszą rewizją Alembic. Dla rollbac
 
 ## Granice dostępu
 
-Każde wywołanie wymaga jednocześnie: aktywnej instalacji, włączenia globalnego i aplikacji, aktywnego użytkownika z listy dopuszczonych osób, aktualnej zgody, zgodności rewizji i zakresu należącego do manifestu, zatwierdzenia administratora oraz zgody użytkownika. Mutacje klientów dodatkowo wymagają `clients.edit` z istniejącego systemu ról i zespołów.
+Każde wywołanie wymaga jednocześnie: aktywnej instalacji, włączenia globalnego i aplikacji, aktywnego użytkownika z zatwierdzonej grupy dostępu, aktualnej zgody, zgodności rewizji i zakresu należącego do manifestu, zatwierdzenia administratora oraz zgody użytkownika. Mutacje klientów dodatkowo wymagają `clients.edit` z istniejącego systemu ról i zespołów.
 
 | Zakres | Operacje | Zasada |
 | --- | --- | --- |

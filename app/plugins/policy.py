@@ -8,6 +8,7 @@ from ..models.task_assignee import TaskAssignee
 from ..utils.api_security import password_version
 from .models import PluginApp, PluginGrant, PluginAudit
 from ..models.setting import Setting
+from .bundled import ALL_USERS, bundled_metadata
 
 PLATFORM_SETTING = 'plugins_enabled'
 
@@ -37,7 +38,8 @@ def app_or_404(app_id):
 
 
 def audience(app, user):
-    return bool(user and user.is_active and app.installed and app.enabled and user.id in app.allowed_users)
+    all_users = ALL_USERS in app.allowed_users and bundled_metadata(app)['bundled']
+    return bool(user and user.is_active and app.installed and app.enabled and (all_users or user.id in app.allowed_users))
 
 
 def principal(grant_id, *, app_revision=None, grant_revision=None, version=None):

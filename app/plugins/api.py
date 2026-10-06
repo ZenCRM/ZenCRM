@@ -18,6 +18,7 @@ from .policy import require_enabled, app_or_404, audience, principal, audit, pla
 from ..models.setting import Setting
 from .operations import invoke
 from .tokens import authorize_code, issue
+from .bundled import BUNDLED, ALL_USERS, bundled_metadata
 
 plugins_bp = Blueprint('plugins', __name__)
 
@@ -76,8 +77,10 @@ def public_app(app, user, management=False):
               'installed': app.installed, 'enabled': app.enabled,
               'approved_scopes': app.approved_scopes, 'consented_scopes': grant.scopes if grant else [],
               'scope_descriptions': {key: t(SCOPES[key]) for key in app.approved_scopes}}
+    result.update(bundled_metadata(app))
     if management:
         result.update(configuration=app.configuration, allowed_users=app.allowed_users,
+                      all_users=ALL_USERS in app.allowed_users and result['bundled'],
                       credentials_configured=bool(app.client_secret_hash))
     return result
 
@@ -119,11 +122,26 @@ def my_apps():
                     if audience(app, user)])
 
 
+@plugins_bp.get('/store')
+def store():
+    user = current_user()
+    # Only reviewed local definitions are visible outside the administrator-approved audience.
+    apps = []
+    for app in PluginApp.query.order_by(PluginApp.id):
+        if bundled_metadata(app)['bundled'] or audience(app, user):
+            item = public_app(app, user)
+            item['available'] = audience(app, user)
+            apps.append(item)
+    return jsonify(apps)
+
+
 @plugins_bp.post('/apps')
 @auth_limit(20, by_user=True)
 def register():
     user = admin()
     manifest = validate_manifest(data())
+    if manifest['id'] in BUNDLED:
+        abort(409)
     if db.session.get(PluginApp, manifest['id']):
         abort(409)
     if PluginApp.query.count() >= 100:
@@ -139,6 +157,8 @@ def register():
 def update_manifest(app_id):
     user = admin()
     app = app_or_404(app_id)
+    if app.id in BUNDLED:
+        abort(409, description='Manifest aplikacji ZenCRM jest dostarczany z systemem i nie może być zmieniany w panelu.')
     if app.enabled:
         abort(409)
     manifest = validate_manifest(data())
@@ -168,15 +188,18 @@ def install(app_id):
     user = admin()
     app = app_or_404(app_id)
     payload = data()
-    if set(payload) - {'scopes', 'allowed_users', 'configuration', 'revision'}:
+    if set(payload) - {'scopes', 'allowed_users', 'all_users', 'configuration', 'revision'}:
         abort(400)
     if app.enabled or type(payload.get('revision')) is not int or payload.get('revision') != app.revision:
         abort(409)
     scopes = scope_list(payload.get('scopes'), app.manifest['scopes'])
     users = payload.get('allowed_users')
-    if not isinstance(users, list) or not users or len(users) > 500 or any(type(uid) is not int for uid in users) or len(set(users)) != len(users):
+    all_users = payload.get('all_users', False)
+    if type(all_users) is not bool or (all_users and not bundled_metadata(app)['bundled']):
         abort(400)
-    if User.query.filter(User.id.in_(users), User.is_active.is_(True)).count() != len(users):
+    if not isinstance(users, list) or (not users and not all_users) or len(users) > 500 or any(type(uid) is not int for uid in users) or len(set(users)) != len(users):
+        abort(400)
+    if (all_users and users) or User.query.filter(User.id.in_(users), User.is_active.is_(True)).count() != len(users):
         abort(400)
     configuration = payload.get('configuration', {})
     if not isinstance(configuration, dict):
@@ -184,7 +207,7 @@ def install(app_id):
     bounded_json(configuration, 8192)
     # Configuration is not a credential vault; provider secrets belong to the external app.
     app.approved_scopes = scopes
-    app.allowed_users = users
+    app.allowed_users = [ALL_USERS] if all_users else users
     app.configuration = configuration
     app.installed = True
     app.revision += 1

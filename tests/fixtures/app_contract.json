@@ -1121,6 +1121,15 @@
       ]
     },
     {
+      "path": "/api/plugins/store",
+      "endpoint": "plugins.store",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
       "path": "/api/portal/branding",
       "endpoint": "portal.upload_branding",
       "methods": [

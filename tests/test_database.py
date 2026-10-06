@@ -113,6 +113,9 @@ class DatabasePreparationTest(unittest.TestCase):
         self.assertEqual([worker.returncode for worker in workers], [0] * 4, errors)
         self.assertEqual(self.version(), self.head)
         self.assertIn('claimed_at', self.columns('sms_queue'))
+        with db.engine.connect() as conn:
+            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_apps')).scalar(), 3)
+            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_grants')).scalar(), 0)
 
     def test_revision_from_removed_migration_chain_is_replaced(self):
         self.create_legacy_schema()
@@ -129,6 +132,9 @@ class DatabasePreparationTest(unittest.TestCase):
         self.assertEqual(self.version(), self.head)
         with db.engine.connect() as conn:
             self.assertGreater(conn.execute(text('SELECT COUNT(*) FROM document_types')).scalar(), 0)
+            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_apps')).scalar(), 3)
+            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_grants')).scalar(), 0)
+            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_tokens')).scalar(), 0)
 
     def test_sqlite_connections_enforce_foreign_keys(self):
         prepare_database()

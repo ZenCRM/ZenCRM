@@ -2,13 +2,18 @@
     <p role="alert" x-show="slotError" x-text="slotError" class="text-red-600"></p>
     <template x-for="entry in entries" :key="entry.key">
         <section class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
-            <h3 class="font-semibold mb-3" x-text="entry.placement.label"></h3>
+            <h3 class="font-semibold mb-3" x-text="entry.app.bundled ? window.ZenI18n.t(entry.placement.label) : entry.placement.label"></h3>
             <p role="alert" x-text="entry.error" class="text-red-600"></p>
             <template x-if="entry.result && entry.placement.operation === 'reports.summary'"><div class="grid grid-cols-2 gap-4">
                 <div><p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Klienci')"></p><strong class="text-3xl" x-text="entry.result.clients"></strong></div>
                 <div><p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Otwarte zadania')"></p><strong class="text-3xl" x-text="entry.result.open_tasks"></strong></div>
             </div></template>
-            <template x-if="entry.result?.items"><ul class="divide-y dark:divide-gray-700"><template x-for="item in entry.result.items" :key="item.id"><li class="py-2"><strong x-text="item.name || item.title"></strong><p class="text-sm text-gray-500" x-text="item.company || item.status || ''"></p></li></template></ul></template>
+            <template x-if="entry.result?.items"><div>
+                <form class="plugin-slot-tools" @submit.prevent="listPage(entry)"><input type="search" x-model="entry.search" maxlength="120" :aria-label="window.ZenI18n.t('Szukaj w aplikacji')" :placeholder="window.ZenI18n.t('Szukaj w aplikacji')"><button type="submit" :disabled="entry.loading" class="ux-text-button" x-text="window.ZenI18n.t('Szukaj')"></button></form>
+                <p x-show="!entry.result.items.length" class="text-sm text-gray-500" x-text="window.ZenI18n.t('Brak wyników')"></p>
+                <ul class="divide-y dark:divide-gray-700"><template x-for="item in entry.result.items" :key="item.id"><li class="py-2"><strong x-text="item.name || item.title"></strong><p class="text-sm text-gray-500" x-text="item.company || item.status || ''"></p></li></template></ul>
+                <div class="plugin-slot-pager"><span x-text="window.ZenI18n.t('Liczba wyników') + ': ' + entry.result.total"></span><div class="flex gap-3"><button type="button" :disabled="entry.loading || entry.page <= 1" @click="listPage(entry, entry.page - 1)" class="ux-text-button" x-text="window.ZenI18n.t('Poprzednia')"></button><span x-text="entry.page"></span><button type="button" :disabled="entry.loading || entry.page * 25 >= entry.result.total" @click="listPage(entry, entry.page + 1)" class="ux-text-button" x-text="window.ZenI18n.t('Następna')"></button></div></div>
+            </div></template>
             <div :data-plugin-frame="entry.key"></div>
         </section>
     </template>

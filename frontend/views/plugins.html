@@ -1,52 +1,73 @@
-<section x-show="currentView === 'plugins' && !detailView.open" x-cloak x-data="pluginHub()" class="space-y-6">
-    <div class="flex justify-between items-center"><h1 class="text-2xl font-bold" x-text="window.ZenI18n.t('Aplikacje')"></h1><button class="ux-text-button" @click="loadHub(); $dispatch('plugins-changed')" x-text="window.ZenI18n.t('Odśwież')"></button></div>
-    <p x-show="hubLoaded && !enabled" x-text="window.ZenI18n.t('Aplikacje są wyłączone w ustawieniach systemu.')"></p>
-    <button type="button" x-show="hubLoaded && !enabled && user?.role === 'admin'" @click="selectView('settings'); settingsTab = 'plugins'" class="ux-text-button" x-text="window.ZenI18n.t('Włącz aplikacje w ustawieniach')"></button>
-    <p role="alert" x-show="hubError" x-text="hubError" class="text-red-600"></p>
-    <div x-show="enabled" class="space-y-6">
-        <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Każda aplikacja wymaga Twojej zgody. Zakres dostępu jest ograniczony uprawnieniami i przypisaniem rekordów.')"></p>
-        <template x-for="app in hubApps" :key="app.id">
-            <article class="border dark:border-gray-700 rounded-xl p-4 space-y-3">
-                <h2 class="font-semibold" x-text="app.manifest.name"></h2><p x-text="app.manifest.description || ''"></p>
-                <p class="text-sm" x-text="app.approved_scopes.map(scope => app.scope_descriptions[scope] || scope).join(', ')"></p>
-                <div class="flex gap-3 flex-wrap">
-                    <button :disabled="hubBusy" x-show="!app.consented_scopes.length" @click="consentApp(app)" class="ux-text-button" x-text="window.ZenI18n.t('Zezwól na wymienione uprawnienia')"></button>
-                    <button :disabled="hubBusy" x-show="app.consented_scopes.length" @click="consentApp(app, true)" class="ux-text-button" x-text="window.ZenI18n.t('Cofnij zgodę')"></button>
-                    <button :disabled="hubBusy" x-show="app.consented_scopes.length" @click="showSecret(app)" class="ux-text-button" x-text="window.ZenI18n.t('Token osobisty na 24 godziny')"></button>
-                    <button :disabled="hubBusy" x-show="app.consented_scopes.length" @click="revokeAppTokens(app)" class="ux-text-button" x-text="window.ZenI18n.t('Unieważnij tokeny')"></button>
-                    <button :disabled="hubBusy" x-show="authorization?.app_id === app.id && app.consented_scopes.length" @click="completeAuthorization(app)" class="ux-text-button" x-text="window.ZenI18n.t('Połącz konto z aplikacją')"></button>
-                </div>
-            </article>
-        </template>
-        <p x-show="!hubApps.length" x-text="window.ZenI18n.t('Brak dostępnych aplikacji')"></p>
-        <div x-show="oneTimeSecret" class="border border-amber-500 rounded-xl p-4 space-y-3">
-            <p x-text="window.ZenI18n.t('Zapisz sekret teraz. Nie będzie dostępny ponownie. Przechowuj go poza konfiguracją aplikacji.')"></p>
-            <textarea readonly :value="oneTimeSecret" rows="8" class="w-full font-mono text-sm bg-transparent" :aria-label="window.ZenI18n.t('Sekret aplikacji')"></textarea>
-            <button @click="oneTimeSecret = ''" class="ux-text-button" x-text="window.ZenI18n.t('Zamknij')"></button>
+<section x-show="currentView === 'plugins' && !detailView.open" x-cloak x-data="pluginHub()" class="plugin-hub">
+    <header class="plugin-heading">
+        <div><p class="plugin-eyebrow" x-text="window.ZenI18n.t('Rozszerz swój CRM')"></p><h1 x-text="window.ZenI18n.t('Aplikacje')"></h1><p class="plugin-muted" x-text="window.ZenI18n.t('Gotowe narzędzia do codziennej pracy, w jednym miejscu.')"></p></div>
+        <button type="button" class="plugin-button" :disabled="hubBusy" @click="loadHub(); $dispatch('plugins-changed')" x-text="window.ZenI18n.t('Odśwież')"></button>
+    </header>
+    <p role="status" x-show="!hubLoaded && !hubError" class="plugin-empty" x-text="window.ZenI18n.t('Ładowanie aplikacji…')"></p>
+    <div x-show="hubLoaded && !enabled" class="plugin-empty"><h2 x-text="window.ZenI18n.t('Aplikacje są wyłączone w ustawieniach systemu.')"></h2><button type="button" x-show="user?.role === 'admin'" @click="selectView('settings'); settingsTab = 'plugins'" class="plugin-button plugin-primary" x-text="window.ZenI18n.t('Włącz aplikacje w ustawieniach')"></button></div>
+    <p role="alert" x-show="hubError" x-text="hubError" class="plugin-alert"></p>
+    <div x-show="enabled" class="plugin-content">
+        <nav class="plugin-tabs" :aria-label="window.ZenI18n.t('Sekcje aplikacji')">
+            <button type="button" :class="{'is-active': hubTab === 'store'}" :aria-current="hubTab === 'store' ? 'page' : null" @click="tab('store')"><span x-text="window.ZenI18n.t('Sklep aplikacji')"></span><span class="plugin-count" x-text="storeApps.length"></span></button>
+            <button type="button" :class="{'is-active': hubTab === 'mine'}" :aria-current="hubTab === 'mine' ? 'page' : null" @click="tab('mine')"><span x-text="window.ZenI18n.t('Moje aplikacje')"></span><span class="plugin-count" x-text="ownedApps().length"></span></button>
+            <button type="button" x-show="catalog && user?.role === 'admin'" :class="{'is-active': hubTab === 'manage'}" :aria-current="hubTab === 'manage' ? 'page' : null" @click="tab('manage')" x-text="window.ZenI18n.t('Zarządzanie aplikacjami')"></button>
+        </nav>
+        <div x-show="hubTab === 'store'" class="plugin-section">
+            <div class="plugin-banner">
+                <div class="plugin-banner-mark" aria-hidden="true">+</div>
+                <div><h2 x-text="window.ZenI18n.t('Małe narzędzia. Więcej możliwości.')"></h2><p x-text="window.ZenI18n.t('Aplikacje ZenCRM są już preinstalowane. Wybierz narzędzie, sprawdź uprawnienia i dodaj je do swoich aplikacji.')"></p><div class="plugin-banner-tags"><span class="plugin-tag" x-text="window.ZenI18n.t('Bez dodatkowych opłat')"></span><span class="plugin-tag" x-text="window.ZenI18n.t('Zgoda pod Twoją kontrolą')"></span></div></div>
+            </div>
+            <div class="plugin-toolbar">
+                <label class="plugin-search"><span class="sr-only" x-text="window.ZenI18n.t('Szukaj aplikacji')"></span><input type="search" x-model="storeQuery" :placeholder="window.ZenI18n.t('Szukaj aplikacji')" maxlength="120"></label>
+                <label class="plugin-category"><span class="sr-only" x-text="window.ZenI18n.t('Kategoria aplikacji')"></span><select x-model="storeCategory"><option value="" x-text="window.ZenI18n.t('Wszystkie kategorie')"></option><template x-for="category in categories()" :key="category"><option :value="category" x-text="window.ZenI18n.t(category)"></option></template></select></label>
+            </div>
+            <div class="plugin-grid"><template x-for="app in filteredStore()" :key="app.id">
+                <article class="plugin-card">
+                    <div class="plugin-card-top"><span class="plugin-app-icon" :data-category="app.category" aria-hidden="true" x-text="app.badge"></span><span class="plugin-tag" x-text="app.bundled ? window.ZenI18n.t('Preinstalowana') : window.ZenI18n.t('Integracja')"></span></div>
+                    <p class="plugin-category-label" x-text="window.ZenI18n.t(app.category)"></p><h2 x-text="appName(app)"></h2><p class="plugin-muted plugin-card-description" x-text="appDescription(app)"></p>
+                    <p class="plugin-publisher" x-text="app.bundled ? 'ZenCRM · ' + window.ZenI18n.t('Tylko odczyt') : window.ZenI18n.t('Aplikacja zatwierdzona przez administratora')"></p>
+                    <div class="plugin-card-footer"><span class="plugin-status" :class="{'is-enabled': app.available && app.consented_scopes.length}" x-text="!app.available ? window.ZenI18n.t('Wymaga udostępnienia') : app.consented_scopes.length ? window.ZenI18n.t('Dodana do Twoich aplikacji') : window.ZenI18n.t('Dostępna')"></span><button type="button" class="plugin-button" @click="storeDetail = app" x-text="window.ZenI18n.t('Szczegóły')"></button></div>
+                </article>
+            </template></div>
+            <p class="plugin-empty" x-show="hubLoaded && !filteredStore().length" x-text="window.ZenI18n.t('Brak aplikacji pasujących do wyszukiwania.')"></p>
         </div>
-        <section x-show="catalog" class="rounded-xl border dark:border-gray-700 p-4 space-y-4">
-            <h2 class="text-xl font-semibold" x-text="window.ZenI18n.t('Zarządzanie aplikacjami')"></h2>
-            <div class="flex flex-wrap gap-3"><template x-for="app in catalog?.apps || []" :key="app.id"><button @click="editApp(app)" class="ux-text-button" x-text="app.manifest.name + ' · ' + (app.enabled ? window.ZenI18n.t('Włączona') : window.ZenI18n.t('Wyłączona'))"></button></template></div>
-            <button @click="selected = null; manifestText = ''" class="ux-text-button" x-text="window.ZenI18n.t('Nowa aplikacja')"></button>
-            <label class="block"><span x-text="window.ZenI18n.t('Manifest JSON')"></span><textarea x-model="manifestText" rows="10" class="block w-full border dark:border-gray-600 rounded p-3 bg-transparent font-mono text-sm" maxlength="32768"></textarea></label>
-            <button :disabled="hubBusy || selected?.enabled || !manifestText" @click="registerApp(!!selected)" class="ux-text-button" x-text="selected ? window.ZenI18n.t('Zaktualizuj manifest') : window.ZenI18n.t('Zarejestruj aplikację')"></button>
-            <template x-if="selected"><div class="space-y-4">
-                <p class="text-sm" x-text="window.ZenI18n.t('Zmiana manifestu i instalacji wymaga wyłączenia aplikacji oraz ponownej zgody użytkowników.')"></p>
-                <fieldset :disabled="hubBusy || selected.enabled"><legend x-text="window.ZenI18n.t('Zatwierdzone uprawnienia')"></legend><template x-for="scope in selected.manifest.scopes" :key="scope"><label class="block"><input type="checkbox" :value="scope" x-model="selectedScopes"> <span x-text="scope + ' — ' + (catalog?.scopes[scope] || '')"></span></label></template></fieldset>
-                <fieldset :disabled="hubBusy || selected.enabled"><legend x-text="window.ZenI18n.t('Użytkownicy aplikacji')"></legend><template x-for="person in catalog?.users || []" :key="person.id"><label class="block"><input type="checkbox" :value="person.id" x-model.number="selectedUsers"> <span x-text="person.name + ' (' + person.email + ')'"></span></label></template></fieldset>
-                <label class="block"><span x-text="window.ZenI18n.t('Konfiguracja JSON bez sekretów')"></span><textarea x-model="configurationText" :disabled="selected.enabled" rows="3" class="block border dark:border-gray-600 w-full rounded p-3 bg-transparent"></textarea></label>
-                <div class="flex gap-3 flex-wrap">
-                    <button :disabled="hubBusy || selected.enabled" @click="installApp()" class="ux-text-button" x-text="window.ZenI18n.t('Zatwierdź instalację')"></button>
-                    <button :disabled="hubBusy || !selected.installed || selected.enabled" @click="stateApp('enable')" class="ux-text-button" x-text="window.ZenI18n.t('Włącz')"></button>
-                    <button :disabled="hubBusy || !selected.enabled" @click="stateApp('disable')" class="ux-text-button" x-text="window.ZenI18n.t('Wyłącz')"></button>
-                    <button :disabled="hubBusy || !selected.installed" @click="stateApp('uninstall')" class="ux-text-button" x-text="window.ZenI18n.t('Odinstaluj')"></button>
-                    <button :disabled="hubBusy" x-show="selected.manifest.type === 'remote'" @click="showSecret(selected, true)" class="ux-text-button" x-text="window.ZenI18n.t('Utwórz lub zmień sekrety')"></button>
-                    <button :disabled="hubBusy" @click="inspectApp('audit')" class="ux-text-button" x-text="window.ZenI18n.t('Historia dostępu')"></button>
-                    <button :disabled="hubBusy" @click="inspectApp('deliveries')" class="ux-text-button" x-text="window.ZenI18n.t('Dostarczenia zdarzeń')"></button>
+        <div x-show="hubTab === 'mine'" class="plugin-section">
+            <div class="plugin-section-heading"><div><h2 x-text="window.ZenI18n.t('Moje aplikacje')"></h2><p class="plugin-muted" x-text="window.ZenI18n.t('Narzędzia, którym udzielono zgody na dostęp do danych.')"></p></div><button type="button" class="plugin-button" @click="tab('store')" x-text="window.ZenI18n.t('Przeglądaj sklep')"></button></div>
+            <div x-show="!ownedApps().length" class="plugin-empty"><h3 x-text="window.ZenI18n.t('Wybierz swoją pierwszą aplikację')"></h3><p class="plugin-muted" x-text="window.ZenI18n.t('Przejdź do sklepu i dodaj narzędzia, z których chcesz korzystać.')"></p></div>
+            <div class="plugin-owned"><template x-for="app in ownedApps()" :key="app.id"><article class="plugin-owned-card" :class="{'is-selected': workspaceApp === app.id}"><span class="plugin-app-icon" :data-category="app.category" aria-hidden="true" x-text="app.badge"></span><div><h3 x-text="appName(app)"></h3><p class="plugin-muted" x-text="window.ZenI18n.t(app.category)"></p></div><div class="plugin-actions"><button type="button" class="plugin-button plugin-primary" @click="openApp(app)" x-text="window.ZenI18n.t('Otwórz aplikację')"></button><button type="button" class="plugin-button" @click="storeDetail = app" x-text="window.ZenI18n.t('Uprawnienia')"></button></div></article></template></div>
+            <div x-show="workspaceApp" x-data="pluginSlot('app.page')"><% include "views/plugin-slot.html" %></div>
+        </div>
+        <template x-if="storeDetail"><section role="region" class="plugin-detail plugin-consent" :aria-label="window.ZenI18n.t('Szczegóły aplikacji')">
+            <div class="plugin-section-heading"><div class="plugin-detail-title"><span class="plugin-app-icon" :data-category="storeDetail.category" aria-hidden="true" x-text="storeDetail.badge"></span><div><h2 x-text="appName(storeDetail)"></h2><p class="plugin-muted" x-text="window.ZenI18n.t('Wersja') + ' ' + storeDetail.manifest.version"></p></div></div><button type="button" class="plugin-button" @click="storeDetail = null; oneTimeSecret = ''" x-text="window.ZenI18n.t('Zamknij')"></button></div>
+            <p x-text="appDescription(storeDetail)"></p><h3 x-text="window.ZenI18n.t('Zakres dostępu')"></h3>
+            <ul class="plugin-permissions"><template x-for="scope in storeDetail.approved_scopes.length ? storeDetail.approved_scopes : storeDetail.manifest.scopes" :key="scope"><li x-text="storeDetail.scope_descriptions[scope] || scope"></li></template></ul>
+            <p class="plugin-muted" x-text="window.ZenI18n.t('Każda aplikacja wymaga Twojej zgody. Zakres dostępu jest ograniczony uprawnieniami i przypisaniem rekordów.')"></p>
+            <p x-show="storeDetail.available === false" class="plugin-notice" x-text="window.ZenI18n.t('Administrator musi włączyć aplikację i udostępnić ją Twojemu kontu.')"></p>
+            <div class="plugin-actions">
+                <button type="button" class="plugin-button plugin-primary" :disabled="hubBusy || storeDetail.available === false" x-show="!storeDetail.consented_scopes.length" @click="consentApp(storeDetail)" x-text="window.ZenI18n.t('Dodaj do moich aplikacji')"></button>
+                <button type="button" class="plugin-button plugin-primary" x-show="storeDetail.consented_scopes.length && storeDetail.available !== false" @click="openApp(storeDetail)" x-text="window.ZenI18n.t('Otwórz aplikację')"></button>
+                <button type="button" class="plugin-button plugin-danger" :disabled="hubBusy" x-show="storeDetail.consented_scopes.length" @click="consentApp(storeDetail, true)" x-text="window.ZenI18n.t('Cofnij zgodę')"></button>
+                <button type="button" class="plugin-button plugin-primary" :disabled="hubBusy" x-show="authorization?.app_id === storeDetail.id && storeDetail.consented_scopes.length && storeDetail.available !== false" @click="completeAuthorization(storeDetail)" x-text="window.ZenI18n.t('Połącz konto z aplikacją')"></button>
+            </div>
+            <details x-show="storeDetail.manifest.type === 'remote' && storeDetail.consented_scopes.length"><summary x-text="window.ZenI18n.t('Zaawansowany dostęp API')"></summary><div class="plugin-actions"><button type="button" class="plugin-button" :disabled="hubBusy" @click="showSecret(storeDetail)" x-text="window.ZenI18n.t('Token osobisty na 24 godziny')"></button><button type="button" class="plugin-button" :disabled="hubBusy" @click="revokeAppTokens(storeDetail)" x-text="window.ZenI18n.t('Unieważnij tokeny')"></button></div></details>
+        </section></template>
+        <div x-show="oneTimeSecret" class="plugin-detail plugin-secret"><p x-text="window.ZenI18n.t('Zapisz sekret teraz. Nie będzie dostępny ponownie. Przechowuj go poza konfiguracją aplikacji.')"></p><textarea readonly :value="oneTimeSecret" rows="8" :aria-label="window.ZenI18n.t('Sekret aplikacji')"></textarea><button type="button" @click="oneTimeSecret = ''" class="plugin-button" x-text="window.ZenI18n.t('Zamknij')"></button></div>
+        <section x-show="hubTab === 'manage' && catalog && user?.role === 'admin'" class="plugin-section">
+            <div class="plugin-section-heading"><div><h2 x-text="window.ZenI18n.t('Zarządzanie aplikacjami')"></h2><p class="plugin-muted" x-text="window.ZenI18n.t('Kontroluj dostępność aplikacji, uprawnienia i dostęp użytkowników.')"></p></div><button type="button" class="plugin-button" :disabled="hubBusy" @click="newApp()" x-text="window.ZenI18n.t('Nowa aplikacja')"></button></div>
+            <div class="plugin-admin-grid"><template x-for="app in catalog?.apps || []" :key="app.id"><button type="button" class="plugin-admin-item" :class="{'is-selected': selected?.id === app.id}" :disabled="hubBusy" @click="editApp(app); diagnostic = []; diagnosticKind = ''"><span class="plugin-app-icon" :data-category="app.category" aria-hidden="true" x-text="app.badge"></span><span><strong x-text="appName(app)"></strong><span class="plugin-muted" x-text="app.bundled ? 'ZenCRM' : window.ZenI18n.t('Integracja')"></span></span><span class="plugin-status" :class="{'is-enabled': app.enabled}" x-text="appStatus(app)"></span></button></template></div>
+            <div x-show="newAppOpen" class="plugin-detail"><h3 x-text="window.ZenI18n.t('Nowa aplikacja')"></h3><label><span x-text="window.ZenI18n.t('Manifest JSON')"></span><textarea x-model="manifestText" rows="10" maxlength="32768" :aria-label="window.ZenI18n.t('Manifest JSON')"></textarea></label><button type="button" class="plugin-button plugin-primary" :disabled="hubBusy || !manifestText" @click="registerApp()" x-text="window.ZenI18n.t('Zarejestruj aplikację')"></button></div>
+            <template x-if="selected"><div class="plugin-detail">
+                <div class="plugin-section-heading"><div><h2 x-text="appName(selected)"></h2><p class="plugin-muted" x-text="appStatus(selected)"></p></div><div class="plugin-actions"><button type="button" class="plugin-button plugin-primary" :disabled="hubBusy || !selected.installed" x-show="!selected.enabled" @click="stateApp('enable')" x-text="window.ZenI18n.t('Włącz')"></button><button type="button" class="plugin-button" :disabled="hubBusy" x-show="selected.enabled" @click="stateApp('disable')" x-text="window.ZenI18n.t('Wyłącz')"></button><button type="button" class="plugin-button plugin-danger" :disabled="hubBusy || !selected.installed" @click="stateApp('uninstall')" x-text="window.ZenI18n.t('Odinstaluj')"></button></div></div>
+                <p class="plugin-notice" x-text="window.ZenI18n.t('Zmiana manifestu i instalacji wymaga wyłączenia aplikacji oraz ponownej zgody użytkowników.')"></p>
+                <div class="plugin-install-grid">
+                    <fieldset :disabled="hubBusy || selected.enabled"><legend x-text="window.ZenI18n.t('Zatwierdzone uprawnienia')"></legend><template x-for="scope in selected.manifest.scopes" :key="scope"><label class="plugin-checkbox"><input type="checkbox" :value="scope" x-model="selectedScopes"><span x-text="catalog?.scopes[scope] || scope"></span></label></template></fieldset>
+                    <fieldset :disabled="hubBusy || selected.enabled"><legend x-text="window.ZenI18n.t('Użytkownicy aplikacji')"></legend><label x-show="selected.bundled" class="plugin-checkbox"><input type="checkbox" x-model="allUsers"><span x-text="window.ZenI18n.t('Wszyscy aktywni użytkownicy, także nowe konta')"></span></label><div x-show="!allUsers" class="plugin-user-list"><template x-for="person in catalog?.users || []" :key="person.id"><label class="plugin-checkbox"><input type="checkbox" :value="person.id" x-model.number="selectedUsers"><span><strong x-text="person.name || person.email"></strong><small x-text="person.email"></small></span></label></template></div></fieldset>
                 </div>
-                <pre x-text="diagnostic" class="text-sm overflow-auto max-h-80 whitespace-pre-wrap"></pre>
+                <button type="button" class="plugin-button plugin-primary" :disabled="hubBusy || selected.enabled || !selectedScopes.length || (!allUsers && !selectedUsers.length)" @click="installApp()" x-text="window.ZenI18n.t('Zatwierdź instalację')"></button>
+                <details class="plugin-advanced"><summary x-text="window.ZenI18n.t('Konfiguracja zaawansowana')"></summary><label><span x-text="window.ZenI18n.t('Konfiguracja JSON bez sekretów')"></span><textarea x-model="configurationText" :disabled="selected.enabled || hubBusy" rows="3"></textarea></label><label><span x-text="window.ZenI18n.t('Manifest JSON')"></span><textarea x-model="manifestText" :readonly="selected.bundled" :disabled="selected.enabled || hubBusy" rows="10" maxlength="32768"></textarea></label><button type="button" x-show="!selected.bundled" class="plugin-button" :disabled="hubBusy || selected.enabled || !manifestText" @click="registerApp(true)" x-text="window.ZenI18n.t('Zaktualizuj manifest')"></button><button type="button" class="plugin-button" :disabled="hubBusy" x-show="selected.manifest.type === 'remote'" @click="showSecret(selected, true)" x-text="window.ZenI18n.t('Utwórz lub zmień sekrety')"></button></details>
+                <div class="plugin-actions"><button type="button" class="plugin-button" :disabled="hubBusy" @click="inspectApp('audit')" x-text="window.ZenI18n.t('Historia dostępu')"></button><button type="button" class="plugin-button" :disabled="hubBusy" @click="inspectApp('deliveries')" x-text="window.ZenI18n.t('Dostarczenia zdarzeń')"></button></div>
+                <div x-show="diagnosticKind" class="plugin-diagnostics"><h3 x-text="diagnosticKind === 'audit' ? window.ZenI18n.t('Historia dostępu') : window.ZenI18n.t('Dostarczenia zdarzeń')"></h3><p x-show="!diagnostic.length" class="plugin-muted" x-text="window.ZenI18n.t('Brak wpisów')"></p><ul><template x-for="row in diagnostic" :key="row.id"><li><strong x-text="diagnosticLabel(row.action || row.status)"></strong><span x-text="diagnosticKind === 'audit' ? diagnosticUser(row.user_id) : row.event_id"></span><time x-text="new Date((row.created_at || row.next_attempt_at) + 'Z').toLocaleString()"></time></li></template></ul></div>
             </div></template>
         </section>
-        <div x-data="pluginSlot('app.page')"><% include "views/plugin-slot.html" %></div>
     </div>
 </section>

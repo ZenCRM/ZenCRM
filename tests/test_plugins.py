@@ -26,6 +26,7 @@ from app.plugins.tokens import challenge, digest
 from app.plugins.events import emit_client_event
 from app.plugins.worker import run_once
 from app.plugins.transport import send_event, PublicHTTPS
+from app.plugins.bundled import BUNDLED, ALL_USERS, seed_bundled, bundled_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -118,6 +119,111 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(self.client.get('/api/plugins/apps', headers=self.headers['admin']).status_code, 503)
         self.assertEqual(self.call('fake', 'clients.list').status_code, 503)
         self.assertEqual(self.client.post('/api/plugin-api/v1/unknown').status_code, 404)
+
+    def test_bundled_store_is_preinstalled_without_implicit_consent(self):
+        seed_bundled()
+        for item in BUNDLED.values():
+            self.assertEqual(validate_manifest(item['manifest']), item['manifest'])
+        self.assertEqual(self.client.get('/api/plugins/store').status_code, 401)
+        response = self.client.get('/api/plugins/store', headers=self.headers['employee'])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 3)
+        for app in response.json:
+            self.assertTrue(app['bundled'] and app['installed'] and app['available'])
+            self.assertEqual(app['consented_scopes'], [])
+            self.assertNotIn('allowed_users', app)
+            self.assertNotIn('configuration', app)
+            denied = self.post('/apps/'+app['id']+'/invoke', {'operation': app['manifest']['placements'][0]['operation']}, 'employee')
+            self.assertEqual(denied.status_code, 403)
+        self.assertEqual(PluginGrant.query.count(), 0)
+        self.assertEqual(PluginToken.query.count(), 0)
+
+    def test_bundled_read_scope_and_record_boundaries(self):
+        seed_bundled()
+        for app_id, operation, expected in [
+            ('zencrm-work-summary', 'reports.summary', None),
+            ('zencrm-client-directory', 'clients.list', ['Own']),
+            ('zencrm-task-list', 'tasks.list', ['In progress', 'Done']),
+        ]:
+            app = db.session.get(PluginApp, app_id)
+            grant = self.post('/apps/'+app_id+'/consent', {'revision':app.revision, 'scopes':app.approved_scopes}, 'employee')
+            self.assertEqual(grant.status_code, 200, grant.json)
+            result = self.post('/apps/'+app_id+'/invoke', {'operation':operation}, 'employee')
+            self.assertEqual(result.status_code, 200, result.json)
+            if expected:
+                self.assertEqual([item.get('name', item.get('title')) for item in result.json['items']], expected)
+            else:
+                self.assertEqual(result.json['clients'], 1)
+                self.assertEqual(result.json['open_tasks'], 1)
+            self.assertEqual(self.post('/apps/'+app_id+'/invoke', {'operation':'clients.update', 'params':{'id':self.own.id, 'fields':{'name':'Changed'}}}, 'employee').status_code, 403)
+            self.assertEqual(self.post('/apps/'+app_id+'/consent', {'revision':app.revision, 'scopes':['clients.write']}, 'employee').status_code, 400)
+
+    def test_bundled_seed_preserves_admin_disable_uninstall_and_audience(self):
+        seed_bundled()
+        app = db.session.get(PluginApp, 'zencrm-work-summary')
+        self.assertEqual(self.post('/apps/'+app.id+'/disable', {'revision':app.revision}, 'employee').status_code, 403)
+        response = self.post('/apps/'+app.id+'/disable', {'revision':app.revision})
+        self.assertEqual(response.status_code, 200)
+        response = self.post('/apps/'+app.id+'/install', {'revision':response.json['revision'], 'scopes':['reports.read'],
+                    'allowed_users':[self.users['admin'].id], 'all_users':False})
+        self.assertEqual(response.status_code, 200, response.json)
+        self.post('/apps/'+app.id+'/enable', {'revision':response.json['revision']})
+        other = db.session.get(PluginApp, 'zencrm-task-list')
+        self.post('/apps/'+other.id+'/uninstall', {'revision':other.revision})
+        before = [(row.id, row.revision, row.installed, row.enabled, row.allowed_users[:]) for row in PluginApp.query.order_by(PluginApp.id)]
+        seed_bundled(); seed_bundled()
+        self.assertEqual(before, [(row.id, row.revision, row.installed, row.enabled, row.allowed_users) for row in PluginApp.query.order_by(PluginApp.id)])
+        store = self.client.get('/api/plugins/store', headers=self.headers['employee']).json
+        self.assertFalse(next(row for row in store if row['id']==app.id)['available'])
+        self.assertFalse(next(row for row in store if row['id']==other.id)['available'])
+        self.assertEqual(self.post('/apps/'+app.id+'/consent', {'revision':app.revision, 'scopes':['reports.read']}, 'employee').status_code, 403)
+        self.post('/apps/'+app.id+'/disable', {'revision':app.revision})
+        # Explicit all-users approval is restricted to reviewed bundled definitions.
+        self.assertEqual(self.post('/apps/'+app.id+'/install', {'revision':app.revision, 'scopes':['reports.read'],
+                    'allowed_users':[self.users['admin'].id], 'all_users':True}).status_code, 400)
+        response = self.post('/apps/'+app.id+'/install', {'revision':app.revision, 'scopes':['reports.read'],
+                    'allowed_users':[], 'all_users':True})
+        self.assertEqual(response.status_code, 200, response.json)
+        self.assertTrue(response.json['all_users'])
+        self.post('/apps/'+app.id+'/enable', {'revision':response.json['revision']})
+        self.assertEqual(self.post('/apps/'+app.id+'/consent', {'revision':app.revision, 'scopes':['reports.read']}, 'employee').status_code, 200)
+
+    def test_all_users_audience_requires_canonical_bundled_definition(self):
+        seed_bundled()
+        user = User(email='new@example.com', first_name='New', last_name='User', role='employee', is_active=True)
+        user.set_password('test-password'); db.session.add(user); db.session.commit()
+        headers = {'Authorization':'Bearer '+create_access_token(identity=str(user.id))}
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), 3)
+        app = db.session.get(PluginApp, 'zencrm-work-summary')
+        app.manifest = {**app.manifest, 'name':'Impostor'}; db.session.commit()
+        self.assertFalse(bundled_metadata(app)['bundled'])
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), 2)
+        user.is_active = False; db.session.commit()
+        self.assertEqual(self.client.get('/api/plugins/store', headers=headers).status_code, 403)
+
+    def test_store_hides_external_apps_outside_approved_audience(self):
+        seed_bundled()
+        app_id, _ = self.install()
+        app = db.session.get(PluginApp, app_id)
+        self.post('/apps/'+app_id+'/disable', {'revision':app.revision})
+        response = self.post('/apps/'+app_id+'/install', {'revision':app.revision, 'scopes':app.manifest['scopes'], 'allowed_users':[self.users['admin'].id]})
+        self.post('/apps/'+app_id+'/enable', {'revision':response.json['revision']})
+        store = self.client.get('/api/plugins/store', headers=self.headers['employee']).json
+        self.assertEqual(len(store), 3)
+        self.assertEqual(len(self.client.get('/api/plugins/store', headers=self.headers['admin']).json), 4)
+        self.post('/apps/'+app_id+'/disable', {'revision':app.revision})
+        self.assertEqual(self.post('/apps/'+app_id+'/install', {'revision':app.revision, 'scopes':app.manifest['scopes'], 'allowed_users':[], 'all_users':True}).status_code, 400)
+        # A corrupted/malicious marker on an external definition cannot grant access either.
+        app.allowed_users = [ALL_USERS]; app.enabled = True; db.session.commit()
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=self.headers['employee']).json), 3)
+
+    def test_bundled_manifest_ids_are_reserved_and_platform_gate_applies(self):
+        manifest = copy.deepcopy(BUNDLED['zencrm-work-summary']['manifest'])
+        self.assertEqual(self.post('/apps', manifest).status_code, 409)
+        seed_bundled()
+        self.assertEqual(self.client.put('/api/plugins/apps/zencrm-work-summary/manifest', json=manifest, headers=self.headers['admin']).status_code, 409)
+        self.app.config['PLUGINS_ENABLED'] = False
+        self.assertEqual(self.client.get('/api/plugins/store', headers=self.headers['employee']).status_code, 503)
 
     def test_admin_can_enable_platform_without_server_restart(self):
         self.app.config['PLUGINS_ENABLED'] = False
