@@ -14,10 +14,34 @@ services:
       - DATABASE_URL=sqlite:////app/instance/zencrm.db
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
       - TRUSTED_PROXY_HOPS=${TRUSTED_PROXY_HOPS:-0}
+      - PLUGINS_ENABLED=${PLUGINS_ENABLED:-false}
       - PORT=8080
     volumes:
       - zencrm_data:/app/instance
       - zencrm_uploads:/app/uploads
+
+  plugin-worker:
+    image: kosiorekmateusz/zencrm:latest
+    build: .
+    profiles: [plugins]
+    restart: unless-stopped
+    depends_on: [zencrm]
+    command: [python, -m, app.plugins.worker]
+    environment:
+      - DATABASE_URL=sqlite:////app/instance/zencrm.db
+      - SECRET_KEY=${SECRET_KEY:-}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - PLUGINS_ENABLED=${PLUGINS_ENABLED:-false}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
+      - PREPARE_DATABASE=false
+      - PUSH_ENABLED=false
+      - MAIL_POLLING_ENABLED=false
+    volumes:
+      - zencrm_data:/app/instance
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    security_opt: [no-new-privileges:true]
 
   # Nightly archive of the database, application keys and uploads; see "Backups" in README.md.
   backup:

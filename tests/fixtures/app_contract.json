@@ -953,6 +953,164 @@
       ]
     },
     {
+      "path": "/api/plugin-api/v1/call",
+      "endpoint": "plugin_integration.rpc",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugin-api/v1/oauth/token",
+      "endpoint": "plugin_integration.token",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugin-api/v1/subscriptions",
+      "endpoint": "plugin_integration.subscriptions",
+      "methods": [
+        "DELETE",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps",
+      "endpoint": "plugins.my_apps",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps",
+      "endpoint": "plugins.register",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/<action>",
+      "endpoint": "plugins.change_state",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/audit",
+      "endpoint": "plugins.application_audit",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/authorize",
+      "endpoint": "plugins.authorize",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/consent",
+      "endpoint": "plugins.consent",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/consent",
+      "endpoint": "plugins.revoke_consent",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/credentials",
+      "endpoint": "plugins.credentials",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/deliveries",
+      "endpoint": "plugins.deliveries",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/install",
+      "endpoint": "plugins.install",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/invoke",
+      "endpoint": "plugins.invoke_ui",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/manifest",
+      "endpoint": "plugins.update_manifest",
+      "methods": [
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/personal-token",
+      "endpoint": "plugins.personal_token",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/apps/<app_id>/tokens",
+      "endpoint": "plugins.revoke_tokens",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/catalog",
+      "endpoint": "plugins.catalog",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/status",
+      "endpoint": "plugins.status",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
       "path": "/api/portal/branding",
       "endpoint": "portal.upload_branding",
       "methods": [
@@ -4239,6 +4397,709 @@
         }
       ],
       "unique_constraints": []
+    },
+    "plugin_apps": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "manifest",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "installed",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "approved_scopes",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "allowed_users",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "configuration",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "client_secret_hash",
+          "type": "VARCHAR(256)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "signing_secret_encrypted",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_by_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "created_by_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "plugin_audit": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "app_id",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "SET NULL"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "plugin_codes": {
+      "columns": [
+        {
+          "name": "code_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "grant_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "redirect_uri",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "challenge",
+          "type": "VARCHAR(43)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "app_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "grant_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_version",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "consumed",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "grant_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_grants",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": []
+    },
+    "plugin_deliveries": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "VARCHAR(36)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "event_id",
+          "type": "VARCHAR(36)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "grant_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "app_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "grant_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "attempts",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "next_attempt_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lease_token",
+          "type": "VARCHAR(36)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "lease_until",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_status",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "event_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_events",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "grant_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_grants",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_plugin_delivery_event",
+          "column_names": [
+            "event_id",
+            "grant_id"
+          ]
+        }
+      ]
+    },
+    "plugin_events": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "VARCHAR(36)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "entity_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [],
+      "unique_constraints": []
+    },
+    "plugin_grants": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "app_id",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "scopes",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "app_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_apps",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "user_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "users",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_plugin_grant_user",
+          "column_names": [
+            "app_id",
+            "user_id"
+          ]
+        }
+      ]
+    },
+    "plugin_storage": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "grant_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "key",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "value",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "grant_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_grants",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_plugin_storage_key",
+          "column_names": [
+            "grant_id",
+            "key"
+          ]
+        }
+      ]
+    },
+    "plugin_subscriptions": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "grant_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "grant_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_grants",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": "uq_plugin_subscription_kind",
+          "column_names": [
+            "grant_id",
+            "kind"
+          ]
+        }
+      ]
+    },
+    "plugin_tokens": {
+      "columns": [
+        {
+          "name": "access_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "refresh_hash",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "family",
+          "type": "VARCHAR(36)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "grant_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "app_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "grant_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "password_version",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "refresh_expires_at",
+          "type": "DATETIME",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "revoked",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "refresh_used",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "grant_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "plugin_grants",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique_constraints": [
+        {
+          "name": null,
+          "column_names": [
+            "refresh_hash"
+          ]
+        }
+      ]
     },
     "portal_client_spaces": {
       "columns": [

@@ -8,6 +8,10 @@ from ..extensions import db
 
 def soft_delete(obj, entity_type=None):
     obj.deleted_at = datetime.utcnow()
+    from ..models.client import Client
+    if isinstance(obj, Client):
+        from ..plugins.events import emit_client_event
+        emit_client_event('client.archived.v1', obj.id)
     ent = entity_type or getattr(obj, '__tablename__', None) or 'item'
     if ent.endswith('s') and ent != 'sms':
         ent = ent[:-1]

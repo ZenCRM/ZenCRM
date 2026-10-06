@@ -1,0 +1,15 @@
+{
+  "manifest_version": 1,
+  "api_version": 1,
+  "id": "client-tools-demo",
+  "name": "Narzędzia klienta — przykład",
+  "version": "1.0.0",
+  "type": "remote",
+  "scopes": ["clients.read", "storage", "app.config", "events.clients"],
+  "placements": [
+    {"id": "client-panel", "slot": "client.detail.tab", "label": "Narzędzia klienta", "url": "https://apps.example.com/client-tools/"},
+    {"id": "application", "slot": "app.page", "label": "Narzędzia klienta", "url": "https://apps.example.com/client-tools/"}
+  ],
+  "redirect_uris": ["https://apps.example.com/oauth/callback"],
+  "event_url": "https://apps.example.com/events"
+}

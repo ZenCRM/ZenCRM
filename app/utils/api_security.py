@@ -68,6 +68,9 @@ def init_api_security(app):
         endpoint = request.endpoint
         if not endpoint or endpoint in ('static', 'static_files'):
             abort(404)
+        from ..plugins.integration_api import INTEGRATION_ENDPOINTS, authenticate_integration
+        if request.method in INTEGRATION_ENDPOINTS.get(endpoint, set()):
+            return authenticate_integration()
         if request.method in PUBLIC.get(endpoint, set()) or endpoint in TOKEN_HANDLERS:
             return
         if endpoint in PORTAL_HANDLERS and request.headers.get('X-Portal-Token'):

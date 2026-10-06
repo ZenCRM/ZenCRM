@@ -115,6 +115,7 @@ window.ZenCore.navigation = function () { return {
             const view = this.currentView;
             const requestId = this._reloadRequest = (this._reloadRequest || 0) + 1;
             this.listError = '';
+            if (view === 'plugins') return;
             if (['portalSettings', 'portalUsers', 'portalTickets', 'portalSpaces'].includes(view)) return;
             if (view === 'dashboard') {
                 await this.loadStats();

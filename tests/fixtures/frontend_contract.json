@@ -3323,6 +3323,11 @@
         "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z\"/></svg>"
       },
       {
+        "id": "plugins",
+        "label": "Aplikacje",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z\"/></svg>"
+      },
+      {
         "id": "notifications",
         "label": "Powiadomienia",
         "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9\"/></svg>"
@@ -4428,7 +4433,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "cb92d56d0fd5de06c21c0331ce46c5910a791947e4e282bdc48336cc018f49b2"
+      "function": "fcfc9d09e8daf32aa0910357590694324c12ebe655381d5f73bc12a8afc17aae"
     }
   },
   "reminderActive": {

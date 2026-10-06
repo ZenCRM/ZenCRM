@@ -1,0 +1,14 @@
+{
+  "manifest_version": 1,
+  "api_version": 1,
+  "id": "reports-demo",
+  "name": "Podsumowanie pracy",
+  "description": "Podsumowanie klientów i otwartych zadań dostępnych użytkownikowi.",
+  "version": "1.0.0",
+  "type": "declarative",
+  "scopes": ["reports.read"],
+  "placements": [
+    {"id": "summary", "slot": "app.page", "label": "Podsumowanie", "operation": "reports.summary"},
+    {"id": "dashboard-summary", "slot": "dashboard.widget", "label": "Podsumowanie pracy", "operation": "reports.summary"}
+  ]
+}
