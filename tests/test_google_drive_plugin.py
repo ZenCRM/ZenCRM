@@ -92,3 +92,61 @@ class GoogleDriveTests(unittest.TestCase):
         self.assertEqual(self.post('/google-drive/connect', {}, 'employee').status_code, 409)
         self.app.config['PLUGINS_ENABLED'] = False
         self.assertEqual(self.client.get('/api/plugins/google-drive/status', headers=self.headers['employee']).status_code, 503)
+
+    def settings(self, user='admin'):
+        return self.client.get('/api/plugins/google-drive/settings', headers=self.headers[user])
+
+    def save_settings(self, client_id='panel.apps.googleusercontent.com', secret='panel-private-secret', revision=None):
+        revision = revision or self.settings().json['revision']
+        return self.client.put('/api/plugins/google-drive/settings', headers=self.headers['admin'],
+            json={'client_id':client_id,'client_secret':secret,'revision':revision})
+
+    def test_panel_settings_encrypted_and_hidden_from_other_settings_apis(self):
+        from app.models.setting import Setting
+        result = self.save_settings()
+        self.assertEqual(result.status_code, 200, result.json)
+        self.assertEqual(result.json['source'], 'settings')
+        self.assertTrue(result.json['secret_set'])
+        self.assertNotIn('panel-private-secret', str(result.json))
+        row = Setting.query.filter_by(key=drive.OAUTH_SETTING).one()
+        self.assertNotIn('panel-private-secret', row.value)
+        self.assertTrue(row.value.startswith('fernet:v1:'))
+        self.assertEqual(drive.oauth_config()['client_secret'], 'panel-private-secret')
+        for path in ['/api/settings', '/api/settings/full', '/api/settings/ui', '/api/settings/public', '/api/plugins/catalog']:
+            response = self.client.get(path, headers=self.headers['admin'])
+            self.assertEqual(response.status_code, 200, response.json)
+            self.assertNotIn('panel-private-secret', str(response.json))
+            self.assertNotIn(row.value, str(response.json))
+        response = self.client.put('/api/settings', json={drive.OAUTH_SETTING:'plaintext'}, headers=self.headers['admin'])
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(drive.oauth_config()['client_secret'], 'panel-private-secret')
+
+    def test_panel_preserves_secret_and_requires_matching_client(self):
+        self.assertEqual(self.save_settings().status_code, 200)
+        self.assertEqual(self.save_settings(secret='').status_code, 200)
+        self.assertEqual(drive.oauth_config()['client_secret'], 'panel-private-secret')
+        self.assertEqual(self.save_settings(client_id='new.apps.googleusercontent.com', secret='').status_code, 400)
+        self.assertEqual(drive.oauth_config()['client_id'], 'panel.apps.googleusercontent.com')
+        self.assertEqual(self.save_settings(client_id='new.apps.googleusercontent.com', secret='new-private-secret').status_code, 200)
+
+    def test_panel_requires_admin_and_prevents_stale_overwrites(self):
+        self.assertEqual(self.settings('employee').status_code, 403)
+        result = self.client.put('/api/plugins/google-drive/settings', json={}, headers=self.headers['employee'])
+        self.assertEqual(result.status_code, 403)
+        revision = self.settings().json['revision']
+        self.assertEqual(self.save_settings(revision=revision).status_code, 200)
+        self.assertEqual(self.save_settings(secret='stale-secret', revision=revision).status_code, 409)
+        self.assertEqual(drive.oauth_config()['client_secret'], 'panel-private-secret')
+
+    def test_panel_change_invalidates_existing_connections(self):
+        self.connected()
+        self.assertEqual(self.save_settings().status_code, 200)
+        response = self.client.get('/api/plugins/google-drive/status', headers=self.headers['employee'])
+        self.assertFalse(response.json['connected'])
+        self.assertEqual(self.connect() and drive.oauth_config()['client_id'], 'panel.apps.googleusercontent.com')
+
+    def test_panel_validates_credentials_and_encryption(self):
+        for client_id, secret in [('bad-id','secret'), ('valid.apps.googleusercontent.com','a b'), ('valid.apps.googleusercontent.com','x'*4097)]:
+            self.assertEqual(self.save_settings(client_id, secret).status_code, 400)
+        self.app.config['SECRET_KEY'] = 'short'
+        self.assertEqual(self.save_settings().status_code, 409)

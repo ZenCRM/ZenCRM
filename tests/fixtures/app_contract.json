@@ -1137,6 +1137,16 @@
       ]
     },
     {
+      "path": "/api/plugins/google-drive/settings",
+      "endpoint": "plugins.google_drive_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
       "path": "/api/plugins/google-drive/status",
       "endpoint": "plugins.google_drive_status",
       "methods": [

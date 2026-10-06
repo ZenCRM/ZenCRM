@@ -163,6 +163,22 @@ def google_drive_status():
     return jsonify(status(grant.id))
 
 
+@plugins_bp.route('/google-drive/settings', methods=['GET', 'PUT'])
+def google_drive_settings():
+    from .google_drive import APP_ID, admin_settings, save_admin_settings
+    user = admin()
+    if not bundled_metadata(app_or_404(APP_ID))['bundled']:
+        abort(403)
+    if request.method == 'PUT':
+        result = save_admin_settings(data())
+        audit(APP_ID, user.id, 'drive.configure'); db.session.commit()
+    else:
+        result = admin_settings()
+    response = jsonify(result)
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
 @plugins_bp.post('/google-drive/connect')
 @auth_limit(10, seconds=60, by_user=True)
 def google_drive_connect():

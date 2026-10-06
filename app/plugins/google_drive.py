@@ -32,6 +32,21 @@ REVOKE = 'https://oauth2.googleapis.com/revoke'
 MAX_UPLOAD = 10 * 1024 * 1024
 FILE_FIELDS = 'id,name,mimeType,size,modifiedTime'
 FOLDER_TYPE = 'application/vnd.google-apps.folder'
+OAUTH_SETTING = 'plugin_google_drive_oauth'
+
+
+def stored_oauth():
+    from ..models.setting import Setting
+    row = Setting.query.filter_by(key=OAUTH_SETTING).first()
+    if row is None:
+        return None, None
+    try:
+        value = json.loads(unseal(row.value))
+        if not isinstance(value, dict) or not all(isinstance(value.get(key), str) for key in ('client_id', 'client_secret')):
+            raise ValueError
+        return row, value
+    except (ValueError, TypeError, InvalidToken):
+        return row, {'client_id': '', 'client_secret': ''}
 
 
 def oauth_config():
@@ -40,9 +55,51 @@ def oauth_config():
     valid = parts.scheme == 'https' or (parts.scheme == 'http' and parts.hostname in ('localhost', '127.0.0.1', '::1'))
     client_id = current_app.config.get('GOOGLE_DRIVE_CLIENT_ID', '')
     secret = current_app.config.get('GOOGLE_DRIVE_CLIENT_SECRET', '')
+    row, stored = stored_oauth()
+    if row is not None:
+        client_id, secret = stored['client_id'], stored['client_secret']
     strong_key = len(current_app.config.get('SECRET_KEY', '')) >= 32
     return {'configured': bool(client_id and secret and base and valid and strong_key),
             'client_id': client_id, 'client_secret': secret, 'redirect_uri': base + CALLBACK if base and valid else ''}
+
+
+def admin_settings():
+    row, _ = stored_oauth()
+    config = oauth_config()
+    revision = hashlib.sha256((row.value if row else config_stamp()).encode()).hexdigest()
+    return {'client_id': config['client_id'], 'secret_set': bool(config['client_secret']),
+            'configured': config['configured'], 'redirect_uri': config['redirect_uri'],
+            'encryption_ready': len(current_app.config.get('SECRET_KEY', '')) >= 32,
+            'revision': revision, 'source': 'settings' if row else 'environment'}
+
+
+def save_admin_settings(payload):
+    from ..models.setting import Setting
+    if set(payload) != {'client_id', 'client_secret', 'revision'} or not all(isinstance(value, str) for value in payload.values()):
+        abort(400)
+    if len(current_app.config.get('SECRET_KEY', '')) < 32:
+        abort(409, description='Serwer wymaga stałego SECRET_KEY o długości minimum 32 znaków.')
+    if payload['revision'] != admin_settings()['revision']:
+        abort(409)
+    client_id, secret = payload['client_id'].strip(), payload['client_secret'].strip()
+    if not re.fullmatch(r'[A-Za-z0-9._-]{1,512}\.apps\.googleusercontent\.com', client_id):
+        abort(400, description='Podaj poprawny identyfikator klienta OAuth Google.')
+    if not secret:
+        existing = oauth_config()
+        if client_id != existing['client_id'] or not existing['client_secret']:
+            abort(400, description='Podaj sekret dla tego klienta OAuth Google.')
+        secret = existing['client_secret']
+    if len(secret) > 4096 or any(ord(char) < 33 or ord(char) > 126 for char in secret):
+        abort(400, description='Podaj poprawny sekret klienta OAuth Google.')
+    row, _ = stored_oauth()
+    encrypted = seal(json.dumps({'client_id': client_id, 'client_secret': secret}))
+    if row is None:
+        db.session.add(Setting(key=OAUTH_SETTING, value=encrypted, category='plugins'))
+    elif not Setting.query.filter_by(id=row.id, value=row.value).update({'value': encrypted}, synchronize_session=False):
+        abort(409)
+    db.session.commit()
+    db.session.expire_all()
+    return admin_settings()
 
 
 def config_stamp():

@@ -1,4 +1,9 @@
 /* Application store and administration are scoped to the plugin host. */
+.plugin-drive-settings { border:1px solid var(--plugin-line); border-radius:12px; padding:18px; margin:18px 0; }
+.plugin-drive-settings label { display:block; margin:12px 0; }
+.plugin-drive-settings label span { display:block; margin-bottom:6px; }
+.plugin-drive-settings input { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--plugin-line); border-radius:8px; background:var(--plugin-surface); color:var(--plugin-ink); }
+.plugin-drive-settings code { display:block; overflow-wrap:anywhere; font-size:12px; margin:8px 0 16px; }
 .plugin-hub { --plugin-ink:#172b46; --plugin-muted:#62748b; --plugin-line:#e1e8f0; --plugin-surface:#fff; --plugin-accent:var(--wm-accent,#087fa6); --plugin-action:#087998; color:var(--plugin-ink); max-width:1400px; margin:0 auto; padding-bottom:32px; }
 .dark .plugin-hub { --plugin-ink:#e4edf8; --plugin-muted:#a7b6ca; --plugin-line:#384457; --plugin-surface:#202b3b; --plugin-accent:#93b9ff; }
 .plugin-hub h1 { font-size:30px; font-weight:750; letter-spacing:-.025em; line-height:1.25; margin:5px 0 8px; }

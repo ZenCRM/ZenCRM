@@ -1,0 +1,18 @@
+<section class="plugin-drive-settings" x-data="pluginDriveSettings()">
+    <h3 x-text="window.ZenI18n.t('Konfiguracja Google Drive')"></h3>
+    <p class="plugin-muted" x-text="window.ZenI18n.t('Połączenie konta wymaga klienta OAuth Google: identyfikatora i sekretu. Zwykły klucz API nie wystarczy.')"></p>
+    <p role="alert" class="plugin-error" x-show="settingsError" x-text="settingsError"></p>
+    <p role="status" class="plugin-notice" x-show="settingsSaved" x-text="settingsSaved"></p>
+    <form @submit.prevent="saveDriveSettings()" autocomplete="off">
+        <fieldset :disabled="settingsBusy || !driveConfig">
+            <label><span x-text="window.ZenI18n.t('Identyfikator klienta OAuth')"></span><input type="text" x-model="driveClientId" maxlength="540" required :placeholder="'123456789.apps.googleusercontent.com'" spellcheck="false" autocomplete="off"></label>
+            <label><span x-text="window.ZenI18n.t('Sekret klienta OAuth')"></span><input type="password" x-model="driveClientSecret" maxlength="4096" autocomplete="new-password" :required="!driveConfig?.secret_set" :placeholder="driveConfig?.secret_set ? window.ZenI18n.t('Sekret zapisany — zostaw puste, aby zachować') : ''"></label>
+            <p class="plugin-muted" x-text="window.ZenI18n.t('Sekret jest szyfrowany na serwerze. Po zapisaniu nie można go odczytać w panelu.')"></p>
+            <p class="plugin-error" x-show="driveConfig && !driveConfig.encryption_ready" x-text="window.ZenI18n.t('Serwer wymaga stałego SECRET_KEY o długości minimum 32 znaków.')"></p>
+            <p class="plugin-muted" x-text="window.ZenI18n.t('Adres powrotu OAuth do wpisania w Google Cloud')"></p>
+            <code x-text="driveConfig?.redirect_uri || window.ZenI18n.t('Ustaw najpierw adres CRM w ustawieniach firmy.')"></code>
+            <div class="plugin-actions"><button type="submit" class="plugin-button plugin-primary" :disabled="!driveConfig?.encryption_ready" x-text="window.ZenI18n.t('Zapisz konfigurację Google Drive')"></button></div>
+        </fieldset>
+    </form>
+    <button type="button" class="plugin-button" :disabled="settingsBusy" @click="loadDriveSettings()" x-text="window.ZenI18n.t('Odśwież konfigurację')"></button>
+</section>

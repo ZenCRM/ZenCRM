@@ -2785,5 +2785,19 @@ window.ZenLocales.en = {
   "Ważność oferty": "Offer validity",
   "Data rozwiązania": "Resolution date",
   "Początek spotkania": "Meeting start",
-  "Koniec spotkania": "Meeting end"
+  "Koniec spotkania": "Meeting end",
+  "Konfiguracja Google Drive zapisana. Użytkownicy mogą wymagać ponownego połączenia konta.": "Google Drive configuration saved. Users may need to reconnect their accounts.",
+  "Konfiguracja Google Drive": "Google Drive configuration",
+  "Połączenie konta wymaga klienta OAuth Google: identyfikatora i sekretu. Zwykły klucz API nie wystarczy.": "Connecting an account requires a Google OAuth client ID and secret. A standard API key is not sufficient.",
+  "Identyfikator klienta OAuth": "OAuth client ID",
+  "Sekret klienta OAuth": "OAuth client secret",
+  "Sekret zapisany — zostaw puste, aby zachować": "Secret saved — leave empty to keep it",
+  "Sekret jest szyfrowany na serwerze. Po zapisaniu nie można go odczytać w panelu.": "The secret is encrypted on the server. It cannot be read back in the panel after saving.",
+  "Serwer wymaga stałego SECRET_KEY o długości minimum 32 znaków.": "The server requires a stable SECRET_KEY at least 32 characters long.",
+  "Zapisz konfigurację Google Drive": "Save Google Drive configuration",
+  "Odśwież konfigurację": "Refresh configuration",
+  "Konfigurację integracji zmień w ustawieniach pluginu.": "Change integration configuration in the plugin settings.",
+  "Podaj poprawny identyfikator klienta OAuth Google.": "Enter a valid Google OAuth client ID.",
+  "Podaj poprawny sekret klienta OAuth Google.": "Enter a valid Google OAuth client secret.",
+  "Podaj sekret dla tego klienta OAuth Google.": "Enter the secret for this Google OAuth client."
 };

@@ -38,11 +38,12 @@ def prevent_settings_cache(response):
 
 
 SECRET_KEYS = frozenset({'smtp_password', 'gus_api_key'})
+PLUGIN_PRIVATE_KEYS = frozenset({'plugin_google_drive_oauth'})
 
 
 def settings_values(items):
     # Platform state is managed separately, avoiding stale saves of unrelated settings.
-    values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items if s.key != 'plugins_enabled'}
+    values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items if s.key != 'plugins_enabled' and s.key not in PLUGIN_PRIVATE_KEYS}
     from ..services.company_lookup import provider
     values['crm_base_url'] = public_base_url()
     values['client_company_provider'] = provider()
@@ -116,7 +117,7 @@ def list_full():
     values = settings_values(items)
     result = []
     for setting in items:
-        if setting.key == 'plugins_enabled':
+        if setting.key == 'plugins_enabled' or setting.key in PLUGIN_PRIVATE_KEYS:
             continue
         row = setting.to_dict()
         if setting.key in SECRET_KEYS:
@@ -137,6 +138,8 @@ def update_settings():
         return jsonify({'error': 'Wymagane uprawnienia administratora'}), 403
 
     data = request.get_json(silent=True) or {}
+    if any(key in data for key in PLUGIN_PRIVATE_KEYS):
+        return jsonify({'error': 'Konfigurację integracji zmień w ustawieniach pluginu.'}), 400
     try:
         if 'crm_base_url' in data:
             data['crm_base_url'] = normalize_crm_url(data['crm_base_url'])

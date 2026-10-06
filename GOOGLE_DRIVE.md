@@ -6,11 +6,13 @@ Integracja udostępnia własny widok w menu, wyszukiwanie i listę plików, wysy
 
 1. W Google Cloud utwórz projekt, włącz Google Drive API i skonfiguruj ekran zgody OAuth. Przy trybie testowym dodaj użytkowników testowych.
 2. Utwórz klienta OAuth typu **Web application**. Dodaj dokładny adres przekierowania `https://ADRES-CRM/api/plugins/google-drive/callback`. Integracja wyświetla ten adres administratorowi. Dla lokalnego developmentu dopuszczalny jest HTTP na localhost.
-3. Ustaw `GOOGLE_DRIVE_CLIENT_ID` i `GOOGLE_DRIVE_CLIENT_SECRET` w środowisku serwera. Docker Compose przekazuje te zmienne. Zachowaj stały, losowy `SECRET_KEY` o długości minimum 32 znaków; służy do szyfrowania tokenów. Ustaw publiczny adres CRM w ustawieniach firmy lub `PUBLIC_BASE_URL`. Uruchom ponownie serwer po zmianie środowiska.
+3. Ustaw publiczny adres CRM w ustawieniach firmy lub `PUBLIC_BASE_URL`. Zachowaj stały, losowy `SECRET_KEY` o długości minimum 32 znaków; służy do szyfrowania sekretu OAuth i tokenów. Administrator wpisuje identyfikator klienta i sekret w **Aplikacje → Zarządzanie → Google Drive → Konfiguracja Google Drive**. Zapis działa bez restartu. Sekret jest szyfrowany w bazie i nigdy nie wraca do panelu; puste pole zachowuje aktualny sekret. Zmiana identyfikatora wymaga podania odpowiadającego mu sekretu. Zmiana konfiguracji może wymagać ponownego połączenia kont użytkowników.
 4. Włącz platformę pluginów w ustawieniach. Użytkownik dodaje **Google Drive** ze sklepu, zatwierdza zakres i otwiera aplikację z menu, następnie wybiera **Połącz konto Google**.
 5. Studio raportów udostępnia przycisk **Zapisz na Dysku Google**. Zapis następuje wyłącznie po kliknięciu użytkownika, dla aktualnie wygenerowanego raportu.
 
 Klucz klienta i tokeny pozostają na serwerze. Nie umieszczaj ich w manifeście, konfiguracji frontendowej ani repozytorium.
+
+Opcjonalnie serwer nadal obsługuje `GOOGLE_DRIVE_CLIENT_ID` i `GOOGLE_DRIVE_CLIENT_SECRET` ze środowiska, jeśli konfiguracja nie została zapisana w panelu. Ustawienia pluginu mają pierwszeństwo. Zwykły klucz API Google nie zastępuje klienta OAuth przy dostępie do prywatnego dysku.
 
 ## Zakres dostępu i odłączanie
 

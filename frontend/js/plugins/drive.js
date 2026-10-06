@@ -1,4 +1,4 @@
-/* Reviewed native connector. Google credentials never enter this component. */
+/* Reviewed native connector. Saved credentials are never returned to the browser. */
 (function () {
     'use strict';
     const t = key => window.ZenI18n.t(key);
@@ -22,6 +22,42 @@
         return result;
     }
     window.ZenDrive = {safeURL, upload};
+    window.pluginDriveSettings = () => ({
+        driveConfig:null, driveClientId:'', driveClientSecret:'', settingsBusy:false, settingsError:'', settingsSaved:'', settingsSerial:0,
+        settingsActive() { return !!this.token && this.user?.role === 'admin' && this.currentView === 'plugins' && this.hubTab === 'manage' && this.selected?.id === 'zencrm-google-drive'; },
+        clearSettings() { this.settingsSerial++; this.driveConfig=null; this.driveClientId=''; this.driveClientSecret=''; this.settingsError=''; this.settingsSaved=''; this.settingsBusy=false; },
+        init() {
+            const update=()=>{ this.clearSettings(); if(this.settingsActive()) this.loadDriveSettings(); };
+            this.$watch('token',update); this.$watch('currentView',update); this.$watch('hubTab',update); update();
+        },
+        destroy() { this.clearSettings(); },
+        async loadDriveSettings() {
+            if(!this.settingsActive()) return;
+            const token=this.token, serial=++this.settingsSerial;
+            const alive=()=>token===this.token && serial===this.settingsSerial && this.settingsActive();
+            this.settingsBusy=true; this.settingsError=''; this.driveClientSecret='';
+            try {
+                const result=await this.api('/plugins/google-drive/settings');
+                if(!alive()) return;
+                this.driveConfig=result; this.driveClientId=result.client_id;
+            } catch(error) { if(alive()) this.settingsError=error.message; }
+            finally { if(alive()) this.settingsBusy=false; }
+        },
+        async saveDriveSettings() {
+            if(!this.settingsActive() || !this.driveConfig || this.settingsBusy) return;
+            const token=this.token, serial=this.settingsSerial;
+            const alive=()=>token===this.token && serial===this.settingsSerial && this.settingsActive();
+            const body=JSON.stringify({client_id:this.driveClientId,client_secret:this.driveClientSecret,revision:this.driveConfig.revision});
+            this.driveClientSecret=''; this.settingsBusy=true; this.settingsError=''; this.settingsSaved='';
+            try {
+                const result=await this.api('/plugins/google-drive/settings',{method:'PUT',body});
+                if(!alive()) return;
+                this.driveConfig=result; this.driveClientId=result.client_id;
+                this.settingsSaved=t('Konfiguracja Google Drive zapisana. Użytkownicy mogą wymagać ponownego połączenia konta.');
+            } catch(error) { if(alive()) this.settingsError=error.message; }
+            finally { if(alive()) this.settingsBusy=false; }
+        }
+    });
     window.pluginDrive = () => ({
         driveStatus:null, files:[], search:'', nextPage:'', pages:[''], pageIndex:0, busy:false, driveError:'', message:'', serial:0,
         init() {
