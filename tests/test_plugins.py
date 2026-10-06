@@ -17,6 +17,7 @@ from app.config import Config
 from app.extensions import db
 from app.models.client import Client
 from app.models.task import Task
+from app.models.task_assignee import TaskAssignee
 from app.models.user import User
 from app.models.permission import Role, PermissionRule
 from app.models.setting import Setting
@@ -120,6 +121,91 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(self.call('fake', 'clients.list').status_code, 503)
         self.assertEqual(self.client.post('/api/plugin-api/v1/unknown').status_code, 404)
 
+    def report_access(self, user='employee'):
+        seed_bundled()
+        app = db.session.get(PluginApp, 'zencrm-report-studio')
+        consent = self.post('/apps/'+app.id+'/consent', {'revision':app.revision, 'scopes':['reports.read']}, user)
+        self.assertEqual(consent.status_code, 200, consent.json)
+        return self.access(app.id, user)
+
+    def test_report_studio_period_grouping_and_private_record_boundaries(self):
+        token = self.report_access()
+        for task in Task.query.all():
+            task.created_at = datetime(2020, 6, 30, 23, 59, 59)
+            task.priority = 'high'
+            task.due_date = datetime(2020, 6, 1)
+        db.session.add_all([
+            Task(title='Outside period', created_at=datetime(2020, 7, 1), assignee_id=self.users['employee'].id),
+            Task(title='Deleted', created_at=datetime(2020, 6, 30), deleted_at=datetime.utcnow(), assignee_id=self.users['employee'].id),
+            Task(title='Without status', status=None, priority='low', created_at=datetime(2020, 6, 30), assignee_id=self.users['employee'].id),
+        ])
+        db.session.commit()
+        params = {'entity':'tasks', 'group_by':'priority', 'date_from':'2020-06-30', 'date_to':'2020-06-30'}
+        result = self.call(token, 'reports.aggregate', params)
+        self.assertEqual(result.status_code, 200, result.json)
+        self.assertEqual(result.json['total'], 3)
+        self.assertEqual(result.json['metrics'], {'open':2, 'done':1, 'overdue':1})
+        self.assertEqual([(row['label'], row['count']) for row in result.json['rows']], [('high',2), ('low',1)])
+        self.assertNotIn('Private', json.dumps(result.json))
+        self.assertNotIn('items', result.json)
+        self.assertEqual(self.call(token, 'reports.aggregate', {**params,'overdue_only':True}).json['total'], 1)
+        self.assertEqual(self.call(token, 'reports.aggregate', {**params,'status':'done'}).json['total'], 1)
+        self.assertEqual(self.call(self.report_access('admin'), 'reports.aggregate', params).json['total'], 4)
+
+    def test_report_clients_include_only_assigned_non_deleted_aggregates(self):
+        token = self.report_access()
+        self.own.created_at = datetime(2020, 1, 1); self.other.created_at = datetime(2020, 1, 1)
+        self.archived.created_at = datetime(2020, 1, 1); db.session.commit()
+        params = {'entity':'clients', 'date_from':'2020-01-01', 'date_to':'2020-01-01'}
+        report = self.call(token, 'reports.aggregate', params).json
+        self.assertEqual(report['total'], 1)
+        self.assertEqual(report['metrics'], {})
+        self.assertEqual(report['rows'], [{'label':'active','count':1,'percent':100.0}])
+        self.assertNotIn('Own', json.dumps(report))
+        self.assertNotIn('email', report)
+        self.assertEqual(self.call(token, 'reports.aggregate', {**params,'status':'missing'}).json['rows'], [])
+
+    def test_report_shared_assignments_count_once_and_null_status_remains_open(self):
+        token = self.report_access()
+        shared = Task.query.filter_by(title='Private').one()
+        shared.status = None
+        shared.due_date = datetime(2020, 1, 1)
+        db.session.add_all([TaskAssignee(task_id=shared.id, user_id=self.users['employee'].id),
+                            TaskAssignee(task_id=shared.id, user_id=self.users['other'].id)])
+        db.session.commit()
+        report = self.call(token, 'reports.aggregate').json
+        self.assertEqual(report['total'], 3)
+        self.assertEqual(report['metrics'], {'open':2, 'done':1, 'overdue':1})
+        self.assertIn({'label':'', 'count':1, 'percent':33.33}, report['rows'])
+
+    def test_report_validation_scope_revoke_and_platform_gate(self):
+        token = self.report_access()
+        invalid = [{'entity':'users'}, {'entity':[]}, {'group_by':'email'}, {'entity':'clients','group_by':'priority'},
+                   {'date_from':'2020-02-30'}, {'date_to':'9999-12-31'}, {'date_from':'2020-2-01'}, {'date_from':[]},
+                   {'date_from':'2020-02-02','date_to':'2020-02-01'}, {'status':'x'*21}, {'status':None},
+                   {'overdue_only':1}, {'entity':'clients','overdue_only':True}, {'sql':'SELECT * FROM users'}]
+        for params in invalid:
+            with self.subTest(params=params):
+                self.assertEqual(self.call(token, 'reports.aggregate', params).status_code, 400)
+        app_id, _ = self.install()
+        self.assertEqual(self.call(self.access(app_id), 'reports.aggregate').status_code, 403)
+        self.client.delete('/api/plugins/apps/zencrm-report-studio/consent', headers=self.headers['employee'])
+        self.assertEqual(self.call(token, 'reports.aggregate').status_code, 401)
+        token = self.report_access(); self.app.config['PLUGINS_ENABLED'] = False
+        self.assertEqual(self.call(token, 'reports.aggregate').status_code, 503)
+
+    def test_report_custom_groups_are_bounded_without_losing_totals(self):
+        token = self.report_access()
+        for index in range(110):
+            db.session.add(Task(title='Task', status=f'status-{index}', assignee_id=self.users['employee'].id))
+        db.session.commit()
+        report = self.call(token, 'reports.aggregate').json
+        self.assertEqual(report['total'], 112)
+        self.assertEqual(report['metrics'], {'open':111, 'done':1, 'overdue':0})
+        self.assertEqual(len(report['rows']), 101)
+        self.assertEqual(sum(row['count'] for row in report['rows']), 112)
+        self.assertTrue(report['rows'][-1]['other'])
+
     def test_bundled_store_is_preinstalled_without_implicit_consent(self):
         seed_bundled()
         for item in BUNDLED.values():
@@ -127,7 +213,7 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(self.client.get('/api/plugins/store').status_code, 401)
         response = self.client.get('/api/plugins/store', headers=self.headers['employee'])
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json), 3)
+        self.assertEqual(len(response.json), len(BUNDLED))
         for app in response.json:
             self.assertTrue(app['bundled'] and app['installed'] and app['available'])
             self.assertEqual(app['consented_scopes'], [])
@@ -193,11 +279,11 @@ class PluginTest(unittest.TestCase):
         user = User(email='new@example.com', first_name='New', last_name='User', role='employee', is_active=True)
         user.set_password('test-password'); db.session.add(user); db.session.commit()
         headers = {'Authorization':'Bearer '+create_access_token(identity=str(user.id))}
-        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), 3)
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), len(BUNDLED))
         app = db.session.get(PluginApp, 'zencrm-work-summary')
         app.manifest = {**app.manifest, 'name':'Impostor'}; db.session.commit()
         self.assertFalse(bundled_metadata(app)['bundled'])
-        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), 2)
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=headers).json), len(BUNDLED) - 1)
         user.is_active = False; db.session.commit()
         self.assertEqual(self.client.get('/api/plugins/store', headers=headers).status_code, 403)
 
@@ -209,13 +295,13 @@ class PluginTest(unittest.TestCase):
         response = self.post('/apps/'+app_id+'/install', {'revision':app.revision, 'scopes':app.manifest['scopes'], 'allowed_users':[self.users['admin'].id]})
         self.post('/apps/'+app_id+'/enable', {'revision':response.json['revision']})
         store = self.client.get('/api/plugins/store', headers=self.headers['employee']).json
-        self.assertEqual(len(store), 3)
-        self.assertEqual(len(self.client.get('/api/plugins/store', headers=self.headers['admin']).json), 4)
+        self.assertEqual(len(store), len(BUNDLED))
+        self.assertEqual(len(self.client.get('/api/plugins/store', headers=self.headers['admin']).json), len(BUNDLED) + 1)
         self.post('/apps/'+app_id+'/disable', {'revision':app.revision})
         self.assertEqual(self.post('/apps/'+app_id+'/install', {'revision':app.revision, 'scopes':app.manifest['scopes'], 'allowed_users':[], 'all_users':True}).status_code, 400)
         # A corrupted/malicious marker on an external definition cannot grant access either.
         app.allowed_users = [ALL_USERS]; app.enabled = True; db.session.commit()
-        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=self.headers['employee']).json), 3)
+        self.assertEqual(len(self.client.get('/api/plugins/apps', headers=self.headers['employee']).json), len(BUNDLED))
 
     def test_bundled_manifest_ids_are_reserved_and_platform_gate_applies(self):
         manifest = copy.deepcopy(BUNDLED['zencrm-work-summary']['manifest'])

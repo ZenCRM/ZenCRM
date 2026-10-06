@@ -14,15 +14,25 @@ Platforma umożliwia instalowanie aplikacji przez administratora, udostępnianie
 
 ## Preinstalowane aplikacje i sklep
 
-Standardowy start bazy dodaje trzy aplikacje ZenCRM: **Podsumowanie pracy** (liczniki klientów i otwartych zadań, również na dashboardzie), **Katalog klientów** oraz **Lista zadań** (listy z wyszukiwaniem i paginacją). To lokalne deklaracje, bez pobierania paczek i uruchamiania kodu dostawcy. Wszystkie korzystają wyłącznie z zakresów odczytu.
+Standardowy start bazy dodaje cztery aplikacje ZenCRM: **Studio raportów** (budowanie raportów i eksport CSV), **Podsumowanie pracy** (liczniki klientów i otwartych zadań, również na dashboardzie), **Katalog klientów** oraz **Lista zadań** (listy z wyszukiwaniem i paginacją). To lokalne deklaracje, bez pobierania paczek i uruchamiania kodu dostawcy. Wszystkie korzystają wyłącznie z zakresów odczytu.
 
 Po włączeniu platformy aplikacje są preinstalowane i udostępnione aktywnym kontom, także utworzonym później. Samo preinstalowanie nie tworzy zgód ani tokenów. Użytkownik wybiera **Szczegóły**, sprawdza zakres i klika **Dodaj do moich aplikacji**; dopiero wtedy może otworzyć narzędzie. Administrator nadal może wyłączyć, odinstalować lub ograniczyć aplikację do konkretnych osób. Restart nie zmienia tych decyzji i nie przywraca odinstalowanych aplikacji.
 
 `GET /api/plugins/store` wymaga aktywnego konta i włączonej platformy. Pokazuje oficjalne definicje lokalne (także niedostępne, bez możliwości aktywacji) oraz zewnętrzne aplikacje udostępnione danemu użytkownikowi. Nie ujawnia list użytkowników, konfiguracji ani zewnętrznych aplikacji spoza jego grupy dostępu. To katalog lokalny; nie ma zakupów, płatności ani pobierania z internetowego marketplace.
 
-Definicje znajdują się w `app/plugins/bundled.py`. Identyfikatory `zencrm-work-summary`, `zencrm-client-directory`, `zencrm-task-list` są zarezerwowane. Manifesty są nieedytowalne w panelu, a status aplikacji ZenCRM wymaga dokładnej zgodności całej definicji; sama nazwa lub ID nie wystarcza. Wyłącznie dla takich definicji administrator może wybrać **Wszyscy aktywni użytkownicy, także nowe konta**. Instalacja API przyjmuje wtedy `all_users: true` i pustą `allowed_users`; baza przechowuje wewnętrzny znacznik `all-active-users`. Dla aplikacji zewnętrznych obowiązuje lista konkretnych osób.
+Definicje znajdują się w `app/plugins/bundled.py`. Identyfikatory `zencrm-report-studio`, `zencrm-work-summary`, `zencrm-client-directory`, `zencrm-task-list` są zarezerwowane. Manifesty są nieedytowalne w panelu, a status aplikacji ZenCRM wymaga dokładnej zgodności całej definicji; sama nazwa lub ID nie wystarcza. Wyłącznie dla takich definicji administrator może wybrać **Wszyscy aktywni użytkownicy, także nowe konta**. Instalacja API przyjmuje wtedy `all_users: true` i pustą `allowed_users`; baza przechowuje wewnętrzny znacznik `all-active-users`. Dla aplikacji zewnętrznych obowiązuje lista konkretnych osób.
 
 Szczegóły aplikacji i zgoda otwierają się w natywnym modalu. Modal blokuje interakcję z tłem, utrzymuje fokus klawiatury, zamyka się przy Escape lub kliknięciu poza oknem i przywraca fokus do przycisku wywołującego. Wylogowanie i opuszczenie sekcji zamykają modal oraz usuwają wyświetlone sekrety. Sekcja administracyjna oddziela listę aplikacji od ustawień wybranej pozycji.
+
+## Studio raportów
+
+Po wdrożeniu i standardowym starcie CRM aplikacja `zencrm-report-studio` pojawia się w sklepie. Wybierz **Szczegóły → Dodaj do moich aplikacji → Otwórz aplikację**; po zgodzie dostępna jest też w bocznym menu. Nie wymaga kluczy API, kont dostawcy ani workera.
+
+Wybierz klientów lub zadania, daty utworzenia, status oraz grupowanie (status albo priorytet zadań). Skróty ustawiają ostatnie 30 dni, bieżący miesiąc lub cały okres; kliknij **Generuj raport**, aby zastosować filtry. Raport zawiera liczbę rekordów, udziały grup i liczniki otwartych, ukończonych oraz zaległych zadań. Zaległe oznacza niewykonane zadanie z terminem wcześniejszym niż moment generowania. Daty są liczone w UTC; koniec okresu obejmuje cały wskazany dzień. To bieżący stan rekordów utworzonych w danym okresie, nie historyczny stan statusów.
+
+**Eksport CSV** zapisuje lokalnie podsumowanie z filtrami i czasem generowania (UTF-8 z BOM, separator średnik). Eksport odpowiada ostatniemu wygenerowanemu wynikowi, nawet jeżeli potem zmienisz formularz. Tekstowe komórki mają ochronę przed interpretacją jako formuły. CSV nie zawiera nazw, treści zadań ani danych kontaktowych. Cofnięcie zgody lub wyłączenie platformy blokuje dalsze wywołania; już pobranego pliku nie można cofnąć.
+
+Operacja `reports.aggregate` używa zakresu `reports.read` i standardowej polityki przypisania rekordów. Parametry: `entity` (`clients`/`tasks`), `group_by` (`status`/`priority`, priorytet tylko dla zadań), opcjonalne `date_from`/`date_to` (`YYYY-MM-DD`), `status` (identyfikator, do 20 znaków), `overdue_only` (boolean, tylko zadania). Brak dat oznacza cały okres. Nie przyjmuje SQL, pól dowolnych ani identyfikatorów innych użytkowników. Zwraca najwyżej 100 grup i ewentualną grupę pozostałych, zachowując pełną sumę. Inne aplikacje mogą użyć tej samej operacji przez kontrakt API lub deklaratywne osadzenie.
 
 ## Własne widoki w menu
 
@@ -76,7 +86,7 @@ Każde wywołanie wymaga jednocześnie: aktywnej instalacji, włączenia globaln
 | `clients.read` | `clients.list`, `clients.get` | administrator widzi niearchiwalne rekordy; pozostali wyłącznie klientów przypisanych do siebie |
 | `clients.write` | `clients.update` | ta sama widoczność i `clients.edit`; pola `name`, `email`, `phone`, `company` |
 | `tasks.read` | `tasks.list` | administrator: niearchiwalne zadania; pozostali: przypisanie główne lub wykonawca |
-| `reports.read` | `reports.summary` | liczby klientów, statusy i otwarte zadania w powyższym zakresie użytkownika |
+| `reports.read` | `reports.summary`, `reports.aggregate` | liczby klientów, statusy i otwarte zadania w powyższym zakresie użytkownika |
 | `storage` | `storage.get`, `storage.put`, `storage.delete` | osobno dla pary aplikacja–użytkownik, 100 kluczy po 8 KiB, CAS przez `revision` |
 | `app.config` | `app.config.get` | wspólna konfiguracja tej aplikacji zatwierdzona przez administratora; bez sekretów |
 | `events.clients` | endpoint subskrypcji | wymaga również `clients.read`; widoczność sprawdzana przy zapisie i przed wysyłką |
@@ -93,7 +103,7 @@ Storage zwraca `revision` jako nieprzezroczystą liczbę całkowitą bezpieczną
 
 Manifest ma maksymalnie 32 KiB; wersje kontraktu `manifest_version: 1`, `api_version: 1`; `version` jest wersją aplikacji `x.y.z`. Identyfikatory są stabilne i ograniczone do małych liter/cyfr/myślników. Nieznane pola i zakresy są odrzucane. Maksymalnie 8 miejsc osadzenia, 5 dokładnych URI powrotu i 100 aplikacji.
 
-Miejsca: `app.page`, `dashboard.widget`, `client.detail.tab`. Deklaratywny widżet obsługuje `reports.summary`, `clients.list`, `tasks.list`, a wynik renderuje jako bezpieczny tekst JSON. Zewnętrzny widżet wskazuje HTTPS URL na osobnej domenie; manifest nie wstrzykuje HTML, JavaScript, CSS ani metod `crmApp`.
+Miejsca: `app.page`, `dashboard.widget`, `client.detail.tab`. Deklaratywny widżet obsługuje `reports.summary`, `reports.aggregate`, `clients.list`, `tasks.list`; wynik renderuje za pomocą lokalnych komponentów i tekstu z `x-text`. Zewnętrzny widżet wskazuje HTTPS URL na osobnej domenie; manifest nie wstrzykuje HTML, JavaScript, CSS ani metod `crmApp`.
 
 SDK dostawcy:
 

@@ -16,7 +16,7 @@ SCOPES = {
 OPERATIONS = {
     'clients.list': 'clients.read', 'clients.get': 'clients.read',
     'clients.update': 'clients.write', 'tasks.list': 'tasks.read',
-    'reports.summary': 'reports.read', 'storage.get': 'storage',
+    'reports.summary': 'reports.read', 'reports.aggregate': 'reports.read', 'storage.get': 'storage',
     'storage.put': 'storage', 'storage.delete': 'storage',
     'app.config.get': 'app.config',
 }
@@ -100,7 +100,7 @@ def validate_manifest(value):
         text(placement.get('label'))
         if kind == 'declarative':
             operation = placement.get('operation')
-            if operation not in ('reports.summary', 'clients.list', 'tasks.list') or OPERATIONS[operation] not in result['scopes'] or 'url' in placement:
+            if operation not in ('reports.summary', 'reports.aggregate', 'clients.list', 'tasks.list') or OPERATIONS[operation] not in result['scopes'] or 'url' in placement:
                 raise ValueError('Nieprawidłowa operacja widżetu.')
         else:
             if 'operation' in placement:

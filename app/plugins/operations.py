@@ -41,6 +41,9 @@ def invoke(app, grant, user, operation, params):
         tasks = visible_tasks(user)
         return {'clients': clients.count(), 'open_tasks': tasks.filter(Task.status != 'done').count(),
                 'client_statuses': {status: count for status, count in clients.with_entities(Client.status, func.count(Client.id)).group_by(Client.status).all()}}
+    if operation == 'reports.aggregate':
+        from .reports import aggregate_report
+        return aggregate_report(user, params)
     if operation in ('clients.list', 'tasks.list'):
         if set(params) - {'page', 'limit', 'search'}:
             abort(400)

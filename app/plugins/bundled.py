@@ -16,6 +16,9 @@ def definition(app_id, name, description, scope, operation, category, badge, das
 
 BUNDLED = {
     item['manifest']['id']: item for item in [
+        definition('zencrm-report-studio', 'Studio raportów',
+                   'Twórz raporty klientów i zadań, analizuj statusy, priorytety i zaległości. Filtruj okres i eksportuj wyniki do CSV.',
+                   'reports.read', 'reports.aggregate', 'Raporty', 'SR'),
         definition('zencrm-work-summary', 'Podsumowanie pracy',
                    'Liczba dostępnych klientów i otwartych zadań. Podsumowanie także na pulpicie.',
                    'reports.read', 'reports.summary', 'Raporty', 'RP', True),
