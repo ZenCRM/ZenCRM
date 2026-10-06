@@ -7,11 +7,23 @@ from ..models.task import Task
 from ..models.task_assignee import TaskAssignee
 from ..utils.api_security import password_version
 from .models import PluginApp, PluginGrant, PluginAudit
+from ..models.setting import Setting
+
+PLATFORM_SETTING = 'plugins_enabled'
+
+
+def configured_enabled():
+    value = Setting.get_value(PLATFORM_SETTING)
+    return value == 'true' if value is not None else bool(current_app.config.get('PLUGINS_ENABLED', False))
+
+
+def platform_enabled():
+    return not current_app.config.get('PLUGINS_LOCKED', False) and configured_enabled()
 
 
 def require_enabled():
-    if not current_app.config.get('PLUGINS_ENABLED', False):
-        abort(503, description='Aplikacje są wyłączone przez administratora serwera.')
+    if not platform_enabled():
+        abort(503, description='Aplikacje są wyłączone w ustawieniach systemu.')
 
 
 def app_or_404(app_id):

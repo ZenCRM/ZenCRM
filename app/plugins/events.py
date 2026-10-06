@@ -6,11 +6,11 @@ from ..extensions import db
 from ..models.user import User
 from .manifest import EVENTS
 from .models import PluginApp, PluginGrant, PluginSubscription, PluginEvent, PluginDelivery
-from .policy import audience
+from .policy import audience, platform_enabled
 
 
 def emit_client_event(kind, entity_id):
-    if not current_app.config.get('PLUGINS_ENABLED', False):
+    if not platform_enabled():
         return
     if kind not in EVENTS:
         raise ValueError('Nieobsługiwane zdarzenie aplikacji.')

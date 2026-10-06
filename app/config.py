@@ -23,5 +23,7 @@ class Config:
     TRUSTED_PROXY_HOPS = int(os.getenv('TRUSTED_PROXY_HOPS', '0'))
     # Disable in application workers when a separate step (seed.py) migrates the database first.
     PREPARE_DATABASE = os.getenv('PREPARE_DATABASE', 'true').lower() == 'true'
-    # Applications are opt-in; this kill switch also stops dispatch in the separate worker.
+    # Initial state until an administrator saves the platform switch in CRM settings.
     PLUGINS_ENABLED = os.getenv('PLUGINS_ENABLED', 'false').lower() == 'true'
+    # Emergency server veto; the CRM panel cannot override it.
+    PLUGINS_LOCKED = os.getenv('PLUGINS_LOCKED', 'false').lower() == 'true'

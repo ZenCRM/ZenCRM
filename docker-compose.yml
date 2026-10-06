@@ -15,6 +15,7 @@ services:
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
       - TRUSTED_PROXY_HOPS=${TRUSTED_PROXY_HOPS:-0}
       - PLUGINS_ENABLED=${PLUGINS_ENABLED:-false}
+      - PLUGINS_LOCKED=${PLUGINS_LOCKED:-false}
       - PORT=8080
     volumes:
       - zencrm_data:/app/instance
@@ -32,6 +33,7 @@ services:
       - SECRET_KEY=${SECRET_KEY:-}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
       - PLUGINS_ENABLED=${PLUGINS_ENABLED:-false}
+      - PLUGINS_LOCKED=${PLUGINS_LOCKED:-false}
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-}
       - PREPARE_DATABASE=false
       - PUSH_ENABLED=false

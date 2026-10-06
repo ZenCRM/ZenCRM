@@ -1,6 +1,7 @@
 <section x-show="currentView === 'plugins' && !detailView.open" x-cloak x-data="pluginHub()" class="space-y-6">
     <div class="flex justify-between items-center"><h1 class="text-2xl font-bold" x-text="window.ZenI18n.t('Aplikacje')"></h1><button class="ux-text-button" @click="loadHub(); $dispatch('plugins-changed')" x-text="window.ZenI18n.t('Odśwież')"></button></div>
-    <p x-show="hubLoaded && !enabled" x-text="window.ZenI18n.t('Aplikacje są wyłączone przez administratora serwera')"></p>
+    <p x-show="hubLoaded && !enabled" x-text="window.ZenI18n.t('Aplikacje są wyłączone w ustawieniach systemu.')"></p>
+    <button type="button" x-show="hubLoaded && !enabled && user?.role === 'admin'" @click="selectView('settings'); settingsTab = 'plugins'" class="ux-text-button" x-text="window.ZenI18n.t('Włącz aplikacje w ustawieniach')"></button>
     <p role="alert" x-show="hubError" x-text="hubError" class="text-red-600"></p>
     <div x-show="enabled" class="space-y-6">
         <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Każda aplikacja wymaga Twojej zgody. Zakres dostępu jest ograniczony uprawnieniami i przypisaniem rekordów.')"></p>

@@ -41,7 +41,8 @@ SECRET_KEYS = frozenset({'smtp_password', 'gus_api_key'})
 
 
 def settings_values(items):
-    values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items}
+    # Platform state is managed separately, avoiding stale saves of unrelated settings.
+    values = {s.key: ('' if s.key in SECRET_KEYS else s.value) for s in items if s.key != 'plugins_enabled'}
     from ..services.company_lookup import provider
     values['crm_base_url'] = public_base_url()
     values['client_company_provider'] = provider()
@@ -115,6 +116,8 @@ def list_full():
     values = settings_values(items)
     result = []
     for setting in items:
+        if setting.key == 'plugins_enabled':
+            continue
         row = setting.to_dict()
         if setting.key in SECRET_KEYS:
             row['value'] = ''
@@ -181,7 +184,7 @@ def update_settings():
         if 'gus_api_key' in data:
             data['gus_api_key'] = data['gus_api_key'].strip()
         for key, value in data.items():
-            if key == 'gus_api_key_set':
+            if key in ('gus_api_key_set', 'plugins_enabled'):
                 continue
             if key in SECRET_KEYS and not value:
                 continue

@@ -2603,5 +2603,13 @@ window.ZenLocales.en = {
   "Podsumowanie dostępnych rekordów": "Summary of accessible records",
   "Własne dane aplikacji": "Application-owned data",
   "Zdarzenia dostępnych klientów": "Events for accessible clients",
-  "Odczyt wspólnej konfiguracji aplikacji": "Read shared application configuration"
+  "Odczyt wspólnej konfiguracji aplikacji": "Read shared application configuration",
+  "Aplikacje i pluginy": "Applications and plugins",
+  "Włącz platformę aplikacji dla tego CRM. Każda aplikacja nadal wymaga instalacji i zgody użytkownika.": "Enable the application platform for this CRM. Each application still requires installation and user consent.",
+  "Włącz aplikacje i pluginy": "Enable applications and plugins",
+  "Zmiana działa bez restartu. Wyłączenie zatrzymuje dostęp i nowe zdarzenia, zachowując konfigurację i zgody.": "The change takes effect without restarting. Disabling stops access and new events while preserving configuration and consent.",
+  "Administrator serwera zablokował aplikacje. Włączenie w panelu jest niedostępne.": "The server administrator has blocked applications. Enabling them in the panel is unavailable.",
+  "Przejdź do aplikacji": "Go to applications",
+  "Włącz aplikacje w ustawieniach": "Enable applications in settings",
+  "Aplikacje są wyłączone w ustawieniach systemu.": "Applications are disabled in system settings."
 };

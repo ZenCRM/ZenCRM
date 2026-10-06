@@ -19,6 +19,7 @@ from app.models.client import Client
 from app.models.task import Task
 from app.models.user import User
 from app.models.permission import Role, PermissionRule
+from app.models.setting import Setting
 from app.plugins.manifest import validate_manifest
 from app.plugins.models import PluginApp, PluginGrant, PluginToken, PluginCode, PluginStorage, PluginEvent, PluginDelivery
 from app.plugins.tokens import challenge, digest
@@ -37,6 +38,7 @@ class PluginTest(unittest.TestCase):
             JWT_SECRET_KEY = 'plugin-tests-with-at-least-thirty-two-bytes'
             SECRET_KEY = 'plugin-encryption-tests-only'
             PLUGINS_ENABLED = True
+            PLUGINS_LOCKED = False
             PUBLIC_BASE_URL = 'https://crm.example.com'
             PREPARE_DATABASE = False
             PUSH_ENABLED = False
@@ -116,6 +118,59 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(self.client.get('/api/plugins/apps', headers=self.headers['admin']).status_code, 503)
         self.assertEqual(self.call('fake', 'clients.list').status_code, 503)
         self.assertEqual(self.client.post('/api/plugin-api/v1/unknown').status_code, 404)
+
+    def test_admin_can_enable_platform_without_server_restart(self):
+        self.app.config['PLUGINS_ENABLED'] = False
+        for method in ('get', 'put'):
+            call = getattr(self.client, method)
+            params = {'json': {'enabled': True}} if method == 'put' else {}
+            self.assertEqual(call('/api/plugins/settings', **params).status_code, 401)
+            self.assertEqual(call('/api/plugins/settings', headers=self.headers['employee'], **params).status_code, 403)
+        result = self.client.put('/api/plugins/settings', json={'enabled': True}, headers=self.headers['admin'])
+        self.assertEqual(result.status_code, 200, result.json)
+        self.assertTrue(result.json['enabled'])
+        self.assertEqual(Setting.get_value('plugins_enabled'), 'true')
+        self.assertTrue(self.client.get('/api/plugins/status', headers=self.headers['employee']).json['enabled'])
+        # Removing the ORM session simulates the next request/another process reading the setting.
+        db.session.remove()
+        self.assertTrue(self.client.get('/api/plugins/status', headers=self.headers['admin']).json['enabled'])
+        result = self.client.put('/api/plugins/settings', json={'enabled': False}, headers=self.headers['admin'])
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(self.client.get('/api/plugins/catalog', headers=self.headers['admin']).status_code, 503)
+
+    def test_server_veto_and_strict_platform_toggle_payload(self):
+        self.app.config['PLUGINS_LOCKED'] = True
+        Setting.set_value('plugins_enabled', 'true'); db.session.commit()
+        self.assertFalse(self.client.get('/api/plugins/status', headers=self.headers['admin']).json['enabled'])
+        self.assertTrue(self.client.get('/api/plugins/settings', headers=self.headers['admin']).json['server_locked'])
+        self.assertEqual(self.client.put('/api/plugins/settings', json={'enabled':True}, headers=self.headers['admin']).status_code, 409)
+        self.assertFalse(self.client.get('/api/plugins/status', headers=self.headers['admin']).json['enabled'])
+        for payload in ({'enabled':'true'}, {'enabled':1}, {}, {'enabled':False,'scope':'all'}):
+            self.assertEqual(self.client.put('/api/plugins/settings', json=payload, headers=self.headers['admin']).status_code, 400)
+
+    def test_database_switch_stops_api_and_worker_and_can_resume(self):
+        app_id, _ = self.install(); token = self.access(app_id); self.subscribe(token)
+        emit_client_event('client.updated.v1',self.own.id); db.session.commit()
+        result = self.client.put('/api/plugins/settings', json={'enabled':False}, headers=self.headers['admin'])
+        self.assertEqual(result.status_code,200)
+        self.assertEqual(self.call(token,'clients.list').status_code,503)
+        with patch('app.plugins.worker.send_event') as send:
+            self.assertEqual(run_once(),0); send.assert_not_called()
+        emit_client_event('client.updated.v1',self.own.id); db.session.commit()
+        self.assertEqual(PluginEvent.query.count(),1)
+        self.client.put('/api/plugins/settings', json={'enabled':True}, headers=self.headers['admin'])
+        self.assertEqual(self.call(token,'clients.list').status_code,200)
+        with patch('app.plugins.worker.send_event',return_value=204) as send:
+            self.assertEqual(run_once(),1); send.assert_called_once()
+
+    def test_unrelated_general_settings_save_preserves_platform_state(self):
+        self.client.put('/api/plugins/settings',json={'enabled':True},headers=self.headers['admin'])
+        for path in ('/api/settings', '/api/settings/full', '/api/settings/ui', '/api/settings/public'):
+            result = self.client.get(path,headers=self.headers['admin'])
+            self.assertNotIn('plugins_enabled',str(result.json))
+        result = self.client.put('/api/settings',json={'brand_name':'New brand','plugins_enabled':'false'},headers=self.headers['admin'])
+        self.assertEqual(result.status_code,200,result.json)
+        self.assertEqual(Setting.get_value('plugins_enabled'),'true')
 
     def test_admin_installation_and_explicit_consent(self):
         manifest = self.remote()

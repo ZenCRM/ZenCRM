@@ -2603,5 +2603,13 @@ window.ZenLocales.pl = {
   "Podsumowanie dostępnych rekordów": "Podsumowanie dostępnych rekordów",
   "Własne dane aplikacji": "Własne dane aplikacji",
   "Zdarzenia dostępnych klientów": "Zdarzenia dostępnych klientów",
-  "Odczyt wspólnej konfiguracji aplikacji": "Odczyt wspólnej konfiguracji aplikacji"
+  "Odczyt wspólnej konfiguracji aplikacji": "Odczyt wspólnej konfiguracji aplikacji",
+  "Aplikacje i pluginy": "Aplikacje i pluginy",
+  "Włącz platformę aplikacji dla tego CRM. Każda aplikacja nadal wymaga instalacji i zgody użytkownika.": "Włącz platformę aplikacji dla tego CRM. Każda aplikacja nadal wymaga instalacji i zgody użytkownika.",
+  "Włącz aplikacje i pluginy": "Włącz aplikacje i pluginy",
+  "Zmiana działa bez restartu. Wyłączenie zatrzymuje dostęp i nowe zdarzenia, zachowując konfigurację i zgody.": "Zmiana działa bez restartu. Wyłączenie zatrzymuje dostęp i nowe zdarzenia, zachowując konfigurację i zgody.",
+  "Administrator serwera zablokował aplikacje. Włączenie w panelu jest niedostępne.": "Administrator serwera zablokował aplikacje. Włączenie w panelu jest niedostępne.",
+  "Przejdź do aplikacji": "Przejdź do aplikacji",
+  "Włącz aplikacje w ustawieniach": "Włącz aplikacje w ustawieniach",
+  "Aplikacje są wyłączone w ustawieniach systemu.": "Aplikacje są wyłączone w ustawieniach systemu."
 };

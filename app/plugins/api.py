@@ -14,7 +14,8 @@ from ..utils.auth_limits import auth_limit
 from ..utils.i18n import t
 from .manifest import validate_manifest, scope_list, SCOPES, OPERATIONS, EVENTS, bounded_json
 from .models import PluginApp, PluginGrant, PluginToken, PluginSubscription, PluginDelivery, PluginAudit
-from .policy import require_enabled, app_or_404, audience, principal, audit
+from .policy import require_enabled, app_or_404, audience, principal, audit, platform_enabled, configured_enabled, PLATFORM_SETTING
+from ..models.setting import Setting
 from .operations import invoke
 from .tokens import authorize_code, issue
 
@@ -42,7 +43,7 @@ plugins_bp.register_error_handler(IntegrityError, conflict)
 
 @plugins_bp.before_request
 def plugin_access():
-    if request.endpoint != 'plugins.status' and request.method != 'OPTIONS':
+    if request.endpoint not in ('plugins.status', 'plugins.platform_settings') and request.method != 'OPTIONS':
         require_enabled()
 
 
@@ -83,7 +84,23 @@ def public_app(app, user, management=False):
 
 @plugins_bp.get('/status')
 def status():
-    return jsonify(enabled=bool(current_app.config.get('PLUGINS_ENABLED', False)), api_version=1)
+    return jsonify(enabled=platform_enabled(), api_version=1)
+
+
+@plugins_bp.route('/settings', methods=['GET', 'PUT'])
+def platform_settings():
+    user = admin()
+    locked = bool(current_app.config.get('PLUGINS_LOCKED', False))
+    if request.method == 'PUT':
+        payload = data()
+        if set(payload) != {'enabled'} or type(payload['enabled']) is not bool:
+            abort(400)
+        if payload['enabled'] and locked:
+            abort(409, description='Administrator serwera zablokował aplikacje. Włączenie w panelu jest niedostępne.')
+        Setting.set_value(PLATFORM_SETTING, 'true' if payload['enabled'] else 'false', 'plugins')
+        audit('_platform', user.id, 'platform_enable' if payload['enabled'] else 'platform_disable')
+        db.session.commit()
+    return jsonify(enabled=platform_enabled(), configured_enabled=configured_enabled(), server_locked=locked)
 
 
 @plugins_bp.get('/catalog')

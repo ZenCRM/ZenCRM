@@ -10,12 +10,12 @@ from sqlalchemy import or_
 from ..extensions import db
 from ..utils.secret_storage import unseal
 from .models import PluginDelivery, PluginEvent, PluginToken, PluginCode
-from .policy import principal, require_scope, visible_clients
+from .policy import principal, require_scope, visible_clients, platform_enabled
 from .transport import send_event
 
 
 def run_once():
-    if not current_app.config.get('PLUGINS_ENABLED', False):
+    if not platform_enabled():
         return 0
     now = datetime.utcnow()
     due = PluginDelivery.query.filter(

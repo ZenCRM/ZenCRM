@@ -1102,6 +1102,16 @@
       ]
     },
     {
+      "path": "/api/plugins/settings",
+      "endpoint": "plugins.platform_settings",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ]
+    },
+    {
       "path": "/api/plugins/status",
       "endpoint": "plugins.status",
       "methods": [
