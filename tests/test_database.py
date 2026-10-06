@@ -13,6 +13,7 @@ from app import create_app
 from app.config import Config
 from app.database import MIGRATIONS_DIR, prepare_database
 from app.extensions import db
+from app.plugins.bundled import BUNDLED
 
 
 class DatabasePreparationTest(unittest.TestCase):
@@ -114,7 +115,7 @@ class DatabasePreparationTest(unittest.TestCase):
         self.assertEqual(self.version(), self.head)
         self.assertIn('claimed_at', self.columns('sms_queue'))
         with db.engine.connect() as conn:
-            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_apps')).scalar(), 3)
+            self.assertEqual(set(conn.execute(text('SELECT id FROM plugin_apps')).scalars()), set(BUNDLED))
             self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_grants')).scalar(), 0)
 
     def test_revision_from_removed_migration_chain_is_replaced(self):
@@ -132,7 +133,7 @@ class DatabasePreparationTest(unittest.TestCase):
         self.assertEqual(self.version(), self.head)
         with db.engine.connect() as conn:
             self.assertGreater(conn.execute(text('SELECT COUNT(*) FROM document_types')).scalar(), 0)
-            self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_apps')).scalar(), 3)
+            self.assertEqual(set(conn.execute(text('SELECT id FROM plugin_apps')).scalars()), set(BUNDLED))
             self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_grants')).scalar(), 0)
             self.assertEqual(conn.execute(text('SELECT COUNT(*) FROM plugin_tokens')).scalar(), 0)
 
