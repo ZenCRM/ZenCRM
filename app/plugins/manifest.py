@@ -70,7 +70,7 @@ def scope_list(value, allowed=None):
 def validate_manifest(value):
     bounded_json(value)
     fields = {'manifest_version', 'id', 'name', 'version', 'api_version', 'type', 'scopes',
-              'placements', 'redirect_uris', 'event_url', 'description'}
+              'placements', 'views', 'redirect_uris', 'event_url', 'description'}
     if not isinstance(value, dict) or set(value) - fields:
         raise ValueError('Nieznane pola manifestu aplikacji.')
     if type(value.get('manifest_version')) is not int or type(value.get('api_version')) is not int or value.get('manifest_version') != 1 or value.get('api_version') != 1:
@@ -107,6 +107,19 @@ def validate_manifest(value):
                 raise ValueError('Nieprawidłowa operacja widżetu.')
             https_url(placement.get('url'))
     result['placements'] = placements
+    views = value.get('views', [])
+    if not isinstance(views, list) or len(views) > 8:
+        raise ValueError('Nieprawidłowe widoki aplikacji.')
+    page_ids = {p['id'] for p in placements if p['slot'] == 'app.page'}
+    seen_views = set()
+    for view in views:
+        if not isinstance(view, dict) or set(view) != {'id', 'label', 'placement'}:
+            raise ValueError('Nieprawidłowe widoki aplikacji.')
+        vid, placement = view['id'], view['placement']
+        if not isinstance(vid, str) or not IDENTIFIER.fullmatch(vid) or vid in seen_views or not isinstance(placement, str) or placement not in page_ids:
+            raise ValueError('Widok wymaga unikalnego identyfikatora i miejsca app.page.')
+        text(view['label'])
+        seen_views.add(vid)
     redirects = value.get('redirect_uris', [])
     if not isinstance(redirects, list) or len(redirects) > 5 or any(not isinstance(url, str) for url in redirects) or len(set(redirects)) != len(redirects):
         raise ValueError('Nieprawidłowe adresy powrotu aplikacji.')

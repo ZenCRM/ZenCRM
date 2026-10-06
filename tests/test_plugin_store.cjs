@@ -1,17 +1,17 @@
 const test=require('node:test'), assert=require('node:assert/strict'), vm=require('node:vm'), fs=require('node:fs');
 function component() {
-    const sandbox={window:{ZenI18n:{t:key=>key}},URLSearchParams,location:{search:''}};
+    const sandbox={window:{ZenI18n:{t:key=>key},ZenPluginNavigation:{load:async()=>{}},Alpine:{store:()=>({entries:[]})}},URLSearchParams,location:{search:''}};
     vm.runInNewContext(fs.readFileSync('frontend/js/plugins/host.js','utf8'),sandbox);
     const c=sandbox.window.pluginHub();
     Object.assign(c,{token:'session',user:{id:1,role:'employee'},currentView:'plugins',$dispatch(){}});
     return c;
 }
 const app=(id,consent=[])=>({id,bundled:true,manifest:{name:'App '+id,description:'Local tool',scopes:['reports.read']},approved_scopes:['reports.read'],consented_scopes:consent,category:'Raporty',available:true});
-test('store search/category and My apps distinguish availability from consent',()=>{
+test('store search/category and My apps distinguish availability from consent',async()=>{
     const c=component(); c.storeApps=[app('one'),{...app('two'),category:'Sales'}]; c.hubApps=[app('one'),app('two',['reports.read'])];
     assert.equal(c.ownedApps().length,1); c.storeQuery=' ONE '; assert.equal(c.filteredStore().length,1);
     c.storeCategory='Sales'; assert.equal(c.filteredStore().length,0); c.storeQuery=''; assert.equal(c.filteredStore().length,1);
-    c.openApp(c.hubApps[1]); assert.equal(c.hubTab,'mine'); assert.equal(c.workspaceApp,'two');
+    await c.openApp(c.hubApps[1]); assert.equal(c.hubTab,'mine'); assert.equal(c.workspaceApp,'two');
 });
 test('out-of-order hub response cannot replace the latest store state',async()=>{
     const c=component(); const status=[]; c.api=path=>path==='/plugins/status'?new Promise(r=>status.push(r)):Promise.resolve([app('fresh')]);

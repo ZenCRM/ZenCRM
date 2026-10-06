@@ -122,6 +122,30 @@ def my_apps():
                     if audience(app, user)])
 
 
+@plugins_bp.get('/views')
+def application_views():
+    user = current_user()
+    result = []
+    for app, grant in db.session.query(PluginApp, PluginGrant).join(PluginGrant, PluginGrant.app_id == PluginApp.id).filter(
+            PluginGrant.user_id == user.id, PluginGrant.active.is_(True), PluginApp.installed.is_(True), PluginApp.enabled.is_(True)):
+        if not audience(app, user):
+            continue
+        scopes = set(app.approved_scopes) & set(grant.scopes) & set(app.manifest['scopes'])
+        if not scopes:
+            continue
+        meta = bundled_metadata(app)
+        # Bundled definitions keep their canonical manifest and existing approvals unchanged.
+        views = ([{'id': p['id'], 'label': p['label'], 'placement': p['id']} for p in app.manifest['placements'] if p['slot'] == 'app.page']
+                 if meta['bundled'] else app.manifest.get('views', []))
+        for view in views:
+            placement = next((p for p in app.manifest['placements'] if p['id'] == view['placement'] and p['slot'] == 'app.page'), None)
+            if not placement or (app.manifest['type'] == 'declarative' and OPERATIONS[placement['operation']] not in scopes):
+                continue
+            result.append({'id': f"plugin/{app.id}/{view['id']}", 'app_id': app.id, 'view_id': view['id'],
+                           'placement_id': placement['id'], 'label': view['label'], 'app_name': app.manifest['name'], **meta})
+    return jsonify(sorted(result, key=lambda view: (view['app_id'], view['view_id'])))
+
+
 @plugins_bp.get('/store')
 def store():
     user = current_user()

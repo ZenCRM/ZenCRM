@@ -7,6 +7,7 @@
   "version": "1.0.0",
   "type": "declarative",
   "scopes": ["reports.read"],
+  "views": [{"id": "summary", "label": "Podsumowanie pracy", "placement": "summary"}],
   "placements": [
     {"id": "summary", "slot": "app.page", "label": "Podsumowanie", "operation": "reports.summary"},
     {"id": "dashboard-summary", "slot": "dashboard.widget", "label": "Podsumowanie pracy", "operation": "reports.summary"}

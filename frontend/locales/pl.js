@@ -2678,5 +2678,22 @@ window.ZenLocales.pl = {
   "Wysyłanie": "Wysyłanie",
   "Dostarczono": "Dostarczono",
   "Anulowano": "Anulowano",
-  "Niepowodzenie": "Niepowodzenie"
+  "Niepowodzenie": "Niepowodzenie",
+  "Widoki aplikacji": "Widoki aplikacji",
+  "Widok aplikacji": "Widok aplikacji",
+  "Wszystkie aplikacje": "Wszystkie aplikacje",
+  "Ten widok nie jest dostępny. Sprawdź zgodę i dostęp do aplikacji.": "Ten widok nie jest dostępny. Sprawdź zgodę i dostęp do aplikacji.",
+  "O aplikacji": "O aplikacji",
+  "Widoki w menu": "Widoki w menu",
+  "Po udzieleniu zgody znajdziesz te widoki w bocznym menu.": "Po udzieleniu zgody znajdziesz te widoki w bocznym menu.",
+  "Ukryj sekret": "Ukryj sekret",
+  "Zgoda udzielona": "Zgoda udzielona",
+  "Wymagana Twoja zgoda": "Wymagana Twoja zgoda",
+  "Dostępne narzędzia": "Dostępne narzędzia",
+  "Odkryj aplikacje": "Odkryj aplikacje",
+  "Wybierz narzędzia dopasowane do swojej pracy.": "Wybierz narzędzia dopasowane do swojej pracy.",
+  "Wybierz aplikację": "Wybierz aplikację",
+  "Tutaj zarządzisz dostępem, uprawnieniami i konfiguracją.": "Tutaj zarządzisz dostępem, uprawnieniami i konfiguracją.",
+  "Nieprawidłowe widoki aplikacji.": "Nieprawidłowe widoki aplikacji.",
+  "Widok wymaga unikalnego identyfikatora i miejsca app.page.": "Widok wymaga unikalnego identyfikatora i miejsca app.page."
 };

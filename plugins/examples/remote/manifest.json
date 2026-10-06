@@ -10,6 +10,7 @@
     {"id": "client-panel", "slot": "client.detail.tab", "label": "Narzędzia klienta", "url": "https://apps.example.com/client-tools/"},
     {"id": "application", "slot": "app.page", "label": "Narzędzia klienta", "url": "https://apps.example.com/client-tools/"}
   ],
+  "views": [{"id": "tools", "label": "Narzędzia klienta", "placement": "application"}],
   "redirect_uris": ["https://apps.example.com/oauth/callback"],
   "event_url": "https://apps.example.com/events"
 }

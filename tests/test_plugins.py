@@ -225,6 +225,52 @@ class PluginTest(unittest.TestCase):
         self.app.config['PLUGINS_ENABLED'] = False
         self.assertEqual(self.client.get('/api/plugins/store', headers=self.headers['employee']).status_code, 503)
 
+    def test_named_views_are_authorized_per_user_and_removed_on_revoke(self):
+        seed_bundled()
+        path = '/api/plugins/views'
+        self.assertEqual(self.client.get(path).status_code, 401)
+        self.assertEqual(self.client.get(path, headers=self.headers['employee']).json, [])
+        app = db.session.get(PluginApp, 'zencrm-work-summary')
+        self.post('/apps/'+app.id+'/consent', {'revision':app.revision, 'scopes':['reports.read']}, 'employee')
+        views = self.client.get(path, headers=self.headers['employee']).json
+        self.assertEqual(len(views), 1)
+        self.assertEqual(views[0]['id'], 'plugin/zencrm-work-summary/main')
+        self.assertEqual(views[0]['placement_id'], 'main')
+        self.assertNotIn('configuration', views[0])
+        self.assertNotIn('allowed_users', views[0])
+        self.assertEqual(self.client.get(path, headers=self.headers['other']).json, [])
+        self.client.delete('/api/plugins/apps/'+app.id+'/consent', headers=self.headers['employee'])
+        self.assertEqual(self.client.get(path, headers=self.headers['employee']).json, [])
+        self.app.config['PLUGINS_ENABLED'] = False
+        self.assertEqual(self.client.get(path, headers=self.headers['employee']).status_code, 503)
+
+    def test_multiple_views_respect_approved_and_consented_scopes(self):
+        manifest = json.loads((ROOT/'plugins/examples/reports/manifest.json').read_text(encoding='utf-8'))
+        manifest['scopes'] = ['reports.read', 'tasks.read']
+        manifest['placements'].append({'id':'tasks', 'slot':'app.page', 'label':'Tasks', 'operation':'tasks.list'})
+        manifest['views'].append({'id':'tasks', 'label':'Tasks', 'placement':'tasks'})
+        app_id, _ = self.install(manifest)
+        app = db.session.get(PluginApp, app_id)
+        self.post('/apps/'+app_id+'/consent', {'revision':app.revision, 'scopes':['reports.read']}, 'employee')
+        views = self.client.get('/api/plugins/views', headers=self.headers['employee']).json
+        self.assertEqual([view['view_id'] for view in views], ['summary'])
+        self.assertEqual(self.post('/apps/'+app_id+'/invoke', {'operation':'tasks.list'}, 'employee').status_code, 403)
+        self.post('/apps/'+app_id+'/disable', {'revision':app.revision})
+        self.assertEqual(self.client.get('/api/plugins/views', headers=self.headers['employee']).json, [])
+
+    def test_named_views_reject_invalid_routes_references_and_executable_content(self):
+        manifest = self.remote()
+        for invalid in [None, {}, [{'id':'../../settings', 'label':'Bad', 'placement':'application'}],
+                        [{'id':'settings', 'label':'Bad', 'placement':'client-panel'}],
+                        [{'id':'settings', 'label':'Bad', 'placement':'missing'}],
+                        [{'id':'settings', 'label':'Bad', 'placement':'application', 'html':'<script>'}],
+                        [{'id':'a', 'label':'One', 'placement':'application'}, {'id':'a', 'label':'Two', 'placement':'application'}],
+                        [{'id':'a', 'label':'', 'placement':'application'}]]:
+            with self.subTest(invalid=invalid):
+                self.assertEqual(self.post('/apps', {**manifest, 'views':invalid}).status_code, 400)
+        app_id, _ = self.install(manifest)
+        self.assertEqual(self.client.get('/api/plugins/views', headers=self.headers['employee']).json[0]['id'], 'plugin/'+app_id+'/tools')
+
     def test_admin_can_enable_platform_without_server_restart(self):
         self.app.config['PLUGINS_ENABLED'] = False
         for method in ('get', 'put'):

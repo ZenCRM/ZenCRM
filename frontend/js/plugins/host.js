@@ -2,6 +2,15 @@
 (function () {
     'use strict';
     const t = key => window.ZenI18n.t(key);
+    const icon = path => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + '</svg>';
+    const icons = {
+        'Raporty': icon('<path d="M4 19h16M7 15V9m5 6V5m5 10v-4"/>'),
+        'Sprzedaż': icon('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m20 0v-2a4 4 0 0 0-3-3.9M15 3a4 4 0 0 1 0 8"/><circle cx="9" cy="7" r="4"/>'),
+        'Organizacja pracy': icon('<rect x="4" y="5" width="16" height="16" rx="3"/><path d="M9 3h6v4H9zM8 13l2 2 5-5"/>'),
+        'Integracje': icon('<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/>')
+    };
+    // Only host-owned SVG is allowed in the store and navigation.
+    window.ZenPluginVisual = {icon: category => icons[category] || icons['Integracje']};
 
     function bridge(frame, origin, context, invoke, alive) {
         let channel = crypto.randomUUID();
@@ -47,10 +56,12 @@
         slot, apps: [], entries: [], slotError: '', requestSerial: 0, bridges: [],
         active() {
             if (!this.token) return false;
+            if (this.slot === 'menu.view') return !!this.menuView() && !this.detailView.open && this.canAccessView(this.currentView);
             if (this.slot === 'dashboard.widget') return this.currentView === 'dashboard' && !this.detailView.open;
             if (this.slot === 'client.detail.tab') return this.detailView.open && this.detailView.type === 'client' && this.detailView.tab === 'plugins';
             return this.currentView === 'plugins' && this.hubTab === 'mine' && !!this.workspaceApp;
         },
+        menuView() { return this.slot === 'menu.view' ? window.ZenPluginNavigation.getView(this.currentView) : null; },
         contextKey() { return this.slot === 'client.detail.tab' ? this.detailView.data?.id : null; },
         init() {
             const update = () => { this.closeFrames(); if (this.active()) this.loadSlots(); };
@@ -61,6 +72,7 @@
             if (this.slot === 'app.page') {
                 this.$watch('hubTab', update); this.$watch('workspaceApp', update);
             }
+            if (this.slot === 'menu.view') this.$watch(() => window.ZenPluginNavigation.version(), update);
             update();
         },
         destroy() { this.closeFrames(); },
@@ -77,7 +89,9 @@
                 for (const app of apps) {
                     if (!app.consented_scopes.length) continue;
                     if (this.slot === 'app.page' && app.id !== this.workspaceApp) continue;
-                    for (const placement of app.manifest.placements.filter(p => p.slot === this.slot)) {
+                    const menuView = this.menuView();
+                    if (this.slot === 'menu.view' && app.id !== menuView?.app_id) continue;
+                    for (const placement of app.manifest.placements.filter(p => this.slot === 'menu.view' ? p.slot === 'app.page' && p.id === menuView.placement_id : p.slot === this.slot)) {
                         entries.push({key: app.id + ':' + placement.id, app, placement, result: null, error: '', page: 1, search: '', loading: false});
                     }
                 }
@@ -105,7 +119,8 @@
                             frame.setAttribute('referrerpolicy', 'no-referrer');
                             frame.setAttribute('allow', "camera 'none'; microphone 'none'; geolocation 'none'; payment 'none'; clipboard-read 'none'; clipboard-write 'none'");
                             frame.style.cssText = 'width:100%;height:320px;border:0';
-                            const port = bridge(frame, url.origin, {app_id: entry.app.id, slot: this.slot, entity_id: entityId}, invoke, alive);
+                            const port = bridge(frame, url.origin, {app_id: entry.app.id, slot: this.slot === 'menu.view' ? 'app.page' : this.slot, entity_id: entityId,
+                                ...(this.menuView() ? {view_id: this.menuView().view_id, placement_id: entry.placement.id} : {})}, invoke, alive);
                             this.bridges.push(port); frame.src = url.href; container.appendChild(frame);
                         }
                     } catch (error) { if (alive()) this.entries.find(e => e.key === entry.key).error = error.message; }
@@ -139,10 +154,41 @@
         appName(app) { return app.bundled ? t(app.manifest.name) : app.manifest.name; },
         appDescription(app) { return app.bundled ? t(app.manifest.description) : app.manifest.description || ''; },
         appStatus(app) { return app.enabled ? t('Włączona') : app.installed ? t('Wyłączona') : t('Odinstalowana'); },
-        openApp(app) { this.workspaceApp = app.id; this.hubTab = 'mine'; this.storeDetail = null; },
-        tab(value) { this.hubTab = value; this.oneTimeSecret = ''; this.storeDetail = null; },
+        menuViews(app) { return app.bundled ? app.manifest.placements.filter(p => p.slot === 'app.page') : app.manifest.views || []; },
+        async openApp(app) {
+            this.closeDetails();
+            await window.ZenPluginNavigation.load(this, true);
+            if (!this.token || this.currentView !== 'plugins') return;
+            const route = window.Alpine.store('pluginNavigation').entries.find(entry => entry.app_id === app.id);
+            if (route && this.canAccessView(route.id)) this.selectView(route.id);
+            else { this.workspaceApp = app.id; this.hubTab = 'mine'; }
+        },
+        async showDetails(app) {
+            const session = this.token;
+            this.storeDetail = app; this.oneTimeSecret = '';
+            await this.$nextTick();
+            if (session === this.token && this.currentView === 'plugins' && this.storeDetail?.id === app.id) {
+                if (!this.$refs.pluginDetails.open) this.$refs.pluginDetails.showModal();
+            }
+        },
+        closeDetails() { this.$refs?.pluginDetails?.close(); this.storeDetail = null; this.oneTimeSecret = ''; },
+        dialogBackdrop(event) {
+            if (event.target !== this.$refs.pluginDetails) return;
+            const bounds = event.target.getBoundingClientRect();
+            if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) this.closeDetails();
+        },
+        trapDetailsFocus(event) {
+            const controls = [...this.$refs.pluginDetails.querySelectorAll('button, input, textarea, select, summary, a[href], [tabindex]')]
+                .filter(element => !element.disabled && element.tabIndex >= 0 && element.getClientRects().length);
+            if (!controls.length) return;
+            const first = controls[0], last = controls[controls.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        },
+        tab(value) { this.hubTab = value; this.closeDetails(); },
         init() {
             const load = () => {
+                this.closeDetails();
                 this.loadSerial++; this.oneTimeSecret = ''; this.hubApps = []; this.storeApps = []; this.catalog = null;
                 this.selected = null; this.storeDetail = null; this.workspaceApp = ''; this.diagnostic = []; this.manifestText = '';
                 this.newAppOpen = false; this.diagnosticKind = ''; this.hubLoaded = false; this.enabled = false; this.hubError = '';
@@ -171,8 +217,14 @@
                     this.user?.role === 'admin' ? this.api('/plugins/catalog') : Promise.resolve(null)]);
                 if (!alive()) return;
                 this.hubApps = apps; this.storeApps = store; this.catalog = catalog; this.hubLoaded = true;
-                if (this.authorization && !this.storeDetail) this.storeDetail = store.find(app => app.id === this.authorization.app_id) || null;
-                if (this.storeDetail) this.storeDetail = store.find(app => app.id === this.storeDetail.id) || null;
+                if (this.authorization && !this.storeDetail) {
+                    const app = store.find(app => app.id === this.authorization.app_id);
+                    if (app) this.showDetails(app);
+                }
+                if (this.storeDetail) {
+                    const app = store.find(app => app.id === this.storeDetail.id);
+                    if (app) this.storeDetail = app; else this.closeDetails();
+                }
                 if (this.selected) { const selected = catalog?.apps.find(app => app.id === this.selected.id); if (selected) this.editApp(selected); }
                 if (!this.ownedApps().some(app => app.id === this.workspaceApp)) this.workspaceApp = '';
             } catch (error) { if (alive()) { this.hubError = error.message; this.hubLoaded = true; } }

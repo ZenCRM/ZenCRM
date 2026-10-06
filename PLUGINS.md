@@ -22,6 +22,31 @@ Po włączeniu platformy aplikacje są preinstalowane i udostępnione aktywnym k
 
 Definicje znajdują się w `app/plugins/bundled.py`. Identyfikatory `zencrm-work-summary`, `zencrm-client-directory`, `zencrm-task-list` są zarezerwowane. Manifesty są nieedytowalne w panelu, a status aplikacji ZenCRM wymaga dokładnej zgodności całej definicji; sama nazwa lub ID nie wystarcza. Wyłącznie dla takich definicji administrator może wybrać **Wszyscy aktywni użytkownicy, także nowe konta**. Instalacja API przyjmuje wtedy `all_users: true` i pustą `allowed_users`; baza przechowuje wewnętrzny znacznik `all-active-users`. Dla aplikacji zewnętrznych obowiązuje lista konkretnych osób.
 
+Szczegóły aplikacji i zgoda otwierają się w natywnym modalu. Modal blokuje interakcję z tłem, utrzymuje fokus klawiatury, zamyka się przy Escape lub kliknięciu poza oknem i przywraca fokus do przycisku wywołującego. Wylogowanie i opuszczenie sekcji zamykają modal oraz usuwają wyświetlone sekrety. Sekcja administracyjna oddziela listę aplikacji od ustawień wybranej pozycji.
+
+## Własne widoki w menu
+
+Aplikacja może zadeklarować do ośmiu widoków, odnoszących się do własnych miejsc `app.page`. Przykład fragmentu manifestu:
+
+```json
+{
+  "placements": [
+    {"id": "overview-page", "slot": "app.page", "label": "Podsumowanie", "url": "https://apps.example.com/overview/"},
+    {"id": "work-page", "slot": "app.page", "label": "Moja praca", "url": "https://apps.example.com/work/"}
+  ],
+  "views": [
+    {"id": "overview", "label": "Podsumowanie", "placement": "overview-page"},
+    {"id": "work", "label": "Moja praca", "placement": "work-page"}
+  ]
+}
+```
+
+Ten fragment jest częścią manifestu typu `remote`; pełny przykład znajduje się w `plugins/examples/remote/manifest.json`. Aplikacje deklaratywne wskazują w miejscach osadzenia ograniczone operacje zamiast URL (przykład `plugins/examples/reports/manifest.json`). Widok nie może wskazywać innej aplikacji, zakładki klienta, dowolnej ścieżki rdzenia ani zawierać HTML/JavaScript/SVG. Nazwy są wyświetlane jako tekst, a ikony menu dostarcza host.
+
+`GET /api/plugins/views` jest uwierzytelnionym endpointem hosta CRM. Zwraca wyłącznie widoki aktywnych instalacji dostępnych użytkownikowi z aktualną zgodą; dla widżetów deklaratywnych sprawdza także zakres konkretnej operacji. Widoki pojawiają się w bocznym menu **Widoki aplikacji**, mają adresy `#plugin/<app_id>/<view_id>` i działają po odświeżeniu strony. Uprawnienia menu **Aplikacje** obejmują również te widoki. Cofnięcie zgody, wyłączenie lub utrata dostępu usuwa pozycje po ponownym sprawdzeniu; host sprawdza listę przy wejściu, zmianie zgód i powrocie do okna. API operacji zawsze sprawdza dostęp ponownie, niezależnie od stanu menu.
+
+Każdy widok otwiera wyłącznie wskazane miejsce osadzenia. Zewnętrzny interfejs nadal działa w ograniczonym iframe na osobnej domenie HTTPS; `context()` instancji `ZenPlugin({hostOrigin})` przekazuje `slot: "app.page"`, `view_id` i `placement_id`, bez tokenu CRM. Bez zmian pozostają ograniczenia operacji, bridge i zakresów. Gotowe aplikacje ZenCRM udostępniają swój główny widok w menu bez zmiany istniejących manifestów, rewizji i zgód.
+
 Gmail, Google Drive, magazyn i pełny silnik raportów to kolejne aplikacje/moduły. Przykładowy raport to podsumowanie liczb, bez generatora PDF, harmonogramu i konstruktora raportów. Uwierzytelnianie 2FA należy rozbudować w rdzeniu logowania; plugin nie powinien przejmować uwierzytelniania CRM.
 
 ## Uruchomienie i wycofanie

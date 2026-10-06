@@ -6,6 +6,7 @@ window.ZenCore.navigation = function () { return {
         },
         canAccessView(viewId) {
             if (!viewId) return true;
+            if (window.ZenPluginNavigation?.isRoute(viewId)) return window.ZenPluginNavigation.hasView(viewId) && this.canAccessView('plugins');
             const admin = this.user?.role === 'admin' || this.isAdmin;
             // Keep the administration panel available to prevent accidental lockout.
             if (viewId === 'settings') return !!admin;
@@ -41,6 +42,7 @@ window.ZenCore.navigation = function () { return {
 
         isKnownView(id) {
             if (!id) return false;
+            if (window.ZenPluginNavigation?.isRoute(id)) return window.ZenPluginNavigation.hasView(id);
             for (const item of this.menu) {
                 if (item.id === id) return true;
                 if (item.children && item.children.some(c => c.id === id)) return true;
@@ -115,7 +117,7 @@ window.ZenCore.navigation = function () { return {
             const view = this.currentView;
             const requestId = this._reloadRequest = (this._reloadRequest || 0) + 1;
             this.listError = '';
-            if (view === 'plugins') return;
+            if (view === 'plugins' || window.ZenPluginNavigation?.isRoute(view)) return;
             if (['portalSettings', 'portalUsers', 'portalTickets', 'portalSpaces'].includes(view)) return;
             if (view === 'dashboard') {
                 await this.loadStats();

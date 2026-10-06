@@ -2678,5 +2678,22 @@ window.ZenLocales.en = {
   "Wysyłanie": "Sending",
   "Dostarczono": "Delivered",
   "Anulowano": "Cancelled",
-  "Niepowodzenie": "Failed"
+  "Niepowodzenie": "Failed",
+  "Widoki aplikacji": "Application views",
+  "Widok aplikacji": "Application view",
+  "Wszystkie aplikacje": "All apps",
+  "Ten widok nie jest dostępny. Sprawdź zgodę i dostęp do aplikacji.": "This view is unavailable. Check your consent and application access.",
+  "O aplikacji": "About this app",
+  "Widoki w menu": "Views in the menu",
+  "Po udzieleniu zgody znajdziesz te widoki w bocznym menu.": "Once you grant consent, these views appear in the sidebar.",
+  "Ukryj sekret": "Hide secret",
+  "Zgoda udzielona": "Consent granted",
+  "Wymagana Twoja zgoda": "Your consent is required",
+  "Dostępne narzędzia": "Available tools",
+  "Odkryj aplikacje": "Discover apps",
+  "Wybierz narzędzia dopasowane do swojej pracy.": "Choose tools that fit your work.",
+  "Wybierz aplikację": "Select an app",
+  "Tutaj zarządzisz dostępem, uprawnieniami i konfiguracją.": "Manage access, permissions and configuration here.",
+  "Nieprawidłowe widoki aplikacji.": "Invalid application views.",
+  "Widok wymaga unikalnego identyfikatora i miejsca app.page.": "A view requires a unique identifier and an app.page placement."
 };
