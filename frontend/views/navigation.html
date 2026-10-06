@@ -89,6 +89,10 @@
                     </template>
                 </div>
             </template>
+            <div x-data="pluginNavigation()" @plugins-changed.window="refreshViews()" @focus.window="refreshViews()" x-show="viewItems.length && canAccessView('plugins')" class="plugin-nav">
+                <button type="button" class="plugin-nav-heading" @click="menuOpen = !menuOpen" :aria-expanded="menuOpen"><span x-text="window.ZenI18n.t('Widoki aplikacji')"></span><span aria-hidden="true" x-text="menuOpen ? '−' : '+'"></span></button>
+                <div x-show="menuOpen"><template x-for="entry in viewItems" :key="entry.id"><a :href="'#' + entry.id" @click.prevent="selectView(entry.id)" :aria-current="currentView === entry.id ? 'page' : null" class="plugin-nav-link"><span class="plugin-nav-icon" aria-hidden="true" x-text="entry.badge"></span><span><strong x-text="viewLabel(entry)"></strong><small x-show="entry.label !== entry.app_name" x-text="appLabel(entry)"></small></span></a></template></div>
+            </div>
         </nav>
     </aside>
 

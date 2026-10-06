@@ -155,6 +155,8 @@ def create_item():
         db.session.add(c)
         db.session.flush()
         log_activity('client', c.id, 'created', f'Utworzono klienta: {c.name}')
+        from ..plugins.events import emit_client_event
+        emit_client_event('client.created.v1', c.id)
         db.session.commit()
         if c.assignee_id:
             _notify_client_assigned(c, c.assignee_id)
@@ -178,6 +180,8 @@ def update_item(item_id):
         apply_payload(c, data)
         _sync_address(c, data, previously_structured, previous_address)
         log_activity('client', c.id, 'updated', 'Zaktualizowano')
+        from ..plugins.events import emit_client_event
+        emit_client_event('client.updated.v1', c.id)
         db.session.commit()
         if c.assignee_id and c.assignee_id != old_assignee_id:
             _notify_client_assigned(c, c.assignee_id)

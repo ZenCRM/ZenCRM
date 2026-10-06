@@ -33,11 +33,11 @@
     <link rel="stylesheet" href="/css/app-shell.css?v=20261004leadscale1">
 
     <!-- Aplikacja (musi być PRZED Alpine, dlatego bez "defer") -->
-    <script src="/locales/pl.js?v=20261004meetings1"></script>
-    <script src="/locales/en.js?v=20261004meetings1"></script>
+    <script src="/locales/pl.js?v=20261006drivesettings1"></script>
+    <script src="/locales/en.js?v=20261006drivesettings1"></script>
     <script>try { window.ZenCustomI18n = localStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('zen-i18n-catalog') || 'null') : null; } catch (_) {} window.ZenCustomI18n ||= {languages:{pl:{name:'Polski',base:'pl'},en:{name:'English',base:'en'}},overrides:{}};</script>
     <script src="/js/i18n.js?v=20261004profile1"></script>
-    <script src="/js/config.js?v=20261004mail10-20261004mail3"></script>
+    <script src="/js/config.js?v=20261006plugins1"></script>
     <script src="/js/helpers.js?v=20260928b"></script>
     <script src="/js/api.js?v=20260929translations2"></script>
     <script src="/js/icons.js?v=20260929files1"></script>
@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="/css/template-studio.css?v=20261004templates1">
     <link rel="stylesheet" href="/css/mailboxes.css?v=20261004padding1">
     <link rel="stylesheet" href="/css/employees.css?v=20261004fullheight1">
+    <link rel="stylesheet" href="/css/plugins.css?v=20261006drivesettings1">
     <script src="/js/modules/details.js?v=20261004meetings1"></script>
     <script src="/js/modules/people.js?v=20261004employeeavatars1"></script>
     <script src="/js/modules/services.js?v=20260929doctypes1"></script>
@@ -71,9 +72,14 @@
     <script src="/js/modules/projects.js?v=20260928a"></script>
     <script src="/js/modules/tickets.js?v=20260928a"></script>
     <script src="/js/core/auth.js?v=20261004employeeavatars1"></script>
-    <script src="/js/core/navigation.js?v=20261004sidebar1"></script>
-    <script src="/js/core/lifecycle.js?v=20261004taskstatus1"></script>
+    <script src="/js/core/navigation.js?v=20261006views1"></script>
+    <script src="/js/core/lifecycle.js?v=20261006views1"></script>
     <script src="/js/app.js?v=20261004meetings1"></script>
+    <script src="/js/plugins/navigation.js?v=20261006views1"></script>
+    <script src="/js/plugins/drive.js?v=20261006drivesettings1"></script>
+    <script src="/js/plugins/reports.js?v=20261006drivesettings1"></script>
+    <script src="/js/plugins/host.js?v=20261006drivesettings1"></script>
+    <script src="/js/plugins/options.js?v=20261006views1"></script>
 </head>
 
 <body class="windmill-app bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">

@@ -31,6 +31,7 @@ window.ZenCore.lifecycle = function () { return {
             // Załaduj ustawienia publiczne (motyw logowania, sidebar, favicon)
             await this.loadSettings(true);
             if (this.token) await this.loadMyPermissions();
+            if (this.token) await window.ZenPluginNavigation?.load(this);
 
             const updateLayout = () => { this.sidebarOpen = window.innerWidth >= 1024; };
             updateLayout();

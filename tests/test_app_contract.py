@@ -70,6 +70,8 @@ class AppContractTests(unittest.TestCase):
             client = app.test_client()
             response = client.get('/')
             self.assertEqual(response.status_code, 200)
+            self.assertIn('class="plugin-report-studio"', response.get_data(as_text=True))
+            self.assertNotIn('{% include', response.get_data(as_text=True))
             scripts = re.findall(r'<script[^>]+src="(/js/[^\"]+)"', response.get_data(as_text=True))
             self.assertTrue(scripts)
             for script in scripts:
