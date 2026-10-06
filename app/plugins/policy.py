@@ -77,5 +77,34 @@ def visible_tasks(user):
     return query
 
 
+def visible_report_records(user, entity):
+    """Explicit owner/member policies; never forward unrestricted core collection APIs."""
+    from ..models.lead import Lead
+    from ..models.project import Project, ProjectMember
+    from ..models.ticket import Ticket
+    from ..models.document import Document
+    from ..models.offer import Offer
+    from ..models.service import Service
+    from ..models.meeting import Meeting
+    if entity == 'clients':
+        return visible_clients(user)
+    if entity == 'tasks':
+        return visible_tasks(user)
+    model = {'leads': Lead, 'projects': Project, 'tickets': Ticket, 'documents': Document,
+             'offers': Offer, 'services': Service, 'meetings': Meeting}[entity]
+    query = model.query
+    if hasattr(model, 'deleted_at'):
+        query = query.filter(model.deleted_at.is_(None))
+    if user.role == 'admin':
+        return query
+    if entity == 'projects':
+        members = db.select(ProjectMember.project_id).where(ProjectMember.user_id == user.id)
+        return query.filter(db.or_(Project.manager_id == user.id, Project.id.in_(members)))
+    if entity == 'services':
+        return query.filter(Service.client_id.in_(visible_clients(user).with_entities(Client.id)))
+    field = 'created_by' if entity in ('documents', 'offers') else 'organizer_id' if entity == 'meetings' else 'assignee_id'
+    return query.filter(getattr(model, field) == user.id)
+
+
 def audit(app_id, user_id, action):
     db.session.add(PluginAudit(app_id=app_id, user_id=user_id, action=action))

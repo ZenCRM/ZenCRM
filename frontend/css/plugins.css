@@ -175,6 +175,30 @@
 @media(max-width:680px) { .plugin-tabs { width:100%; gap:3px; } .plugin-tabs>button { font-size:11px; padding:9px 11px; } .plugin-tabs>button:last-child { flex-grow:1; } .plugin-banner { flex-wrap:wrap; gap:20px; padding:24px; } .plugin-banner h2 { font-size:23px; } .plugin-banner-stat { flex-direction:row; align-items:center; border-left:0; border-top:1px solid #ffffff25; padding:16px 0 0; width:100%; max-width:none; margin:0; gap:12px; } .plugin-banner-stat strong { font-size:32px; } .plugin-admin-grid { grid-template-columns:1fr; } .plugin-admin-editor>.plugin-detail { padding:18px; } .plugin-modal { width:calc(100vw - 24px); max-height:calc(100dvh - 24px); border-radius:18px; } .plugin-modal .plugin-modal-heading { padding:22px 18px; gap:12px; } .plugin-modal .plugin-modal-heading .plugin-app-icon { width:46px; height:46px; border-radius:13px; } .plugin-modal-heading h2 { font-size:20px; } .plugin-modal-body { grid-template-columns:1fr; gap:22px; padding:22px 18px; } .plugin-modal-extra { padding:0 18px; } .plugin-modal-footer { padding:18px; align-items:stretch; flex-direction:column; } .plugin-modal-footer .plugin-actions { justify-content:flex-start; } .plugin-workspace .plugin-report-metrics { grid-template-columns:1fr; } .plugin-workspace .plugin-report-metrics>div { padding:20px; } }
 @media(prefers-reduced-motion:reduce) { .plugin-hub * { transition:none !important; scroll-behavior:auto !important; } }
 /* Report Studio uses only host-rendered aggregate values. */
+.plugin-report-export { display:flex; flex-wrap:wrap; gap:8px; }
+.plugin-report-comparison { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; padding:18px; border-radius:12px; background:#f5f3ff; border:1px solid #e4dcfc; }
+.plugin-report-comparison span { font-size:12px; color:#64748b; }
+.plugin-report-comparison p { font-size:12px; margin-top:6px; }
+.plugin-report-comparison strong { display:block; font-size:24px; margin-top:6px; }
+.dark .plugin-report-comparison { background:#29203c; border-color:#574672; }
+.dark .plugin-report-comparison span { color:#b4a5cf; }
+.plugin-drive-banner { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px; background:linear-gradient(120deg,#edf8f2,#eef6ff); border:1px solid #d4e8df; border-radius:16px; margin-bottom:18px; }
+.plugin-drive-mark { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; background:#fff; color:#168557; border:1px solid #c3e5d2; border-radius:12px; font-weight:700; margin-bottom:12px; }
+.plugin-drive-banner h4 { font-weight:700; font-size:20px; }
+.plugin-drive-banner p { margin-top:8px; font-size:13px; color:#526779; max-width:640px; }
+.plugin-drive-connect,.plugin-drive-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:20px 0; }
+.plugin-drive-connect p { font-size:13px; color:#64748b; }
+.plugin-drive-toolbar form,.plugin-drive-toolbar > div { display:flex; gap:8px; flex-wrap:wrap; }
+.plugin-drive-toolbar input { min-width:0; border:1px solid #dbe5ee; border-radius:9px; padding:9px 12px; background:#fff; color:inherit; font-size:13px; }
+.plugin-drive-message { background:#ecfdf5; border:1px solid #b9e6d4; color:#14754f; border-radius:10px; padding:12px; font-size:13px; margin:12px 0; }
+.plugin-drive-setup { text-align:left; margin-top:18px; padding:14px; border:1px solid #dbe5ee; border-radius:10px; font-size:12px; }
+.plugin-drive-setup code { display:block; overflow-wrap:anywhere; padding:10px 0; }
+.dark .plugin-drive-banner { background:linear-gradient(120deg,#19352b,#1b2c3e); border-color:#33594b; }
+.dark .plugin-drive-banner p,.dark .plugin-drive-connect p { color:#b1c9c0; }
+.dark .plugin-drive-mark,.dark .plugin-drive-toolbar input { background:#1e293b; border-color:#475569; color:#92dec1; }
+.dark .plugin-drive-message { background:#163c2f; border-color:#29674e; color:#a0eac9; }
+.dark .plugin-drive-setup { border-color:#475569; }
+@media(max-width:560px) { .plugin-drive-banner { padding:16px; flex-direction:column; align-items:flex-start; } .plugin-report-export,.plugin-drive-toolbar form,.plugin-drive-toolbar > div { width:100%; } .plugin-drive-toolbar input { width:100%; } .plugin-drive-toolbar button,.plugin-report-export button { flex:1; } }
 .plugin-report-intro { color:var(--ux-muted,#64748b); margin:0 0 20px; max-width:760px; }
 .plugin-report-form { padding:20px; border:1px solid #e2e8f0; border-radius:16px; background:#f8fafc; }
 .plugin-report-presets { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:18px; }

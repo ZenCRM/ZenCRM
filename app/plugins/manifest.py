@@ -9,6 +9,7 @@ SCOPES = {
     'clients.write': 'Edycja przypisanych klientów',
     'tasks.read': 'Odczyt przypisanych zadań',
     'reports.read': 'Podsumowanie dostępnych rekordów',
+    'drive.files': 'Tworzenie i odczyt własnych plików integracji Google Drive',
     'storage': 'Własne dane aplikacji',
     'app.config': 'Odczyt wspólnej konfiguracji aplikacji',
     'events.clients': 'Zdarzenia dostępnych klientów',
@@ -19,6 +20,8 @@ OPERATIONS = {
     'reports.summary': 'reports.read', 'reports.aggregate': 'reports.read', 'storage.get': 'storage',
     'storage.put': 'storage', 'storage.delete': 'storage',
     'app.config.get': 'app.config',
+    'drive.status': 'drive.files',
+    'reports.capabilities': 'reports.read',
 }
 PLACEMENTS = {'app.page', 'dashboard.widget', 'client.detail.tab'}
 EVENTS = {'client.created.v1', 'client.updated.v1', 'client.archived.v1'}
@@ -100,8 +103,10 @@ def validate_manifest(value):
         text(placement.get('label'))
         if kind == 'declarative':
             operation = placement.get('operation')
-            if operation not in ('reports.summary', 'reports.aggregate', 'clients.list', 'tasks.list') or OPERATIONS[operation] not in result['scopes'] or 'url' in placement:
+            if operation not in ('reports.summary', 'reports.aggregate', 'clients.list', 'tasks.list', 'drive.status') or OPERATIONS[operation] not in result['scopes'] or 'url' in placement:
                 raise ValueError('Nieprawidłowa operacja widżetu.')
+            if operation == 'drive.status' and result['id'] != 'zencrm-google-drive':
+                raise ValueError('Ten widok jest zarezerwowany dla integracji Google Drive.')
         else:
             if 'operation' in placement:
                 raise ValueError('Nieprawidłowa operacja widżetu.')

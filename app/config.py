@@ -27,3 +27,5 @@ class Config:
     PLUGINS_ENABLED = os.getenv('PLUGINS_ENABLED', 'false').lower() == 'true'
     # Emergency server veto; the CRM panel cannot override it.
     PLUGINS_LOCKED = os.getenv('PLUGINS_LOCKED', 'false').lower() == 'true'
+    GOOGLE_DRIVE_CLIENT_ID = os.getenv('GOOGLE_DRIVE_CLIENT_ID', '').strip()
+    GOOGLE_DRIVE_CLIENT_SECRET = os.getenv('GOOGLE_DRIVE_CLIENT_SECRET', '').strip()

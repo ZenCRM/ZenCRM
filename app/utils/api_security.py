@@ -19,6 +19,8 @@ PUBLIC = {
     'portal.configuration': {'GET', 'HEAD'}, 'portal.branding': {'GET', 'HEAD'},
     'tickets.public_helpdesk_config': {'GET', 'HEAD'},
     'tickets.public_submit_ticket': {'POST'},
+    # One-time OAuth state, HttpOnly browser cookie and grant binding verified by this handler.
+    'plugins.google_drive_callback': {'GET', 'HEAD'},
 }
 # These specific handlers check their own capability or device tokens.
 TOKEN_HANDLERS = {

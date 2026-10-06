@@ -16,6 +16,9 @@ def definition(app_id, name, description, scope, operation, category, badge, das
 
 BUNDLED = {
     item['manifest']['id']: item for item in [
+        definition('zencrm-google-drive', 'Google Drive',
+                   'Połącz konto Google, zapisuj pliki i raporty w folderze ZenCRM oraz otwieraj je na Dysku Google. Dostęp tylko do plików tej integracji.',
+                   'drive.files', 'drive.status', 'Integracje', 'GD'),
         definition('zencrm-report-studio', 'Studio raportów',
                    'Twórz raporty klientów i zadań, analizuj statusy, priorytety i zaległości. Filtruj okres i eksportuj wyniki do CSV.',
                    'reports.read', 'reports.aggregate', 'Raporty', 'SR'),

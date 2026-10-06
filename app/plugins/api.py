@@ -146,6 +146,74 @@ def application_views():
     return jsonify(sorted(result, key=lambda view: (view['app_id'], view['view_id'])))
 
 
+@plugins_bp.get('/reports/capabilities')
+def report_sources():
+    from .reports import report_capabilities
+    _, grant, _ = user_principal('zencrm-report-studio')
+    from .policy import require_scope
+    app = app_or_404('zencrm-report-studio')
+    require_scope(app, grant, 'reports.read')
+    return jsonify(report_capabilities())
+
+
+@plugins_bp.get('/google-drive/status')
+def google_drive_status():
+    from .google_drive import status
+    _, grant, _ = user_principal('zencrm-google-drive')
+    return jsonify(status(grant.id))
+
+
+@plugins_bp.post('/google-drive/connect')
+@auth_limit(10, seconds=60, by_user=True)
+def google_drive_connect():
+    from .google_drive import begin_connect, oauth_config, COOKIE, CALLBACK
+    _, grant, _ = user_principal('zencrm-google-drive')
+    if data():
+        abort(400)
+    url, state = begin_connect(grant.id)
+    response = jsonify(authorization_url=url)
+    response.set_cookie(COOKIE, state, max_age=600, httponly=True, samesite='Lax',
+                        secure=oauth_config()['redirect_uri'].startswith('https:'), path=CALLBACK)
+    return response
+
+
+@plugins_bp.get('/google-drive/callback')
+@auth_limit(30, seconds=60)
+def google_drive_callback():
+    if request.method != 'GET':
+        abort(405)
+    from flask import redirect
+    from .google_drive import finish_connect, COOKIE, CALLBACK
+    result = finish_connect()
+    response = redirect('/?drive=' + result + '#plugin/zencrm-google-drive/main')
+    response.delete_cookie(COOKIE, path=CALLBACK)
+    return response
+
+
+@plugins_bp.route('/google-drive/files', methods=['GET', 'POST'])
+@auth_limit(60, seconds=60, by_user=True)
+def google_drive_files():
+    from .google_drive import list_files, upload_file, MAX_UPLOAD
+    _, grant, _ = user_principal('zencrm-google-drive')
+    if request.method == 'GET':
+        if set(request.args) - {'search', 'page'} or any(len(request.args.getlist(key)) != 1 for key in request.args):
+            abort(400)
+        return jsonify(list_files(grant.id, request.args.get('search', ''), request.args.get('page', '')))
+    if request.content_length is None or request.content_length > MAX_UPLOAD + 65536:
+        abort(413)
+    if set(request.files) != {'file'} or len(request.files.getlist('file')) != 1 or request.form:
+        abort(400)
+    file = request.files['file']
+    return jsonify(upload_file(grant.id, file.filename, file.stream.read(MAX_UPLOAD + 1))), 201
+
+
+@plugins_bp.delete('/google-drive/connection')
+def google_drive_disconnect():
+    from .google_drive import disconnect
+    _, grant, _ = user_principal('zencrm-google-drive')
+    return jsonify(disconnect(grant.id))
+
+
 @plugins_bp.get('/store')
 def store():
     user = current_user()
@@ -314,6 +382,9 @@ def revoke_consent(app_id):
     if grant:
         grant.active = False
         grant.revision += 1
+        if app.id == 'zencrm-google-drive':
+            from .models import PluginStorage
+            PluginStorage.query.filter_by(grant_id=grant.id).filter(PluginStorage.key.startswith('_drive.')).delete(synchronize_session=False)
         PluginToken.query.filter_by(grant_id=grant.id).update({'revoked': True}, synchronize_session=False)
         PluginSubscription.query.filter_by(grant_id=grant.id).delete()
         PluginDelivery.query.filter_by(grant_id=grant.id).filter(PluginDelivery.status.in_(['pending', 'sending'])).update({'status': 'cancelled'}, synchronize_session=False)

@@ -44,6 +44,16 @@ def invoke(app, grant, user, operation, params):
     if operation == 'reports.aggregate':
         from .reports import aggregate_report
         return aggregate_report(user, params)
+    if operation == 'reports.capabilities':
+        if params:
+            abort(400)
+        from .reports import report_capabilities
+        return report_capabilities()
+    if operation == 'drive.status':
+        if params:
+            abort(400)
+        from .google_drive import status
+        return status(grant.id)
     if operation in ('clients.list', 'tasks.list'):
         if set(params) - {'page', 'limit', 'search'}:
             abort(400)
@@ -90,6 +100,8 @@ def invoke(app, grant, user, operation, params):
         if set(params) - allowed_params or not isinstance(params.get('key'), str) or not re.fullmatch(r'[a-zA-Z0-9._-]{1,80}', params['key']):
             abort(400)
         key = params['key']
+        if key.startswith('_drive.'):
+            abort(400)
         row = PluginStorage.query.filter_by(grant_id=grant.id, key=key).first()
         if operation == 'storage.get':
             return {'key': key, 'value': row.value if row else None, 'revision': row.revision if row else 0}

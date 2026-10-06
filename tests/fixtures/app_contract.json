@@ -1102,6 +1102,59 @@
       ]
     },
     {
+      "path": "/api/plugins/google-drive/callback",
+      "endpoint": "plugins.google_drive_callback",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/google-drive/connect",
+      "endpoint": "plugins.google_drive_connect",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/google-drive/connection",
+      "endpoint": "plugins.google_drive_disconnect",
+      "methods": [
+        "DELETE",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/google-drive/files",
+      "endpoint": "plugins.google_drive_files",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/plugins/google-drive/status",
+      "endpoint": "plugins.google_drive_status",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
+      "path": "/api/plugins/reports/capabilities",
+      "endpoint": "plugins.report_sources",
+      "methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    {
       "path": "/api/plugins/settings",
       "endpoint": "plugins.platform_settings",
       "methods": [
@@ -2368,6 +2421,10 @@
       "HEAD"
     ],
     "branding.serve_branding_file": [
+      "GET",
+      "HEAD"
+    ],
+    "plugins.google_drive_callback": [
       "GET",
       "HEAD"
     ],

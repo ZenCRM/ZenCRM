@@ -17,6 +17,8 @@ services:
       - PLUGINS_ENABLED=${PLUGINS_ENABLED:-false}
       - PLUGINS_LOCKED=${PLUGINS_LOCKED:-false}
       - PORT=8080
+      - GOOGLE_DRIVE_CLIENT_ID=${GOOGLE_DRIVE_CLIENT_ID:-}
+      - GOOGLE_DRIVE_CLIENT_SECRET=${GOOGLE_DRIVE_CLIENT_SECRET:-}
     volumes:
       - zencrm_data:/app/instance
       - zencrm_uploads:/app/uploads

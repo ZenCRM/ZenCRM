@@ -14,7 +14,7 @@ Platforma umożliwia instalowanie aplikacji przez administratora, udostępnianie
 
 ## Preinstalowane aplikacje i sklep
 
-Standardowy start bazy dodaje cztery aplikacje ZenCRM: **Studio raportów** (budowanie raportów i eksport CSV), **Podsumowanie pracy** (liczniki klientów i otwartych zadań, również na dashboardzie), **Katalog klientów** oraz **Lista zadań** (listy z wyszukiwaniem i paginacją). To lokalne deklaracje, bez pobierania paczek i uruchamiania kodu dostawcy. Wszystkie korzystają wyłącznie z zakresów odczytu.
+Standardowy start bazy dodaje pięć aplikacji ZenCRM: **Studio raportów**, **Podsumowanie pracy**, **Katalog klientów**, **Lista zadań** oraz **Google Drive**. To lokalne deklaracje bez pobierania paczek i uruchamiania kodu dostawcy. Aplikacje raportowe korzystają z odczytu; Google Drive ma osobny zakres tworzenia i odczytu własnych plików integracji. Konfiguracja połączenia Google: [GOOGLE_DRIVE.md](GOOGLE_DRIVE.md).
 
 Po włączeniu platformy aplikacje są preinstalowane i udostępnione aktywnym kontom, także utworzonym później. Samo preinstalowanie nie tworzy zgód ani tokenów. Użytkownik wybiera **Szczegóły**, sprawdza zakres i klika **Dodaj do moich aplikacji**; dopiero wtedy może otworzyć narzędzie. Administrator nadal może wyłączyć, odinstalować lub ograniczyć aplikację do konkretnych osób. Restart nie zmienia tych decyzji i nie przywraca odinstalowanych aplikacji.
 
@@ -32,7 +32,9 @@ Wybierz klientów lub zadania, daty utworzenia, status oraz grupowanie (status a
 
 **Eksport CSV** zapisuje lokalnie podsumowanie z filtrami i czasem generowania (UTF-8 z BOM, separator średnik). Eksport odpowiada ostatniemu wygenerowanemu wynikowi, nawet jeżeli potem zmienisz formularz. Tekstowe komórki mają ochronę przed interpretacją jako formuły. CSV nie zawiera nazw, treści zadań ani danych kontaktowych. Cofnięcie zgody lub wyłączenie platformy blokuje dalsze wywołania; już pobranego pliku nie można cofnąć.
 
-Operacja `reports.aggregate` używa zakresu `reports.read` i standardowej polityki przypisania rekordów. Parametry: `entity` (`clients`/`tasks`), `group_by` (`status`/`priority`, priorytet tylko dla zadań), opcjonalne `date_from`/`date_to` (`YYYY-MM-DD`), `status` (identyfikator, do 20 znaków), `overdue_only` (boolean, tylko zadania). Brak dat oznacza cały okres. Nie przyjmuje SQL, pól dowolnych ani identyfikatorów innych użytkowników. Zwraca najwyżej 100 grup i ewentualną grupę pozostałych, zachowując pełną sumę. Inne aplikacje mogą użyć tej samej operacji przez kontrakt API lub deklaratywne osadzenie.
+Operacja `reports.aggregate` używa zakresu `reports.read`. Obsługuje `entity`: `clients`, `tasks`, `leads`, `projects`, `tickets`, `documents`, `offers`, `services`, `meetings`. Operacja `reports.capabilities` udostępnia zamknięty katalog pól dat i grupowań dla każdego źródła, w tym grupowanie miesięczne. Parametry: `group_by`, opcjonalne `date_field`, `date_from`/`date_to` (`YYYY-MM-DD`), `status`, `overdue_only`, `amount_min`/`amount_max` oraz `compare_previous`. Filtry kwot dotyczą leadów, ofert, projektów i usług. Porównanie wymaga obu dat i porównuje okres z bezpośrednio poprzedzającym okresem tej samej długości (do 3661 dni). Brak dat oznacza cały okres. Nie przyjmuje SQL, dowolnych pól ani identyfikatorów innych użytkowników. Zwraca najwyżej 100 grup i ewentualną grupę pozostałych, zachowując pełną sumę. Kwoty są nominalnymi sumami i nie stanowią przychodu, rozliczeń walutowych ani sumy faktur.
+
+Pracownik widzi przypisane klienty, zadania i leady, projekty zarządzane lub z członkostwem, bezpośrednio przypisane zgłoszenia, własne dokumenty i oferty, usługi przypisanych klientów oraz spotkania, które organizuje. Administrator widzi wszystkie niearchiwalne rekordy. Usługi nie rozszerzają dostępu przez listę dodatkowych wykonawców. Wyniki zawierają agregaty, bez treści, tytułów i kontaktów rekordów.
 
 ## Własne widoki w menu
 
@@ -57,7 +59,7 @@ Ten fragment jest częścią manifestu typu `remote`; pełny przykład znajduje 
 
 Każdy widok otwiera wyłącznie wskazane miejsce osadzenia. Zewnętrzny interfejs nadal działa w ograniczonym iframe na osobnej domenie HTTPS; `context()` instancji `ZenPlugin({hostOrigin})` przekazuje `slot: "app.page"`, `view_id` i `placement_id`, bez tokenu CRM. Bez zmian pozostają ograniczenia operacji, bridge i zakresów. Gotowe aplikacje ZenCRM udostępniają swój główny widok w menu bez zmiany istniejących manifestów, rewizji i zgód.
 
-Gmail, Google Drive, magazyn i pełny silnik raportów to kolejne aplikacje/moduły. Przykładowy raport to podsumowanie liczb, bez generatora PDF, harmonogramu i konstruktora raportów. Uwierzytelnianie 2FA należy rozbudować w rdzeniu logowania; plugin nie powinien przejmować uwierzytelniania CRM.
+Gmail, magazyn, generator PDF i harmonogram raportów pozostają kolejnymi modułami. Studio raportów podsumowuje bieżący stan rekordów; nie odtwarza historycznego stanu statusów. Uwierzytelnianie 2FA należy rozbudować w rdzeniu logowania; plugin nie powinien przejmować uwierzytelniania CRM.
 
 ## Uruchomienie i wycofanie
 

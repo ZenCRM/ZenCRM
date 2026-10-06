@@ -105,7 +105,7 @@
                     };
                     try {
                         if (entry.app.manifest.type === 'declarative') {
-                            if (entry.placement.operation === 'reports.aggregate') continue;
+                            if (['reports.aggregate', 'drive.status'].includes(entry.placement.operation)) continue;
                             const result = await invoke(entry.placement.operation, {});
                             if (alive()) this.entries.find(e => e.key === entry.key).result = result;
                         } else {
