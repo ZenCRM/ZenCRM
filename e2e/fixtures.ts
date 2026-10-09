@@ -1,6 +1,7 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import { randomBytes } from 'node:crypto';
-import { ADMIN, STORAGE, baseURL } from './support/env';
+import { readFileSync } from 'node:fs';
+import { STORAGE, baseURL } from './support/env';
 import { ApiClient } from './support/api';
 
 // console.error messages that are known and harmless. Keep this list short and justified.
@@ -56,8 +57,11 @@ export const test = base.extend<Fixtures>({
     await context.close();
     expect(problems, 'browser errors during the test').toEqual([]);
   },
+  // Reuses the admin token saved by global setup: login is rate limited (30 per 15 minutes per address).
   api: async ({}, use) => {
-    await use(await ApiClient.login(baseURL, ADMIN.email, ADMIN.password));
+    const state = JSON.parse(readFileSync(STORAGE.admin, 'utf8'));
+    const token = state.origins[0].localStorage.find((entry: { name: string }) => entry.name === 'token').value;
+    await use(new ApiClient(baseURL, token));
   },
   uniqueName: async ({}, use) => {
     await use(prefix => `${prefix} E2E ${randomBytes(3).toString('hex')}`);

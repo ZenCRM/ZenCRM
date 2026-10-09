@@ -157,7 +157,7 @@ docker compose up -d --no-build zencrm
 
 Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.5</code>.
 
-Ten sam obraz (amd64 i arm64) jest publikowany także jako <code>ghcr.io/zencrm/zencrm</code>.
+Od kolejnego wydania ten sam obraz (amd64 i arm64) jest publikowany także jako <code>ghcr.io/zencrm/zencrm</code>.
 
 ### HTTPS z Caddy i Let's Encrypt
 
@@ -375,7 +375,7 @@ docker compose up -d --no-build zencrm
 
 The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.5</code>.
 
-The same image (amd64 and arm64) is also published as <code>ghcr.io/zencrm/zencrm</code>.
+Starting with the next release, the same image (amd64 and arm64) is also published as <code>ghcr.io/zencrm/zencrm</code>.
 
 ### HTTPS with Caddy and Let's Encrypt
 

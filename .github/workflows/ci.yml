@@ -45,6 +45,7 @@ jobs:
 
   image:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       contents: read
       security-events: write
@@ -110,6 +111,7 @@ jobs:
 
   image-arm64:
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -122,7 +124,9 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           if [ "$EVENT" != "pull_request" ]; then echo "image=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          if git diff --name-only "$BASE_SHA...$HEAD_SHA" | grep -qE '^(Dockerfile|requirements\.txt|entrypoint\.sh)$'; then
+          # Written to a file first: grep -q closing a pipe early would fail the diff under pipefail.
+          git diff --name-only "$BASE_SHA...$HEAD_SHA" > changed-files.txt
+          if grep -qE '^(Dockerfile|requirements\.txt|entrypoint\.sh)$' changed-files.txt; then
             echo "image=true" >> "$GITHUB_OUTPUT"
           else
             echo "image=false" >> "$GITHUB_OUTPUT"

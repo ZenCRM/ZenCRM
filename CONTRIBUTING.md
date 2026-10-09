@@ -91,7 +91,7 @@ Docker base image. Third-party actions are pinned to commit SHAs.
    - runs the whole CI workflow on the tagged commit;
    - builds `amd64` and `arm64` images on native runners, smoke-tests each, and pushes them by digest;
    - publishes the multi-architecture image as `<version>` and, for stable releases,
-     `latest` to `ghcr.io/<owner>/zencrm` and, when the `DOCKERHUB_IMAGE` variable is
+     `latest` to `ghcr.io/<owner>/<repository>` (lowercased) and, when the `DOCKERHUB_IMAGE` variable is
      set, to Docker Hub; attests build provenance on GHCR;
    - creates the GitHub Release with generated notes, last, so the application's
      Settings → Updates never offers a version without an image.
@@ -99,7 +99,9 @@ Docker base image. Third-party actions are pinned to commit SHAs.
 A tag with a suffix (`v0.9.1.0-rc1`, with the same value in `VERSION`) publishes a
 pre-release: the version tag only, never `latest`.
 
-If a job fails, fix the cause and use "Re-run failed jobs"; every step can be repeated safely.
+If a job fails, fix the cause and use "Re-run failed jobs"; no step publishes a partial result. The
+per-architecture digests are kept for one day, so re-run `publish` alone within 24 hours,
+or re-run the whole workflow after that.
 
 ### Rolling back `latest`
 

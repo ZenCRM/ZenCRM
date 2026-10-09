@@ -15,7 +15,7 @@ docker run -d --name "$name" -p "127.0.0.1:${port}:8080" \
   "$image" >/dev/null
 
 for _ in $(seq 1 60); do
-  if body="$(curl -fsS "http://127.0.0.1:${port}/api/auth/setup-status" 2>/dev/null)"; then
+  if body="$(curl -fsS --max-time 5 "http://127.0.0.1:${port}/api/auth/setup-status" 2>/dev/null)"; then
     if [[ "$body" != *'"needs_setup":true'* && "$body" != *'"needs_setup": true'* ]]; then
       echo "Unexpected setup status: $body" >&2
       exit 1
