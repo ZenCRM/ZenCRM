@@ -35,6 +35,8 @@ export default async function globalSetup() {
     email: ADMIN.email, password: ADMIN.password, first_name: ADMIN.firstName, last_name: ADMIN.lastName,
   });
   saveSession(STORAGE.admin, admin);
+  // Seed default settings once; concurrent first requests race (see findings: settings seeding race).
+  await fetch(`${baseURL}/api/settings/ui`, { headers: { Authorization: `Bearer ${admin.access_token}` } });
 
   const api = new ApiClient(baseURL, admin.access_token);
   await api.post('/auth/register', {
