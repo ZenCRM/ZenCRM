@@ -39,3 +39,16 @@ Dockerfile
 .dockerignore
 docker-compose*.yml
 .gitattributes
+
+# Development and CI files
+e2e/
+node_modules/
+package.json
+package-lock.json
+playwright.config.ts
+playwright-report/
+test-results/
+requirements-dev.txt
+ruff.toml
+CONTRIBUTING.md
+.superpowers/

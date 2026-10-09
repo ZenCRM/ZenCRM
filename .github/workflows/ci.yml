@@ -42,3 +42,68 @@ jobs:
           python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
       - run: node --test tests/*.cjs
+
+  image:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    env:
+      TRIVY_IMAGE: aquasec/trivy:0.75.0@sha256:af6acf9a6b85dfe389a1941505c0ce9efef52a4719635e1a962f022a3d855daa
+      # Code scanning upload is unavailable to pull requests from forks.
+      UPLOAD_SARIF: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          load: true
+          tags: zencrm:ci
+          build-args: ZENCRM_VERSION=${{ github.sha }}
+          cache-from: type=gha,scope=amd64
+          cache-to: type=gha,mode=max,scope=amd64
+      - name: Start containers
+        run: |
+          .github/scripts/container-smoke.sh zencrm:ci zencrm-e2e 8081
+          .github/scripts/container-smoke.sh zencrm:ci zencrm-first-run 8082
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: End-to-end tests
+        env:
+          BASE_URL: http://127.0.0.1:8081
+          FIRST_RUN_BASE_URL: http://127.0.0.1:8082
+        run: npx playwright test
+      - name: Scan image
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "$TRIVY_IMAGE" \
+            image --quiet --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 zencrm:ci
+      - name: Scan image (SARIF)
+        if: always() && env.UPLOAD_SARIF == 'true'
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/out" "$TRIVY_IMAGE" \
+            image --quiet --ignore-unfixed --format sarif --output /out/trivy.sarif zencrm:ci
+      - name: Upload scan results
+        if: always() && env.UPLOAD_SARIF == 'true' && hashFiles('trivy.sarif') != ''
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: trivy.sarif
+      - name: Container logs
+        if: failure()
+        run: |
+          docker logs zencrm-e2e > container-e2e.log 2>&1 || true
+          docker logs zencrm-first-run > container-first-run.log 2>&1 || true
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: failure()
+        with:
+          name: e2e-report
+          path: |
+            playwright-report/
+            test-results/
+            container-*.log
+          retention-days: 14
