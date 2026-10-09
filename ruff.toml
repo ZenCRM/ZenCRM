@@ -1,0 +1,5 @@
+# Only rules that indicate real defects; extend deliberately.
+extend-exclude = ["venv", "migrations/versions"]
+
+[lint]
+select = ["E9", "F63", "F7", "F82"]
