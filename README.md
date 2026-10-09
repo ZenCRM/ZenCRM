@@ -157,6 +157,8 @@ docker compose up -d --no-build zencrm
 
 Wolumeny pozostają zachowane. Do przewidywalnych wdrożeń możesz zamiast <code>latest</code> wskazać konkretny tag obrazu, na przykład <code>0.9.0.5</code>.
 
+Ten sam obraz (amd64 i arm64) jest publikowany także jako <code>ghcr.io/zencrm/zencrm</code>.
+
 ### HTTPS z Caddy i Let's Encrypt
 
 Plik <code>docker-compose.caddy.yml</code> dodaje Caddy, który sam pobiera i odnawia certyfikat Let's Encrypt. Wymagana jest domena wskazująca na serwer oraz otwarte porty 80 i 443. Ustaw w <code>.env</code>:
@@ -245,6 +247,7 @@ Przed wdrożeniem nowej wersji wykonaj kopię bazy i katalogu przesłanych plik�
 | [Dokumentacja API](docs/api.md) | Logowanie, endpointy i przykładowe żądania. |
 | [Opis frontendu](frontend/README.md) | Widoki, moduły JavaScript i katalogi językowe. |
 | [Najnowsze wydanie](https://github.com/ZenCRM/ZenCRM/releases/latest) | Opis zmian i dostępne tagi. |
+| [Rozwój (English)](CONTRIBUTING.md) | Testy lokalne i E2E, CI oraz procedura wydania. |
 
 Błędy i pomysły zgłaszaj przez [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Zmiany można proponować przez pull request.
 
@@ -372,6 +375,8 @@ docker compose up -d --no-build zencrm
 
 The volumes are retained. For predictable deployments, you can replace <code>latest</code> with a specific image tag such as <code>0.9.0.5</code>.
 
+The same image (amd64 and arm64) is also published as <code>ghcr.io/zencrm/zencrm</code>.
+
 ### HTTPS with Caddy and Let's Encrypt
 
 <code>docker-compose.caddy.yml</code> adds Caddy, which obtains and renews a Let's Encrypt certificate automatically. You need a domain pointing at the server and open ports 80 and 443. Set in <code>.env</code>:
@@ -467,5 +472,6 @@ Document templates render in an isolated Python subprocess, with a 128 MiB memor
 | [API reference (Polish)](docs/api.md) | Login, endpoints, and example requests. |
 | [Frontend notes (Polish)](frontend/README.md) | Views, JavaScript modules, and language catalogs. |
 | [Latest release](https://github.com/ZenCRM/ZenCRM/releases/latest) | Release notes and available tags. |
+| [Contributing](CONTRIBUTING.md) | Local and end-to-end tests, CI, and the release procedure. |
 
 Report bugs and ideas through [GitHub Issues](https://github.com/ZenCRM/ZenCRM/issues). Code changes can be proposed in a pull request.
