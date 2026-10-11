@@ -74,13 +74,13 @@
 
                         <!-- TEXTAREA -->
                         <template x-if="field.type === 'textarea'">
-                            <textarea x-model="modal.form[field.key]" rows="3" :required="field.required"
+                            <textarea x-model="modal.form[field.key]" :aria-label="field.label" rows="3" :required="field.required"
                                       class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 placeholder-gray-400 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all font-sans"></textarea>
                         </template>
 
                         <!-- STANDARD SELECT -->
                         <template x-if="field.type === 'select' && !((modal.view || currentView) === 'tasks' && field.key === 'priority')">
-                            <select x-model="modal.form[field.key]" :required="field.required"
+                            <select x-model="modal.form[field.key]" :aria-label="field.label" :required="field.required"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
                                 <option value="" x-text="window.ZenI18n.t('— wybierz —')">— wybierz —</option>
                                 <template x-for="opt in field.options" :key="opt.value">
@@ -103,7 +103,7 @@
 
                         <!-- PROJEKT SELECT (tylko dropdown, NIGDY nie generuje inputu z ID!) -->
                         <template x-if="field.type === 'project-select'">
-                            <select x-model="modal.form[field.key]" :required="field.required"
+                            <select x-model="modal.form[field.key]" :aria-label="field.label" :required="field.required"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
                                 <option value="" x-text="window.ZenI18n.t('— brak powiązania z projektem —')">— brak powiązania z projektem —</option>
                                 <template x-for="p in (projects || [])" :key="p.id">
@@ -285,7 +285,7 @@
 
                         <!-- CLIENT SELECT -->
                         <template x-if="field.type === 'client-select'">
-                            <select x-model="modal.form[field.key]"
+                            <select x-model="modal.form[field.key]" :aria-label="field.label"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 shadow-2xs outline-none transition-all">
                                 <option value="" x-text="window.ZenI18n.t('— brak klienta —')">— brak klienta —</option>
                                 <template x-for="c in clients" :key="c.id">
@@ -296,7 +296,7 @@
 
                         <!-- STANDARD INPUT (EXCLUDES ALL SPECIAL TYPES INCLUDING project-select & teams-select!) -->
                         <template x-if="!['lead-stage','textarea','select','client-select','project-select','teams-select','user-select','template-select','document-type-select','catalog-select','task-assignees','multi-user-select','document-relation','lead-select','checkbox','range'].includes(field.type)">
-                            <input :type="field.type" x-model="modal.form[field.key]"
+                            <input :type="field.type" x-model="modal.form[field.key]" :aria-label="field.label"
                                    :required="(field.key === 'password' && modal.editingId) ? false : Boolean(field.required)"
                                    :min="(modal.view || currentView) === 'leads' && field.key === 'value' ? 0 : null" :step="field.key === 'value' ? '0.01' : null"
                                    :minlength="field.type === 'password' ? 10 : null"

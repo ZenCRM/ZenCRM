@@ -26,3 +26,9 @@ frontend/README.md
 
 # Backup archives written by the backup service
 backups/
+
+# Node and Playwright
+node_modules/
+test-results/
+playwright-report/
+.playwright-mcp/
