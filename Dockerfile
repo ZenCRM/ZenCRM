@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Pending Debian security fixes, then system dependencies for WeasyPrint & general utilities
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
