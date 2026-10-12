@@ -72,8 +72,9 @@ Writing tests:
 fails, download the `e2e-report` artifact from the run: open
 `playwright-report/index.html`, or a trace with `npx playwright show-trace <trace.zip>`.
 
-Dependabot opens grouped weekly updates for Python, npm, GitHub Actions and the
-Docker base image. Third-party actions are pinned to commit SHAs.
+Dependabot opens weekly updates for Python, npm, GitHub Actions and the Docker base
+image: minor and patch updates grouped per ecosystem, each major update in its own pull
+request. Third-party actions are pinned to commit SHAs.
 
 ## Releasing
 
