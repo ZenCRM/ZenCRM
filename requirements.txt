@@ -52,7 +52,7 @@ pyhanko-certvalidator==0.32.1
 PyJWT==2.15.1
 pypdf==6.21.4
 pyphen==0.18.1
-python-bidi==0.6.11
+python-bidi==0.6.12
 reportlab==5.0.1
 requests==2.34.2
 six==1.17.0
