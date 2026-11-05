@@ -1,0 +1,7 @@
+<section x-cloak x-show="window.ZenPluginNavigation.isRoute(currentView) && !detailView.open" x-data="pluginRoute()" class="plugin-hub plugin-workspace">
+    <header class="plugin-heading"><div><p class="plugin-eyebrow" x-text="appLabel()"></p><h1 x-text="routeLabel()"></h1><p class="plugin-muted" x-text="window.ZenI18n.t('Widok aplikacji')"></p></div><button type="button" class="plugin-button" @click="selectView('plugins')" x-text="window.ZenI18n.t('Wszystkie aplikacje')"></button></header>
+    <p x-show="!routeReady" role="status" class="plugin-empty" x-text="window.ZenI18n.t('Ładowanie aplikacji…')"></p>
+    <p x-show="routeError" role="alert" class="plugin-alert" x-text="routeError"></p>
+    <p x-show="routeReady && !routeEntry" class="plugin-empty" x-text="window.ZenI18n.t('Ten widok nie jest dostępny. Sprawdź zgodę i dostęp do aplikacji.')"></p>
+    <div x-data="pluginSlot('menu.view')"><% include "views/plugin-slot.html" %></div>
+</section>

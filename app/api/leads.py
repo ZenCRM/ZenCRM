@@ -167,6 +167,8 @@ def convert_lead(item_id):
         lead.stage = 'won'
         log_activity('lead', lead.id, 'converted', f'Przekonwertowano na klienta: {client.name}')
         log_activity('client', client.id, 'created', f'Utworzony z leada: {lead.title}')
+        from ..plugins.events import emit_client_event
+        emit_client_event('client.created.v1', client.id)
         db.session.commit()
         return jsonify({'ok': True, 'client_id': client.id, 'client': client.to_dict()}), 200
     except Exception as e:
@@ -250,6 +252,8 @@ def webhook_submit_lead():
             )
             db.session.add(cl)
             db.session.flush()
+            from ..plugins.events import emit_client_event
+            emit_client_event('client.created.v1', cl.id)
         client_id = cl.id
 
     lead = Lead(

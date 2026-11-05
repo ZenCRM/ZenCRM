@@ -153,6 +153,7 @@
                         <button class="detail-tab-v2" :class="detailView.tab === &#x27;tasks&#x27; ? &#x27;active&#x27; : &#x27;&#x27;" @click="detailView.tab = &#x27;tasks&#x27;">
                             <span x-text="window.ZenI18n.t(&quot;Zadania&quot;)">Zadania</span> <span class="detail-tab-count" x-text="(detailView.tasks || []).length"></span>
                         </button>
+                        <button class="detail-tab-v2" x-show="detailView.type === 'client'" :class="{'active': detailView.tab === 'plugins'}" @click="detailView.tab = 'plugins'" x-text="window.ZenI18n.t('Aplikacje')"></button>
                         <button class="detail-tab-v2" :class="detailView.tab === 'meetings' ? 'active' : ''" @click="detailView.tab = 'meetings'">
                             <span x-text="window.ZenI18n.t('Spotkania')">Spotkania</span> <span class="detail-tab-count" x-text="(detailView.meetings || []).length"></span>
                         </button>
@@ -790,6 +791,7 @@
 
                     </div>
                 </div>
+                <div x-show="detailView.type === 'client' && detailView.tab === 'plugins'" x-data="pluginSlot('client.detail.tab')" class="mt-4"><% include "views/plugin-slot.html" %></div>
             </div>
 
 
