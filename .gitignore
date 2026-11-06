@@ -32,3 +32,6 @@ node_modules/
 test-results/
 playwright-report/
 .playwright-mcp/
+
+# macOS Finder metadata
+.DS_Store

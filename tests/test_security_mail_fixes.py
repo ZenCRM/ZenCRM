@@ -1,4 +1,4 @@
-"""Regression checks for the five findings in SECURITY_AUDIT_20261004.md."""
+"""Regression checks for the mail module security fixes from the October 2026 audit."""
 import unittest
 from datetime import datetime, timedelta
 from unittest.mock import patch
