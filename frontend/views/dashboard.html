@@ -161,6 +161,7 @@
                         </div>
                     </div>
                 </div>
+                <div x-data="pluginSlot('dashboard.widget')"><% include "views/plugin-slot.html" %></div>
             </div>
 
 <div class="ux-error" x-show="!detailView.open &amp;&amp; listError" x-cloak role="alert"><span x-text="listError"></span><button @click="reload()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div><div class="ux-error" x-show="detailView.open &amp;&amp; detailError" x-cloak role="alert"><span x-text="detailError"></span><button @click="loadDetail()"><span x-text="window.ZenI18n.t(&quot;Spróbuj ponownie&quot;)">Spróbuj ponownie</span></button></div>

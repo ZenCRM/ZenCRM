@@ -76,6 +76,7 @@
                         </section>
                         <section class="settings-nav-group" aria-labelledby="settings-group-4">
                             <h2 id="settings-group-4" class="settings-nav-heading" x-text="window.ZenI18n.t('Administracja')">Administracja</h2>
+                            <button type="button" class="settings-nav-item" :class="settingsTab === 'plugins' ? 'active' : ''" @click="settingsTab = 'plugins'"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span x-text="window.ZenI18n.t('Aplikacje i pluginy')"></span></button>
                             <button class="settings-nav-item" :class="settingsTab === 'permissions' ? 'active' : ''" @click="settingsTab = 'permissions'; loadPermissions()">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V7l8-4zM9 12l2 2 4-4"/></svg>
                             <span><span x-text="window.ZenI18n.t(&quot;Role i uprawnienia&quot;)">Role i uprawnienia</span></span>
@@ -93,6 +94,17 @@
 
                     <!-- PANEL -->
                     <div class="settings-panel">
+                        <section x-show="settingsTab === 'plugins'" x-cloak x-data="pluginOptions()" class="space-y-5">
+                            <h2 class="settings-section-title" x-text="window.ZenI18n.t('Aplikacje i pluginy')"></h2>
+                            <p class="settings-section-desc" x-text="window.ZenI18n.t('Włącz platformę aplikacji dla tego CRM. Każda aplikacja nadal wymaga instalacji i zgody użytkownika.')"></p>
+                            <label class="flex items-center gap-3 text-sm font-medium"><input type="checkbox" x-model="optionEnabled" :disabled="!optionReady || optionBusy || optionLocked"><span x-text="window.ZenI18n.t('Włącz aplikacje i pluginy')"></span></label>
+                            <p class="text-sm text-gray-500" x-text="window.ZenI18n.t('Zmiana działa bez restartu. Wyłączenie zatrzymuje dostęp i nowe zdarzenia, zachowując konfigurację i zgody.')"></p>
+                            <p x-show="optionLocked" class="text-amber-700 dark:text-amber-400 text-sm" x-text="window.ZenI18n.t('Administrator serwera zablokował aplikacje. Włączenie w panelu jest niedostępne.')"></p>
+                            <p role="alert" x-show="optionError" x-text="optionError" class="text-red-600"></p>
+                            <p role="status" x-show="optionSaved" x-text="optionSaved" class="text-green-600"></p>
+                            <button type="button" @click="saveOptions()" :disabled="!optionReady || optionBusy || optionLocked" class="px-6 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold disabled:opacity-50" x-text="window.ZenI18n.t('Zapisz ustawienia')"></button>
+                            <button type="button" x-show="optionReady && optionEnabled && !optionLocked" @click="selectView('plugins')" class="ux-text-button" x-text="window.ZenI18n.t('Przejdź do aplikacji')"></button>
+                        </section>
                         <div x-show="settingsTab === 'clients'" x-cloak class="space-y-5">
                             <h2 class="settings-section-title" x-text="window.ZenI18n.t('Ustawienia klientów')"></h2>
                             <p class="settings-section-desc" x-text="window.ZenI18n.t('Wyszukiwanie firmy po NIP uzupełnia dane klienta. Funkcja jest domyślnie wyłączona.')"></p>
@@ -1464,7 +1476,7 @@
                         </div>
 
                         <!-- ZAPISZ -->
-                        <div x-show="![&#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;, &#x27;menu&#x27;, &#x27;leads&#x27;, &#x27;translations&#x27;, &#x27;updates&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
+                        <div x-show="![&#x27;plugins&#x27;, &#x27;customFields&#x27;, &#x27;customValues&#x27;, &#x27;emails&#x27;, &#x27;standardFields&#x27;, &#x27;permissions&#x27;, &#x27;menu&#x27;, &#x27;leads&#x27;, &#x27;translations&#x27;, &#x27;updates&#x27;].includes(settingsTab)" class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700 mt-8">
                             <button @click="loadSettings()" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium">
                                 <span x-text="window.ZenI18n.t(&quot;Cofnij zmiany&quot;)">Cofnij zmiany</span>
                             </button>

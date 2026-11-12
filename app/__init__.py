@@ -62,6 +62,8 @@ def create_app(config_class=Config):
     from .bootstrap.database import initialize_database
 
     register_api(app)
+    from .plugins import init_plugins
+    init_plugins(app)
     register_frontend(app, frontend_dir)
     initialize_database(app)
 

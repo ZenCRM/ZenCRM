@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pl">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Przykład aplikacji ZenCRM</title>
+<style>body{font:16px system-ui;margin:24px;color:#193b50}pre{white-space:pre-wrap}button{padding:10px}</style>
+<h1>Narzędzia klienta</h1><p id="status">Łączenie z CRM…</p><pre id="result"></pre>
+<button id="save" disabled>Zapisz preferencję w aplikacji</button>
+<!-- Copy sdk.js from frontend/js/plugins/ into this application's own static assets. -->
+<script src="/sdk.js"></script>
+<script>
+    // Replace with this installation's exact, trusted CRM origin.
+    const sdk = ZenPlugin({hostOrigin: 'https://crm.example.com'});
+    sdk.ready().then(async context => {
+        document.getElementById('status').textContent = 'Połączono: ' + context.app_id;
+        try {
+            const result = context.entity_id
+                ? await sdk.call('clients.get', {id: context.entity_id})
+                : await sdk.call('clients.list', {limit: 10});
+            document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            document.getElementById('save').disabled = false;
+        } catch (error) { document.getElementById('status').textContent = error.message; }
+    });
+    document.getElementById('save').onclick = async () => {
+        try {
+            const item = await sdk.call('storage.get', {key: 'preference'});
+            await sdk.call('storage.put', {key: 'preference', value: {compact: true}, revision: item.revision});
+            document.getElementById('status').textContent = 'Zapisano';
+        } catch (error) { document.getElementById('status').textContent = error.message; }
+    };
+</script>
+</html>

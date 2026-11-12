@@ -19,6 +19,8 @@ PUBLIC = {
     'portal.configuration': {'GET', 'HEAD'}, 'portal.branding': {'GET', 'HEAD'},
     'tickets.public_helpdesk_config': {'GET', 'HEAD'},
     'tickets.public_submit_ticket': {'POST'},
+    # One-time OAuth state, HttpOnly browser cookie and grant binding verified by this handler.
+    'plugins.google_drive_callback': {'GET', 'HEAD'},
 }
 # These specific handlers check their own capability or device tokens.
 TOKEN_HANDLERS = {
@@ -68,6 +70,9 @@ def init_api_security(app):
         endpoint = request.endpoint
         if not endpoint or endpoint in ('static', 'static_files'):
             abort(404)
+        from ..plugins.integration_api import INTEGRATION_ENDPOINTS, authenticate_integration
+        if request.method in INTEGRATION_ENDPOINTS.get(endpoint, set()):
+            return authenticate_integration()
         if request.method in PUBLIC.get(endpoint, set()) or endpoint in TOKEN_HANDLERS:
             return
         if endpoint in PORTAL_HANDLERS and request.headers.get('X-Portal-Token'):

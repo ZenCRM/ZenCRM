@@ -582,7 +582,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "c47e061cf099c897fe824368b141467ae6f20a4158e5dd7fb210015956fe35dd"
+      "function": "944e548f8366723f7a87b7ed64e401a1ef3c5ee01d6037cbc87a75303e9fda43"
     }
   },
   "cancelEditCustomField": {
@@ -2284,7 +2284,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "230a0a5d87446a8f209a87c161c1da943be57428cebcb1e1c3091907b8c02287"
+      "function": "27c191a1639afed94614d0f0f53eb45043114a7b359dce3d6040440b6f3a0bd9"
     }
   },
   "initialsFrom": {
@@ -2362,7 +2362,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "3582bb0cbcf5dde569e756b0c3503a23369d28ff35a3c129a4d41d649083519c"
+      "function": "9edf2864c97f8f3d401a602837b4f10e20cbda4ac310ad86bca3d0d347717d4e"
     }
   },
   "isOverdue": {
@@ -3321,6 +3321,11 @@
         "id": "users",
         "label": "Pracownicy",
         "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z\"/></svg>"
+      },
+      {
+        "id": "plugins",
+        "label": "Aplikacje",
+        "icon": "<svg fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-width=\"2\" d=\"M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z\"/></svg>"
       },
       {
         "id": "notifications",
@@ -4428,7 +4433,7 @@
     "configurable": true,
     "writable": true,
     "value": {
-      "function": "cb92d56d0fd5de06c21c0331ce46c5910a791947e4e282bdc48336cc018f49b2"
+      "function": "06d7a02c119adad1956cd84af24e69f410a2d2d4c1a26677a30309872ba21b0e"
     }
   },
   "reminderActive": {

@@ -107,11 +107,8 @@ def _schema_lock():
             if fcntl:
                 fcntl.flock(handle, fcntl.LOCK_EX)
             else:
-                # Windows byte-range locks require a byte and a stable file offset.
-                handle.seek(0, 2)
-                if handle.tell() == 0:
-                    handle.write(b'0')
-                    handle.flush()
+                # Windows can lock beyond EOF. Never write before acquiring the lock:
+                # another starter may already hold byte zero of this initially empty file.
                 handle.seek(0)
                 msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
             try:
@@ -189,6 +186,8 @@ def _seed_defaults():
     migrate_smtp_password()
     from .models.document_type import DocumentType
     from .models.email_template import EmailTemplate
+    from .plugins.bundled import seed_bundled
+    seed_bundled()
     DocumentType.seed_defaults()
     try:
         EmailTemplate.seed_defaults()

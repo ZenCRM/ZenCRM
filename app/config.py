@@ -23,3 +23,9 @@ class Config:
     TRUSTED_PROXY_HOPS = int(os.getenv('TRUSTED_PROXY_HOPS', '0'))
     # Disable in application workers when a separate step (seed.py) migrates the database first.
     PREPARE_DATABASE = os.getenv('PREPARE_DATABASE', 'true').lower() == 'true'
+    # Initial state until an administrator saves the platform switch in CRM settings.
+    PLUGINS_ENABLED = os.getenv('PLUGINS_ENABLED', 'false').lower() == 'true'
+    # Emergency server veto; the CRM panel cannot override it.
+    PLUGINS_LOCKED = os.getenv('PLUGINS_LOCKED', 'false').lower() == 'true'
+    GOOGLE_DRIVE_CLIENT_ID = os.getenv('GOOGLE_DRIVE_CLIENT_ID', '').strip()
+    GOOGLE_DRIVE_CLIENT_SECRET = os.getenv('GOOGLE_DRIVE_CLIENT_SECRET', '').strip()
